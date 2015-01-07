@@ -3,13 +3,13 @@ import "package:binary_declarations/binary_declarations.dart";
 void main() {
   var declarations = new BinaryDeclarations(text);
   for (var declaration in declarations) {
-    print(declaration);
+    print("$declaration;");
   }
 }
 
 var text = '''
+int8_t int8;
 signed char[10] foo(struct S);
-
 struct _s {} s;
 int i;
 int* ip;
@@ -36,7 +36,7 @@ int foo(void* []);
 int foo(char[]);
 int foo(int, ...);
 int foo(int, const char*, ...);
-int foo(const int);
+int foo(const int*);
 int foo(int i);
 int foo(int*, char[]);
 int foo(int* ip, char cp[]);

@@ -64,7 +64,8 @@ PointerType <-
   TypeName ASTERISK+ { $$ = _createPointer($1, $2); }
 
 TypeName <-
-  TypeSign? CHAR { $$ = new IntegerTypeSpecification(kind: $2, sign: $1); }
+  IDENTIFIER { $$ = new TypedefTypeSpecification(name: $1); }  
+  / TypeSign? CHAR { $$ = new IntegerTypeSpecification(kind: $2, sign: $1); }
   / TypeSign? INT { $$ = new IntegerTypeSpecification(kind: $2, sign: $1); }
   / TypeSign? SHORT INT? { $$ = new IntegerTypeSpecification(kind: "short", sign: $1); }
   / TypeSign? LONG INT? { $$ = new IntegerTypeSpecification(kind: "long", sign: $1); }
@@ -73,8 +74,21 @@ TypeName <-
   / DOUBLE { $$ = new FloatTypeSpecification(kind: "double"); }
   / STRUCT IDENTIFIER { $$ = new StructureTypeSpecification(kind: "struct", tag: $2); }
   / UNION IDENTIFIER { $$ = new StructureTypeSpecification(kind: "union", tag: $2); }
-  / VOID { $$ = new VoidTypeSpecification(); }
-  / IDENTIFIER { $$ = new TypedefTypeSpecification(name: $1); }
+  / VOID { $$ = new VoidTypeSpecification(); }  
+  
+ReservedWord <-
+  ("signed"
+  / "unsigned"
+  / "char"
+  / "int"
+  / "short"
+  / "long"   
+  / "float"
+  / "double"
+  / "struct"
+  / "typedef"
+  / "union"
+  / "void") !(IDENT_START / IDENT_CONT) { $$ = $1; }
 
 TypeSign <-
   SIGNED { $$ = true; }
@@ -108,7 +122,7 @@ STRUCT <-
   'struct' SPACING { $$ = $1; }
 
 IDENTIFIER <-
-  IDENT_START IDENT_CONT* SPACING { $$ = _flatten([$1, $2]).join(); }
+  !ReservedWord IDENT_START IDENT_CONT* SPACING { $$ = _flatten([$2, $3]).join(); }
 
 UNION <-
   'union' SPACING { $$ = $1; }
