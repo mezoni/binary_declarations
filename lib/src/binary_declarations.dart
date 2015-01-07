@@ -14,7 +14,7 @@ class ArrayTypeSpecification extends TypeSpecification {
 
   final TypeSpecification type;
 
-  ArrayTypeSpecification({List<int> dimensions, this.type}) {
+  ArrayTypeSpecification({int align, List<int> dimensions, this.type}) : super(align: align) {
     if (dimensions == null) {
       throw new ArgumentError.notNull("dimensions");
     }
@@ -98,7 +98,7 @@ class BinaryDeclarations extends Object with IterableMixin<BinaryDeclaration> {
 class FloatTypeSpecification extends TypeSpecification {
   final String kind;
 
-  FloatTypeSpecification({this.kind}) {
+  FloatTypeSpecification({int align, this.kind}) : super(align: align) {
     switch (kind) {
       case "double":
       case "float":
@@ -162,7 +162,7 @@ class IntegerTypeSpecification extends TypeSpecification {
 
   final bool sign;
 
-  IntegerTypeSpecification({this.kind, this.sign}) {
+  IntegerTypeSpecification({int align, this.kind, this.sign}) : super(align: align) {
     switch (kind) {
       case "char":
       case "int":
@@ -214,7 +214,7 @@ class ParameterDeclaration {
 class PointerTypeSpecification extends TypeSpecification {
   final TypeSpecification type;
 
-  PointerTypeSpecification({this.type}) {
+  PointerTypeSpecification({int align, this.type}) : super(align: align) {
     if (type == null) {
       throw new ArgumentError.notNull("type");
     }
@@ -226,8 +226,8 @@ class PointerTypeSpecification extends TypeSpecification {
 class StructDeclaration extends BinaryDeclaration {
   StructureTypeSpecification _type;
 
-  StructDeclaration({String kind, List members, String tag}) {
-    _type = new StructureTypeSpecification(kind: kind, members: members, tag: tag);
+  StructDeclaration({String kind, List members, int pack, String tag}) {
+    _type = new StructureTypeSpecification(kind: kind, members: members, pack: pack, tag: tag);
   }
 
   StructureTypeSpecification get type => _type;
@@ -240,11 +240,13 @@ class StructDeclaration extends BinaryDeclaration {
 class StructureTypeSpecification extends TypeSpecification {
   final String kind;
 
+  final int pack;
+
   final String tag;
 
   List<VariableDeclaration> _members;
 
-  StructureTypeSpecification({this.kind, List members, this.tag}) {
+  StructureTypeSpecification({int align, this.kind, List members, this.pack, this.tag}) : super(align: align) {
     switch (kind) {
       case "struct":
       case "union":
@@ -305,6 +307,12 @@ class StructureTypeSpecification extends TypeSpecification {
 }
 
 abstract class TypeSpecification {
+  final int align;
+
+  TypeSpecification({this.align}) {
+    _checkAlignment(align);
+  }
+
   String toStringWithIdentifier(String identifier, {bool short: true}) {
     var sb = new StringBuffer();
     sb.write(this);
@@ -363,7 +371,7 @@ class TypedefDeclaration extends BinaryDeclaration {
 class TypedefTypeSpecification extends TypeSpecification {
   final String name;
 
-  TypedefTypeSpecification({this.name}) {
+  TypedefTypeSpecification({int align, this.name}) : super(align: align) {
     if (name == null || name.isEmpty) {
       throw new ArgumentError.value("name", name);
     }

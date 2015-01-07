@@ -1,3 +1,8 @@
+## 0.0.7
+
+- Added `StructureTypeSpecification.pack`
+- Added `TypeSpecification.align`
+
 ## 0.0.6
 
 - Fixed bug in `C grammar`, now an identifiers and builtin types parsed correctly
