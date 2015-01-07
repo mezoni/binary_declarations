@@ -1,0 +1,173 @@
+%{
+import "package:binary_declarations/binary_declarations.dart";
+
+ArrayTypeSpecification _createArray(TypeSpecification type, List dimensions) {  
+  return new ArrayTypeSpecification(dimensions: dimensions, type: type);
+}
+
+PointerTypeSpecification _createPointer(TypeSpecification type, List stars) {    
+  for (var star in stars) {
+    type = new PointerTypeSpecification(type: type);
+  }
+  
+  return type;
+}
+}%
+
+# Nonterminals
+
+Declarations <-
+  SPACING? DeclarationList? EOF { $$ = $2; }
+
+SPACING <-
+  (SPACE / COMMENT)*
+
+SPACE <-
+  [\t ]
+  / EOL
+
+EOL <-
+  '\r\n'
+  / [\n\r] SPACING { $$ = $1; }
+
+COMMENT <-
+  '//' (!EOL .)* EOL?
+
+DeclarationList <-
+  Declaration*
+
+Declaration <-
+  FunctionDeclartion SEMICOLON { $$ = $1; }
+  / TypeDefDeclaration SEMICOLON { $$ = $1; }
+
+FunctionDeclartion <-
+  Type IDENTIFIER OPEN_PAREN Parameters CLOSE_PAREN { $$ = new FunctionDeclaration(name: $2, parameters: $4, returnType: $1); }
+
+Type <-
+  PointerType
+  / ArrayType
+  / TypeName
+
+PointerType <-
+  TypeName ASTERISK+ { $$ = _createPointer($1, $2); }
+
+TypeName <-
+  TypeSign? CHAR { $$ = new IntegerTypeSpecification(kind: $2, sign: $1); }
+  / TypeSign? INT { $$ = new IntegerTypeSpecification(kind: $2, sign: $1); }
+  / TypeSign? SHORT INT? { $$ = new IntegerTypeSpecification(kind: "short", sign: $1); }
+  / TypeSign? LONG INT? { $$ = new IntegerTypeSpecification(kind: "long", sign: $1); }
+  / TypeSign? LONG LONG INT? { $$ = new IntegerTypeSpecification(kind: "long long", sign: $1); }
+  / FLOAT { $$ = new FloatTypeSpecification(kind: "float"); }
+  / DOUBLE { $$ = new FloatTypeSpecification(kind: "double"); }
+  / STRUCT IDENTIFIER { $$ = new StructureTypeSpecification(kind: "struct", tag: $2); }
+  / UNION IDENTIFIER { $$ = new StructureTypeSpecification(kind: "union", tag: $2); }
+  / IDENTIFIER { $$ = new TypedefTypeSpecification(name: $1); }
+
+TypeSign <-
+  SIGNED { $$ = true; }
+  / UNSIGNED { $$ = false; }
+
+SIGNED <-
+  'signed' SPACING { $$ = $1; }
+
+UNSIGNED <-
+  'unsigned' SPACING { $$ = $1; }
+
+CHAR <-
+  'char' SPACING { $$ = $1; }
+
+INT <-
+  'int' SPACING { $$ = $1; }
+
+SHORT <-
+  'short' SPACING { $$ = $1; }
+
+LONG <-
+  'long' SPACING { $$ = $1; }
+
+FLOAT <-
+  'float' SPACING { $$ = $1; }
+
+DOUBLE <-
+  'double' SPACING { $$ = $1; }
+
+STRUCT <-
+  'struct' SPACING { $$ = $1; }
+
+IDENTIFIER <-
+  IDENT_START IDENT_CONT* SPACING { $$ = _flatten([$1, $2]).join(); }
+
+UNION <-
+  'union' SPACING { $$ = $1; }
+
+ASTERISK <-
+  '*' SPACING { $$ = $1; }
+
+ArrayType <-
+  TypeName DIMENSIONS { $$ = _createArray($1, $2); }
+
+DIMENSIONS <-
+  DIMENSION+
+
+DIMENSION <-
+  OPEN_BRACKET INTEGER? CLOSE_BRACKET { $$ = $2; }
+
+OPEN_BRACKET <-
+  '[' SPACING { $$ = $1; }
+
+INTEGER <-
+  [0-9]+ SPACING { $$ = int.parse($1.join()); }
+
+CLOSE_BRACKET <-
+  ']' SPACING { $$ = $1; }
+
+OPEN_PAREN <-
+  '(' SPACING { $$ = $1; }
+
+Parameters <-
+  ParameterList?
+
+ParameterList <-
+  Parameter (COMMA Parameter)* { $$ = _list($1, $2); }
+
+Parameter <-
+  ArrayParameter
+  / PointerParameter
+  / SimpleParameter
+
+ArrayParameter <-
+  Type IDENTIFIER? DIMENSIONS { $$ = new ParameterDeclaration(name: $2, type: _createArray($1, $3)); }
+
+PointerParameter <-
+  PointerType IDENTIFIER? { $$ = new ParameterDeclaration(name: $2, type: $1); }
+
+SimpleParameter <-
+  Type IDENTIFIER? { $$ = new ParameterDeclaration(name: $2, type: $1); }
+
+COMMA <-
+  ',' SPACING { $$ = $1; }
+
+CLOSE_PAREN <-
+  ')' SPACING { $$ = $1; }
+
+TypeDefDeclaration <-
+  TYPEDEF Type Parameter
+
+TYPEDEF <-
+  'typedef' SPACING { $$ = $1; }
+
+SEMICOLON <-
+  ';' SPACING { $$ = $1; }
+
+# Lexemes
+
+EOF <-
+  !.
+
+IDENT_CONT <-
+  IDENT_START
+  / [0-9]
+
+IDENT_START <-
+  [A-Z_a-z]
+

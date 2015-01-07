@@ -1,0 +1,21 @@
+binary_declarations
+=====
+
+{{DESCRIPTION}}
+
+Version: {{VERSION}}
+
+Initial release. Use at your own risk!
+
+**Current features**
+
+- Function declarations
+
+**Planned features**
+
+- Enum declarations
+- Preprocessor directives
+- Struct and unions declarations
+- Typedef declarations
+
+{{example/example.dart}}
