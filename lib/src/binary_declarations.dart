@@ -33,12 +33,12 @@ class ArrayTypeSpecification extends TypeSpecification {
     return sb.toString();
   }
 
-  String toStringWithParameter(String parameter) {
+  String toStringWithIdentifier(String identifier, {bool short: true}) {
     var sb = new StringBuffer();
     sb.write(type);
-    if (parameter != null) {
+    if (identifier != null) {
       sb.write(" ");
-      sb.write(parameter);
+      sb.write(identifier);
     }
 
     sb.write(_dimensionsToString());
@@ -114,15 +114,30 @@ class FloatTypeSpecification extends TypeSpecification {
 class FunctionDeclaration extends BinaryDeclaration {
   final String name;
 
-  final List<ParameterDeclaration> parameters;
-
   final TypeSpecification returnType;
 
-  FunctionDeclaration({this.name, this.parameters, this.returnType}) {
+  List<ParameterDeclaration> _parameters;
+
+  FunctionDeclaration({this.name, List<ParameterDeclaration> parameters, this.returnType}) {
     if (name == null || name.isEmpty) {
       throw new ArgumentError.value("name", name);
     }
+
+    var list = <ParameterDeclaration>[];
+    if (parameters != null) {
+      list.addAll(parameters);
+      if (list.length == 1) {
+        var first = list.first;
+        if (first.type is VoidTypeSpecification) {
+          list.removeAt(0);
+        }
+      }
+    }
+
+    _parameters = new UnmodifiableListView(list);
   }
+
+  List<ParameterDeclaration> get parameters => _parameters;
 
   String toString() {
     var sb = new StringBuffer();
@@ -188,7 +203,7 @@ class ParameterDeclaration {
   }
 
   String toString() {
-    return type.toStringWithParameter(name);
+    return type.toStringWithIdentifier(name);
   }
 }
 
@@ -204,12 +219,28 @@ class PointerTypeSpecification extends TypeSpecification {
   String toString() => "$type*";
 }
 
+class StructDeclaration extends BinaryDeclaration {
+  StructureTypeSpecification _type;
+
+  StructDeclaration({String kind, List members, String tag}) {
+    _type = new StructureTypeSpecification(kind: kind, members: members, tag: tag);
+  }
+
+  StructureTypeSpecification get type => _type;
+
+  String toString() {
+    return type.toStringWithMembers();
+  }
+}
+
 class StructureTypeSpecification extends TypeSpecification {
   final String kind;
 
   final String tag;
 
-  StructureTypeSpecification({this.kind, this.tag}) {
+  List<VariableDeclaration> _members;
+
+  StructureTypeSpecification({this.kind, List members, this.tag}) {
     switch (kind) {
       case "struct":
       case "union":
@@ -217,7 +248,16 @@ class StructureTypeSpecification extends TypeSpecification {
       default:
         throw new ArgumentError.value("kind", kind);
     }
+
+    var list = <VariableDeclaration>[];
+    if (members != null) {
+      list.addAll(members);
+    }
+
+    _members = new UnmodifiableListView<VariableDeclaration>(list);
   }
+
+  List<VariableDeclaration> get members => _members;
 
   String toString() {
     var sb = new StringBuffer();
@@ -229,15 +269,44 @@ class StructureTypeSpecification extends TypeSpecification {
 
     return sb.toString();
   }
+
+  String toStringWithIdentifier(String identifier, {bool short: true}) {
+    var sb = new StringBuffer();
+    if (short) {
+      sb.write(this);
+    } else {
+      sb.write(toStringWithMembers());
+    }
+
+    sb.write(" ");
+    sb.write(identifier);
+    return sb.toString();
+  }
+
+  String toStringWithMembers() {
+    var sb = new StringBuffer();
+    sb.write(this);
+    sb.write(" { ");
+    if (!members.isEmpty) {
+      sb.write(" ");
+      for (var member in members) {
+        sb.write(member);
+        sb.write("; ");
+      }
+    }
+
+    sb.write("}");
+    return sb.toString();
+  }
 }
 
 abstract class TypeSpecification {
-  String toStringWithParameter(String parameter) {
+  String toStringWithIdentifier(String identifier, {bool short: true}) {
     var sb = new StringBuffer();
     sb.write(this);
-    if (parameter != null) {
+    if (identifier != null) {
       sb.write(" ");
-      sb.write(parameter);
+      sb.write(identifier);
     }
 
     return sb.toString();
@@ -249,7 +318,7 @@ class TypedefDeclaration extends BinaryDeclaration {
 
   final String name;
 
-  final Type type;
+  final TypeSpecification type;
 
   TypedefDeclaration({this.align, this.name, this.type}) {
     if (name == null || name.isEmpty) {
@@ -261,6 +330,29 @@ class TypedefDeclaration extends BinaryDeclaration {
     }
 
     _checkAlignment(align);
+  }
+
+  String toString() {
+    var sb = new StringBuffer();
+    sb.write("typedef ");
+    if (type is ArrayTypeSpecification) {
+      var arrayType = type;
+      sb.write(arrayType.type);
+      sb.write(" ");
+      sb.write(name);
+      sb.write(arrayType._dimensionsToString());
+    } else if (type is StructureTypeSpecification) {
+      var structureType = type;
+      sb.write(structureType.toStringWithMembers());
+      sb.write(" ");
+      sb.write(name);
+    } else {
+      sb.write(type);
+      sb.write(" ");
+      sb.write(name);
+    }
+
+    return sb.toString();
   }
 }
 
@@ -278,4 +370,24 @@ class TypedefTypeSpecification extends TypeSpecification {
 
 class VaListTypeSpecification extends TypeSpecification {
   String toString() => "...";
+}
+
+class VariableDeclaration {
+  final String name;
+
+  final TypeSpecification type;
+
+  VariableDeclaration({this.name, this.type}) {
+    if (type == null) {
+      throw new ArgumentError.notNull("type");
+    }
+  }
+
+  String toString() {
+    return type.toStringWithIdentifier(name, short: false);
+  }
+}
+
+class VoidTypeSpecification extends TypeSpecification {
+  String toString() => "void";
 }

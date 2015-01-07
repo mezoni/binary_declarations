@@ -53,37 +53,45 @@ class CParser {
   
   static final List<String> _expect2 = <String>[null, "\\r\\n", "//"];
   
-  static final List<String> _expect20 = <String>["*"];
+  static final List<String> _expect20 = <String>["void"];
   
-  static final List<String> _expect21 = <String>["["];
+  static final List<String> _expect21 = <String>["*"];
   
-  static final List<String> _expect22 = <String>["]"];
+  static final List<String> _expect22 = <String>["["];
   
-  static final List<String> _expect23 = <String>["("];
+  static final List<String> _expect23 = <String>["]"];
   
-  static final List<String> _expect24 = <String>[","];
+  static final List<String> _expect24 = <String>["("];
   
-  static final List<String> _expect25 = <String>["const"];
+  static final List<String> _expect25 = <String>[","];
   
-  static final List<String> _expect26 = <String>["..."];
+  static final List<String> _expect26 = <String>["const"];
   
-  static final List<String> _expect27 = <String>[")"];
+  static final List<String> _expect27 = <String>["..."];
   
-  static final List<String> _expect28 = <String>[";"];
+  static final List<String> _expect28 = <String>[")"];
   
-  static final List<String> _expect29 = <String>["typedef"];
+  static final List<String> _expect29 = <String>[";"];
   
   static final List<String> _expect3 = <String>[null, "\\r\\n"];
   
-  static final List<String> _expect30 = <String>["IDENT_CONT"];
+  static final List<String> _expect30 = <String>["typedef"];
+  
+  static final List<String> _expect31 = <String>["struct", "union"];
+  
+  static final List<String> _expect32 = <String>["{"];
+  
+  static final List<String> _expect33 = <String>["}"];
+  
+  static final List<String> _expect34 = <String>["IDENT_CONT"];
   
   static final List<String> _expect4 = <String>["//"];
   
   static final List<String> _expect5 = <String>[null];
   
-  static final List<String> _expect6 = <String>["IDENT_START", "char", "double", "float", "int", "long", "short", "struct", "typedef", "union"];
+  static final List<String> _expect6 = <String>["IDENT_START", "char", "double", "float", "int", "long", "short", "struct", "typedef", "union", "void"];
   
-  static final List<String> _expect7 = <String>["IDENT_START", "char", "double", "float", "int", "long", "short", "struct", "union"];
+  static final List<String> _expect7 = <String>["IDENT_START", "char", "double", "float", "int", "long", "short", "struct", "union", "void"];
   
   static final List<String> _expect8 = <String>["signed", "unsigned"];
   
@@ -105,11 +113,13 @@ class CParser {
   
   static final List<int> _strings11 = <int>[117, 110, 105, 111, 110];
   
-  static final List<int> _strings12 = <int>[99, 111, 110, 115, 116];
+  static final List<int> _strings12 = <int>[118, 111, 105, 100];
   
-  static final List<int> _strings13 = <int>[46, 46, 46];
+  static final List<int> _strings13 = <int>[99, 111, 110, 115, 116];
   
-  static final List<int> _strings14 = <int>[116, 121, 112, 101, 100, 101, 102];
+  static final List<int> _strings14 = <int>[46, 46, 46];
+  
+  static final List<int> _strings15 = <int>[116, 121, 112, 101, 100, 101, 102];
   
   static final List<int> _strings2 = <int>[115, 105, 103, 110, 101, 100];
   
@@ -141,11 +151,13 @@ class CParser {
   
   static final List<List<int>> _transitions4 = [[65, 90, 95, 95, 97, 122]];
   
-  static final List<List<int>> _transitions5 = [[65, 90, 95, 95, 97, 98, 101, 101, 103, 104, 106, 107, 109, 114, 116, 116, 118, 122], [99, 99], [100, 100], [102, 102], [105, 105], [108, 108], [115, 115], [117, 117]];
+  static final List<List<int>> _transitions5 = [[65, 90, 95, 95, 97, 98, 101, 101, 103, 104, 106, 107, 109, 114, 116, 116, 119, 122], [99, 99], [100, 100], [102, 102], [105, 105], [108, 108], [115, 115], [117, 117], [118, 118]];
   
   static final List<List<int>> _transitions6 = [[115, 115], [117, 117]];
   
-  static final List<List<int>> _transitions7 = [[48, 57], [65, 90, 95, 95, 97, 122]];
+  static final List<List<int>> _transitions7 = [[115, 115, 117, 117]];
+  
+  static final List<List<int>> _transitions8 = [[48, 57], [65, 90, 95, 95, 97, 122]];
   
   List _cache;
   
@@ -488,7 +500,7 @@ class CParser {
         break;
     }
     if (!success && _cursor > _testing) {
-      _failure(_expect20);
+      _failure(_expect21);
     }
     return $$;
   }
@@ -579,6 +591,92 @@ class CParser {
     return $$;
   }
   
+  dynamic _parse_ArrayTypeDeclaration() {
+    var $$;
+    switch (_getState(_transitions4)) {
+      case 0:
+        var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
+        _startPos = _cursor;
+        while (true) {  
+          $$ = _parse_Type();
+          if (!success) break;
+          var seq = new List(3)..[0] = $$;
+          $$ = _parse_IDENTIFIER();
+          if (!success) break;
+          seq[1] = $$;
+          $$ = _parse_DIMENSIONS();
+          if (!success) break;
+          seq[2] = $$;
+          $$ = seq;
+          if (success) {    
+            final $1 = seq[0];
+            final $2 = seq[1];
+            final $3 = seq[2];
+            $$ = new TypedefDeclaration(name: $2,type: _createArray($1, $3));
+          }
+          break;
+        }
+        if (!success) {
+          _ch = ch0;
+          _cursor = pos0;
+        }
+        _startPos = startPos0;
+        break;
+      case 1:
+      case 2:
+        $$ = null;
+        success = false;
+        break;
+    }
+    if (!success && _cursor > _testing) {
+      _failure(_expect7);
+    }
+    return $$;
+  }
+  
+  dynamic _parse_ArrayVariableDeclaration() {
+    var $$;
+    switch (_getState(_transitions4)) {
+      case 0:
+        var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
+        _startPos = _cursor;
+        while (true) {  
+          $$ = _parse_Type();
+          if (!success) break;
+          var seq = new List(3)..[0] = $$;
+          $$ = _parse_IDENTIFIER();
+          if (!success) break;
+          seq[1] = $$;
+          $$ = _parse_DIMENSIONS();
+          if (!success) break;
+          seq[2] = $$;
+          $$ = seq;
+          if (success) {    
+            final $1 = seq[0];
+            final $2 = seq[1];
+            final $3 = seq[2];
+            $$ = new VariableDeclaration(name: $2, type: _createArray($1, $3));
+          }
+          break;
+        }
+        if (!success) {
+          _ch = ch0;
+          _cursor = pos0;
+        }
+        _startPos = startPos0;
+        break;
+      case 1:
+      case 2:
+        $$ = null;
+        success = false;
+        break;
+    }
+    if (!success && _cursor > _testing) {
+      _failure(_expect7);
+    }
+    return $$;
+  }
+  
   dynamic _parse_CHAR() {
     var $$;
     switch (_ch == 99 ? 0 : _ch == -1 ? 2 : 1) {
@@ -614,6 +712,51 @@ class CParser {
     }
     if (!success && _cursor > _testing) {
       _failure(_expect11);
+    }
+    return $$;
+  }
+  
+  dynamic _parse_CLOSE_BRACE() {
+    var $$;
+    switch (_ch == 125 ? 0 : _ch == -1 ? 2 : 1) {
+      case 0:
+        var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
+        _startPos = _cursor;
+        while (true) {  
+          $$ = '}';
+          success = true;
+          if (++_cursor < _inputLen) {
+            _ch = _input[_cursor];
+          } else {
+            _ch = -1;
+          }
+          if (!success) break;
+          var seq = new List(2)..[0] = $$;
+          $$ = _parse_SPACING();
+          if (!success) break;
+          seq[1] = $$;
+          $$ = seq;
+          if (success) {    
+            final $1 = seq[0];
+            final $2 = seq[1];
+            $$ = $1;
+          }
+          break;
+        }
+        if (!success) {
+          _ch = ch0;
+          _cursor = pos0;
+        }
+        _startPos = startPos0;
+        break;
+      case 1:
+      case 2:
+        $$ = null;
+        success = false;
+        break;
+    }
+    if (!success && _cursor > _testing) {
+      _failure(_expect33);
     }
     return $$;
   }
@@ -658,7 +801,7 @@ class CParser {
         break;
     }
     if (!success && _cursor > _testing) {
-      _failure(_expect22);
+      _failure(_expect23);
     }
     return $$;
   }
@@ -703,7 +846,7 @@ class CParser {
         break;
     }
     if (!success && _cursor > _testing) {
-      _failure(_expect27);
+      _failure(_expect28);
     }
     return $$;
   }
@@ -748,7 +891,7 @@ class CParser {
         break;
     }
     if (!success && _cursor > _testing) {
-      _failure(_expect24);
+      _failure(_expect25);
     }
     return $$;
   }
@@ -848,7 +991,7 @@ class CParser {
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
         _startPos = _cursor;
         while (true) {  
-          $$ = _matchString(_strings12, 'const');
+          $$ = _matchString(_strings13, 'const');
           if (!success) break;
           var seq = new List(2)..[0] = $$;
           $$ = _parse_SPACING();
@@ -875,7 +1018,7 @@ class CParser {
         break;
     }
     if (!success && _cursor > _testing) {
-      _failure(_expect25);
+      _failure(_expect26);
     }
     return $$;
   }
@@ -973,7 +1116,7 @@ class CParser {
         break;
     }
     if (!success && _cursor > _testing) {
-      _failure(_expect21);
+      _failure(_expect22);
     }
     return $$;
   }
@@ -1013,7 +1156,7 @@ class CParser {
         break;
     }
     if (!success && _cursor > _testing) {
-      _failure(_expect21);
+      _failure(_expect22);
     }
     return $$;
   }
@@ -1112,7 +1255,7 @@ class CParser {
           var ch2 = _ch, pos2 = _cursor, startPos2 = _startPos;
           _startPos = _cursor;
           while (true) {  
-            $$ = _parse_TypeDefDeclaration();
+            $$ = _parse_TypedefDeclaration();
             if (!success) break;
             var seq = new List(2)..[0] = $$;
             $$ = _parse_SEMICOLON();
@@ -1131,6 +1274,29 @@ class CParser {
             _cursor = pos2;
           }
           _startPos = startPos2;
+          if (success) break;
+          var ch3 = _ch, pos3 = _cursor, startPos3 = _startPos;
+          _startPos = _cursor;
+          while (true) {  
+            $$ = _parse_StructDeclaration();
+            if (!success) break;
+            var seq = new List(2)..[0] = $$;
+            $$ = _parse_SEMICOLON();
+            if (!success) break;
+            seq[1] = $$;
+            $$ = seq;
+            if (success) {    
+              final $1 = seq[0];
+              final $2 = seq[1];
+              $$ = $1;
+            }
+            break;
+          }
+          if (!success) {
+            _ch = ch3;
+            _cursor = pos3;
+          }
+          _startPos = startPos3;
           break;
         }
         break;
@@ -1185,7 +1351,7 @@ class CParser {
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
         _startPos = _cursor;
         while (true) {  
-          $$ = _matchString(_strings13, '...');
+          $$ = _matchString(_strings14, '...');
           if (!success) break;
           var seq = new List(2)..[0] = $$;
           $$ = _parse_SPACING();
@@ -1212,7 +1378,7 @@ class CParser {
         break;
     }
     if (!success && _cursor > _testing) {
-      _failure(_expect26);
+      _failure(_expect27);
     }
     return $$;
   }
@@ -1485,7 +1651,7 @@ class CParser {
                 break;
             }
             if (!success && _cursor > _testing) {
-              _failure(_expect24);
+              _failure(_expect25);
             }
             if (success) {  
               reps.add($$);
@@ -1568,7 +1734,7 @@ class CParser {
               break;
           }
           if (!success && _cursor > _testing) {
-            _failure(_expect24);
+            _failure(_expect25);
           }
           success = true; 
           _testing = testing0;
@@ -1658,7 +1824,7 @@ class CParser {
   dynamic _parse_IDENT_CONT() {
     var $$;
     _beginToken(1);  
-    switch (_getState(_transitions7)) {
+    switch (_getState(_transitions8)) {
       case 0:
         var startPos0 = _startPos;
         $$ = _matchRange(48, 57);
@@ -1676,7 +1842,7 @@ class CParser {
         break;
     }
     if (!success && _cursor > _testing) {
-      _failure(_expect30);
+      _failure(_expect34);
     }
     _endToken();
     return $$;
@@ -1841,6 +2007,51 @@ class CParser {
     return $$;
   }
   
+  dynamic _parse_OPEN_BRACE() {
+    var $$;
+    switch (_ch == 123 ? 0 : _ch == -1 ? 2 : 1) {
+      case 0:
+        var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
+        _startPos = _cursor;
+        while (true) {  
+          $$ = '{';
+          success = true;
+          if (++_cursor < _inputLen) {
+            _ch = _input[_cursor];
+          } else {
+            _ch = -1;
+          }
+          if (!success) break;
+          var seq = new List(2)..[0] = $$;
+          $$ = _parse_SPACING();
+          if (!success) break;
+          seq[1] = $$;
+          $$ = seq;
+          if (success) {    
+            final $1 = seq[0];
+            final $2 = seq[1];
+            $$ = $1;
+          }
+          break;
+        }
+        if (!success) {
+          _ch = ch0;
+          _cursor = pos0;
+        }
+        _startPos = startPos0;
+        break;
+      case 1:
+      case 2:
+        $$ = null;
+        success = false;
+        break;
+    }
+    if (!success && _cursor > _testing) {
+      _failure(_expect32);
+    }
+    return $$;
+  }
+  
   dynamic _parse_OPEN_BRACKET() {
     var $$;
     switch (_ch == 91 ? 0 : _ch == -1 ? 2 : 1) {
@@ -1881,7 +2092,7 @@ class CParser {
         break;
     }
     if (!success && _cursor > _testing) {
-      _failure(_expect21);
+      _failure(_expect22);
     }
     return $$;
   }
@@ -1926,7 +2137,7 @@ class CParser {
         break;
     }
     if (!success && _cursor > _testing) {
-      _failure(_expect23);
+      _failure(_expect24);
     }
     return $$;
   }
@@ -2033,6 +2244,45 @@ class CParser {
     return $$;
   }
   
+  dynamic _parse_PointerVariableDeclaration() {
+    var $$;
+    switch (_getState(_transitions4)) {
+      case 0:
+        var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
+        _startPos = _cursor;
+        while (true) {  
+          $$ = _parse_PointerType();
+          if (!success) break;
+          var seq = new List(2)..[0] = $$;
+          $$ = _parse_IDENTIFIER();
+          if (!success) break;
+          seq[1] = $$;
+          $$ = seq;
+          if (success) {    
+            final $1 = seq[0];
+            final $2 = seq[1];
+            $$ = new VariableDeclaration(name: $2, type: $1);
+          }
+          break;
+        }
+        if (!success) {
+          _ch = ch0;
+          _cursor = pos0;
+        }
+        _startPos = startPos0;
+        break;
+      case 1:
+      case 2:
+        $$ = null;
+        success = false;
+        break;
+    }
+    if (!success && _cursor > _testing) {
+      _failure(_expect7);
+    }
+    return $$;
+  }
+  
   dynamic _parse_SEMICOLON() {
     var $$;
     switch (_ch == 59 ? 0 : _ch == -1 ? 2 : 1) {
@@ -2073,7 +2323,7 @@ class CParser {
         break;
     }
     if (!success && _cursor > _testing) {
-      _failure(_expect28);
+      _failure(_expect29);
     }
     return $$;
   }
@@ -2314,6 +2564,286 @@ class CParser {
     return $$;
   }
   
+  dynamic _parse_SimpleVariableDeclaration() {
+    var $$;
+    switch (_getState(_transitions4)) {
+      case 0:
+        var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
+        _startPos = _cursor;
+        while (true) {  
+          $$ = _parse_Type();
+          if (!success) break;
+          var seq = new List(2)..[0] = $$;
+          $$ = _parse_IDENTIFIER();
+          if (!success) break;
+          seq[1] = $$;
+          $$ = seq;
+          if (success) {    
+            final $1 = seq[0];
+            final $2 = seq[1];
+            $$ = new VariableDeclaration(name: $2, type: $1);
+          }
+          break;
+        }
+        if (!success) {
+          _ch = ch0;
+          _cursor = pos0;
+        }
+        _startPos = startPos0;
+        break;
+      case 1:
+      case 2:
+        $$ = null;
+        success = false;
+        break;
+    }
+    if (!success && _cursor > _testing) {
+      _failure(_expect7);
+    }
+    return $$;
+  }
+  
+  dynamic _parse_StructDeclaration() {
+    var $$;
+    switch (_getState(_transitions7)) {
+      case 0:
+        var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
+        _startPos = _cursor;
+        while (true) {  
+          switch (_getState(_transitions6)) {
+            case 0:
+              var startPos1 = _startPos;
+              $$ = _parse_STRUCT();
+              _startPos = startPos1;
+              break;
+            case 1:
+              var startPos2 = _startPos;
+              $$ = _parse_UNION();
+              _startPos = startPos2;
+              break;
+            case 2:
+            case 3:
+              $$ = null;
+              success = false;
+              break;
+          }
+          if (!success && _cursor > _testing) {
+            _failure(_expect31);
+          }
+          if (!success) break;
+          var seq = new List(5)..[0] = $$;
+          var testing0 = _testing;
+          _testing = _cursor;
+          $$ = _parse_IDENTIFIER();
+          success = true; 
+          _testing = testing0;
+          if (!success) break;
+          seq[1] = $$;
+          $$ = _parse_OPEN_BRACE();
+          if (!success) break;
+          seq[2] = $$;
+          var testing1 = _testing;
+          _testing = _cursor;
+          $$ = _parse_StructMemberList();
+          success = true; 
+          _testing = testing1;
+          if (!success) break;
+          seq[3] = $$;
+          $$ = _parse_CLOSE_BRACE();
+          if (!success) break;
+          seq[4] = $$;
+          $$ = seq;
+          if (success) {    
+            final $1 = seq[0];
+            final $2 = seq[1];
+            final $3 = seq[2];
+            final $4 = seq[3];
+            final $5 = seq[4];
+            $$ = new StructDeclaration(kind: $1, members: $4, tag: $2);
+          }
+          break;
+        }
+        if (!success) {
+          _ch = ch0;
+          _cursor = pos0;
+        }
+        _startPos = startPos0;
+        break;
+      case 1:
+      case 2:
+        $$ = null;
+        success = false;
+        break;
+    }
+    if (!success && _cursor > _testing) {
+      _failure(_expect31);
+    }
+    return $$;
+  }
+  
+  dynamic _parse_StructMember() {
+    var $$;
+    switch (_getState(_transitions4)) {
+      case 0:
+        var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
+        _startPos = _cursor;
+        while (true) {  
+          $$ = _parse_VariableDeclaration();
+          if (!success) break;
+          var seq = new List(2)..[0] = $$;
+          $$ = _parse_SEMICOLON();
+          if (!success) break;
+          seq[1] = $$;
+          $$ = seq;
+          if (success) {    
+            final $1 = seq[0];
+            final $2 = seq[1];
+            $$ = $1;
+          }
+          break;
+        }
+        if (!success) {
+          _ch = ch0;
+          _cursor = pos0;
+        }
+        _startPos = startPos0;
+        break;
+      case 1:
+      case 2:
+        $$ = null;
+        success = false;
+        break;
+    }
+    if (!success && _cursor > _testing) {
+      _failure(_expect7);
+    }
+    return $$;
+  }
+  
+  dynamic _parse_StructMemberList() {
+    var $$;
+    switch (_ch >= 0 && _ch <= 1114111 ? 0 : _ch == -1 ? 2 : 1) {
+      case 0:
+      case 2:
+        var startPos0 = _startPos;
+        var testing0 = _testing; 
+        for (var reps = []; ; ) {
+          _testing = _cursor;
+          switch (_getState(_transitions4)) {
+            case 0:
+              var startPos1 = _startPos;
+              $$ = _parse_StructMember();
+              _startPos = startPos1;
+              break;
+            case 1:
+            case 2:
+              $$ = null;
+              success = false;
+              break;
+          }
+          if (!success && _cursor > _testing) {
+            _failure(_expect7);
+          }
+          if (success) {  
+            reps.add($$);
+          } else {
+            success = true;
+            _testing = testing0;
+            $$ = reps;
+            break; 
+          }
+        }
+        _startPos = startPos0;
+        break;
+      case 1:
+        $$ = null;
+        success = true;
+        break;
+    }
+    if (!success && _cursor > _testing) {
+      _failure(_expect1);
+    }
+    return $$;
+  }
+  
+  dynamic _parse_StructTypeDeclaration() {
+    var $$;
+    switch (_getState(_transitions7)) {
+      case 0:
+        var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
+        _startPos = _cursor;
+        while (true) {  
+          $$ = _parse_StructDeclaration();
+          if (!success) break;
+          var seq = new List(2)..[0] = $$;
+          $$ = _parse_IDENTIFIER();
+          if (!success) break;
+          seq[1] = $$;
+          $$ = seq;
+          if (success) {    
+            final $1 = seq[0];
+            final $2 = seq[1];
+            $$ = new TypedefDeclaration(name: $2, type: $1.type);
+          }
+          break;
+        }
+        if (!success) {
+          _ch = ch0;
+          _cursor = pos0;
+        }
+        _startPos = startPos0;
+        break;
+      case 1:
+      case 2:
+        $$ = null;
+        success = false;
+        break;
+    }
+    if (!success && _cursor > _testing) {
+      _failure(_expect31);
+    }
+    return $$;
+  }
+  
+  dynamic _parse_StructVariableDeclaration() {
+    var $$;
+    switch (_getState(_transitions7)) {
+      case 0:
+        var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
+        _startPos = _cursor;
+        while (true) {  
+          $$ = _parse_StructTypeDeclaration();
+          if (!success) break;
+          var seq = new List(2)..[0] = $$;
+          $$ = _parse_IDENTIFIER();
+          if (!success) break;
+          seq[1] = $$;
+          $$ = seq;
+          if (success) {    
+            final $1 = seq[0];
+            final $2 = seq[1];
+            $$ = new VariableDeclaration(name: $2, type: $1.type);
+          }
+          break;
+        }
+        if (!success) {
+          _ch = ch0;
+          _cursor = pos0;
+        }
+        _startPos = startPos0;
+        break;
+      case 1:
+      case 2:
+        $$ = null;
+        success = false;
+        break;
+    }
+    if (!success && _cursor > _testing) {
+      _failure(_expect31);
+    }
+    return $$;
+  }
+  
   dynamic _parse_TYPEDEF() {
     var $$;
     switch (_ch == 116 ? 0 : _ch == -1 ? 2 : 1) {
@@ -2321,7 +2851,7 @@ class CParser {
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
         _startPos = _cursor;
         while (true) {  
-          $$ = _matchString(_strings14, 'typedef');
+          $$ = _matchString(_strings15, 'typedef');
           if (!success) break;
           var seq = new List(2)..[0] = $$;
           $$ = _parse_SPACING();
@@ -2348,7 +2878,7 @@ class CParser {
         break;
     }
     if (!success && _cursor > _testing) {
-      _failure(_expect29);
+      _failure(_expect30);
     }
     return $$;
   }
@@ -2384,23 +2914,25 @@ class CParser {
     return $$;
   }
   
-  dynamic _parse_TypeDefDeclaration() {
+  dynamic _parse_TypeDeclaration() {
     var $$;
-    switch (_ch == 116 ? 0 : _ch == -1 ? 2 : 1) {
+    switch (_getState(_transitions4)) {
       case 0:
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
         _startPos = _cursor;
         while (true) {  
-          $$ = _parse_TYPEDEF();
-          if (!success) break;
-          var seq = new List(3)..[0] = $$;
           $$ = _parse_Type();
           if (!success) break;
-          seq[1] = $$;
-          $$ = _parse_TypedefParameter();
+          var seq = new List(2)..[0] = $$;
+          $$ = _parse_IDENTIFIER();
           if (!success) break;
-          seq[2] = $$;
+          seq[1] = $$;
           $$ = seq;
+          if (success) {    
+            final $1 = seq[0];
+            final $2 = seq[1];
+            $$ = new TypedefDeclaration(name: $2, type: $1);
+          }
           break;
         }
         if (!success) {
@@ -2416,7 +2948,7 @@ class CParser {
         break;
     }
     if (!success && _cursor > _testing) {
-      _failure(_expect29);
+      _failure(_expect7);
     }
     return $$;
   }
@@ -3034,7 +3566,27 @@ class CParser {
         }
         break;
       case 8:
+        while (true) {
+          var startPos26 = _startPos;
+          $$ = _parse_VOID();
+          if (success) {    
+            final $1 = $$;
+            $$ = new VoidTypeSpecification();
+          }
+          _startPos = startPos26;
+          if (success) break;
+          var startPos27 = _startPos;
+          $$ = _parse_IDENTIFIER();
+          if (success) {    
+            final $1 = $$;
+            $$ = new TypedefTypeSpecification(name: $1);
+          }
+          _startPos = startPos27;
+          break;
+        }
+        break;
       case 9:
+      case 10:
         $$ = null;
         success = false;
         break;
@@ -3078,27 +3630,78 @@ class CParser {
     return $$;
   }
   
-  dynamic _parse_TypedefParameter() {
+  dynamic _parse_TypedefDeclaration() {
     var $$;
-    switch (_getState(_transitions4)) {
+    switch (_ch == 116 ? 0 : _ch == -1 ? 2 : 1) {
+      case 0:
+        var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
+        _startPos = _cursor;
+        while (true) {  
+          $$ = _parse_TYPEDEF();
+          if (!success) break;
+          var seq = new List(2)..[0] = $$;
+          $$ = _parse_TypedefTypeDeclaration();
+          if (!success) break;
+          seq[1] = $$;
+          $$ = seq;
+          if (success) {    
+            final $1 = seq[0];
+            final $2 = seq[1];
+            $$ = $2;
+          }
+          break;
+        }
+        if (!success) {
+          _ch = ch0;
+          _cursor = pos0;
+        }
+        _startPos = startPos0;
+        break;
+      case 1:
+      case 2:
+        $$ = null;
+        success = false;
+        break;
+    }
+    if (!success && _cursor > _testing) {
+      _failure(_expect30);
+    }
+    return $$;
+  }
+  
+  dynamic _parse_TypedefTypeDeclaration() {
+    var $$;
+    switch (_getState(_transitions3)) {
       case 0:
         while (true) {
           var startPos0 = _startPos;
-          $$ = _parse_ArrayParameter();
+          $$ = _parse_ArrayTypeDeclaration();
           _startPos = startPos0;
           if (success) break;
           var startPos1 = _startPos;
-          $$ = _parse_PointerParameter();
+          $$ = _parse_TypeDeclaration();
           _startPos = startPos1;
-          if (success) break;
-          var startPos2 = _startPos;
-          $$ = _parse_SimpleParameter();
-          _startPos = startPos2;
           break;
         }
         break;
       case 1:
+        while (true) {
+          var startPos2 = _startPos;
+          $$ = _parse_ArrayTypeDeclaration();
+          _startPos = startPos2;
+          if (success) break;
+          var startPos3 = _startPos;
+          $$ = _parse_StructTypeDeclaration();
+          _startPos = startPos3;
+          if (success) break;
+          var startPos4 = _startPos;
+          $$ = _parse_TypeDeclaration();
+          _startPos = startPos4;
+          break;
+        }
+        break;
       case 2:
+      case 3:
         $$ = null;
         success = false;
         break;
@@ -3187,6 +3790,45 @@ class CParser {
     return $$;
   }
   
+  dynamic _parse_VOID() {
+    var $$;
+    switch (_ch == 118 ? 0 : _ch == -1 ? 2 : 1) {
+      case 0:
+        var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
+        _startPos = _cursor;
+        while (true) {  
+          $$ = _matchString(_strings12, 'void');
+          if (!success) break;
+          var seq = new List(2)..[0] = $$;
+          $$ = _parse_SPACING();
+          if (!success) break;
+          seq[1] = $$;
+          $$ = seq;
+          if (success) {    
+            final $1 = seq[0];
+            final $2 = seq[1];
+            $$ = $1;
+          }
+          break;
+        }
+        if (!success) {
+          _ch = ch0;
+          _cursor = pos0;
+        }
+        _startPos = startPos0;
+        break;
+      case 1:
+      case 2:
+        $$ = null;
+        success = false;
+        break;
+    }
+    if (!success && _cursor > _testing) {
+      _failure(_expect20);
+    }
+    return $$;
+  }
+  
   dynamic _parse_VaListParameter() {
     var $$;
     switch (_ch == 46 ? 0 : _ch == -1 ? 2 : 1) {
@@ -3206,7 +3848,58 @@ class CParser {
         break;
     }
     if (!success && _cursor > _testing) {
-      _failure(_expect26);
+      _failure(_expect27);
+    }
+    return $$;
+  }
+  
+  dynamic _parse_VariableDeclaration() {
+    var $$;
+    switch (_getState(_transitions3)) {
+      case 0:
+        while (true) {
+          var startPos0 = _startPos;
+          $$ = _parse_ArrayVariableDeclaration();
+          _startPos = startPos0;
+          if (success) break;
+          var startPos1 = _startPos;
+          $$ = _parse_PointerVariableDeclaration();
+          _startPos = startPos1;
+          if (success) break;
+          var startPos2 = _startPos;
+          $$ = _parse_SimpleVariableDeclaration();
+          _startPos = startPos2;
+          break;
+        }
+        break;
+      case 1:
+        while (true) {
+          var startPos3 = _startPos;
+          $$ = _parse_ArrayVariableDeclaration();
+          _startPos = startPos3;
+          if (success) break;
+          var startPos4 = _startPos;
+          $$ = _parse_StructVariableDeclaration();
+          _startPos = startPos4;
+          if (success) break;
+          var startPos5 = _startPos;
+          $$ = _parse_PointerVariableDeclaration();
+          _startPos = startPos5;
+          if (success) break;
+          var startPos6 = _startPos;
+          $$ = _parse_SimpleVariableDeclaration();
+          _startPos = startPos6;
+          break;
+        }
+        break;
+      case 2:
+      case 3:
+        $$ = null;
+        success = false;
+        break;
+    }
+    if (!success && _cursor > _testing) {
+      _failure(_expect7);
     }
     return $$;
   }

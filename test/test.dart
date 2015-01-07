@@ -8,6 +8,27 @@ void main() {
 }
 
 var text = '''
+int i;
+int* ip;
+void* vpa;
+struct _s { int i; } S;
+typedef int INT;
+typedef void* PVOID;
+typedef void* PVOIDA[];
+typedef void* PVOIDA[10];
+typedef struct _s SA[];
+typedef struct {} S;
+typedef struct _s {} S2;
+typedef struct _s { int i; int* ip; } S2;
+typedef struct _s { int i; int* ip; struct s { int i; } s; } S2;
+struct {};
+struct _s {};
+struct _s {
+  int i;
+  char* cp;
+};
+int foo(void);
+int foo(void* []);
 int foo(char[]);
 int foo(int, ...);
 int foo(int, const char*, ...);
