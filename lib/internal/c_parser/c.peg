@@ -245,5 +245,5 @@ IDENT_CONT <-
   / [0-9]
 
 IDENT_START <-
-  [A-Z_a-z]
+  [A-Z_a-z_]
 

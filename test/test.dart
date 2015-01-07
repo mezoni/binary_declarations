@@ -16,6 +16,7 @@ int* ip;
 void* vpa;
 struct _s { int i; } s;
 typedef int INT;
+typedef int int32_t;
 typedef void* PVOID;
 typedef void* PVOIDA[];
 typedef void* PVOIDA[10];

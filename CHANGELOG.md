@@ -1,3 +1,7 @@
+## 0.0.5
+
+- Fixed bug in `C grammar`, IDENTIFIER now can contains underscore character `_` 
+
 ## 0.0.4
 
 - Fixed bug in `C grammar`

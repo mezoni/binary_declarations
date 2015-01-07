@@ -5,3 +5,4 @@
 0.0.3 Initial support of typedef declarations
 0.0.4 Fixed bug in `C grammar`
 0.0.4 Initial support of variable declarations
+0.0.5 Fixed bug in `C grammar`, IDENTIFIER now can contains underscore character `_` 
