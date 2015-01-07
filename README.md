@@ -3,7 +3,7 @@ binary_declarations
 
 Binary declarations is a set of classes for parsing declarations of the binary types specified in textual form.
 
-Version: 0.0.1
+Version: 0.0.2
 
 Initial release. Use at your own risk!
 

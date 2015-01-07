@@ -7,6 +7,16 @@ ArrayTypeSpecification _createArray(TypeSpecification type, List dimensions) {
   return new ArrayTypeSpecification(dimensions: dimensions, type: type);
 }
 
+List _createParameters(List parameters, ParameterDeclaration vaList) {    
+  var list = <ParameterDeclaration>[];
+  list.addAll(parameters);
+  if (vaList != null) {
+    list.add(vaList);  
+  }
+  
+  return list;
+}
+
 PointerTypeSpecification _createPointer(TypeSpecification type, List stars) {    
   for (var star in stars) {
     type = new PointerTypeSpecification(type: type);
@@ -53,15 +63,19 @@ class CParser {
   
   static final List<String> _expect24 = <String>[","];
   
-  static final List<String> _expect25 = <String>[")"];
+  static final List<String> _expect25 = <String>["const"];
   
-  static final List<String> _expect26 = <String>["typedef"];
+  static final List<String> _expect26 = <String>["..."];
   
-  static final List<String> _expect27 = <String>[";"];
+  static final List<String> _expect27 = <String>[")"];
   
-  static final List<String> _expect28 = <String>["IDENT_CONT"];
+  static final List<String> _expect28 = <String>[";"];
+  
+  static final List<String> _expect29 = <String>["typedef"];
   
   static final List<String> _expect3 = <String>[null, "\\r\\n"];
+  
+  static final List<String> _expect30 = <String>["IDENT_CONT"];
   
   static final List<String> _expect4 = <String>["//"];
   
@@ -91,7 +105,11 @@ class CParser {
   
   static final List<int> _strings11 = <int>[117, 110, 105, 111, 110];
   
-  static final List<int> _strings12 = <int>[116, 121, 112, 101, 100, 101, 102];
+  static final List<int> _strings12 = <int>[99, 111, 110, 115, 116];
+  
+  static final List<int> _strings13 = <int>[46, 46, 46];
+  
+  static final List<int> _strings14 = <int>[116, 121, 112, 101, 100, 101, 102];
   
   static final List<int> _strings2 = <int>[115, 105, 103, 110, 101, 100];
   
@@ -685,7 +703,7 @@ class CParser {
         break;
     }
     if (!success && _cursor > _testing) {
-      _failure(_expect25);
+      _failure(_expect27);
     }
     return $$;
   }
@@ -819,6 +837,96 @@ class CParser {
     }
     if (!success && _cursor > _testing) {
       _failure(_expect4);
+    }
+    return $$;
+  }
+  
+  dynamic _parse_CONST() {
+    var $$;
+    switch (_ch == 99 ? 0 : _ch == -1 ? 2 : 1) {
+      case 0:
+        var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
+        _startPos = _cursor;
+        while (true) {  
+          $$ = _matchString(_strings12, 'const');
+          if (!success) break;
+          var seq = new List(2)..[0] = $$;
+          $$ = _parse_SPACING();
+          if (!success) break;
+          seq[1] = $$;
+          $$ = seq;
+          if (success) {    
+            final $1 = seq[0];
+            final $2 = seq[1];
+            $$ = $1;
+          }
+          break;
+        }
+        if (!success) {
+          _ch = ch0;
+          _cursor = pos0;
+        }
+        _startPos = startPos0;
+        break;
+      case 1:
+      case 2:
+        $$ = null;
+        success = false;
+        break;
+    }
+    if (!success && _cursor > _testing) {
+      _failure(_expect25);
+    }
+    return $$;
+  }
+  
+  dynamic _parse_ConstPointerParameter() {
+    var $$;
+    switch (_getState(_transitions4)) {
+      case 0:
+        var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
+        _startPos = _cursor;
+        while (true) {  
+          var testing0 = _testing;
+          _testing = _cursor;
+          $$ = _parse_CONST();
+          success = true; 
+          _testing = testing0;
+          if (!success) break;
+          var seq = new List(3)..[0] = $$;
+          $$ = _parse_PointerType();
+          if (!success) break;
+          seq[1] = $$;
+          var testing1 = _testing;
+          _testing = _cursor;
+          $$ = _parse_IDENTIFIER();
+          success = true; 
+          _testing = testing1;
+          if (!success) break;
+          seq[2] = $$;
+          $$ = seq;
+          if (success) {    
+            final $1 = seq[0];
+            final $2 = seq[1];
+            final $3 = seq[2];
+            $$ = new ParameterDeclaration(name: $3, type: $2);
+          }
+          break;
+        }
+        if (!success) {
+          _ch = ch0;
+          _cursor = pos0;
+        }
+        _startPos = startPos0;
+        break;
+      case 1:
+      case 2:
+        $$ = null;
+        success = false;
+        break;
+    }
+    if (!success && _cursor > _testing) {
+      _failure(_expect7);
     }
     return $$;
   }
@@ -1070,6 +1178,45 @@ class CParser {
     return $$;
   }
   
+  dynamic _parse_ELLIPSIS() {
+    var $$;
+    switch (_ch == 46 ? 0 : _ch == -1 ? 2 : 1) {
+      case 0:
+        var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
+        _startPos = _cursor;
+        while (true) {  
+          $$ = _matchString(_strings13, '...');
+          if (!success) break;
+          var seq = new List(2)..[0] = $$;
+          $$ = _parse_SPACING();
+          if (!success) break;
+          seq[1] = $$;
+          $$ = seq;
+          if (success) {    
+            final $1 = seq[0];
+            final $2 = seq[1];
+            $$ = $1;
+          }
+          break;
+        }
+        if (!success) {
+          _ch = ch0;
+          _cursor = pos0;
+        }
+        _startPos = startPos0;
+        break;
+      case 1:
+      case 2:
+        $$ = null;
+        success = false;
+        break;
+    }
+    if (!success && _cursor > _testing) {
+      _failure(_expect26);
+    }
+    return $$;
+  }
+  
   dynamic _parse_EOF() {
     var $$;
     _beginToken(0);  
@@ -1224,7 +1371,11 @@ class CParser {
           $$ = _parse_OPEN_PAREN();
           if (!success) break;
           seq[2] = $$;
-          $$ = _parse_Parameters();
+          var testing0 = _testing;
+          _testing = _cursor;
+          $$ = _parse_FunctionParameters();
+          success = true; 
+          _testing = testing0;
           if (!success) break;
           seq[3] = $$;
           $$ = _parse_CLOSE_PAREN();
@@ -1238,6 +1389,196 @@ class CParser {
             final $4 = seq[3];
             final $5 = seq[4];
             $$ = new FunctionDeclaration(name: $2, parameters: $4, returnType: $1);
+          }
+          break;
+        }
+        if (!success) {
+          _ch = ch0;
+          _cursor = pos0;
+        }
+        _startPos = startPos0;
+        break;
+      case 1:
+      case 2:
+        $$ = null;
+        success = false;
+        break;
+    }
+    if (!success && _cursor > _testing) {
+      _failure(_expect7);
+    }
+    return $$;
+  }
+  
+  dynamic _parse_FunctionParameter() {
+    var $$;
+    switch (_getState(_transitions4)) {
+      case 0:
+        while (true) {
+          var startPos0 = _startPos;
+          $$ = _parse_ArrayParameter();
+          _startPos = startPos0;
+          if (success) break;
+          var startPos1 = _startPos;
+          $$ = _parse_ConstPointerParameter();
+          _startPos = startPos1;
+          if (success) break;
+          var startPos2 = _startPos;
+          $$ = _parse_PointerParameter();
+          _startPos = startPos2;
+          if (success) break;
+          var startPos3 = _startPos;
+          $$ = _parse_SimpleParameter();
+          _startPos = startPos3;
+          break;
+        }
+        break;
+      case 1:
+      case 2:
+        $$ = null;
+        success = false;
+        break;
+    }
+    if (!success && _cursor > _testing) {
+      _failure(_expect7);
+    }
+    return $$;
+  }
+  
+  dynamic _parse_FunctionParameterList() {
+    var $$;
+    switch (_getState(_transitions4)) {
+      case 0:
+        var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
+        _startPos = _cursor;
+        while (true) {  
+          $$ = _parse_FunctionParameter();
+          if (!success) break;
+          var seq = new List(2)..[0] = $$;
+          var testing0 = _testing; 
+          for (var reps = []; ; ) {
+            _testing = _cursor;
+            switch (_ch == 44 ? 0 : _ch == -1 ? 2 : 1) {
+              case 0:
+                var ch1 = _ch, pos1 = _cursor, startPos1 = _startPos;
+                _startPos = _cursor;
+                while (true) {  
+                  $$ = _parse_COMMA();
+                  if (!success) break;
+                  var seq = new List(2)..[0] = $$;
+                  $$ = _parse_FunctionParameter();
+                  if (!success) break;
+                  seq[1] = $$;
+                  $$ = seq;
+                  break;
+                }
+                if (!success) {
+                  _ch = ch1;
+                  _cursor = pos1;
+                }
+                _startPos = startPos1;
+                break;
+              case 1:
+              case 2:
+                $$ = null;
+                success = false;
+                break;
+            }
+            if (!success && _cursor > _testing) {
+              _failure(_expect24);
+            }
+            if (success) {  
+              reps.add($$);
+            } else {
+              success = true;
+              _testing = testing0;
+              $$ = reps;
+              break; 
+            }
+          }
+          if (!success) break;
+          seq[1] = $$;
+          $$ = seq;
+          if (success) {    
+            final $1 = seq[0];
+            final $2 = seq[1];
+            $$ = _list($1, $2);
+          }
+          break;
+        }
+        if (!success) {
+          _ch = ch0;
+          _cursor = pos0;
+        }
+        _startPos = startPos0;
+        break;
+      case 1:
+      case 2:
+        $$ = null;
+        success = false;
+        break;
+    }
+    if (!success && _cursor > _testing) {
+      _failure(_expect7);
+    }
+    return $$;
+  }
+  
+  dynamic _parse_FunctionParameters() {
+    var $$;
+    switch (_getState(_transitions4)) {
+      case 0:
+        var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
+        _startPos = _cursor;
+        while (true) {  
+          $$ = _parse_FunctionParameterList();
+          if (!success) break;
+          var seq = new List(2)..[0] = $$;
+          var testing0 = _testing;
+          _testing = _cursor;
+          switch (_ch == 44 ? 0 : _ch == -1 ? 2 : 1) {
+            case 0:
+              var ch1 = _ch, pos1 = _cursor, startPos1 = _startPos;
+              _startPos = _cursor;
+              while (true) {  
+                $$ = _parse_COMMA();
+                if (!success) break;
+                var seq = new List(2)..[0] = $$;
+                $$ = _parse_VaListParameter();
+                if (!success) break;
+                seq[1] = $$;
+                $$ = seq;
+                if (success) {    
+                  final $1 = seq[0];
+                  final $2 = seq[1];
+                  $$ = $2;
+                }
+                break;
+              }
+              if (!success) {
+                _ch = ch1;
+                _cursor = pos1;
+              }
+              _startPos = startPos1;
+              break;
+            case 1:
+            case 2:
+              $$ = null;
+              success = false;
+              break;
+          }
+          if (!success && _cursor > _testing) {
+            _failure(_expect24);
+          }
+          success = true; 
+          _testing = testing0;
+          if (!success) break;
+          seq[1] = $$;
+          $$ = seq;
+          if (success) {    
+            final $1 = seq[0];
+            final $2 = seq[1];
+            $$ = _createParameters($1, $2);
           }
           break;
         }
@@ -1335,7 +1676,7 @@ class CParser {
         break;
     }
     if (!success && _cursor > _testing) {
-      _failure(_expect28);
+      _failure(_expect30);
     }
     _endToken();
     return $$;
@@ -1590,140 +1931,6 @@ class CParser {
     return $$;
   }
   
-  dynamic _parse_Parameter() {
-    var $$;
-    switch (_getState(_transitions4)) {
-      case 0:
-        while (true) {
-          var startPos0 = _startPos;
-          $$ = _parse_ArrayParameter();
-          _startPos = startPos0;
-          if (success) break;
-          var startPos1 = _startPos;
-          $$ = _parse_PointerParameter();
-          _startPos = startPos1;
-          if (success) break;
-          var startPos2 = _startPos;
-          $$ = _parse_SimpleParameter();
-          _startPos = startPos2;
-          break;
-        }
-        break;
-      case 1:
-      case 2:
-        $$ = null;
-        success = false;
-        break;
-    }
-    if (!success && _cursor > _testing) {
-      _failure(_expect7);
-    }
-    return $$;
-  }
-  
-  dynamic _parse_ParameterList() {
-    var $$;
-    switch (_getState(_transitions4)) {
-      case 0:
-        var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
-        _startPos = _cursor;
-        while (true) {  
-          $$ = _parse_Parameter();
-          if (!success) break;
-          var seq = new List(2)..[0] = $$;
-          var testing0 = _testing; 
-          for (var reps = []; ; ) {
-            _testing = _cursor;
-            switch (_ch == 44 ? 0 : _ch == -1 ? 2 : 1) {
-              case 0:
-                var ch1 = _ch, pos1 = _cursor, startPos1 = _startPos;
-                _startPos = _cursor;
-                while (true) {  
-                  $$ = _parse_COMMA();
-                  if (!success) break;
-                  var seq = new List(2)..[0] = $$;
-                  $$ = _parse_Parameter();
-                  if (!success) break;
-                  seq[1] = $$;
-                  $$ = seq;
-                  break;
-                }
-                if (!success) {
-                  _ch = ch1;
-                  _cursor = pos1;
-                }
-                _startPos = startPos1;
-                break;
-              case 1:
-              case 2:
-                $$ = null;
-                success = false;
-                break;
-            }
-            if (!success && _cursor > _testing) {
-              _failure(_expect24);
-            }
-            if (success) {  
-              reps.add($$);
-            } else {
-              success = true;
-              _testing = testing0;
-              $$ = reps;
-              break; 
-            }
-          }
-          if (!success) break;
-          seq[1] = $$;
-          $$ = seq;
-          if (success) {    
-            final $1 = seq[0];
-            final $2 = seq[1];
-            $$ = _list($1, $2);
-          }
-          break;
-        }
-        if (!success) {
-          _ch = ch0;
-          _cursor = pos0;
-        }
-        _startPos = startPos0;
-        break;
-      case 1:
-      case 2:
-        $$ = null;
-        success = false;
-        break;
-    }
-    if (!success && _cursor > _testing) {
-      _failure(_expect7);
-    }
-    return $$;
-  }
-  
-  dynamic _parse_Parameters() {
-    var $$;
-    switch (_ch >= 0 && _ch <= 1114111 ? 0 : _ch == -1 ? 2 : 1) {
-      case 0:
-      case 2:
-        var startPos0 = _startPos;
-        var testing0 = _testing;
-        _testing = _cursor;
-        $$ = _parse_ParameterList();
-        success = true; 
-        _testing = testing0;
-        _startPos = startPos0;
-        break;
-      case 1:
-        $$ = null;
-        success = true;
-        break;
-    }
-    if (!success && _cursor > _testing) {
-      _failure(_expect1);
-    }
-    return $$;
-  }
-  
   dynamic _parse_PointerParameter() {
     var $$;
     switch (_getState(_transitions4)) {
@@ -1866,7 +2073,7 @@ class CParser {
         break;
     }
     if (!success && _cursor > _testing) {
-      _failure(_expect27);
+      _failure(_expect28);
     }
     return $$;
   }
@@ -2114,7 +2321,7 @@ class CParser {
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
         _startPos = _cursor;
         while (true) {  
-          $$ = _matchString(_strings12, 'typedef');
+          $$ = _matchString(_strings14, 'typedef');
           if (!success) break;
           var seq = new List(2)..[0] = $$;
           $$ = _parse_SPACING();
@@ -2141,7 +2348,7 @@ class CParser {
         break;
     }
     if (!success && _cursor > _testing) {
-      _failure(_expect26);
+      _failure(_expect29);
     }
     return $$;
   }
@@ -2190,7 +2397,7 @@ class CParser {
           $$ = _parse_Type();
           if (!success) break;
           seq[1] = $$;
-          $$ = _parse_Parameter();
+          $$ = _parse_TypedefParameter();
           if (!success) break;
           seq[2] = $$;
           $$ = seq;
@@ -2209,7 +2416,7 @@ class CParser {
         break;
     }
     if (!success && _cursor > _testing) {
-      _failure(_expect26);
+      _failure(_expect29);
     }
     return $$;
   }
@@ -2871,6 +3078,37 @@ class CParser {
     return $$;
   }
   
+  dynamic _parse_TypedefParameter() {
+    var $$;
+    switch (_getState(_transitions4)) {
+      case 0:
+        while (true) {
+          var startPos0 = _startPos;
+          $$ = _parse_ArrayParameter();
+          _startPos = startPos0;
+          if (success) break;
+          var startPos1 = _startPos;
+          $$ = _parse_PointerParameter();
+          _startPos = startPos1;
+          if (success) break;
+          var startPos2 = _startPos;
+          $$ = _parse_SimpleParameter();
+          _startPos = startPos2;
+          break;
+        }
+        break;
+      case 1:
+      case 2:
+        $$ = null;
+        success = false;
+        break;
+    }
+    if (!success && _cursor > _testing) {
+      _failure(_expect7);
+    }
+    return $$;
+  }
+  
   dynamic _parse_UNION() {
     var $$;
     switch (_ch == 117 ? 0 : _ch == -1 ? 2 : 1) {
@@ -2945,6 +3183,30 @@ class CParser {
     }
     if (!success && _cursor > _testing) {
       _failure(_expect10);
+    }
+    return $$;
+  }
+  
+  dynamic _parse_VaListParameter() {
+    var $$;
+    switch (_ch == 46 ? 0 : _ch == -1 ? 2 : 1) {
+      case 0:
+        var startPos0 = _startPos;
+        $$ = _parse_ELLIPSIS();
+        if (success) {    
+          final $1 = $$;
+          $$ = new ParameterDeclaration(type: new VaListTypeSpecification());
+        }
+        _startPos = startPos0;
+        break;
+      case 1:
+      case 2:
+        $$ = null;
+        success = false;
+        break;
+    }
+    if (!success && _cursor > _testing) {
+      _failure(_expect26);
     }
     return $$;
   }

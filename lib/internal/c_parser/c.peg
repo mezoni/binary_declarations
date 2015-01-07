@@ -5,6 +5,16 @@ ArrayTypeSpecification _createArray(TypeSpecification type, List dimensions) {
   return new ArrayTypeSpecification(dimensions: dimensions, type: type);
 }
 
+List _createParameters(List parameters, ParameterDeclaration vaList) {    
+  var list = <ParameterDeclaration>[];
+  list.addAll(parameters);
+  if (vaList != null) {
+    list.add(vaList);  
+  }
+  
+  return list;
+}
+
 PointerTypeSpecification _createPointer(TypeSpecification type, List stars) {    
   for (var star in stars) {
     type = new PointerTypeSpecification(type: type);
@@ -41,7 +51,7 @@ Declaration <-
   / TypeDefDeclaration SEMICOLON { $$ = $1; }
 
 FunctionDeclartion <-
-  Type IDENTIFIER OPEN_PAREN Parameters CLOSE_PAREN { $$ = new FunctionDeclaration(name: $2, parameters: $4, returnType: $1); }
+  Type IDENTIFIER OPEN_PAREN FunctionParameters? CLOSE_PAREN { $$ = new FunctionDeclaration(name: $2, parameters: $4, returnType: $1); }
 
 Type <-
   PointerType
@@ -124,16 +134,22 @@ CLOSE_BRACKET <-
 OPEN_PAREN <-
   '(' SPACING { $$ = $1; }
 
-Parameters <-
-  ParameterList?
+FunctionParameters <-
+  FunctionParameterList (COMMA VaListParameter { $$ = $2; })? { $$ = _createParameters($1, $2); }
 
-ParameterList <-
-  Parameter (COMMA Parameter)* { $$ = _list($1, $2); }
+FunctionParameterList <-
+  FunctionParameter (COMMA FunctionParameter)* { $$ = _list($1, $2); }
 
-Parameter <-
+FunctionParameter <-
   ArrayParameter
-  / PointerParameter
+  / ConstPointerParameter
+  / PointerParameter  
   / SimpleParameter
+
+TypedefParameter <-
+  ArrayParameter  
+  / PointerParameter  
+  / SimpleParameter  
 
 ArrayParameter <-
   Type IDENTIFIER? DIMENSIONS { $$ = new ParameterDeclaration(name: $2, type: _createArray($1, $3)); }
@@ -141,23 +157,35 @@ ArrayParameter <-
 PointerParameter <-
   PointerType IDENTIFIER? { $$ = new ParameterDeclaration(name: $2, type: $1); }
 
+ConstPointerParameter <-
+  CONST? PointerType IDENTIFIER? { $$ = new ParameterDeclaration(name: $3, type: $2); }
+
+CONST <-
+  'const' SPACING { $$ = $1; }
+
 SimpleParameter <-
   Type IDENTIFIER? { $$ = new ParameterDeclaration(name: $2, type: $1); }
 
 COMMA <-
   ',' SPACING { $$ = $1; }
 
+VaListParameter <-
+  ELLIPSIS { $$ = new ParameterDeclaration(type: new VaListTypeSpecification()); }
+
+ELLIPSIS <-
+  '...' SPACING { $$ = $1; }
+
 CLOSE_PAREN <-
   ')' SPACING { $$ = $1; }
 
+SEMICOLON <-
+  ';' SPACING { $$ = $1; }
+
 TypeDefDeclaration <-
-  TYPEDEF Type Parameter
+  TYPEDEF Type TypedefParameter
 
 TYPEDEF <-
   'typedef' SPACING { $$ = $1; }
-
-SEMICOLON <-
-  ';' SPACING { $$ = $1; }
 
 # Lexemes
 

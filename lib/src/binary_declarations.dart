@@ -275,3 +275,7 @@ class TypedefTypeSpecification extends TypeSpecification {
 
   String toString() => name;
 }
+
+class VaListTypeSpecification extends TypeSpecification {
+  String toString() => "...";
+}
