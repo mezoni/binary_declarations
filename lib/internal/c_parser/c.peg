@@ -49,6 +49,7 @@ DeclarationList <-
 Declaration <-
   FunctionDeclartion SEMICOLON { $$ = $1; }
   / TypedefDeclaration SEMICOLON { $$ = $1; }
+  / VariableDeclaration SEMICOLON { $$ = $1; }
   / StructDeclaration SEMICOLON { $$ = $1; }
 
 FunctionDeclartion <-
@@ -188,14 +189,14 @@ TYPEDEF <-
   'typedef' SPACING { $$ = $1; }
 
 TypedefTypeDeclaration <-
-  ArrayTypeDeclaration
-  / StructTypeDeclaration
-  / TypeDeclaration
+  TypedefArrayTypeDeclaration
+  / TypedefStructTypeDeclaration
+  / TypedefSimpleTypeDeclaration
 
-ArrayTypeDeclaration <-
+TypedefArrayTypeDeclaration <-
   Type IDENTIFIER DIMENSIONS { $$ = new TypedefDeclaration(name: $2,type: _createArray($1, $3)); }
 
-StructTypeDeclaration <-
+TypedefStructTypeDeclaration <-
   StructDeclaration IDENTIFIER { $$ = new TypedefDeclaration(name: $2, type: $1.type); }
 
 StructDeclaration <-
@@ -220,7 +221,7 @@ ArrayVariableDeclaration <-
   Type IDENTIFIER DIMENSIONS { $$ = new VariableDeclaration(name: $2, type: _createArray($1, $3)); }
 
 StructVariableDeclaration <-
-  StructTypeDeclaration IDENTIFIER { $$ = new VariableDeclaration(name: $2, type: $1.type); }
+  StructDeclaration IDENTIFIER { $$ = new VariableDeclaration(name: $2, type: $1.type); }
 
 PointerVariableDeclaration <-
   PointerType IDENTIFIER { $$ = new VariableDeclaration(name: $2, type: $1); }
@@ -231,7 +232,7 @@ SimpleVariableDeclaration <-
 CLOSE_BRACE <-
   '}' SPACING { $$ = $1; }
 
-TypeDeclaration <-
+TypedefSimpleTypeDeclaration <-
   Type IDENTIFIER { $$ = new TypedefDeclaration(name: $2, type: $1); }
 
 # Lexemes

@@ -1,3 +1,8 @@
+## 0.0.4
+
+- Fixed bug in `C grammar`
+- Initial support of variable declarations
+
 ## 0.0.3
 
 - Added support of va_list parameters `...` for function parameters

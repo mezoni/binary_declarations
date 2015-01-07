@@ -203,7 +203,11 @@ class ParameterDeclaration {
   }
 
   String toString() {
-    return type.toStringWithIdentifier(name);
+    if (name == null) {
+      return type.toString();
+    } else {
+      return type.toStringWithIdentifier(name);
+    }
   }
 }
 
@@ -372,7 +376,7 @@ class VaListTypeSpecification extends TypeSpecification {
   String toString() => "...";
 }
 
-class VariableDeclaration {
+class VariableDeclaration extends BinaryDeclaration {
   final String name;
 
   final TypeSpecification type;

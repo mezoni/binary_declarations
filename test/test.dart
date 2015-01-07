@@ -8,10 +8,13 @@ void main() {
 }
 
 var text = '''
+signed char[10] foo(struct S);
+
+struct _s {} s;
 int i;
 int* ip;
 void* vpa;
-struct _s { int i; } S;
+struct _s { int i; } s;
 typedef int INT;
 typedef void* PVOID;
 typedef void* PVOIDA[];
