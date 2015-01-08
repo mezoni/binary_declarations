@@ -5,6 +5,17 @@ ArrayTypeSpecification _createArray(TypeSpecification type, List dimensions) {
   return new ArrayTypeSpecification(dimensions: dimensions, type: type);
 }
 
+String _createInt(List parts) {
+  var list = [];
+  for (var part in parts) {
+    if (part != null) {
+      list.add(part);
+    }
+  }
+
+  return list.join(" ");
+}
+
 List _createParameters(List parameters, ParameterDeclaration vaList) {    
   var list = <ParameterDeclaration>[];
   list.addAll(parameters);
@@ -53,7 +64,8 @@ Declaration <-
   / StructDeclaration SEMICOLON { $$ = $1; }
 
 FunctionDeclartion <-
-  Type IDENTIFIER OPEN_PAREN FunctionParameters? CLOSE_PAREN { $$ = new FunctionDeclaration(name: $2, parameters: $4, returnType: $1); }
+  IDENTIFIER OPEN_PAREN FunctionParameters? CLOSE_PAREN { $$ = new FunctionDeclaration(name: $1, parameters: $3); }
+  / Type IDENTIFIER OPEN_PAREN FunctionParameters? CLOSE_PAREN { $$ = new FunctionDeclaration(name: $2, parameters: $4, returnType: $1); }
 
 Type <-
   PointerType
@@ -65,17 +77,18 @@ PointerType <-
 
 TypeName <-
   IDENTIFIER { $$ = new TypedefTypeSpecification(name: $1); }  
-  / TypeSign? CHAR { $$ = new IntegerTypeSpecification(kind: $2, sign: $1); }
-  / TypeSign? INT { $$ = new IntegerTypeSpecification(kind: $2, sign: $1); }
-  / TypeSign? SHORT INT? { $$ = new IntegerTypeSpecification(kind: "short", sign: $1); }
-  / TypeSign? LONG INT? { $$ = new IntegerTypeSpecification(kind: "long", sign: $1); }
-  / TypeSign? LONG LONG INT? { $$ = new IntegerTypeSpecification(kind: "long long", sign: $1); }
-  / FLOAT { $$ = new FloatTypeSpecification(kind: "float"); }
-  / DOUBLE { $$ = new FloatTypeSpecification(kind: "double"); }
-  / STRUCT IDENTIFIER { $$ = new StructureTypeSpecification(kind: "struct", tag: $2); }
-  / UNION IDENTIFIER { $$ = new StructureTypeSpecification(kind: "union", tag: $2); }
-  / VOID { $$ = new VoidTypeSpecification(); }  
-  
+  / TypeSign? (ID_CHAR / ID_INT) { $$ = new IntegerTypeSpecification(name: _createInt([$1, $2])); }  
+  / TypeSign? (ID_SHORT / LongType) ID_INT? { $$ = new IntegerTypeSpecification(name: _createInt([$1, $2, $3])); }  
+  / ID_FLOAT { $$ = new FloatTypeSpecification(kind: "float"); }
+  / ID_DOUBLE { $$ = new FloatTypeSpecification(kind: "double"); }
+  / ID_STRUCT IDENTIFIER { $$ = new StructureTypeSpecification(kind: "struct", tag: $2); }
+  / ID_UNION IDENTIFIER { $$ = new StructureTypeSpecification(kind: "union", tag: $2); }
+  / ID_VOID { $$ = new VoidTypeSpecification(); }  
+
+LongType <-
+  ID_LONG ID_LONG { $$ = _createInt([$1, $2]); }
+  / ID_LONG
+
 ReservedWord <-
   ("signed"
   / "unsigned"
@@ -91,44 +104,48 @@ ReservedWord <-
   / "void") !(IDENT_START / IDENT_CONT) { $$ = $1; }
 
 TypeSign <-
-  SIGNED { $$ = true; }
-  / UNSIGNED { $$ = false; }
+  ID_SIGNED
+  / ID_UNSIGNED
 
-SIGNED <-
-  'signed' SPACING { $$ = $1; }
+IDENT_PART <-
+  IDENT_START
+  / IDENT_CONT
 
-UNSIGNED <-
-  'unsigned' SPACING { $$ = $1; }
+ID_SIGNED <-
+  'signed' !IDENT_PART SPACING { $$ = $1; }
 
-CHAR <-
-  'char' SPACING { $$ = $1; }
+ID_UNSIGNED <-
+  'unsigned' !IDENT_PART SPACING { $$ = $1; }
 
-INT <-
-  'int' SPACING { $$ = $1; }
+ID_CHAR <-
+  'char' !IDENT_PART SPACING { $$ = $1; }
 
-SHORT <-
-  'short' SPACING { $$ = $1; }
+ID_INT <-
+  'int' !IDENT_PART SPACING { $$ = $1; }
 
-LONG <-
-  'long' SPACING { $$ = $1; }
+ID_SHORT <-
+  'short' !IDENT_PART SPACING { $$ = $1; }
 
-FLOAT <-
-  'float' SPACING { $$ = $1; }
+ID_LONG <-
+  'long' !IDENT_PART SPACING { $$ = $1; }
 
-DOUBLE <-
-  'double' SPACING { $$ = $1; }
+ID_FLOAT <-
+  'float' !IDENT_PART SPACING { $$ = $1; }
 
-STRUCT <-
-  'struct' SPACING { $$ = $1; }
+ID_DOUBLE <-
+  'double' !IDENT_PART SPACING { $$ = $1; }
+
+ID_STRUCT <-
+  'struct' !IDENT_PART SPACING { $$ = $1; }
 
 IDENTIFIER <-
   !ReservedWord IDENT_START IDENT_CONT* SPACING { $$ = _flatten([$2, $3]).join(); }
 
-UNION <-
-  'union' SPACING { $$ = $1; }
+ID_UNION <-
+  'union' !IDENT_PART SPACING { $$ = $1; }
 
-VOID <-
-  'void' SPACING { $$ = $1; }
+ID_VOID <-
+  'void' !IDENT_PART SPACING { $$ = $1; }
 
 ASTERISK <-
   '*' SPACING { $$ = $1; }
@@ -214,7 +231,7 @@ TypedefStructTypeDeclaration <-
   StructDeclaration IDENTIFIER { $$ = new TypedefDeclaration(name: $2, type: $1.type); }
 
 StructDeclaration <-
-  (STRUCT / UNION) IDENTIFIER? OPEN_BRACE StructMemberList? CLOSE_BRACE { $$ = new StructDeclaration(kind: $1, members: $4, tag: $2); }
+  (ID_STRUCT / ID_UNION) IDENTIFIER? OPEN_BRACE StructMemberList? CLOSE_BRACE { $$ = new StructureDeclaration(kind: $1, members: $4, tag: $2); }
 
 OPEN_BRACE <-
   '{' SPACING { $$ = $1; }

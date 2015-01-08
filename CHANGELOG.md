@@ -1,3 +1,7 @@
+## 0.0.8
+
+- Fixed bugs in `C grammar`
+
 ## 0.0.7
 
 - Added `StructureTypeSpecification.pack`

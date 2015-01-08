@@ -33,7 +33,7 @@ class ArrayTypeSpecification extends TypeSpecification {
     return sb.toString();
   }
 
-  String toStringWithIdentifier(String identifier, {bool short: true}) {
+  String toStringWithIdentifier(String identifier) {
     var sb = new StringBuffer();
     sb.write(type);
     if (identifier != null) {
@@ -158,37 +158,15 @@ class FunctionDeclaration extends BinaryDeclaration {
 }
 
 class IntegerTypeSpecification extends TypeSpecification {
-  final String kind;
+  final String name;
 
-  final bool sign;
-
-  IntegerTypeSpecification({int align, this.kind, this.sign}) : super(align: align) {
-    switch (kind) {
-      case "char":
-      case "int":
-      case "long":
-      case "long int":
-      case "long long":
-      case "long long int":
-      case "short":
-      case "short int":
-        break;
-      default:
-        throw new ArgumentError.value("kind", kind);
+  IntegerTypeSpecification({int align, this.name}) : super(align: align) {
+    if (name == null) {
+      throw new ArgumentError.notNull("name");
     }
   }
 
-  String toString() {
-    var sb = new StringBuffer();
-    if (sign == true) {
-      sb.write("signed ");
-    } else if (sign == false) {
-      sb.write("unsigned ");
-    }
-
-    sb.write(kind);
-    return sb.toString();
-  }
+  String toString() => name;
 }
 
 class ParameterDeclaration {
@@ -223,17 +201,17 @@ class PointerTypeSpecification extends TypeSpecification {
   String toString() => "$type*";
 }
 
-class StructDeclaration extends BinaryDeclaration {
-  StructureTypeSpecification _type;
+class StructureDeclaration extends BinaryDeclaration {
+  StructureDefTypeSpecification _type;
 
-  StructDeclaration({String kind, List members, int pack, String tag}) {
-    _type = new StructureTypeSpecification(kind: kind, members: members, pack: pack, tag: tag);
+  StructureDeclaration({String kind, List members, int pack, String tag}) {
+    _type = new StructureDefTypeSpecification(kind: kind, members: members, pack: pack, tag: tag);
   }
 
-  StructureTypeSpecification get type => _type;
+  StructureDefTypeSpecification get type => _type;
 
   String toString() {
-    return type.toStringWithMembers();
+    return type.toString();
   }
 }
 
@@ -244,9 +222,42 @@ class StructureTypeSpecification extends TypeSpecification {
 
   final String tag;
 
+  StructureTypeSpecification({int align, this.kind, this.pack, this.tag}) : super(align: align) {
+    if (tag == null) {
+      throw new ArgumentError.notNull("tag");
+    }
+
+    switch (kind) {
+      case "struct":
+      case "union":
+        break;
+      default:
+        throw new ArgumentError.value("kind", kind);
+    }
+  }
+
+  String toString() {
+    var sb = new StringBuffer();
+    sb.write(kind);
+    if (tag != null) {
+      sb.write(" ");
+      sb.write(tag);
+    }
+
+    return sb.toString();
+  }
+}
+
+class StructureDefTypeSpecification extends TypeSpecification {
+  final String kind;
+
+  final int pack;
+
+  final String tag;
+
   List<VariableDeclaration> _members;
 
-  StructureTypeSpecification({int align, this.kind, List members, this.pack, this.tag}) : super(align: align) {
+  StructureDefTypeSpecification({int align, this.kind, List members, this.pack, this.tag}) : super(align: align) {
     switch (kind) {
       case "struct":
       case "union":
@@ -273,28 +284,8 @@ class StructureTypeSpecification extends TypeSpecification {
       sb.write(tag);
     }
 
-    return sb.toString();
-  }
-
-  String toStringWithIdentifier(String identifier, {bool short: true}) {
-    var sb = new StringBuffer();
-    if (short) {
-      sb.write(this);
-    } else {
-      sb.write(toStringWithMembers());
-    }
-
-    sb.write(" ");
-    sb.write(identifier);
-    return sb.toString();
-  }
-
-  String toStringWithMembers() {
-    var sb = new StringBuffer();
-    sb.write(this);
     sb.write(" { ");
     if (!members.isEmpty) {
-      sb.write(" ");
       for (var member in members) {
         sb.write(member);
         sb.write("; ");
@@ -313,7 +304,7 @@ abstract class TypeSpecification {
     _checkAlignment(align);
   }
 
-  String toStringWithIdentifier(String identifier, {bool short: true}) {
+  String toStringWithIdentifier(String identifier) {
     var sb = new StringBuffer();
     sb.write(this);
     if (identifier != null) {
@@ -353,11 +344,6 @@ class TypedefDeclaration extends BinaryDeclaration {
       sb.write(" ");
       sb.write(name);
       sb.write(arrayType._dimensionsToString());
-    } else if (type is StructureTypeSpecification) {
-      var structureType = type;
-      sb.write(structureType.toStringWithMembers());
-      sb.write(" ");
-      sb.write(name);
     } else {
       sb.write(type);
       sb.write(" ");
@@ -396,7 +382,7 @@ class VariableDeclaration extends BinaryDeclaration {
   }
 
   String toString() {
-    return type.toStringWithIdentifier(name, short: false);
+    return type.toStringWithIdentifier(name);
   }
 }
 

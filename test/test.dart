@@ -1,49 +1,231 @@
 import "package:binary_declarations/binary_declarations.dart";
+import "package:unittest/unittest.dart";
 
 void main() {
-  var declarations = new BinaryDeclarations(text);
-  for (var declaration in declarations) {
-    print("$declaration;");
+  group("Declarations.", () {
+    group("Functions.", () {
+      test("Function declarations.", () {
+        var list = <String>[];
+        list.add("foo();");
+        list.add("foo(int);");
+        list.add("foo(int, int*);");
+        list.add("foo(int, int*);");
+        list.add("foo(int, int*, int[]);");
+        list.add("foo(int, int*, int[], struct s);");
+        list.add("int foo(int);");
+        list.add("signed int foo(int);");
+        list.add("signed int* foo(int);");
+        list.add("struct S foo(int);");
+        list.add("foo(int, ...);");
+        list.add("foo(int i);");
+        list.add("foo(int i, int* ip);");
+        var text = list.join("\n");
+        var declarations = new BinaryDeclarations(text);
+        for (var declaration in declarations) {
+          expect(declaration is FunctionDeclaration, true, reason: "Not a $FunctionDeclaration");
+        }
+
+        _checkPresentation(text, declarations);
+      });
+    });
+
+    group("Structures.", () {
+      var kinds = <String>["struct", "union"];
+      var baseList = <String>[];
+      for (var kind in kinds) {
+        baseList.add("$kind { }");
+        baseList.add("$kind s { }");
+        baseList.add("$kind s { int i; }");
+        baseList.add("$kind s { int i; int* ip; }");
+        baseList.add("$kind s { int i; int* ip; int ia[]; }");
+        baseList.add("$kind s { int i; int* ip; int ia[10]; }");
+        baseList.add("$kind s { int i; int* ip; int ia[10]; }");
+        baseList.add("$kind s { int i; $kind { } s; }");
+        baseList.add("$kind s { int i; $kind s { } s; }");
+        baseList.add("$kind s { int i; $kind s { int i; } s; }");
+      }
+      ;
+
+      test("Structure declarations.", () {
+        var lines = baseList.toList();
+        lines = _addBeforeAndAfter(lines, "", ";");
+        var text = lines.join("\n");
+        var declarations = new BinaryDeclarations(text);
+        for (var declaration in declarations) {
+          expect(declaration is StructureDeclaration, true, reason: "Not a $StructureDeclaration");
+        }
+
+        _checkPresentation(text, declarations);
+      });
+
+      test("Structure variable declarations.", () {
+        var lines = baseList.toList();
+        lines = _addBeforeAndAfter(lines, "", " s1;");
+        var text = lines.join("\n");
+        var declarations = new BinaryDeclarations(text);
+        for (var declaration in declarations) {
+          expect(declaration is VariableDeclaration, true, reason: "Not a $VariableDeclaration");
+        }
+
+        _checkPresentation(text, declarations);
+      });
+
+      test("Structure typedef declarations.", () {
+        var lines = baseList.toList();
+        lines = _addBeforeAndAfter(lines, "typedef ", " s1;");
+        var text = lines.join("\n");
+        var declarations = new BinaryDeclarations(text);
+        for (var declaration in declarations) {
+          expect(declaration is TypedefDeclaration, true, reason: "Not a $TypedefDeclaration");
+        }
+
+        _checkPresentation(text, declarations);
+      });
+    });
+
+    group("Integers.", () {
+      var types = _getFullListOfIntegerTypes();
+      test("Integer variable declarations.", () {
+        var list = <String>[];
+        for (var type in types) {
+          var ident = type.replaceAll(" ", "");
+          list.add("$type ${ident}0;");
+        }
+
+        var text = list.join("\n");
+        var declarations = new BinaryDeclarations(text);
+        for (var declaration in declarations) {
+          expect(declaration is VariableDeclaration, true, reason: "Not a $VariableDeclaration");
+        }
+
+        _checkPresentation(text, declarations);
+      });
+
+      test("Integer array variable declarations.", () {
+        var list = <String>[];
+        for (var type in types) {
+          var ident = type.replaceAll(" ", "");
+          list.add("$type ${ident}0[0];");
+        }
+
+        var text = list.join("\n");
+        var declarations = new BinaryDeclarations(text);
+        for (var declaration in declarations) {
+          expect(declaration is VariableDeclaration, true, reason: "Not a $VariableDeclaration");
+        }
+
+        _checkPresentation(text, declarations);
+      });
+
+      test("Integer pointer variable declarations.", () {
+        var list = <String>[];
+        for (var type in types) {
+          var ident = type.replaceAll(" ", "");
+          list.add("$type* ${ident}0;");
+        }
+
+        var text = list.join("\n");
+        var declarations = new BinaryDeclarations(text);
+        for (var declaration in declarations) {
+          expect(declaration is VariableDeclaration, true, reason: "Not a $VariableDeclaration");
+        }
+
+        _checkPresentation(text, declarations);
+      });
+
+      test("Integer typedef declarations.", () {
+        var list = <String>[];
+        for (var type in types) {
+          var ident = type.replaceAll(" ", "");
+          list.add("typedef $type ${ident}0;");
+        }
+
+        var text = list.join("\n");
+        var declarations = new BinaryDeclarations(text);
+        for (var declaration in declarations) {
+          expect(declaration is TypedefDeclaration, true, reason: "Not a $TypedefDeclaration");
+        }
+
+        _checkPresentation(text, declarations);
+      });
+
+      test("Integer array typedef declarations.", () {
+        var list = <String>[];
+        for (var type in types) {
+          var ident = type.replaceAll(" ", "");
+          list.add("typedef $type ${ident}0[0];");
+        }
+
+        var text = list.join("\n");
+        var declarations = new BinaryDeclarations(text);
+        for (var declaration in declarations) {
+          expect(declaration is TypedefDeclaration, true, reason: "Not a $TypedefDeclaration");
+        }
+
+        _checkPresentation(text, declarations);
+      });
+
+      test("Integer pointer typedef declarations.", () {
+        var list = <String>[];
+        for (var type in types) {
+          var ident = type.replaceAll(" ", "");
+          list.add("typedef $type* ${ident}0;");
+        }
+
+        var text = list.join("\n");
+        var declarations = new BinaryDeclarations(text);
+        for (var declaration in declarations) {
+          expect(declaration is TypedefDeclaration, true, reason: "Not a $TypedefDeclaration");
+        }
+
+        _checkPresentation(text, declarations);
+      });
+    });
+  });
+}
+
+List<String> _addBeforeAndAfter(List<String> lines, String before, String after) {
+  var length = lines.length;
+  var result = new List<String>(length);
+  for (var i = 0; i < length; i++) {
+    result[i] = "$before${lines[i]}$after";
+  }
+
+  return result;
+}
+
+void _checkPresentation(String text, BinaryDeclarations declarations) {
+  var lines = text.split("\n");
+  var length = lines.length;
+  var list = declarations.toList();
+  expect(length, list.length, reason: "Text lines count");
+  for (var i = 0; i < length; i++) {
+    var line = lines[i];
+    var actual = list[i].toString() + ";";
+    expect(actual, line, reason: "Wrong presentation at line $i");
   }
 }
 
-var text = '''
-int8_t int8;
-signed char[10] foo(struct S);
-struct _s {} s;
-int i;
-int* ip;
-void* vpa;
-struct _s { int i; } s;
-typedef int INT;
-typedef int int32_t;
-typedef void* PVOID;
-typedef void* PVOIDA[];
-typedef void* PVOIDA[10];
-typedef struct _s SA[];
-typedef struct {} S;
-typedef struct _s {} S2;
-typedef struct _s { int i; int* ip; } S2;
-typedef struct _s { int i; int* ip; struct s { int i; } s; } S2;
-struct {};
-struct _s {};
-struct _s {
-  int i;
-  char* cp;
-};
-int foo(void);
-int foo(void* []);
-int foo(char[]);
-int foo(int, ...);
-int foo(int, const char*, ...);
-int foo(const int*);
-int foo(int i);
-int foo(int*, char[]);
-int foo(int* ip, char cp[]);
-int foo(int* ip, char cp[10]);
-int foo(int* ip, char cp[10], struct S);
-int foo(int* ip, char cp[10], union S);
-struct S foo(int* ip, char cp[10][3], struct S);
-struct S[] foo(int* ip, char cp[10][3], struct S);
-signed char[10] foo(int* ip, char cp[10][3], struct S);
-''';
+List<String> _getFullListOfIntegerTypes() {
+  var result = <String>[];
+  result.add("char");
+  result.add("int");
+  var types = <String>["long", "long long", "short"];
+  for (var type in types) {
+    result.add(type);
+    result.add("$type int");
+  }
+
+  return _getSignedAndUnsignedTypes(result);
+}
+
+List<String> _getSignedAndUnsignedTypes(List<String> types) {
+  var result = <String>[];
+  for (var type in types) {
+    result.add(type);
+    result.add("signed $type");
+    result.add("unsigned $type");
+  }
+
+  return result;
+}
