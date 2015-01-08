@@ -5,7 +5,7 @@ Binary declarations is a set of classes for parsing declarations of the binary t
 
 Version: 0.0.7
 
-[Donate to binary interop for dart](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=binary.dart@gmail.com&item_name=binary.interop.for.dart&currency_code=USD)
+[Donate to binary declarations for dart](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=binary.dart@gmail.com&item_name=binary.declarations.for.dart&currency_code=USD)
 
 Initial release. Use at your own risk!
 
