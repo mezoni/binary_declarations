@@ -105,7 +105,7 @@ void main() {
         var list = <String>[];
         for (var type in types) {
           var ident = type.replaceAll(" ", "");
-          list.add("$type ${ident}0[0];");
+          list.add("$type ${ident}0[];");
         }
 
         var text = list.join("\n");
@@ -153,7 +153,7 @@ void main() {
         var list = <String>[];
         for (var type in types) {
           var ident = type.replaceAll(" ", "");
-          list.add("typedef $type ${ident}0[0];");
+          list.add("typedef $type ${ident}0[];");
         }
 
         var text = list.join("\n");
@@ -180,6 +180,37 @@ void main() {
 
         _checkPresentation(text, declarations);
       });
+    });
+  });
+
+  var list = <String>[];
+  list.add("typedef __attribute__((aligned(8))) int INT;");
+  var text = list.join("\n");
+  var declarations = new BinaryDeclarations(text);
+  _checkPresentation(text, declarations);
+
+  group("Misc.", () {
+    test("Octal numbers.", () {
+      var list = <String>[];
+      list.add("int i[011];");
+      var text = list.join("\n");
+      var declarations = new BinaryDeclarations(text);
+      _checkPresentation("int i[9];", declarations);
+    });
+
+    test("Attributes.", () {
+      var list = <String>[];
+      list.add("typedef __attribute__((aligned(8))) int INT;");
+      list.add("typedef __attribute__((aligned)) int INT;");
+      list.add("typedef __attribute__((foo(baz, 2))) int INT;");
+      var text = list.join("\n");
+      var declarations = new BinaryDeclarations(text);
+      _checkPresentation(text, declarations);
+    });
+
+    test("Semicolons.", () {
+      var declarations = new BinaryDeclarations(";;;");
+      _checkPresentation(";;", declarations);
     });
   });
 }

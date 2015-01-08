@@ -1,26 +1,24 @@
 part of binary_declarations;
 
-void _checkAlignment(int align) {
-  if (align != null) {
-    var powerOf2 = (align != 0) && ((align & (align - 1)) == 0);
-    if (!powerOf2) {
-      throw new ArgumentError("Align '$align' should be power of 2 value.");
-    }
-  }
-}
-
 class ArrayTypeSpecification extends TypeSpecification {
   List<int> _dimensions;
 
   final TypeSpecification type;
 
-  ArrayTypeSpecification({int align, List<int> dimensions, this.type}) : super(align: align) {
+  ArrayTypeSpecification({BinaryAttributes attributes, List<int> dimensions, this.type}) : super(attributes: attributes) {
     if (dimensions == null) {
       throw new ArgumentError.notNull("dimensions");
     }
 
     var list = <int>[];
-    list.addAll(dimensions);
+    for (var dimension in dimensions) {
+      if (dimension == null || dimension is int) {
+        list.add(dimension);
+      } else {
+        throw new ArgumentError("List of dimension contains illegal elements.");
+      }
+    }
+
     _dimensions = new UnmodifiableListView<int>(list);
   }
 
@@ -63,6 +61,59 @@ class ArrayTypeSpecification extends TypeSpecification {
   }
 }
 
+class BinaryAttribute {
+  final String name;
+
+  List<String> _parameters;
+
+  BinaryAttribute(this.name, [List parameters]) {
+    if (name == null) {
+      throw new ArgumentError.notNull("name");
+    }
+
+    var list = <String>[];
+    if (parameters != null) {
+      for (var value in parameters) {
+        list.add(value.toString());
+      }
+    }
+
+    _parameters = new UnmodifiableListView<String>(list);
+  }
+
+  List<String> get parameters => _parameters;
+
+  String toString() {
+    var sb = new StringBuffer();
+    sb.write(name);
+    if (!parameters.isEmpty) {
+      sb.write("(");
+      sb.write(parameters.join(", "));
+      sb.write(")");
+    }
+
+    return sb.toString();
+  }
+}
+
+class BinaryAttributes {
+  List<BinaryAttribute> _values;
+
+  BinaryAttributes(List<BinaryAttribute> values) {
+    _values = new _ListCloner<BinaryAttribute>(values, "values").list;
+  }
+
+  List<BinaryAttribute> get values => _values;
+
+  String toString() {
+    var sb = new StringBuffer();
+    sb.write("__attribute__((");
+    sb.write(_values.join(", "));
+    sb.write("))");
+    return sb.toString();
+  }
+}
+
 abstract class BinaryDeclaration {
 }
 
@@ -95,10 +146,14 @@ class BinaryDeclarations extends Object with IterableMixin<BinaryDeclaration> {
   Iterator<BinaryDeclaration> get iterator => _declarations.iterator;
 }
 
+class EmptyDeclaration extends BinaryDeclaration {
+  String toString() => ";";
+}
+
 class FloatTypeSpecification extends TypeSpecification {
   final String kind;
 
-  FloatTypeSpecification({int align, this.kind}) : super(align: align) {
+  FloatTypeSpecification({BinaryAttributes attributes, this.kind}) : super(attributes: attributes) {
     switch (kind) {
       case "double":
       case "float":
@@ -160,7 +215,7 @@ class FunctionDeclaration extends BinaryDeclaration {
 class IntegerTypeSpecification extends TypeSpecification {
   final String name;
 
-  IntegerTypeSpecification({int align, this.name}) : super(align: align) {
+  IntegerTypeSpecification({BinaryAttributes attributes, this.name}) : super(attributes: attributes) {
     if (name == null) {
       throw new ArgumentError.notNull("name");
     }
@@ -192,7 +247,7 @@ class ParameterDeclaration {
 class PointerTypeSpecification extends TypeSpecification {
   final TypeSpecification type;
 
-  PointerTypeSpecification({int align, this.type}) : super(align: align) {
+  PointerTypeSpecification({BinaryAttributes attributes, this.type}) : super(attributes: attributes) {
     if (type == null) {
       throw new ArgumentError.notNull("type");
     }
@@ -204,8 +259,8 @@ class PointerTypeSpecification extends TypeSpecification {
 class StructureDeclaration extends BinaryDeclaration {
   StructureDefTypeSpecification _type;
 
-  StructureDeclaration({String kind, List members, int pack, String tag}) {
-    _type = new StructureDefTypeSpecification(kind: kind, members: members, pack: pack, tag: tag);
+  StructureDeclaration({List<BinaryAttribute> attributes, String kind, List members, String tag}) {
+    _type = new StructureDefTypeSpecification(kind: kind, members: members, tag: tag);
   }
 
   StructureDefTypeSpecification get type => _type;
@@ -215,49 +270,14 @@ class StructureDeclaration extends BinaryDeclaration {
   }
 }
 
-class StructureTypeSpecification extends TypeSpecification {
-  final String kind;
-
-  final int pack;
-
-  final String tag;
-
-  StructureTypeSpecification({int align, this.kind, this.pack, this.tag}) : super(align: align) {
-    if (tag == null) {
-      throw new ArgumentError.notNull("tag");
-    }
-
-    switch (kind) {
-      case "struct":
-      case "union":
-        break;
-      default:
-        throw new ArgumentError.value("kind", kind);
-    }
-  }
-
-  String toString() {
-    var sb = new StringBuffer();
-    sb.write(kind);
-    if (tag != null) {
-      sb.write(" ");
-      sb.write(tag);
-    }
-
-    return sb.toString();
-  }
-}
-
 class StructureDefTypeSpecification extends TypeSpecification {
   final String kind;
-
-  final int pack;
 
   final String tag;
 
   List<VariableDeclaration> _members;
 
-  StructureDefTypeSpecification({int align, this.kind, List members, this.pack, this.tag}) : super(align: align) {
+  StructureDefTypeSpecification({BinaryAttributes attributes, this.kind, List members, this.tag}) : super(attributes: attributes) {
     switch (kind) {
       case "struct":
       case "union":
@@ -266,12 +286,7 @@ class StructureDefTypeSpecification extends TypeSpecification {
         throw new ArgumentError.value("kind", kind);
     }
 
-    var list = <VariableDeclaration>[];
-    if (members != null) {
-      list.addAll(members);
-    }
-
-    _members = new UnmodifiableListView<VariableDeclaration>(list);
+    _members = new _ListCloner(members, "members").list;
   }
 
   List<VariableDeclaration> get members => _members;
@@ -297,12 +312,41 @@ class StructureDefTypeSpecification extends TypeSpecification {
   }
 }
 
-abstract class TypeSpecification {
-  final int align;
+class StructureTypeSpecification extends TypeSpecification {
+  final String kind;
 
-  TypeSpecification({this.align}) {
-    _checkAlignment(align);
+  final String tag;
+
+  StructureTypeSpecification({BinaryAttributes attributes, this.kind, this.tag}) : super(attributes: attributes) {
+    if (tag == null) {
+      throw new ArgumentError.notNull("tag");
+    }
+
+    switch (kind) {
+      case "struct":
+      case "union":
+        break;
+      default:
+        throw new ArgumentError.value("kind", kind);
+    }
   }
+
+  String toString() {
+    var sb = new StringBuffer();
+    sb.write(kind);
+    if (tag != null) {
+      sb.write(" ");
+      sb.write(tag);
+    }
+
+    return sb.toString();
+  }
+}
+
+abstract class TypeSpecification {
+  final BinaryAttributes attributes;
+
+  TypeSpecification({this.attributes});
 
   String toStringWithIdentifier(String identifier) {
     var sb = new StringBuffer();
@@ -317,13 +361,13 @@ abstract class TypeSpecification {
 }
 
 class TypedefDeclaration extends BinaryDeclaration {
-  final int align;
+  final BinaryAttributes attributes;
 
   final String name;
 
   final TypeSpecification type;
 
-  TypedefDeclaration({this.align, this.name, this.type}) {
+  TypedefDeclaration({this.attributes, this.name, this.type}) {
     if (name == null || name.isEmpty) {
       throw new ArgumentError.value("name", name);
     }
@@ -331,13 +375,16 @@ class TypedefDeclaration extends BinaryDeclaration {
     if (type == null) {
       throw new ArgumentError.notNull("type");
     }
-
-    _checkAlignment(align);
   }
 
   String toString() {
     var sb = new StringBuffer();
     sb.write("typedef ");
+    if (attributes != null) {
+      sb.write(attributes);
+      sb.write(" ");
+    }
+
     if (type is ArrayTypeSpecification) {
       var arrayType = type;
       sb.write(arrayType.type);
@@ -357,7 +404,7 @@ class TypedefDeclaration extends BinaryDeclaration {
 class TypedefTypeSpecification extends TypeSpecification {
   final String name;
 
-  TypedefTypeSpecification({int align, this.name}) : super(align: align) {
+  TypedefTypeSpecification({BinaryAttributes attributes, this.name}) : super(attributes: attributes) {
     if (name == null || name.isEmpty) {
       throw new ArgumentError.value("name", name);
     }
@@ -388,4 +435,25 @@ class VariableDeclaration extends BinaryDeclaration {
 
 class VoidTypeSpecification extends TypeSpecification {
   String toString() => "void";
+}
+
+class _ListCloner<T> {
+  List<T> list;
+
+  String name;
+
+  _ListCloner(List source, this.name) {
+    var temp = <T>[];
+    if (source != null) {
+      for (var element in source) {
+        if (element is! T) {
+          throw new ArgumentError("List of $name contains illegal elements.");
+        }
+
+        temp.add(element);
+      }
+    }
+
+    list = new UnmodifiableListView<T>(temp);
+  }
 }

@@ -1,3 +1,14 @@
+## 0.0.11
+
+- Added complex test
+
+## 0.0.10
+
+- Fixed bugs in `C grammar`
+- Initial support of attributes (currently only for typedef's)
+- Removed `StructureDeclaration.pack` in favor of attributes
+- Removed `TypeSpecification.align` in favor of attributes 
+
 ## 0.0.9
 
 - Fixed bugs in `C grammar`
