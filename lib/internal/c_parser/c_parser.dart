@@ -1120,7 +1120,27 @@ class CParser {
             $$ = _parse_FunctionDeclartion();
             if (!success) break;
             var seq = new List(2)..[0] = $$;
-            $$ = _parse_SEMICOLON();
+            var testing0;
+            for (var first = true, reps; ;) {  
+              $$ = _parse_SEMICOLON();  
+              if (success) {
+               if (first) {      
+                  first = false;
+                  reps = [$$];
+                  testing0 = _testing;                  
+                } else {
+                  reps.add($$);
+                }
+                _testing = _cursor;   
+              } else {
+                success = !first;
+                if (success) {      
+                  _testing = testing0;
+                  $$ = reps;      
+                } else $$ = null;
+                break;
+              }  
+            }
             if (!success) break;
             seq[1] = $$;
             $$ = seq;
@@ -1143,7 +1163,27 @@ class CParser {
             $$ = _parse_VariableDeclaration();
             if (!success) break;
             var seq = new List(2)..[0] = $$;
-            $$ = _parse_SEMICOLON();
+            var testing1;
+            for (var first = true, reps; ;) {  
+              $$ = _parse_SEMICOLON();  
+              if (success) {
+               if (first) {      
+                  first = false;
+                  reps = [$$];
+                  testing1 = _testing;                  
+                } else {
+                  reps.add($$);
+                }
+                _testing = _cursor;   
+              } else {
+                success = !first;
+                if (success) {      
+                  _testing = testing1;
+                  $$ = reps;      
+                } else $$ = null;
+                break;
+              }  
+            }
             if (!success) break;
             seq[1] = $$;
             $$ = seq;
@@ -1170,7 +1210,27 @@ class CParser {
             $$ = _parse_FunctionDeclartion();
             if (!success) break;
             var seq = new List(2)..[0] = $$;
-            $$ = _parse_SEMICOLON();
+            var testing2;
+            for (var first = true, reps; ;) {  
+              $$ = _parse_SEMICOLON();  
+              if (success) {
+               if (first) {      
+                  first = false;
+                  reps = [$$];
+                  testing2 = _testing;                  
+                } else {
+                  reps.add($$);
+                }
+                _testing = _cursor;   
+              } else {
+                success = !first;
+                if (success) {      
+                  _testing = testing2;
+                  $$ = reps;      
+                } else $$ = null;
+                break;
+              }  
+            }
             if (!success) break;
             seq[1] = $$;
             $$ = seq;
@@ -1193,7 +1253,27 @@ class CParser {
             $$ = _parse_TypedefDeclaration();
             if (!success) break;
             var seq = new List(2)..[0] = $$;
-            $$ = _parse_SEMICOLON();
+            var testing3;
+            for (var first = true, reps; ;) {  
+              $$ = _parse_SEMICOLON();  
+              if (success) {
+               if (first) {      
+                  first = false;
+                  reps = [$$];
+                  testing3 = _testing;                  
+                } else {
+                  reps.add($$);
+                }
+                _testing = _cursor;   
+              } else {
+                success = !first;
+                if (success) {      
+                  _testing = testing3;
+                  $$ = reps;      
+                } else $$ = null;
+                break;
+              }  
+            }
             if (!success) break;
             seq[1] = $$;
             $$ = seq;
@@ -1216,7 +1296,27 @@ class CParser {
             $$ = _parse_VariableDeclaration();
             if (!success) break;
             var seq = new List(2)..[0] = $$;
-            $$ = _parse_SEMICOLON();
+            var testing4;
+            for (var first = true, reps; ;) {  
+              $$ = _parse_SEMICOLON();  
+              if (success) {
+               if (first) {      
+                  first = false;
+                  reps = [$$];
+                  testing4 = _testing;                  
+                } else {
+                  reps.add($$);
+                }
+                _testing = _cursor;   
+              } else {
+                success = !first;
+                if (success) {      
+                  _testing = testing4;
+                  $$ = reps;      
+                } else $$ = null;
+                break;
+              }  
+            }
             if (!success) break;
             seq[1] = $$;
             $$ = seq;
@@ -1239,7 +1339,27 @@ class CParser {
             $$ = _parse_StructDeclaration();
             if (!success) break;
             var seq = new List(2)..[0] = $$;
-            $$ = _parse_SEMICOLON();
+            var testing5;
+            for (var first = true, reps; ;) {  
+              $$ = _parse_SEMICOLON();  
+              if (success) {
+               if (first) {      
+                  first = false;
+                  reps = [$$];
+                  testing5 = _testing;                  
+                } else {
+                  reps.add($$);
+                }
+                _testing = _cursor;   
+              } else {
+                success = !first;
+                if (success) {      
+                  _testing = testing5;
+                  $$ = reps;      
+                } else $$ = null;
+                break;
+              }  
+            }
             if (!success) break;
             seq[1] = $$;
             $$ = seq;

@@ -58,10 +58,10 @@ DeclarationList <-
   Declaration*
 
 Declaration <-
-  FunctionDeclartion SEMICOLON { $$ = $1; }
-  / TypedefDeclaration SEMICOLON { $$ = $1; }
-  / VariableDeclaration SEMICOLON { $$ = $1; }
-  / StructDeclaration SEMICOLON { $$ = $1; }
+  FunctionDeclartion SEMICOLON+ { $$ = $1; }
+  / TypedefDeclaration SEMICOLON+ { $$ = $1; }
+  / VariableDeclaration SEMICOLON+ { $$ = $1; }
+  / StructDeclaration SEMICOLON+ { $$ = $1; }
 
 FunctionDeclartion <-
   IDENTIFIER OPEN_PAREN FunctionParameters? CLOSE_PAREN { $$ = new FunctionDeclaration(name: $1, parameters: $3); }

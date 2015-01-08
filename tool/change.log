@@ -10,3 +10,4 @@
 0.0.7 Added `TypeSpecification.align`
 0.0.7 Added `StructureTypeSpecification.pack`
 0.0.8 Fixed bugs in `C grammar`
+0.0.9 Fixed bugs in `C grammar`
