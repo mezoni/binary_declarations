@@ -16,3 +16,6 @@
 0.0.10 Removed `StructureDeclaration.pack` in favor of attributes
 0.0.10 Fixed bugs in `C grammar`
 0.0.11 Added complex test
+0.0.11 Removed dependency to `binary_types`
+0.0.12 Initial support of enums
+0.0.12 Breaking change. Most of classes reworked

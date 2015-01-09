@@ -150,6 +150,78 @@ class EmptyDeclaration extends BinaryDeclaration {
   String toString() => ";";
 }
 
+class EnumDeclaration extends BinaryDeclaration {
+  EnumTypeSpecification _type;
+
+  EnumDeclaration({List<BinaryAttribute> attributes, String kind, String tag, List<EnumValueDeclaration> values}) {
+    _type = new EnumTypeSpecification(kind: kind, values: values, tag: tag);
+  }
+
+  EnumTypeSpecification get type => _type;
+
+  String toString() {
+    return type.toString();
+  }
+}
+
+class EnumTypeSpecification extends TypeSpecification {
+  TaggedTypeSpecification _taggedType;
+
+  List<EnumValueDeclaration> _values;
+
+  EnumTypeSpecification({BinaryAttributes attributes, String kind, List<EnumValueDeclaration> values, String tag}) : super(attributes: attributes) {
+    if (values == null) {
+      throw new ArgumentError.notNull("values");
+    }
+
+    _taggedType = new TaggedTypeSpecification(attributes: attributes, kind: kind, tag: tag);
+    switch (_taggedType.kind) {
+      case TaggedTypeKinds.ENUM:
+        break;
+      default:
+        throw new ArgumentError.value("kind", kind);
+    }
+
+    _values = new _ListCloner<EnumValueDeclaration>(values, "values").list;
+  }
+
+  TaggedTypeSpecification get taggedType => _taggedType;
+
+  List<EnumValueDeclaration> get values => _values;
+
+  String toString() {
+    var sb = new StringBuffer();
+    sb.write(taggedType);
+    sb.write(" { ");
+    sb.write(values.join(", "));
+    sb.write(" }");
+    return sb.toString();
+  }
+}
+
+class EnumValueDeclaration extends BinaryDeclaration {
+  final String name;
+
+  final int value;
+
+  EnumValueDeclaration({this.name, this.value}) {
+    if (name == null) {
+      throw new ArgumentError.notNull("name");
+    }
+  }
+
+  String toString() {
+    var sb = new StringBuffer();
+    sb.write(name);
+    if (value != null) {
+      sb.write(" = ");
+      sb.write(value);
+    }
+
+    return sb.toString();
+  }
+}
+
 class FloatTypeSpecification extends TypeSpecification {
   final String kind;
 
@@ -180,16 +252,31 @@ class FunctionDeclaration extends BinaryDeclaration {
 
     var list = <ParameterDeclaration>[];
     if (parameters != null) {
-      list.addAll(parameters);
-      if (list.length == 1) {
-        var first = list.first;
-        if (first.type is VoidTypeSpecification) {
-          list.removeAt(0);
+      var length = parameters.length;
+      for (var i = 0; i < length; i++) {
+        var parameter = parameters[i];
+        if (parameter == null) {
+          throw new ArgumentError("List of parameters contains illegal elements.");
         }
+
+        var type = parameter.type;
+        if (type is VoidTypeSpecification) {
+          if (i != 0) {
+            throw new ArgumentError("Parameter $i should not have a '$type' type.");
+          }
+
+          continue;
+        } else if (type is VaListTypeSpecification) {
+          if (i != length - 1) {
+            throw new ArgumentError("Parameter $i should not have a '$type' type.");
+          }
+        }
+
+        list.add(parameter);
       }
     }
 
-    _parameters = new UnmodifiableListView(list);
+    _parameters = new UnmodifiableListView<ParameterDeclaration>(list);
   }
 
   List<ParameterDeclaration> get parameters => _parameters;
@@ -257,48 +344,44 @@ class PointerTypeSpecification extends TypeSpecification {
 }
 
 class StructureDeclaration extends BinaryDeclaration {
-  StructureDefTypeSpecification _type;
+  StructureTypeSpecification _type;
 
-  StructureDeclaration({List<BinaryAttribute> attributes, String kind, List members, String tag}) {
-    _type = new StructureDefTypeSpecification(kind: kind, members: members, tag: tag);
+  StructureDeclaration({List<BinaryAttribute> attributes, String kind, List<VariableDeclaration> members, String tag}) {
+    _type = new StructureTypeSpecification(kind: kind, members: members, tag: tag);
   }
 
-  StructureDefTypeSpecification get type => _type;
+  StructureTypeSpecification get type => _type;
 
   String toString() {
     return type.toString();
   }
 }
 
-class StructureDefTypeSpecification extends TypeSpecification {
-  final String kind;
-
-  final String tag;
+class StructureTypeSpecification extends TypeSpecification {
+  TaggedTypeSpecification _taggedType;
 
   List<VariableDeclaration> _members;
 
-  StructureDefTypeSpecification({BinaryAttributes attributes, this.kind, List members, this.tag}) : super(attributes: attributes) {
-    switch (kind) {
-      case "struct":
-      case "union":
+  StructureTypeSpecification({BinaryAttributes attributes, String kind, List<VariableDeclaration> members, String tag}) : super(attributes: attributes) {
+    _taggedType = new TaggedTypeSpecification(attributes: attributes, kind: kind, tag: tag);
+    switch (_taggedType.kind) {
+      case TaggedTypeKinds.STRUCT:
+      case TaggedTypeKinds.UNION:
         break;
       default:
         throw new ArgumentError.value("kind", kind);
     }
 
-    _members = new _ListCloner(members, "members").list;
+    _members = new _ListCloner<VariableDeclaration>(members, "members").list;
   }
 
   List<VariableDeclaration> get members => _members;
 
+  TaggedTypeSpecification get taggedType => _taggedType;
+
   String toString() {
     var sb = new StringBuffer();
-    sb.write(kind);
-    if (tag != null) {
-      sb.write(" ");
-      sb.write(tag);
-    }
-
+    sb.write(taggedType);
     sb.write(" { ");
     if (!members.isEmpty) {
       for (var member in members) {
@@ -312,24 +395,46 @@ class StructureDefTypeSpecification extends TypeSpecification {
   }
 }
 
-class StructureTypeSpecification extends TypeSpecification {
-  final String kind;
+class TaggedTypeKinds {
+  static const TaggedTypeKinds ENUM = const TaggedTypeKinds("enum");
 
+  static const TaggedTypeKinds STRUCT = const TaggedTypeKinds("struct");
+
+  static const TaggedTypeKinds UNION = const TaggedTypeKinds("union");
+
+  final String name;
+
+  const TaggedTypeKinds(this.name);
+
+  String toString() => name;
+}
+
+class TaggedTypeSpecification extends TypeSpecification {
   final String tag;
 
-  StructureTypeSpecification({BinaryAttributes attributes, this.kind, this.tag}) : super(attributes: attributes) {
-    if (tag == null) {
-      throw new ArgumentError.notNull("tag");
+  TaggedTypeKinds _kind;
+
+  TaggedTypeSpecification({BinaryAttributes attributes, String kind, this.tag}) : super(attributes: attributes) {
+    if (kind == null) {
+      throw new ArgumentError.notNull("kind");
     }
 
     switch (kind) {
+      case "enum":
+        _kind = TaggedTypeKinds.ENUM;
+        break;
       case "struct":
+        _kind = TaggedTypeKinds.STRUCT;
+        break;
       case "union":
+        _kind = TaggedTypeKinds.UNION;
         break;
       default:
         throw new ArgumentError.value("kind", kind);
     }
   }
+
+  TaggedTypeKinds get kind => _kind;
 
   String toString() {
     var sb = new StringBuffer();

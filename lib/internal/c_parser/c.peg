@@ -48,6 +48,7 @@ Declaration <-
   / TypedefDeclaration SEMICOLON+ { $$ = $1; }
   / VariableDeclaration SEMICOLON+ { $$ = $1; }
   / StructDeclaration SEMICOLON+ { $$ = $1; }
+  / EnumDeclaration SEMICOLON+ { $$ = $1; }
   / SEMICOLON+ { $$ = new EmptyDeclaration(); }
 
 TypedefDeclaration <-
@@ -55,11 +56,15 @@ TypedefDeclaration <-
 
 TypedefTypeDeclaration <-
   TypedefArrayTypeDeclaration
-  / TypedefStructTypeDeclaration
+  / TypedefTaggedTypeDeclaration
   / TypedefSimpleTypeDeclaration
 
-TypedefStructTypeDeclaration <-
-  Attributes? StructDeclaration IDENTIFIER { $$ = new TypedefDeclaration(name: $3, type: $2.type); }
+TypedefTaggedTypeDeclaration <-
+  Attributes? TaggedTypeDeclaration IDENTIFIER { $$ = new TypedefDeclaration(name: $3, type: $2.type); }
+
+TaggedTypeDeclaration <-
+  StructDeclaration
+  / EnumDeclaration
 
 StructDeclaration <-
   (ID_STRUCT / ID_UNION) IDENTIFIER? OPEN_BRACE StructMemberList? CLOSE_BRACE { $$ = new StructureDeclaration(kind: $1, members: $4, tag: $2); }
@@ -72,12 +77,12 @@ StructMember <-
 
 VariableDeclaration <-
   ArrayVariableDeclaration
-  / StructVariableDeclaration
+  / TaggedTypeVariableDeclaration
   / PointerVariableDeclaration
   / SimpleVariableDeclaration
 
-StructVariableDeclaration <-
-  StructDeclaration IDENTIFIER { $$ = new VariableDeclaration(name: $2, type: $1.type); }
+TaggedTypeVariableDeclaration <-
+  (StructDeclaration / EnumDeclaration) IDENTIFIER { $$ = new VariableDeclaration(name: $2, type: $1.type); }
 
 # Lexemes
 
@@ -92,6 +97,9 @@ CLOSE_BRACE <-
 
 EOF <-
   !.
+
+EnumDeclaration <-
+  ID_ENUM IDENTIFIER? OPEN_BRACE EnumValueList CLOSE_BRACE { $$ = new EnumDeclaration(kind: $1, tag: $2, values: $4); }
 
 FunctionDeclartion <-
   IDENTIFIER OPEN_PAREN FunctionParameters? CLOSE_PAREN { $$ = new FunctionDeclaration(name: $1, parameters: $3); }
@@ -131,6 +139,9 @@ TypedefSimpleTypeDeclaration <-
   Attributes? Type IDENTIFIER { $$ = new TypedefDeclaration(attributes: $1, name: $3, type: $2); }
 
 # Morphemes
+
+ASSIGN <-
+  '=' SPACING { $$ = $1; }
 
 ASTERISK <-
   '*' SPACING { $$ = $1; }
@@ -192,6 +203,13 @@ EOL <-
   '\r\n'
   / [\n\r]
 
+EnumValue <-
+  IDENTIFIER ASSIGN NUMBER { $$ = new EnumValueDeclaration(name: $1, value: $3); }
+  / IDENTIFIER { $$ = new EnumValueDeclaration(name: $1); }
+
+EnumValueList <-
+  EnumValue (COMMA EnumValue)* COMMA? { $$ = _list($1, $2); }
+
 FunctionParameter <-
   ArrayParameter
   / ConstPointerParameter
@@ -224,6 +242,9 @@ ID_CHAR <-
 ID_DOUBLE <-
   'double' !IDENT_PART SPACING { $$ = $1; }
 
+ID_ENUM <-
+  'enum' !IDENT_PART SPACING { $$ = $1; }
+
 ID_FLOAT <-
   'float' !IDENT_PART SPACING { $$ = $1; }
 
@@ -246,24 +267,30 @@ ID_VOID <-
   'void' !IDENT_PART SPACING { $$ = $1; }
 
 INTEGER <-
-  [0-9]+ SPACING { $$ = int.parse($1.join()); }
+  SIGN [0-9]+ SPACING { $$ = $1 * int.parse($2.join()); }
 
 LongType <-
   ID_LONG ID_LONG { $$ = _createInt([$1, $2]); }
   / ID_LONG
+
+MINUS <-
+  '-' SPACING { $$ = $1; }
 
 NUMBER <-
   OCTAL_NUMBER
   / INTEGER
 
 OCTAL_NUMBER <-
-  [0] [0-9]+ { $$ = int.parse(_flatten([$1, $2]).join(), radix: 8); }
+  SIGN [0] [0-9]+ { $$ = $1 * int.parse(_flatten([$2, $3]).join(), radix: 8); }
 
 OPEN_BRACKET <-
   '[' SPACING { $$ = $1; }
 
 OPEN_PAREN <-
   '(' SPACING { $$ = $1; }
+
+PLUS <-
+  '+' SPACING { $$ = $1; }
 
 PointerParameter <-
   PointerType IDENTIFIER? { $$ = new ParameterDeclaration(name: $2, type: $1); }
@@ -272,7 +299,10 @@ PointerType <-
   TypeName ASTERISK+ { $$ = _createPointer($1, $2); }
 
 ReservedWord <-
-  ('signed' / 'unsigned' / 'char' / 'int' / 'short' / 'long' / 'float' / 'double' / 'struct' / 'typedef' / 'union' / 'void') !(IDENT_START / IDENT_CONT) { $$ = $1; }
+  ('signed' / 'unsigned' / 'char' / 'int' / 'short' / 'long' / 'float' / 'double' / 'enum' / 'struct' / 'typedef' / 'union' / 'void') !(IDENT_START / IDENT_CONT) { $$ = $1; }
+
+SIGN <-
+  (PLUS / MINUS)? { $$ = $1 == "-" ? -1 : 1; }
 
 SPACE <-
   [\t-\n\r ]
@@ -291,8 +321,9 @@ TypeName <-
   / TypeSign? (ID_SHORT / LongType) ID_INT? { $$ = new IntegerTypeSpecification(name: _createInt([$1, $2, $3])); }
   / ID_FLOAT { $$ = new FloatTypeSpecification(kind: "float"); }
   / ID_DOUBLE { $$ = new FloatTypeSpecification(kind: "double"); }
-  / ID_STRUCT IDENTIFIER { $$ = new StructureTypeSpecification(kind: "struct", tag: $2); }
-  / ID_UNION IDENTIFIER { $$ = new StructureTypeSpecification(kind: "union", tag: $2); }
+  / ID_ENUM IDENTIFIER { $$ = new TaggedTypeSpecification(kind: "enum", tag: $2); }
+  / ID_STRUCT IDENTIFIER { $$ = new TaggedTypeSpecification(kind: "struct", tag: $2); }
+  / ID_UNION IDENTIFIER { $$ = new TaggedTypeSpecification(kind: "union", tag: $2); }
   / ID_VOID { $$ = new VoidTypeSpecification(); }
 
 TypeSign <-

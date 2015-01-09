@@ -1,6 +1,12 @@
+## 0.0.12
+
+- Breaking change. Most of classes reworked
+- Initial support of enums
+
 ## 0.0.11
 
 - Added complex test
+- Removed dependency to `binary_types`
 
 ## 0.0.10
 

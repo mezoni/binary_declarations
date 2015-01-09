@@ -12,10 +12,12 @@ void main() {
         list.add("foo(int, int*);");
         list.add("foo(int, int*, int[]);");
         list.add("foo(int, int*, int[], struct s);");
+        list.add("foo(int, int*, int[], enum e);");
         list.add("int foo(int);");
         list.add("signed int foo(int);");
         list.add("signed int* foo(int);");
         list.add("struct S foo(int);");
+        list.add("enum E foo(int);");
         list.add("foo(int, ...);");
         list.add("foo(int i);");
         list.add("foo(int i, int* ip);");
@@ -71,6 +73,59 @@ void main() {
       });
 
       test("Structure typedef declarations.", () {
+        var lines = baseList.toList();
+        lines = _addBeforeAndAfter(lines, "typedef ", " s1;");
+        var text = lines.join("\n");
+        var declarations = new BinaryDeclarations(text);
+        for (var declaration in declarations) {
+          expect(declaration is TypedefDeclaration, true, reason: "Not a $TypedefDeclaration");
+        }
+
+        _checkPresentation(text, declarations);
+      });
+    });
+
+    group("Enums.", () {
+      var baseList = <String>[];
+      baseList.add("enum { A }");
+      baseList.add("enum s { A }");
+      baseList.add("enum s { A }");
+      baseList.add("enum s { A, B }");
+      baseList.add("enum s { A = 0 }");
+      baseList.add("enum s { A = 0, B }");
+      baseList.add("enum s { A = 0, B, C = 0 }");
+      baseList.add("enum s { A = 0, B, C = -1 }");
+      test("Enum declarations.", () {
+        var lines = baseList.toList();
+        lines = _addBeforeAndAfter(lines, "", ";");
+        var text = lines.join("\n");
+        var declarations = new BinaryDeclarations(text);
+        for (var declaration in declarations) {
+          expect(declaration is EnumDeclaration, true, reason: "Not a $EnumDeclaration");
+        }
+
+        _checkPresentation(text, declarations);
+
+        try {
+          new BinaryDeclarations("enum { A, };");
+        } catch(e) {
+          expect(true, false, reason: "Extra comma 'enum { A, }'");
+        }
+      });
+
+      test("Enum variable declarations.", () {
+        var lines = baseList.toList();
+        lines = _addBeforeAndAfter(lines, "", " s1;");
+        var text = lines.join("\n");
+        var declarations = new BinaryDeclarations(text);
+        for (var declaration in declarations) {
+          expect(declaration is VariableDeclaration, true, reason: "Not a $VariableDeclaration");
+        }
+
+        _checkPresentation(text, declarations);
+      });
+
+      test("Enum typedef declarations.", () {
         var lines = baseList.toList();
         lines = _addBeforeAndAfter(lines, "typedef ", " s1;");
         var text = lines.join("\n");
@@ -182,12 +237,6 @@ void main() {
       });
     });
   });
-
-  var list = <String>[];
-  list.add("typedef __attribute__((aligned(8))) int INT;");
-  var text = list.join("\n");
-  var declarations = new BinaryDeclarations(text);
-  _checkPresentation(text, declarations);
 
   group("Misc.", () {
     test("Octal numbers.", () {
