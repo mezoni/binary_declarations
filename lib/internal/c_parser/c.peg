@@ -234,7 +234,7 @@ IDENT_PART <-
   / IDENT_CONT
 
 IDENT_START <-
-  [A-Z_a-z]
+  [A-Z_a-z_]
 
 ID_CHAR <-
   'char' !IDENT_PART SPACING { $$ = $1; }

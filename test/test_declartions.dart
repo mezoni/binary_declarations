@@ -7,6 +7,7 @@ void main() {
       test("Function declarations.", () {
         var list = <String>[];
         list.add("foo();");
+        list.add("foo();");
         list.add("foo(int);");
         list.add("foo(int, int*);");
         list.add("foo(int, int*);");
