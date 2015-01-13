@@ -19,3 +19,4 @@
 0.0.11 Removed dependency to `binary_types`
 0.0.12 Initial support of enums
 0.0.12 Breaking change. Most of classes reworked
+0.0.14 Generated new `c.peg` parser using new version of `peg` generator. Now the error messages should be a more understandable.

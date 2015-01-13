@@ -160,31 +160,31 @@ class CParser {
   
   static final List<String> _expect63 = <String>["INTEGER"];
   
-  static final List<String> _expect64 = <String>["NUMBER"];
+  static final List<String> _expect64 = <String>["\'-\'"];
   
-  static final List<String> _expect65 = <String>["OCTAL_NUMBER"];
+  static final List<String> _expect65 = <String>["NUMBER"];
   
-  static final List<String> _expect66 = <String>["SIGN"];
+  static final List<String> _expect66 = <String>["OCTAL_NUMBER"];
   
-  static final List<String> _expect67 = <String>["\'+\'", "\'-\'"];
+  static final List<String> _expect67 = <String>["\'(\'"];
   
-  static final List<String> _expect68 = <String>["\'-\'"];
+  static final List<String> _expect68 = <String>["\'+\'"];
   
-  static final List<String> _expect69 = <String>["\'+\'"];
+  static final List<String> _expect69 = <String>["PointerParameter"];
   
   static final List<String> _expect7 = <String>["\'enum\'", "\'struct\'", "\'union\'", "ArrayVariableDeclaration", "PointerVariableDeclaration", "SimpleVariableDeclaration"];
   
-  static final List<String> _expect70 = <String>["\'(\'"];
+  static final List<String> _expect70 = <String>["PointerType"];
   
-  static final List<String> _expect71 = <String>["PointerParameter"];
+  static final List<String> _expect71 = <String>["ReservedWord"];
   
-  static final List<String> _expect72 = <String>["PointerType"];
+  static final List<String> _expect72 = <String>["char", "double", "enum", "float", "int", "long", "short", "signed", "struct", "typedef", "union", "unsigned", "void"];
   
-  static final List<String> _expect73 = <String>["ReservedWord"];
+  static final List<String> _expect73 = <String>["IDENT_CONT", "IDENT_START"];
   
-  static final List<String> _expect74 = <String>["char", "double", "enum", "float", "int", "long", "short", "signed", "struct", "typedef", "union", "unsigned", "void"];
+  static final List<String> _expect74 = <String>["SIGN"];
   
-  static final List<String> _expect75 = <String>["IDENT_CONT", "IDENT_START"];
+  static final List<String> _expect75 = <String>["\'+\'", "\'-\'"];
   
   static final List<String> _expect76 = <String>["SPACE"];
   
@@ -250,9 +250,9 @@ class CParser {
   
   static final List<int> _strings9 = <int>[100, 111, 117, 98, 108, 101];
   
-  final List<int> _tokenFlags = [1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1];
+  final List<int> _tokenFlags = [1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1];
   
-  final List<String> _tokenNames = ["ArrayVariableDeclaration", "\'__attribute__\'", "\'}\'", "EOF", "\'enum\'", "FunctionDeclartion", "IDENTIFIER", "\'struct\'", "\'union\'", "\'{\'", "PointerVariableDeclaration", "\';\'", "SPACING", "SimpleVariableDeclaration", "\'typedef\'", "TypedefArrayTypeDeclaration", "TypedefSimpleTypeDeclaration", "\'=\'", "\'*\'", "\'__attribute__\'", "ArrayParameter", "ArrayType", "Attribute", "AttributeList", "AttributeParameter", "AttributeParameterList", "\']\'", "\')\'", "\',\'", "\'//\'", "\'const\'", "ConstPointerParameter", "\'[\'", "\'[\'", "Dimension", "\'...\'", "EOL", "EnumValue", "EnumValueList", "FunctionParameter", "FunctionParameterList", "FunctionParameters", "IDENT", "IDENT_CONT", "IDENT_PART", "IDENT_START", "\'char\'", "\'double\'", "\'enum\'", "\'float\'", "\'int\'", "\'long\'", "\'short\'", "\'signed\'", "\'unsigned\'", "\'void\'", "INTEGER", "\'long\'", "NUMBER", "OCTAL_NUMBER", "SIGN", "\'[\'", "\'-\'", "\'+\'", "\'(\'", "PointerParameter", "PointerType", "ReservedWord", "SPACE", "SimpleParameter", "Type", "TypeName", "TypeSign", "\'...\'", "ZERO"];
+  final List<String> _tokenNames = ["\'__attribute__\'", "\'}\'", "EOF", "IDENTIFIER", "\'struct\'", "\'union\'", "\'{\'", "SPACING", "\'=\'", "\'*\'", "\'__attribute__\'", "ArrayParameter", "ArrayType", "Attribute", "AttributeList", "AttributeParameter", "AttributeParameterList", "\']\'", "\')\'", "\',\'", "\'//\'", "\'const\'", "ConstPointerParameter", "\'[\'", "\'[\'", "Dimension", "\'...\'", "EOL", "EnumValue", "EnumValueList", "FunctionParameter", "FunctionParameterList", "FunctionParameters", "IDENT", "IDENT_CONT", "IDENT_PART", "IDENT_START", "\'char\'", "\'double\'", "\'enum\'", "\'float\'", "\'int\'", "\'long\'", "\'short\'", "\'signed\'", "\'unsigned\'", "\'void\'", "INTEGER", "\'long\'", "\'-\'", "NUMBER", "OCTAL_NUMBER", "\'[\'", "\'(\'", "\'+\'", "PointerParameter", "PointerType", "ReservedWord", "SIGN", "SPACE", "SimpleParameter", "Type", "TypeName", "TypeSign", "\'...\'", "ZERO"];
   
   static final List<List<int>> _transitions0 = [[59, 59], [65, 90, 95, 95], [97, 122]];
   
@@ -266,11 +266,11 @@ class CParser {
   
   static final List<List<int>> _transitions13 = [[48, 57], [65, 90, 95, 95, 97, 122]];
   
-  static final List<List<int>> _transitions14 = [[43, 43], [45, 45]];
+  static final List<List<int>> _transitions14 = [[99, 102, 105, 105, 108, 108, 115, 118]];
   
-  static final List<List<int>> _transitions15 = [[99, 102, 105, 105, 108, 108, 115, 118]];
+  static final List<List<int>> _transitions15 = [[99, 99], [100, 100], [101, 101], [102, 102], [105, 105], [108, 108], [115, 115], [116, 116], [117, 117], [118, 118]];
   
-  static final List<List<int>> _transitions16 = [[99, 99], [100, 100], [101, 101], [102, 102], [105, 105], [108, 108], [115, 115], [116, 116], [117, 117], [118, 118]];
+  static final List<List<int>> _transitions16 = [[43, 43], [45, 45]];
   
   static final List<List<int>> _transitions17 = [[9, 10, 13, 13, 32, 32]];
   
@@ -597,7 +597,7 @@ class CParser {
   
   dynamic _parse_ASSIGN() {
     var $$;
-    _beginToken(17);  
+    _beginToken(8);  
     switch (_ch == 61 ? 0 : _ch == -1 ? 2 : 1) {
       case 0:
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
@@ -644,7 +644,7 @@ class CParser {
   
   dynamic _parse_ASTERISK() {
     var $$;
-    _beginToken(18);  
+    _beginToken(9);  
     switch (_ch == 42 ? 0 : _ch == -1 ? 2 : 1) {
       case 0:
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
@@ -691,7 +691,7 @@ class CParser {
   
   dynamic _parse_ATTRIBUTE() {
     var $$;
-    _beginToken(19);  
+    _beginToken(10);  
     switch (_ch == 95 ? 0 : _ch == -1 ? 2 : 1) {
       case 0:
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
@@ -732,7 +732,7 @@ class CParser {
   
   dynamic _parse_ArrayParameter() {
     var $$;
-    _beginToken(20);  
+    _beginToken(11);  
     switch (_getState(_transitions6)) {
       case 0:
       case 2:
@@ -781,7 +781,7 @@ class CParser {
   
   dynamic _parse_ArrayType() {
     var $$;
-    _beginToken(21);  
+    _beginToken(12);  
     switch (_getState(_transitions6)) {
       case 0:
       case 2:
@@ -822,7 +822,6 @@ class CParser {
   
   dynamic _parse_ArrayVariableDeclaration() {
     var $$;
-    _beginToken(0);  
     switch (_getState(_transitions6)) {
       case 0:
       case 2:
@@ -861,13 +860,12 @@ class CParser {
     if (!success && _cursor > _testing) {
       _failure(_expect8);
     }
-    _endToken();
     return $$;
   }
   
   dynamic _parse_Attribute() {
     var $$;
-    _beginToken(22);  
+    _beginToken(13);  
     switch (_getState(_transitions6)) {
       case 0:
         while (true) {
@@ -931,7 +929,7 @@ class CParser {
   
   dynamic _parse_AttributeList() {
     var $$;
-    _beginToken(23);  
+    _beginToken(14);  
     switch (_getState(_transitions6)) {
       case 0:
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
@@ -1012,7 +1010,7 @@ class CParser {
   
   dynamic _parse_AttributeParameter() {
     var $$;
-    _beginToken(24);  
+    _beginToken(15);  
     switch (_getState(_transitions10)) {
       case 0:
         var startPos0 = _startPos;
@@ -1046,7 +1044,7 @@ class CParser {
   
   dynamic _parse_AttributeParameterList() {
     var $$;
-    _beginToken(25);  
+    _beginToken(16);  
     switch (_ch >= 0 && _ch <= 1114111 ? 0 : _ch == -1 ? 2 : 1) {
       case 0:
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
@@ -1127,7 +1125,7 @@ class CParser {
   
   dynamic _parse_Attributes() {
     var $$;
-    _beginToken(1);  
+    _beginToken(0);  
     switch (_ch == 95 ? 0 : _ch == -1 ? 2 : 1) {
       case 0:
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
@@ -1188,7 +1186,7 @@ class CParser {
   
   dynamic _parse_CLOSE_BRACE() {
     var $$;
-    _beginToken(2);  
+    _beginToken(1);  
     switch (_ch == 125 ? 0 : _ch == -1 ? 2 : 1) {
       case 0:
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
@@ -1235,7 +1233,7 @@ class CParser {
   
   dynamic _parse_CLOSE_BRACKET() {
     var $$;
-    _beginToken(26);  
+    _beginToken(17);  
     switch (_ch == 93 ? 0 : _ch == -1 ? 2 : 1) {
       case 0:
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
@@ -1282,7 +1280,7 @@ class CParser {
   
   dynamic _parse_CLOSE_PAREN() {
     var $$;
-    _beginToken(27);  
+    _beginToken(18);  
     switch (_ch == 41 ? 0 : _ch == -1 ? 2 : 1) {
       case 0:
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
@@ -1329,7 +1327,7 @@ class CParser {
   
   dynamic _parse_COMMA() {
     var $$;
-    _beginToken(28);  
+    _beginToken(19);  
     switch (_ch == 44 ? 0 : _ch == -1 ? 2 : 1) {
       case 0:
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
@@ -1376,7 +1374,7 @@ class CParser {
   
   dynamic _parse_COMMENT() {
     var $$;
-    _beginToken(29);  
+    _beginToken(20);  
     switch (_ch == 47 ? 0 : _ch == -1 ? 2 : 1) {
       case 0:
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
@@ -1488,7 +1486,7 @@ class CParser {
   
   dynamic _parse_CONST() {
     var $$;
-    _beginToken(30);  
+    _beginToken(21);  
     switch (_ch == 99 ? 0 : _ch == -1 ? 2 : 1) {
       case 0:
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
@@ -1529,7 +1527,7 @@ class CParser {
   
   dynamic _parse_ConstPointerParameter() {
     var $$;
-    _beginToken(31);  
+    _beginToken(22);  
     switch (_getState(_transitions6)) {
       case 0:
       case 2:
@@ -1582,7 +1580,7 @@ class CParser {
   
   dynamic _parse_DIMENSION() {
     var $$;
-    _beginToken(32);  
+    _beginToken(23);  
     switch (_ch == 91 ? 0 : _ch == -1 ? 2 : 1) {
       case 0:
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
@@ -1631,7 +1629,7 @@ class CParser {
   
   dynamic _parse_DIMENSIONS() {
     var $$;
-    _beginToken(33);  
+    _beginToken(24);  
     switch (_ch == 91 ? 0 : _ch == -1 ? 2 : 1) {
       case 0:
         var startPos0 = _startPos;
@@ -2093,7 +2091,7 @@ class CParser {
   
   dynamic _parse_Dimension() {
     var $$;
-    _beginToken(34);  
+    _beginToken(25);  
     switch (_ch >= 0 && _ch <= 1114111 ? 0 : _ch == -1 ? 2 : 1) {
       case 0:
       case 2:
@@ -2162,7 +2160,7 @@ class CParser {
   
   dynamic _parse_ELLIPSIS() {
     var $$;
-    _beginToken(35);  
+    _beginToken(26);  
     switch (_ch == 46 ? 0 : _ch == -1 ? 2 : 1) {
       case 0:
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
@@ -2203,7 +2201,7 @@ class CParser {
   
   dynamic _parse_EOF() {
     var $$;
-    _beginToken(3);  
+    _beginToken(2);  
     switch (_ch >= 0 && _ch <= 1114111 ? 0 : _ch == -1 ? 2 : 1) {
       case 0:
       case 2:
@@ -2232,7 +2230,7 @@ class CParser {
   
   dynamic _parse_EOL() {
     var $$;
-    _beginToken(36);  
+    _beginToken(27);  
     switch (_getState(_transitions12)) {
       case 0:
         var startPos0 = _startPos;
@@ -2266,7 +2264,6 @@ class CParser {
   
   dynamic _parse_EnumDeclaration() {
     var $$;
-    _beginToken(4);  
     switch (_ch == 101 ? 0 : _ch == -1 ? 2 : 1) {
       case 0:
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
@@ -2317,13 +2314,12 @@ class CParser {
     if (!success && _cursor > _testing) {
       _failure(_expect11);
     }
-    _endToken();
     return $$;
   }
   
   dynamic _parse_EnumValue() {
     var $$;
-    _beginToken(37);  
+    _beginToken(28);  
     switch (_getState(_transitions6)) {
       case 0:
       case 2:
@@ -2379,7 +2375,7 @@ class CParser {
   
   dynamic _parse_EnumValueList() {
     var $$;
-    _beginToken(38);  
+    _beginToken(29);  
     switch (_getState(_transitions6)) {
       case 0:
       case 2:
@@ -2468,7 +2464,6 @@ class CParser {
   
   dynamic _parse_FunctionDeclartion() {
     var $$;
-    _beginToken(5);  
     switch (_getState(_transitions6)) {
       case 0:
       case 2:
@@ -2557,13 +2552,12 @@ class CParser {
     if (!success && _cursor > _testing) {
       _failure(_expect12);
     }
-    _endToken();
     return $$;
   }
   
   dynamic _parse_FunctionParameter() {
     var $$;
-    _beginToken(39);  
+    _beginToken(30);  
     switch (_getState(_transitions6)) {
       case 0:
       case 2:
@@ -2600,7 +2594,7 @@ class CParser {
   
   dynamic _parse_FunctionParameterList() {
     var $$;
-    _beginToken(40);  
+    _beginToken(31);  
     switch (_getState(_transitions6)) {
       case 0:
       case 2:
@@ -2681,7 +2675,7 @@ class CParser {
   
   dynamic _parse_FunctionParameters() {
     var $$;
-    _beginToken(41);  
+    _beginToken(32);  
     switch (_getState(_transitions6)) {
       case 0:
       case 2:
@@ -2759,7 +2753,7 @@ class CParser {
   
   dynamic _parse_IDENT() {
     var $$;
-    _beginToken(42);  
+    _beginToken(33);  
     switch (_getState(_transitions6)) {
       case 0:
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
@@ -2816,7 +2810,7 @@ class CParser {
   
   dynamic _parse_IDENTIFIER() {
     var $$;
-    _beginToken(6);  
+    _beginToken(3);  
     switch (_getState(_transitions6)) {
       case 0:
       case 2:
@@ -2884,7 +2878,7 @@ class CParser {
   
   dynamic _parse_IDENT_CONT() {
     var $$;
-    _beginToken(43);  
+    _beginToken(34);  
     switch (_getState(_transitions13)) {
       case 0:
         var startPos0 = _startPos;
@@ -2911,7 +2905,7 @@ class CParser {
   
   dynamic _parse_IDENT_PART() {
     var $$;
-    _beginToken(44);  
+    _beginToken(35);  
     switch (_getState(_transitions13)) {
       case 0:
         var startPos0 = _startPos;
@@ -2945,7 +2939,7 @@ class CParser {
   
   dynamic _parse_IDENT_START() {
     var $$;
-    _beginToken(45);  
+    _beginToken(36);  
     switch (_getState(_transitions6)) {
       case 0:
         var startPos0 = _startPos;
@@ -2967,7 +2961,7 @@ class CParser {
   
   dynamic _parse_ID_CHAR() {
     var $$;
-    _beginToken(46);  
+    _beginToken(37);  
     switch (_ch == 99 ? 0 : _ch == -1 ? 2 : 1) {
       case 0:
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
@@ -3019,7 +3013,7 @@ class CParser {
   
   dynamic _parse_ID_DOUBLE() {
     var $$;
-    _beginToken(47);  
+    _beginToken(38);  
     switch (_ch == 100 ? 0 : _ch == -1 ? 2 : 1) {
       case 0:
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
@@ -3071,7 +3065,7 @@ class CParser {
   
   dynamic _parse_ID_ENUM() {
     var $$;
-    _beginToken(48);  
+    _beginToken(39);  
     switch (_ch == 101 ? 0 : _ch == -1 ? 2 : 1) {
       case 0:
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
@@ -3123,7 +3117,7 @@ class CParser {
   
   dynamic _parse_ID_FLOAT() {
     var $$;
-    _beginToken(49);  
+    _beginToken(40);  
     switch (_ch == 102 ? 0 : _ch == -1 ? 2 : 1) {
       case 0:
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
@@ -3175,7 +3169,7 @@ class CParser {
   
   dynamic _parse_ID_INT() {
     var $$;
-    _beginToken(50);  
+    _beginToken(41);  
     switch (_ch == 105 ? 0 : _ch == -1 ? 2 : 1) {
       case 0:
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
@@ -3227,7 +3221,7 @@ class CParser {
   
   dynamic _parse_ID_LONG() {
     var $$;
-    _beginToken(51);  
+    _beginToken(42);  
     switch (_ch == 108 ? 0 : _ch == -1 ? 2 : 1) {
       case 0:
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
@@ -3279,7 +3273,7 @@ class CParser {
   
   dynamic _parse_ID_SHORT() {
     var $$;
-    _beginToken(52);  
+    _beginToken(43);  
     switch (_ch == 115 ? 0 : _ch == -1 ? 2 : 1) {
       case 0:
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
@@ -3331,7 +3325,7 @@ class CParser {
   
   dynamic _parse_ID_SIGNED() {
     var $$;
-    _beginToken(53);  
+    _beginToken(44);  
     switch (_ch == 115 ? 0 : _ch == -1 ? 2 : 1) {
       case 0:
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
@@ -3383,7 +3377,7 @@ class CParser {
   
   dynamic _parse_ID_STRUCT() {
     var $$;
-    _beginToken(7);  
+    _beginToken(4);  
     switch (_ch == 115 ? 0 : _ch == -1 ? 2 : 1) {
       case 0:
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
@@ -3435,7 +3429,7 @@ class CParser {
   
   dynamic _parse_ID_UNION() {
     var $$;
-    _beginToken(8);  
+    _beginToken(5);  
     switch (_ch == 117 ? 0 : _ch == -1 ? 2 : 1) {
       case 0:
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
@@ -3487,7 +3481,7 @@ class CParser {
   
   dynamic _parse_ID_UNSIGNED() {
     var $$;
-    _beginToken(54);  
+    _beginToken(45);  
     switch (_ch == 117 ? 0 : _ch == -1 ? 2 : 1) {
       case 0:
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
@@ -3539,7 +3533,7 @@ class CParser {
   
   dynamic _parse_ID_VOID() {
     var $$;
-    _beginToken(55);  
+    _beginToken(46);  
     switch (_ch == 118 ? 0 : _ch == -1 ? 2 : 1) {
       case 0:
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
@@ -3591,7 +3585,7 @@ class CParser {
   
   dynamic _parse_INTEGER() {
     var $$;
-    _beginToken(56);  
+    _beginToken(47);  
     switch (_ch >= 0 && _ch <= 1114111 ? 0 : _ch == -1 ? 2 : 1) {
       case 0:
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
@@ -3656,7 +3650,7 @@ class CParser {
   
   dynamic _parse_LongType() {
     var $$;
-    _beginToken(57);  
+    _beginToken(48);  
     switch (_ch == 108 ? 0 : _ch == -1 ? 2 : 1) {
       case 0:
         while (true) {
@@ -3704,7 +3698,7 @@ class CParser {
   
   dynamic _parse_MINUS() {
     var $$;
-    _beginToken(62);  
+    _beginToken(49);  
     switch (_ch == 45 ? 0 : _ch == -1 ? 2 : 1) {
       case 0:
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
@@ -3743,7 +3737,7 @@ class CParser {
         break;
     }
     if (!success && _cursor > _testing) {
-      _failure(_expect68);
+      _failure(_expect64);
     }
     _endToken();
     return $$;
@@ -3751,7 +3745,7 @@ class CParser {
   
   dynamic _parse_NUMBER() {
     var $$;
-    _beginToken(58);  
+    _beginToken(50);  
     switch (_ch >= 0 && _ch <= 1114111 ? 0 : _ch == -1 ? 2 : 1) {
       case 0:
         while (true) {
@@ -3772,7 +3766,7 @@ class CParser {
         break;
     }
     if (!success && _cursor > _testing) {
-      _failure(_expect64);
+      _failure(_expect65);
     }
     _endToken();
     return $$;
@@ -3780,7 +3774,7 @@ class CParser {
   
   dynamic _parse_OCTAL_NUMBER() {
     var $$;
-    _beginToken(59);  
+    _beginToken(51);  
     switch (_ch >= 0 && _ch <= 1114111 ? 0 : _ch == -1 ? 2 : 1) {
       case 0:
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
@@ -3837,7 +3831,7 @@ class CParser {
         break;
     }
     if (!success && _cursor > _testing) {
-      _failure(_expect65);
+      _failure(_expect66);
     }
     _endToken();
     return $$;
@@ -3845,7 +3839,7 @@ class CParser {
   
   dynamic _parse_OPEN_BRACE() {
     var $$;
-    _beginToken(9);  
+    _beginToken(6);  
     switch (_ch == 123 ? 0 : _ch == -1 ? 2 : 1) {
       case 0:
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
@@ -3892,7 +3886,7 @@ class CParser {
   
   dynamic _parse_OPEN_BRACKET() {
     var $$;
-    _beginToken(61);  
+    _beginToken(52);  
     switch (_ch == 91 ? 0 : _ch == -1 ? 2 : 1) {
       case 0:
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
@@ -3939,7 +3933,7 @@ class CParser {
   
   dynamic _parse_OPEN_PAREN() {
     var $$;
-    _beginToken(64);  
+    _beginToken(53);  
     switch (_ch == 40 ? 0 : _ch == -1 ? 2 : 1) {
       case 0:
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
@@ -3978,7 +3972,7 @@ class CParser {
         break;
     }
     if (!success && _cursor > _testing) {
-      _failure(_expect70);
+      _failure(_expect67);
     }
     _endToken();
     return $$;
@@ -3986,7 +3980,7 @@ class CParser {
   
   dynamic _parse_PLUS() {
     var $$;
-    _beginToken(63);  
+    _beginToken(54);  
     switch (_ch == 43 ? 0 : _ch == -1 ? 2 : 1) {
       case 0:
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
@@ -4025,7 +4019,7 @@ class CParser {
         break;
     }
     if (!success && _cursor > _testing) {
-      _failure(_expect69);
+      _failure(_expect68);
     }
     _endToken();
     return $$;
@@ -4033,7 +4027,7 @@ class CParser {
   
   dynamic _parse_PointerParameter() {
     var $$;
-    _beginToken(65);  
+    _beginToken(55);  
     switch (_getState(_transitions6)) {
       case 0:
       case 2:
@@ -4070,7 +4064,7 @@ class CParser {
         break;
     }
     if (!success && _cursor > _testing) {
-      _failure(_expect71);
+      _failure(_expect69);
     }
     _endToken();
     return $$;
@@ -4078,7 +4072,7 @@ class CParser {
   
   dynamic _parse_PointerType() {
     var $$;
-    _beginToken(66);  
+    _beginToken(56);  
     switch (_getState(_transitions6)) {
       case 0:
       case 2:
@@ -4131,7 +4125,7 @@ class CParser {
         break;
     }
     if (!success && _cursor > _testing) {
-      _failure(_expect72);
+      _failure(_expect70);
     }
     _endToken();
     return $$;
@@ -4139,7 +4133,6 @@ class CParser {
   
   dynamic _parse_PointerVariableDeclaration() {
     var $$;
-    _beginToken(10);  
     switch (_getState(_transitions6)) {
       case 0:
       case 2:
@@ -4174,19 +4167,18 @@ class CParser {
     if (!success && _cursor > _testing) {
       _failure(_expect17);
     }
-    _endToken();
     return $$;
   }
   
   dynamic _parse_ReservedWord() {
     var $$;
-    _beginToken(67);  
-    switch (_getState(_transitions15)) {
+    _beginToken(57);  
+    switch (_getState(_transitions14)) {
       case 0:
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
         _startPos = _cursor;
         while (true) {  
-          switch (_getState(_transitions16)) {
+          switch (_getState(_transitions15)) {
             case 0:
               var startPos1 = _startPos;
               $$ = _matchString(_strings8, 'char');
@@ -4262,7 +4254,7 @@ class CParser {
               break;
           }
           if (!success && _cursor > _testing) {
-            _failure(_expect74);
+            _failure(_expect72);
           }
           if (!success) break;
           var seq = new List(2)..[0] = $$;
@@ -4293,7 +4285,7 @@ class CParser {
               break;
           }
           if (!success && _cursor > _testing) {
-            _failure(_expect75);
+            _failure(_expect73);
           }
           _ch = ch1;
           _cursor = pos1; 
@@ -4323,7 +4315,7 @@ class CParser {
         break;
     }
     if (!success && _cursor > _testing) {
-      _failure(_expect73);
+      _failure(_expect71);
     }
     _endToken();
     return $$;
@@ -4331,7 +4323,6 @@ class CParser {
   
   dynamic _parse_SEMICOLON() {
     var $$;
-    _beginToken(11);  
     switch (_ch == 59 ? 0 : _ch == -1 ? 2 : 1) {
       case 0:
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
@@ -4372,20 +4363,19 @@ class CParser {
     if (!success && _cursor > _testing) {
       _failure(_expect18);
     }
-    _endToken();
     return $$;
   }
   
   dynamic _parse_SIGN() {
     var $$;
-    _beginToken(60);  
+    _beginToken(58);  
     switch (_ch >= 0 && _ch <= 1114111 ? 0 : _ch == -1 ? 2 : 1) {
       case 0:
       case 2:
         var startPos0 = _startPos;
         var testing0 = _testing;
         _testing = _cursor;
-        switch (_getState(_transitions14)) {
+        switch (_getState(_transitions16)) {
           case 0:
             var startPos1 = _startPos;
             $$ = _parse_PLUS();
@@ -4403,7 +4393,7 @@ class CParser {
             break;
         }
         if (!success && _cursor > _testing) {
-          _failure(_expect67);
+          _failure(_expect75);
         }
         success = true; 
         _testing = testing0;
@@ -4419,7 +4409,7 @@ class CParser {
         break;
     }
     if (!success && _cursor > _testing) {
-      _failure(_expect66);
+      _failure(_expect74);
     }
     _endToken();
     return $$;
@@ -4427,7 +4417,7 @@ class CParser {
   
   dynamic _parse_SPACE() {
     var $$;
-    _beginToken(68);  
+    _beginToken(59);  
     switch (_getState(_transitions17)) {
       case 0:
         var startPos0 = _startPos;
@@ -4449,7 +4439,7 @@ class CParser {
   
   dynamic _parse_SPACING() {
     var $$;
-    _beginToken(12);  
+    _beginToken(7);  
     switch (_ch >= 0 && _ch <= 1114111 ? 0 : _ch == -1 ? 2 : 1) {
       case 0:
       case 2:
@@ -4502,7 +4492,7 @@ class CParser {
   
   dynamic _parse_SimpleParameter() {
     var $$;
-    _beginToken(69);  
+    _beginToken(60);  
     switch (_getState(_transitions6)) {
       case 0:
       case 2:
@@ -4547,7 +4537,6 @@ class CParser {
   
   dynamic _parse_SimpleVariableDeclaration() {
     var $$;
-    _beginToken(13);  
     switch (_getState(_transitions6)) {
       case 0:
       case 2:
@@ -4582,7 +4571,6 @@ class CParser {
     if (!success && _cursor > _testing) {
       _failure(_expect21);
     }
-    _endToken();
     return $$;
   }
   
@@ -4814,7 +4802,6 @@ class CParser {
   
   dynamic _parse_TYPEDEF() {
     var $$;
-    _beginToken(14);  
     switch (_ch == 116 ? 0 : _ch == -1 ? 2 : 1) {
       case 0:
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
@@ -4849,7 +4836,6 @@ class CParser {
     if (!success && _cursor > _testing) {
       _failure(_expect3);
     }
-    _endToken();
     return $$;
   }
   
@@ -4938,7 +4924,7 @@ class CParser {
   
   dynamic _parse_Type() {
     var $$;
-    _beginToken(70);  
+    _beginToken(61);  
     switch (_getState(_transitions6)) {
       case 0:
       case 2:
@@ -4971,7 +4957,7 @@ class CParser {
   
   dynamic _parse_TypeName() {
     var $$;
-    _beginToken(71);  
+    _beginToken(62);  
     switch (_getState(_transitions7)) {
       case 0:
       case 3:
@@ -5202,7 +5188,7 @@ class CParser {
   
   dynamic _parse_TypeSign() {
     var $$;
-    _beginToken(72);  
+    _beginToken(63);  
     switch (_getState(_transitions5)) {
       case 0:
         var startPos0 = _startPos;
@@ -5229,7 +5215,6 @@ class CParser {
   
   dynamic _parse_TypedefArrayTypeDeclaration() {
     var $$;
-    _beginToken(15);  
     switch (_getState(_transitions6)) {
       case 0:
       case 2:
@@ -5276,7 +5261,6 @@ class CParser {
     if (!success && _cursor > _testing) {
       _failure(_expect22);
     }
-    _endToken();
     return $$;
   }
   
@@ -5321,7 +5305,6 @@ class CParser {
   
   dynamic _parse_TypedefSimpleTypeDeclaration() {
     var $$;
-    _beginToken(16);  
     switch (_getState(_transitions6)) {
       case 0:
       case 2:
@@ -5364,7 +5347,6 @@ class CParser {
     if (!success && _cursor > _testing) {
       _failure(_expect23);
     }
-    _endToken();
     return $$;
   }
   
@@ -5460,7 +5442,7 @@ class CParser {
   
   dynamic _parse_VaListParameter() {
     var $$;
-    _beginToken(73);  
+    _beginToken(64);  
     switch (_ch == 46 ? 0 : _ch == -1 ? 2 : 1) {
       case 0:
         var startPos0 = _startPos;
@@ -5537,7 +5519,7 @@ class CParser {
   
   dynamic _parse_ZERO() {
     var $$;
-    _beginToken(74);  
+    _beginToken(65);  
     switch (_ch == 48 ? 0 : _ch == -1 ? 2 : 1) {
       case 0:
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;

@@ -1,3 +1,7 @@
+## 0.0.14
+
+- Generated new `c.peg` parser using new version of `peg` generator. Now the error messages should be a more understandable.
+
 ## 0.0.12
 
 - Breaking change. Most of classes reworked
