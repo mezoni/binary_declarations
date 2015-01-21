@@ -109,7 +109,7 @@ void main() {
 
         try {
           new BinaryDeclarations("enum { A, };");
-        } catch(e) {
+        } catch (e) {
           expect(true, false, reason: "Extra comma 'enum { A, }'");
         }
       });
@@ -261,6 +261,19 @@ void main() {
     test("Semicolons.", () {
       var declarations = new BinaryDeclarations(";;;");
       _checkPresentation(";;", declarations);
+    });
+
+    test("Directives.", () {
+      var list = <String>[];
+      list.add("#define FOO");
+      list.add("#if defined(FOO)");
+      list.add("typedef int INT;");
+      list.add("#else");
+      list.add("typedef int LONG;");
+      list.add("#endif");
+      var text = list.join("\n");
+      var declarations = new BinaryDeclarations(text);
+      _checkPresentation("typedef int INT;", declarations);
     });
   });
 }

@@ -17,14 +17,11 @@ Version: {{VERSION}}
 **Current features**
 
 - Enum declarations
+- Macro processing
 - Function declarations
 - Struct declarations
 - Typedef declarations
 - Union declarations
 - Variable declarations
-
-**Planned features**
-
-- Preprocessor directives
 
 {{example/example.dart}}

@@ -120,27 +120,40 @@ abstract class BinaryDeclaration {
 class BinaryDeclarations extends Object with IterableMixin<BinaryDeclaration> {
   List<BinaryDeclaration> _declarations;
 
-  BinaryDeclarations(String text) {
-    var parser = new CParser(text);
-    var result = parser.parse_Declarations();
-    if (!parser.success) {
-      var text = new Text(parser.text);
-      for (var error in parser.errors()) {
-        var position = error.position;
-        var location = "EOF";
-        if (position < text.length) {
-          location = text.locationAt(error.position);
-        }
+  BinaryDeclarations(String source, {Map<String, String> environment}) {
+    if (source == null) {
+      throw new ArgumentError.notNull("source");
+    }
 
-        var message = "Parser error at $location. ${error.message}";
-        print(message);
-      }
-
-      throw new FormatException();
+    if (environment == null) {
+      environment = <String, String>{};
     }
 
     _declarations = <BinaryDeclaration>[];
-    _declarations.addAll(result);
+    var processor = new MacroProcessor();
+    var blocks = processor.process(source, environment);
+    var numberOfBlocks = blocks.length;
+    if (numberOfBlocks == 0) {
+      return;
+    }
+
+    for (var i = 0; i < numberOfBlocks; i++) {
+      var block = blocks[i];
+      var parser = new CParser(block.text);
+      var result = parser.parse_Declarations();
+      if (!parser.success) {
+        var messages = [];
+        for (var error in parser.errors()) {
+          messages.add(new ParserErrorMessage(error.message, error.start, error.position));
+        }
+
+        var strings = ParserErrorFormatter.format(source, messages, offset: block.position);
+        print(strings.join("\n"));
+        throw new FormatException();
+      }
+
+      _declarations.addAll(result);
+    }
   }
 
   Iterator<BinaryDeclaration> get iterator => _declarations.iterator;

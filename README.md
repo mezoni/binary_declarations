@@ -3,7 +3,7 @@ binary_declarations
 
 Binary declarations is a set of classes for parsing declarations of the binary types specified in textual form.
 
-Version: 0.0.15
+Version: 0.0.16
 
 [Donate to binary declarations for dart](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=binary.dart@gmail.com&item_name=binary.declarations.for.dart&currency_code=USD)
 
@@ -17,14 +17,11 @@ Version: 0.0.15
 **Current features**
 
 - Enum declarations
+- Macro processing
 - Function declarations
 - Struct declarations
 - Typedef declarations
 - Union declarations
 - Variable declarations
-
-**Planned features**
-
-- Preprocessor directives
 
 
