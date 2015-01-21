@@ -1026,17 +1026,8 @@ class CParser {
   dynamic _parse_Attribute() {
     // MORPHEME
     // Attribute <- IDENT OPEN_PAREN AttributeParameterList? CLOSE_PAREN / IDENT
-    var $$;          
-    var pos = _cursor;    
-    if(_cachePos[34] >= pos) {
-      $$ = _getFromCache(34);
-    } else {
-      _cachePos[34] = pos;
-    }
-    if($$ != null) {
-      return $$[0];       
-    }  
-    _beginToken(13);    
+    var $$;
+    _beginToken(13);  
     // => IDENT OPEN_PAREN AttributeParameterList? CLOSE_PAREN / IDENT # Choice
     switch (_getState(_transitions6)) {
       // [A-Z] [_] [a-z]
@@ -1122,9 +1113,6 @@ class CParser {
       _failure(_expect28);
     }
     // <= IDENT OPEN_PAREN AttributeParameterList? CLOSE_PAREN / IDENT # Choice
-    if (_cacheable[34]) {
-      _addToCache($$, pos, 34);
-    }  
     _endToken();
     return $$;
   }
@@ -1242,17 +1230,8 @@ class CParser {
   dynamic _parse_AttributeParameter() {
     // MORPHEME
     // AttributeParameter <- IDENT / NUMBER
-    var $$;          
-    var pos = _cursor;    
-    if(_cachePos[36] >= pos) {
-      $$ = _getFromCache(36);
-    } else {
-      _cachePos[36] = pos;
-    }
-    if($$ != null) {
-      return $$[0];       
-    }  
-    _beginToken(15);    
+    var $$;
+    _beginToken(15);  
     // => IDENT / NUMBER # Choice
     switch (_getState(_transitions10)) {
       // [\u0000-@] [[-^] [`] [{-\u0010ffff]
@@ -1296,9 +1275,6 @@ class CParser {
       _failure(_expect31);
     }
     // <= IDENT / NUMBER # Choice
-    if (_cacheable[36]) {
-      _addToCache($$, pos, 36);
-    }  
     _endToken();
     return $$;
   }
@@ -1416,17 +1392,8 @@ class CParser {
   dynamic _parse_Attributes() {
     // LEXEME & MORPHEME
     // Attributes <- ATTRIBUTE OPEN_PAREN OPEN_PAREN AttributeList? CLOSE_PAREN CLOSE_PAREN
-    var $$;          
-    var pos = _cursor;    
-    if(_cachePos[13] >= pos) {
-      $$ = _getFromCache(13);
-    } else {
-      _cachePos[13] = pos;
-    }
-    if($$ != null) {
-      return $$[0];       
-    }  
-    _beginToken(0);    
+    var $$;
+    _beginToken(0);  
     // => ATTRIBUTE OPEN_PAREN OPEN_PAREN AttributeList? CLOSE_PAREN CLOSE_PAREN # Choice
     switch (_ch == 95 ? 0 : _ch == -1 ? 2 : 1) {
       // [_]
@@ -1510,9 +1477,6 @@ class CParser {
       _failure(_expect9);
     }
     // <= ATTRIBUTE OPEN_PAREN OPEN_PAREN AttributeList? CLOSE_PAREN CLOSE_PAREN # Choice
-    if (_cacheable[13]) {
-      _addToCache($$, pos, 13);
-    }  
     _endToken();
     return $$;
   }
@@ -1520,17 +1484,8 @@ class CParser {
   dynamic _parse_CLOSE_BRACE() {
     // LEXEME & MORPHEME
     // CLOSE_BRACE <- '}' SPACING
-    var $$;          
-    var pos = _cursor;    
-    if(_cachePos[14] >= pos) {
-      $$ = _getFromCache(14);
-    } else {
-      _cachePos[14] = pos;
-    }
-    if($$ != null) {
-      return $$[0];       
-    }  
-    _beginToken(1);    
+    var $$;
+    _beginToken(1);  
     // => '}' SPACING # Choice
     switch (_ch == 125 ? 0 : _ch == -1 ? 2 : 1) {
       // [}]
@@ -1586,9 +1541,6 @@ class CParser {
       _failure(_expect10);
     }
     // <= '}' SPACING # Choice
-    if (_cacheable[14]) {
-      _addToCache($$, pos, 14);
-    }  
     _endToken();
     return $$;
   }
@@ -1660,17 +1612,8 @@ class CParser {
   dynamic _parse_CLOSE_PAREN() {
     // MORPHEME
     // CLOSE_PAREN <- ')' SPACING
-    var $$;          
-    var pos = _cursor;    
-    if(_cachePos[39] >= pos) {
-      $$ = _getFromCache(39);
-    } else {
-      _cachePos[39] = pos;
-    }
-    if($$ != null) {
-      return $$[0];       
-    }  
-    _beginToken(18);    
+    var $$;
+    _beginToken(18);  
     // => ')' SPACING # Choice
     switch (_ch == 41 ? 0 : _ch == -1 ? 2 : 1) {
       // [)]
@@ -1726,9 +1669,6 @@ class CParser {
       _failure(_expect34);
     }
     // <= ')' SPACING # Choice
-    if (_cacheable[39]) {
-      _addToCache($$, pos, 39);
-    }  
     _endToken();
     return $$;
   }
@@ -1736,17 +1676,8 @@ class CParser {
   dynamic _parse_COMMA() {
     // MORPHEME
     // COMMA <- ',' SPACING
-    var $$;          
-    var pos = _cursor;    
-    if(_cachePos[40] >= pos) {
-      $$ = _getFromCache(40);
-    } else {
-      _cachePos[40] = pos;
-    }
-    if($$ != null) {
-      return $$[0];       
-    }  
-    _beginToken(19);    
+    var $$;
+    _beginToken(19);  
     // => ',' SPACING # Choice
     switch (_ch == 44 ? 0 : _ch == -1 ? 2 : 1) {
       // [,]
@@ -1802,9 +1733,6 @@ class CParser {
       _failure(_expect30);
     }
     // <= ',' SPACING # Choice
-    if (_cacheable[40]) {
-      _addToCache($$, pos, 40);
-    }  
     _endToken();
     return $$;
   }
@@ -2174,17 +2102,8 @@ class CParser {
   dynamic _parse_DIMENSIONS() {
     // MORPHEME
     // DIMENSIONS <- DIMENSION+
-    var $$;          
-    var pos = _cursor;    
-    if(_cachePos[45] >= pos) {
-      $$ = _getFromCache(45);
-    } else {
-      _cachePos[45] = pos;
-    }
-    if($$ != null) {
-      return $$[0];       
-    }  
-    _beginToken(24);    
+    var $$;
+    _beginToken(24);  
     // => DIMENSION+ # Choice
     switch (_ch == 91 ? 0 : _ch == -1 ? 2 : 1) {
       // [[]
@@ -2231,9 +2150,6 @@ class CParser {
       _failure(_expect40);
     }
     // <= DIMENSION+ # Choice
-    if (_cacheable[45]) {
-      _addToCache($$, pos, 45);
-    }  
     _endToken();
     return $$;
   }
@@ -2934,17 +2850,8 @@ class CParser {
   dynamic _parse_EOF() {
     // LEXEME & MORPHEME
     // EOF <- !.
-    var $$;          
-    var pos = _cursor;    
-    if(_cachePos[15] >= pos) {
-      $$ = _getFromCache(15);
-    } else {
-      _cachePos[15] = pos;
-    }
-    if($$ != null) {
-      return $$[0];       
-    }  
-    _beginToken(2);    
+    var $$;
+    _beginToken(2);  
     // => !. # Choice
     switch (_ch >= 0 && _ch <= 1114111 ? 0 : _ch == -1 ? 2 : 1) {
       // [\u0000-\u0010ffff]
@@ -2978,9 +2885,6 @@ class CParser {
       _failure(_expect0);
     }
     // <= !. # Choice
-    if (_cacheable[15]) {
-      _addToCache($$, pos, 15);
-    }  
     _endToken();
     return $$;
   }
@@ -2988,17 +2892,8 @@ class CParser {
   dynamic _parse_EOL() {
     // MORPHEME
     // EOL <- '\r\n' / [\n\r]
-    var $$;          
-    var pos = _cursor;    
-    if(_cachePos[48] >= pos) {
-      $$ = _getFromCache(48);
-    } else {
-      _cachePos[48] = pos;
-    }
-    if($$ != null) {
-      return $$[0];       
-    }  
-    _beginToken(27);    
+    var $$;
+    _beginToken(27);  
     // => '\r\n' / [\n\r] # Choice
     switch (_getState(_transitions12)) {
       // [\n]
@@ -3042,9 +2937,6 @@ class CParser {
       _failure(_expect44);
     }
     // <= '\r\n' / [\n\r] # Choice
-    if (_cacheable[48]) {
-      _addToCache($$, pos, 48);
-    }  
     _endToken();
     return $$;
   }
@@ -3147,17 +3039,8 @@ class CParser {
   dynamic _parse_EnumValue() {
     // MORPHEME
     // EnumValue <- IDENTIFIER ASSIGN NUMBER / IDENTIFIER
-    var $$;          
-    var pos = _cursor;    
-    if(_cachePos[49] >= pos) {
-      $$ = _getFromCache(49);
-    } else {
-      _cachePos[49] = pos;
-    }
-    if($$ != null) {
-      return $$[0];       
-    }  
-    _beginToken(28);    
+    var $$;
+    _beginToken(28);  
     // => IDENTIFIER ASSIGN NUMBER / IDENTIFIER # Choice
     switch (_getState(_transitions6)) {
       // [A-Z] [_] [a-z]
@@ -3230,9 +3113,6 @@ class CParser {
       _failure(_expect45);
     }
     // <= IDENTIFIER ASSIGN NUMBER / IDENTIFIER # Choice
-    if (_cacheable[49]) {
-      _addToCache($$, pos, 49);
-    }  
     _endToken();
     return $$;
   }
@@ -3501,17 +3381,8 @@ class CParser {
   dynamic _parse_FunctionParameter() {
     // MORPHEME
     // FunctionParameter <- ArrayParameter / ConstPointerParameter / PointerParameter / SimpleParameter
-    var $$;          
-    var pos = _cursor;    
-    if(_cachePos[51] >= pos) {
-      $$ = _getFromCache(51);
-    } else {
-      _cachePos[51] = pos;
-    }
-    if($$ != null) {
-      return $$[0];       
-    }  
-    _beginToken(30);    
+    var $$;
+    _beginToken(30);  
     // => ArrayParameter / ConstPointerParameter / PointerParameter / SimpleParameter # Choice
     switch (_getState(_transitions6)) {
       // [A-Z] [_] [a-z]
@@ -3560,9 +3431,6 @@ class CParser {
       _failure(_expect47);
     }
     // <= ArrayParameter / ConstPointerParameter / PointerParameter / SimpleParameter # Choice
-    if (_cacheable[51]) {
-      _addToCache($$, pos, 51);
-    }  
     _endToken();
     return $$;
   }
@@ -3680,17 +3548,8 @@ class CParser {
   dynamic _parse_FunctionParameters() {
     // MORPHEME
     // FunctionParameters <- FunctionParameterList (COMMA VaListParameter)?
-    var $$;          
-    var pos = _cursor;    
-    if(_cachePos[53] >= pos) {
-      $$ = _getFromCache(53);
-    } else {
-      _cachePos[53] = pos;
-    }
-    if($$ != null) {
-      return $$[0];       
-    }  
-    _beginToken(32);    
+    var $$;
+    _beginToken(32);  
     // => FunctionParameterList (COMMA VaListParameter)? # Choice
     switch (_getState(_transitions6)) {
       // [A-Z] [_] [a-z]
@@ -3792,9 +3651,6 @@ class CParser {
       _failure(_expect49);
     }
     // <= FunctionParameterList (COMMA VaListParameter)? # Choice
-    if (_cacheable[53]) {
-      _addToCache($$, pos, 53);
-    }  
     _endToken();
     return $$;
   }
@@ -3802,17 +3658,8 @@ class CParser {
   dynamic _parse_IDENT() {
     // MORPHEME
     // IDENT <- IDENT_START IDENT_CONT* SPACING
-    var $$;          
-    var pos = _cursor;    
-    if(_cachePos[54] >= pos) {
-      $$ = _getFromCache(54);
-    } else {
-      _cachePos[54] = pos;
-    }
-    if($$ != null) {
-      return $$[0];       
-    }  
-    _beginToken(33);    
+    var $$;
+    _beginToken(33);  
     // => IDENT_START IDENT_CONT* SPACING # Choice
     switch (_getState(_transitions6)) {
       // [A-Z] [_] [a-z]
@@ -3883,9 +3730,6 @@ class CParser {
       _failure(_expect50);
     }
     // <= IDENT_START IDENT_CONT* SPACING # Choice
-    if (_cacheable[54]) {
-      _addToCache($$, pos, 54);
-    }  
     _endToken();
     return $$;
   }
@@ -3893,17 +3737,8 @@ class CParser {
   dynamic _parse_IDENTIFIER() {
     // LEXEME & MORPHEME
     // IDENTIFIER <- !ReservedWord IDENT_START IDENT_CONT* SPACING
-    var $$;          
-    var pos = _cursor;    
-    if(_cachePos[18] >= pos) {
-      $$ = _getFromCache(18);
-    } else {
-      _cachePos[18] = pos;
-    }
-    if($$ != null) {
-      return $$[0];       
-    }  
-    _beginToken(3);    
+    var $$;
+    _beginToken(3);  
     // => !ReservedWord IDENT_START IDENT_CONT* SPACING # Choice
     switch (_getState(_transitions6)) {
       // [A-Z] [_] [a-z]
@@ -3990,9 +3825,6 @@ class CParser {
       _failure(_expect13);
     }
     // <= !ReservedWord IDENT_START IDENT_CONT* SPACING # Choice
-    if (_cacheable[18]) {
-      _addToCache($$, pos, 18);
-    }  
     _endToken();
     return $$;
   }
@@ -4000,17 +3832,8 @@ class CParser {
   dynamic _parse_IDENT_CONT() {
     // MORPHEME
     // IDENT_CONT <- IDENT_START / [0-9]
-    var $$;          
-    var pos = _cursor;    
-    if(_cachePos[55] >= pos) {
-      $$ = _getFromCache(55);
-    } else {
-      _cachePos[55] = pos;
-    }
-    if($$ != null) {
-      return $$[0];       
-    }  
-    _beginToken(34);    
+    var $$;
+    _beginToken(34);  
     // => IDENT_START / [0-9] # Choice
     switch (_getState(_transitions13)) {
       // [0-9]
@@ -4044,9 +3867,6 @@ class CParser {
       _failure(_expect51);
     }
     // <= IDENT_START / [0-9] # Choice
-    if (_cacheable[55]) {
-      _addToCache($$, pos, 55);
-    }  
     _endToken();
     return $$;
   }
@@ -4054,17 +3874,8 @@ class CParser {
   dynamic _parse_IDENT_PART() {
     // MORPHEME
     // IDENT_PART <- IDENT_START / IDENT_CONT
-    var $$;          
-    var pos = _cursor;    
-    if(_cachePos[56] >= pos) {
-      $$ = _getFromCache(56);
-    } else {
-      _cachePos[56] = pos;
-    }
-    if($$ != null) {
-      return $$[0];       
-    }  
-    _beginToken(35);    
+    var $$;
+    _beginToken(35);  
     // => IDENT_START / IDENT_CONT # Choice
     switch (_getState(_transitions13)) {
       // [0-9]
@@ -4108,9 +3919,6 @@ class CParser {
       _failure(_expect52);
     }
     // <= IDENT_START / IDENT_CONT # Choice
-    if (_cacheable[56]) {
-      _addToCache($$, pos, 56);
-    }  
     _endToken();
     return $$;
   }
@@ -4118,17 +3926,8 @@ class CParser {
   dynamic _parse_IDENT_START() {
     // MORPHEME
     // IDENT_START <- [A-Z_a-z]
-    var $$;          
-    var pos = _cursor;    
-    if(_cachePos[57] >= pos) {
-      $$ = _getFromCache(57);
-    } else {
-      _cachePos[57] = pos;
-    }
-    if($$ != null) {
-      return $$[0];       
-    }  
-    _beginToken(36);    
+    var $$;
+    _beginToken(36);  
     // => [A-Z_a-z] # Choice
     switch (_getState(_transitions6)) {
       // [A-Z] [_] [a-z]
@@ -4153,9 +3952,6 @@ class CParser {
       _failure(_expect53);
     }
     // <= [A-Z_a-z] # Choice
-    if (_cacheable[57]) {
-      _addToCache($$, pos, 57);
-    }  
     _endToken();
     return $$;
   }
@@ -4311,17 +4107,8 @@ class CParser {
   dynamic _parse_ID_ENUM() {
     // MORPHEME
     // ID_ENUM <- 'enum' !IDENT_PART SPACING
-    var $$;          
-    var pos = _cursor;    
-    if(_cachePos[60] >= pos) {
-      $$ = _getFromCache(60);
-    } else {
-      _cachePos[60] = pos;
-    }
-    if($$ != null) {
-      return $$[0];       
-    }  
-    _beginToken(39);    
+    var $$;
+    _beginToken(39);  
     // => 'enum' !IDENT_PART SPACING # Choice
     switch (_ch == 101 ? 0 : _ch == -1 ? 2 : 1) {
       // [e]
@@ -4387,9 +4174,6 @@ class CParser {
       _failure(_expect11);
     }
     // <= 'enum' !IDENT_PART SPACING # Choice
-    if (_cacheable[60]) {
-      _addToCache($$, pos, 60);
-    }  
     _endToken();
     return $$;
   }
@@ -4471,17 +4255,8 @@ class CParser {
   dynamic _parse_ID_INT() {
     // MORPHEME
     // ID_INT <- 'int' !IDENT_PART SPACING
-    var $$;          
-    var pos = _cursor;    
-    if(_cachePos[62] >= pos) {
-      $$ = _getFromCache(62);
-    } else {
-      _cachePos[62] = pos;
-    }
-    if($$ != null) {
-      return $$[0];       
-    }  
-    _beginToken(41);    
+    var $$;
+    _beginToken(41);  
     // => 'int' !IDENT_PART SPACING # Choice
     switch (_ch == 105 ? 0 : _ch == -1 ? 2 : 1) {
       // [i]
@@ -4547,9 +4322,6 @@ class CParser {
       _failure(_expect57);
     }
     // <= 'int' !IDENT_PART SPACING # Choice
-    if (_cacheable[62]) {
-      _addToCache($$, pos, 62);
-    }  
     _endToken();
     return $$;
   }
@@ -4557,17 +4329,8 @@ class CParser {
   dynamic _parse_ID_LONG() {
     // MORPHEME
     // ID_LONG <- 'long' !IDENT_PART SPACING
-    var $$;          
-    var pos = _cursor;    
-    if(_cachePos[63] >= pos) {
-      $$ = _getFromCache(63);
-    } else {
-      _cachePos[63] = pos;
-    }
-    if($$ != null) {
-      return $$[0];       
-    }  
-    _beginToken(42);    
+    var $$;
+    _beginToken(42);  
     // => 'long' !IDENT_PART SPACING # Choice
     switch (_ch == 108 ? 0 : _ch == -1 ? 2 : 1) {
       // [l]
@@ -4633,9 +4396,6 @@ class CParser {
       _failure(_expect58);
     }
     // <= 'long' !IDENT_PART SPACING # Choice
-    if (_cacheable[63]) {
-      _addToCache($$, pos, 63);
-    }  
     _endToken();
     return $$;
   }
@@ -4791,17 +4551,8 @@ class CParser {
   dynamic _parse_ID_STRUCT() {
     // LEXEME & MORPHEME
     // ID_STRUCT <- 'struct' !IDENT_PART SPACING
-    var $$;          
-    var pos = _cursor;    
-    if(_cachePos[19] >= pos) {
-      $$ = _getFromCache(19);
-    } else {
-      _cachePos[19] = pos;
-    }
-    if($$ != null) {
-      return $$[0];       
-    }  
-    _beginToken(4);    
+    var $$;
+    _beginToken(4);  
     // => 'struct' !IDENT_PART SPACING # Choice
     switch (_ch == 115 ? 0 : _ch == -1 ? 2 : 1) {
       // [s]
@@ -4867,9 +4618,6 @@ class CParser {
       _failure(_expect14);
     }
     // <= 'struct' !IDENT_PART SPACING # Choice
-    if (_cacheable[19]) {
-      _addToCache($$, pos, 19);
-    }  
     _endToken();
     return $$;
   }
@@ -4877,17 +4625,8 @@ class CParser {
   dynamic _parse_ID_UNION() {
     // LEXEME & MORPHEME
     // ID_UNION <- 'union' !IDENT_PART SPACING
-    var $$;          
-    var pos = _cursor;    
-    if(_cachePos[20] >= pos) {
-      $$ = _getFromCache(20);
-    } else {
-      _cachePos[20] = pos;
-    }
-    if($$ != null) {
-      return $$[0];       
-    }  
-    _beginToken(5);    
+    var $$;
+    _beginToken(5);  
     // => 'union' !IDENT_PART SPACING # Choice
     switch (_ch == 117 ? 0 : _ch == -1 ? 2 : 1) {
       // [u]
@@ -4953,9 +4692,6 @@ class CParser {
       _failure(_expect15);
     }
     // <= 'union' !IDENT_PART SPACING # Choice
-    if (_cacheable[20]) {
-      _addToCache($$, pos, 20);
-    }  
     _endToken();
     return $$;
   }
@@ -5111,17 +4847,8 @@ class CParser {
   dynamic _parse_INTEGER() {
     // MORPHEME
     // INTEGER <- SIGN [0-9]+ SPACING
-    var $$;          
-    var pos = _cursor;    
-    if(_cachePos[68] >= pos) {
-      $$ = _getFromCache(68);
-    } else {
-      _cachePos[68] = pos;
-    }
-    if($$ != null) {
-      return $$[0];       
-    }  
-    _beginToken(47);    
+    var $$;
+    _beginToken(47);  
     // => SIGN [0-9]+ SPACING # Choice
     switch (_ch >= 0 && _ch <= 1114111 ? 0 : _ch == -1 ? 2 : 1) {
       // [\u0000-\u0010ffff]
@@ -5200,9 +4927,6 @@ class CParser {
       _failure(_expect63);
     }
     // <= SIGN [0-9]+ SPACING # Choice
-    if (_cacheable[68]) {
-      _addToCache($$, pos, 68);
-    }  
     _endToken();
     return $$;
   }
@@ -5342,17 +5066,8 @@ class CParser {
   dynamic _parse_NUMBER() {
     // MORPHEME
     // NUMBER <- OCTAL_NUMBER / INTEGER
-    var $$;          
-    var pos = _cursor;    
-    if(_cachePos[71] >= pos) {
-      $$ = _getFromCache(71);
-    } else {
-      _cachePos[71] = pos;
-    }
-    if($$ != null) {
-      return $$[0];       
-    }  
-    _beginToken(50);    
+    var $$;
+    _beginToken(50);  
     // => OCTAL_NUMBER / INTEGER # Choice
     switch (_ch >= 0 && _ch <= 1114111 ? 0 : _ch == -1 ? 2 : 1) {
       // [\u0000-\u0010ffff]
@@ -5387,9 +5102,6 @@ class CParser {
       _failure(_expect65);
     }
     // <= OCTAL_NUMBER / INTEGER # Choice
-    if (_cacheable[71]) {
-      _addToCache($$, pos, 71);
-    }  
     _endToken();
     return $$;
   }
@@ -5397,17 +5109,8 @@ class CParser {
   dynamic _parse_OCTAL_NUMBER() {
     // MORPHEME
     // OCTAL_NUMBER <- SIGN [0] [0-9]+
-    var $$;          
-    var pos = _cursor;    
-    if(_cachePos[72] >= pos) {
-      $$ = _getFromCache(72);
-    } else {
-      _cachePos[72] = pos;
-    }
-    if($$ != null) {
-      return $$[0];       
-    }  
-    _beginToken(51);    
+    var $$;
+    _beginToken(51);  
     // => SIGN [0] [0-9]+ # Choice
     switch (_ch >= 0 && _ch <= 1114111 ? 0 : _ch == -1 ? 2 : 1) {
       // [\u0000-\u0010ffff]
@@ -5486,9 +5189,6 @@ class CParser {
       _failure(_expect66);
     }
     // <= SIGN [0] [0-9]+ # Choice
-    if (_cacheable[72]) {
-      _addToCache($$, pos, 72);
-    }  
     _endToken();
     return $$;
   }
@@ -5496,17 +5196,8 @@ class CParser {
   dynamic _parse_OPEN_BRACE() {
     // LEXEME & MORPHEME
     // OPEN_BRACE <- '{' SPACING
-    var $$;          
-    var pos = _cursor;    
-    if(_cachePos[21] >= pos) {
-      $$ = _getFromCache(21);
-    } else {
-      _cachePos[21] = pos;
-    }
-    if($$ != null) {
-      return $$[0];       
-    }  
-    _beginToken(6);    
+    var $$;
+    _beginToken(6);  
     // => '{' SPACING # Choice
     switch (_ch == 123 ? 0 : _ch == -1 ? 2 : 1) {
       // [{]
@@ -5562,9 +5253,6 @@ class CParser {
       _failure(_expect16);
     }
     // <= '{' SPACING # Choice
-    if (_cacheable[21]) {
-      _addToCache($$, pos, 21);
-    }  
     _endToken();
     return $$;
   }
@@ -5636,17 +5324,8 @@ class CParser {
   dynamic _parse_OPEN_PAREN() {
     // MORPHEME
     // OPEN_PAREN <- '(' SPACING
-    var $$;          
-    var pos = _cursor;    
-    if(_cachePos[74] >= pos) {
-      $$ = _getFromCache(74);
-    } else {
-      _cachePos[74] = pos;
-    }
-    if($$ != null) {
-      return $$[0];       
-    }  
-    _beginToken(53);    
+    var $$;
+    _beginToken(53);  
     // => '(' SPACING # Choice
     switch (_ch == 40 ? 0 : _ch == -1 ? 2 : 1) {
       // [(]
@@ -5702,9 +5381,6 @@ class CParser {
       _failure(_expect67);
     }
     // <= '(' SPACING # Choice
-    if (_cacheable[74]) {
-      _addToCache($$, pos, 74);
-    }  
     _endToken();
     return $$;
   }
@@ -5840,17 +5516,8 @@ class CParser {
   dynamic _parse_PointerType() {
     // MORPHEME
     // PointerType <- TypeName ASTERISK+
-    var $$;          
-    var pos = _cursor;    
-    if(_cachePos[77] >= pos) {
-      $$ = _getFromCache(77);
-    } else {
-      _cachePos[77] = pos;
-    }
-    if($$ != null) {
-      return $$[0];       
-    }  
-    _beginToken(56);    
+    var $$;
+    _beginToken(56);  
     // => TypeName ASTERISK+ # Choice
     switch (_getState(_transitions6)) {
       // [A-Z] [_] [a-z]
@@ -5922,9 +5589,6 @@ class CParser {
       _failure(_expect70);
     }
     // <= TypeName ASTERISK+ # Choice
-    if (_cacheable[77]) {
-      _addToCache($$, pos, 77);
-    }  
     _endToken();
     return $$;
   }
@@ -7125,17 +6789,8 @@ class CParser {
   dynamic _parse_Type() {
     // MORPHEME
     // Type <- PointerType / ArrayType / TypeName
-    var $$;          
-    var pos = _cursor;    
-    if(_cachePos[82] >= pos) {
-      $$ = _getFromCache(82);
-    } else {
-      _cachePos[82] = pos;
-    }
-    if($$ != null) {
-      return $$[0];       
-    }  
-    _beginToken(61);    
+    var $$;
+    _beginToken(61);  
     // => PointerType / ArrayType / TypeName # Choice
     switch (_getState(_transitions6)) {
       // [A-Z] [_] [a-z]
@@ -7177,9 +6832,6 @@ class CParser {
       _failure(_expect78);
     }
     // <= PointerType / ArrayType / TypeName # Choice
-    if (_cacheable[82]) {
-      _addToCache($$, pos, 82);
-    }  
     _endToken();
     return $$;
   }
@@ -7187,17 +6839,8 @@ class CParser {
   dynamic _parse_TypeName() {
     // MORPHEME
     // TypeName <- IDENTIFIER / TypeSign? (ID_CHAR / ID_INT) / TypeSign? (ID_SHORT / LongType) ID_INT? / ID_FLOAT / ID_DOUBLE / ID_ENUM IDENTIFIER / ID_STRUCT IDENTIFIER / ID_UNION IDENTIFIER / ID_VOID
-    var $$;          
-    var pos = _cursor;    
-    if(_cachePos[83] >= pos) {
-      $$ = _getFromCache(83);
-    } else {
-      _cachePos[83] = pos;
-    }
-    if($$ != null) {
-      return $$[0];       
-    }  
-    _beginToken(62);    
+    var $$;
+    _beginToken(62);  
     // => IDENTIFIER / TypeSign? (ID_CHAR / ID_INT) / TypeSign? (ID_SHORT / LongType) ID_INT? / ID_FLOAT / ID_DOUBLE / ID_ENUM IDENTIFIER / ID_STRUCT IDENTIFIER / ID_UNION IDENTIFIER / ID_VOID # Choice
     switch (_getState(_transitions7)) {
       // [A-Z] [_]
@@ -7530,9 +7173,6 @@ class CParser {
       _failure(_expect79);
     }
     // <= IDENTIFIER / TypeSign? (ID_CHAR / ID_INT) / TypeSign? (ID_SHORT / LongType) ID_INT? / ID_FLOAT / ID_DOUBLE / ID_ENUM IDENTIFIER / ID_STRUCT IDENTIFIER / ID_UNION IDENTIFIER / ID_VOID # Choice
-    if (_cacheable[83]) {
-      _addToCache($$, pos, 83);
-    }  
     _endToken();
     return $$;
   }
@@ -7540,17 +7180,8 @@ class CParser {
   dynamic _parse_TypeSign() {
     // MORPHEME
     // TypeSign <- ID_SIGNED / ID_UNSIGNED
-    var $$;          
-    var pos = _cursor;    
-    if(_cachePos[84] >= pos) {
-      $$ = _getFromCache(84);
-    } else {
-      _cachePos[84] = pos;
-    }
-    if($$ != null) {
-      return $$[0];       
-    }  
-    _beginToken(63);    
+    var $$;
+    _beginToken(63);  
     // => ID_SIGNED / ID_UNSIGNED # Choice
     switch (_getState(_transitions5)) {
       // [s]
@@ -7584,9 +7215,6 @@ class CParser {
       _failure(_expect82);
     }
     // <= ID_SIGNED / ID_UNSIGNED # Choice
-    if (_cacheable[84]) {
-      _addToCache($$, pos, 84);
-    }  
     _endToken();
     return $$;
   }
