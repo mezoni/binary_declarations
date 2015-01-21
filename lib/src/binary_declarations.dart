@@ -192,7 +192,7 @@ class EnumTypeSpecification extends TypeSpecification {
       case TaggedTypeKinds.ENUM:
         break;
       default:
-        throw new ArgumentError.value("kind", kind);
+        throw new ArgumentError.value(kind, "kind");
     }
 
     _values = new _ListCloner<EnumValueDeclaration>(values, "values").list;
@@ -244,7 +244,7 @@ class FloatTypeSpecification extends TypeSpecification {
       case "float":
         break;
       default:
-        throw new ArgumentError.value("kind", kind);
+        throw new ArgumentError.value(kind, "kind");
     }
   }
 
@@ -260,7 +260,11 @@ class FunctionDeclaration extends BinaryDeclaration {
 
   FunctionDeclaration({this.name, List<ParameterDeclaration> parameters, this.returnType}) {
     if (name == null || name.isEmpty) {
-      throw new ArgumentError.value("name", name);
+      throw new ArgumentError.value(name, "name");
+    }
+
+    if (returnType == null) {
+      throw new ArgumentError.value(returnType, "returnType");
     }
 
     var list = <ParameterDeclaration>[];
@@ -382,7 +386,7 @@ class StructureTypeSpecification extends TypeSpecification {
       case TaggedTypeKinds.UNION:
         break;
       default:
-        throw new ArgumentError.value("kind", kind);
+        throw new ArgumentError.value(kind, "kind");
     }
 
     _members = new _ListCloner<VariableDeclaration>(members, "members").list;
@@ -443,7 +447,7 @@ class TaggedTypeSpecification extends TypeSpecification {
         _kind = TaggedTypeKinds.UNION;
         break;
       default:
-        throw new ArgumentError.value("kind", kind);
+        throw new ArgumentError.value(kind, "kind");
     }
   }
 
@@ -487,7 +491,7 @@ class TypedefDeclaration extends BinaryDeclaration {
 
   TypedefDeclaration({this.attributes, this.name, this.type}) {
     if (name == null || name.isEmpty) {
-      throw new ArgumentError.value("name", name);
+      throw new ArgumentError.value(name, "name");
     }
 
     if (type == null) {
@@ -524,7 +528,7 @@ class TypedefTypeSpecification extends TypeSpecification {
 
   TypedefTypeSpecification({BinaryAttributes attributes, this.name}) : super(attributes: attributes) {
     if (name == null || name.isEmpty) {
-      throw new ArgumentError.value("name", name);
+      throw new ArgumentError.value(name, "name");
     }
   }
 

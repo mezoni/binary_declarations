@@ -3242,127 +3242,72 @@ class CParser {
   
   dynamic _parse_FunctionDeclartion() {
     // LEXEME
-    // FunctionDeclartion <- IDENTIFIER OPEN_PAREN FunctionParameters? CLOSE_PAREN / Type IDENTIFIER OPEN_PAREN FunctionParameters? CLOSE_PAREN
+    // FunctionDeclartion <- Type IDENTIFIER OPEN_PAREN FunctionParameters? CLOSE_PAREN
     var $$;
-    // => IDENTIFIER OPEN_PAREN FunctionParameters? CLOSE_PAREN / Type IDENTIFIER OPEN_PAREN FunctionParameters? CLOSE_PAREN # Choice
+    // => Type IDENTIFIER OPEN_PAREN FunctionParameters? CLOSE_PAREN # Choice
     switch (_getState(_transitions6)) {
       // [A-Z] [_] [a-z]
       // EOF
       case 0:
       case 2:
-        while (true) {
-          // => IDENTIFIER OPEN_PAREN FunctionParameters? CLOSE_PAREN # Sequence
-          var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
-          _startPos = _cursor;
-          while (true) {  
-            // => IDENTIFIER
-            $$ = _parse_IDENTIFIER();
-            // <= IDENTIFIER
-            if (!success) break;
-            var seq = new List(4)..[0] = $$;
-            // => OPEN_PAREN
-            $$ = _parse_OPEN_PAREN();
-            // <= OPEN_PAREN
-            if (!success) break;
-            seq[1] = $$;
-            // => FunctionParameters?
-            var testing0 = _testing;
-            _testing = _cursor;
-            // => FunctionParameters
-            $$ = _parse_FunctionParameters();
-            // <= FunctionParameters
-            success = true; 
-            _testing = testing0;
-            // <= FunctionParameters?
-            if (!success) break;
-            seq[2] = $$;
-            // => CLOSE_PAREN
-            $$ = _parse_CLOSE_PAREN();
-            // <= CLOSE_PAREN
-            if (!success) break;
-            seq[3] = $$;
-            $$ = seq;
-            if (success) {    
-              // IDENTIFIER
-              final $1 = seq[0];
-              // OPEN_PAREN
-              final $2 = seq[1];
-              // FunctionParameters?
-              final $3 = seq[2];
-              // CLOSE_PAREN
-              final $4 = seq[3];
-              final $start = startPos0;
-              $$ = new FunctionDeclaration(name: $1, parameters: $3);
-            }
-            break;
+        // => Type IDENTIFIER OPEN_PAREN FunctionParameters? CLOSE_PAREN # Sequence
+        var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
+        _startPos = _cursor;
+        while (true) {  
+          // => Type
+          $$ = _parse_Type();
+          // <= Type
+          if (!success) break;
+          var seq = new List(5)..[0] = $$;
+          // => IDENTIFIER
+          $$ = _parse_IDENTIFIER();
+          // <= IDENTIFIER
+          if (!success) break;
+          seq[1] = $$;
+          // => OPEN_PAREN
+          $$ = _parse_OPEN_PAREN();
+          // <= OPEN_PAREN
+          if (!success) break;
+          seq[2] = $$;
+          // => FunctionParameters?
+          var testing0 = _testing;
+          _testing = _cursor;
+          // => FunctionParameters
+          $$ = _parse_FunctionParameters();
+          // <= FunctionParameters
+          success = true; 
+          _testing = testing0;
+          // <= FunctionParameters?
+          if (!success) break;
+          seq[3] = $$;
+          // => CLOSE_PAREN
+          $$ = _parse_CLOSE_PAREN();
+          // <= CLOSE_PAREN
+          if (!success) break;
+          seq[4] = $$;
+          $$ = seq;
+          if (success) {    
+            // Type
+            final $1 = seq[0];
+            // IDENTIFIER
+            final $2 = seq[1];
+            // OPEN_PAREN
+            final $3 = seq[2];
+            // FunctionParameters?
+            final $4 = seq[3];
+            // CLOSE_PAREN
+            final $5 = seq[4];
+            final $start = startPos0;
+            $$ = new FunctionDeclaration(name: $2, parameters: $4, returnType: $1);
           }
-          if (!success) {
-            _ch = ch0;
-            _cursor = pos0;
-          }
-          _startPos = startPos0;
-          // <= IDENTIFIER OPEN_PAREN FunctionParameters? CLOSE_PAREN # Sequence
-          if (success) break;
-          // => Type IDENTIFIER OPEN_PAREN FunctionParameters? CLOSE_PAREN # Sequence
-          var ch1 = _ch, pos1 = _cursor, startPos1 = _startPos;
-          _startPos = _cursor;
-          while (true) {  
-            // => Type
-            $$ = _parse_Type();
-            // <= Type
-            if (!success) break;
-            var seq = new List(5)..[0] = $$;
-            // => IDENTIFIER
-            $$ = _parse_IDENTIFIER();
-            // <= IDENTIFIER
-            if (!success) break;
-            seq[1] = $$;
-            // => OPEN_PAREN
-            $$ = _parse_OPEN_PAREN();
-            // <= OPEN_PAREN
-            if (!success) break;
-            seq[2] = $$;
-            // => FunctionParameters?
-            var testing1 = _testing;
-            _testing = _cursor;
-            // => FunctionParameters
-            $$ = _parse_FunctionParameters();
-            // <= FunctionParameters
-            success = true; 
-            _testing = testing1;
-            // <= FunctionParameters?
-            if (!success) break;
-            seq[3] = $$;
-            // => CLOSE_PAREN
-            $$ = _parse_CLOSE_PAREN();
-            // <= CLOSE_PAREN
-            if (!success) break;
-            seq[4] = $$;
-            $$ = seq;
-            if (success) {    
-              // Type
-              final $1 = seq[0];
-              // IDENTIFIER
-              final $2 = seq[1];
-              // OPEN_PAREN
-              final $3 = seq[2];
-              // FunctionParameters?
-              final $4 = seq[3];
-              // CLOSE_PAREN
-              final $5 = seq[4];
-              final $start = startPos1;
-              $$ = new FunctionDeclaration(name: $2, parameters: $4, returnType: $1);
-            }
-            break;
-          }
-          if (!success) {
-            _ch = ch1;
-            _cursor = pos1;
-          }
-          _startPos = startPos1;
-          // <= Type IDENTIFIER OPEN_PAREN FunctionParameters? CLOSE_PAREN # Sequence
           break;
         }
+        if (!success) {
+          _ch = ch0;
+          _cursor = pos0;
+        }
+        _startPos = startPos0;
+        // <= Type IDENTIFIER OPEN_PAREN FunctionParameters? CLOSE_PAREN # Sequence
         break;
       // No matches
       case 1:
@@ -3374,7 +3319,7 @@ class CParser {
       // Expected: FunctionDeclartion
       _failure(_expect12);
     }
-    // <= IDENTIFIER OPEN_PAREN FunctionParameters? CLOSE_PAREN / Type IDENTIFIER OPEN_PAREN FunctionParameters? CLOSE_PAREN # Choice
+    // <= Type IDENTIFIER OPEN_PAREN FunctionParameters? CLOSE_PAREN # Choice
     return $$;
   }
   

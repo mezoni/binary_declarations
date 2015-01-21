@@ -6,22 +6,22 @@ void main() {
     group("Functions.", () {
       test("Function declarations.", () {
         var list = <String>[];
-        list.add("foo();");
-        list.add("foo();");
-        list.add("foo(int);");
-        list.add("foo(int, int*);");
-        list.add("foo(int, int*);");
-        list.add("foo(int, int*, int[]);");
-        list.add("foo(int, int*, int[], struct s);");
-        list.add("foo(int, int*, int[], enum e);");
+        list.add("int foo();");
+        list.add("void foo();");
+        list.add("short foo(int);");
+        list.add("struct Foo foo(int, int*);");
+        list.add("void** foo(int, int*);");
+        list.add("enum Color* foo(int, int*, int[]);");
+        list.add("unsigned long long int foo(int, int*, int[], struct s);");
+        list.add("char foo(int, int*, int[], enum e);");
         list.add("int foo(int);");
         list.add("signed int foo(int);");
         list.add("signed int* foo(int);");
         list.add("struct S foo(int);");
         list.add("enum E foo(int);");
-        list.add("foo(int, ...);");
-        list.add("foo(int i);");
-        list.add("foo(int i, int* ip);");
+        list.add("void foo(int, ...);");
+        list.add("int foo(int i);");
+        list.add("short int* foo(int i, int* ip);");
         var text = list.join("\n");
         var declarations = new BinaryDeclarations(text);
         for (var declaration in declarations) {

@@ -102,8 +102,7 @@ EnumDeclaration <-
   ID_ENUM IDENTIFIER? OPEN_BRACE EnumValueList CLOSE_BRACE { $$ = new EnumDeclaration(kind: $1, tag: $2, values: $4); }
 
 FunctionDeclartion <-
-  IDENTIFIER OPEN_PAREN FunctionParameters? CLOSE_PAREN { $$ = new FunctionDeclaration(name: $1, parameters: $3); }
-  / Type IDENTIFIER OPEN_PAREN FunctionParameters? CLOSE_PAREN { $$ = new FunctionDeclaration(name: $2, parameters: $4, returnType: $1); }
+  Type IDENTIFIER OPEN_PAREN FunctionParameters? CLOSE_PAREN { $$ = new FunctionDeclaration(name: $2, parameters: $4, returnType: $1); }
 
 IDENTIFIER <-
   !ReservedWord IDENT_START IDENT_CONT* SPACING { $$ = _flatten([$2, $3]).join(); }

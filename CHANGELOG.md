@@ -1,6 +1,10 @@
+## 0.0.19
+
+- Breaking change: Function declaration should explicitly specify the return type
+
 ## 0.0.18
 
-- Generated new `c.peg` parser using new version of `peg` generator.
+- Generated new `c.peg` parser using new version of `peg` generator
 
 ## 0.0.16
 
