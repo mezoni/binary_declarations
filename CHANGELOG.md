@@ -1,3 +1,7 @@
+## 0.0.20
+
+- Minor changes in `c.peg` grammar
+
 ## 0.0.19
 
 - Breaking change: Function declaration should explicitly specify the return type
