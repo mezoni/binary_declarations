@@ -90,6 +90,8 @@ class AttributeSpecifications {
     }
   }
 
+  List<AttributeSpecification> get attributes => _attributes;
+
   String toString() {
     var sb = new StringBuffer();
     sb.write(_attributes.join(" "));
