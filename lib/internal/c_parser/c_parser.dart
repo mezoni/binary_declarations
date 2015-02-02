@@ -8499,7 +8499,7 @@ class CParser {
               // AttributeSpecifiers?
               final $3 = seq[2];
               final $start = startPos9;
-              $$ = new FloatTypeSpecification(attributes: $3, isConst: $1, kind: $2);
+              $$ = new FloatTypeSpecification(attributes: $3, isConst: $1, name: $2);
             }
             break;
           }

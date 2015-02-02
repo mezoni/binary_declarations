@@ -262,21 +262,17 @@ class EnumValueDeclaration extends BinaryDeclaration {
 }
 
 class FloatTypeSpecification extends TypeSpecification {
-  final String kind;
+  final String name;
 
-  FloatTypeSpecification({AttributeSpecifications attributes, this.kind, bool isConst}) : super(attributes: attributes, isConst: isConst) {
-    switch (kind) {
-      case "double":
-      case "float":
-        break;
-      default:
-        throw new ArgumentError.value(kind, "kind");
+  FloatTypeSpecification({AttributeSpecifications attributes, this.name, bool isConst}) : super(attributes: attributes, isConst: isConst) {
+    if (name == null) {
+      throw new ArgumentError.notNull("name");
     }
   }
 
   String toString() {
     var sb = new StringBuffer();
-    sb.write(kind);
+    sb.write(name);
     if (attributes != null) {
       sb.write(" ");
       sb.write(attributes);
@@ -504,6 +500,8 @@ class TaggedTypeSpecification extends TypeSpecification {
 
   TaggedTypeKinds _kind;
 
+  String _name;
+
   TaggedTypeSpecification({AttributeSpecifications attributes, String kind, bool isConst, this.tag}) : super(attributes: attributes, isConst: isConst) {
     if (kind == null) {
       throw new ArgumentError.notNull("kind");
@@ -522,9 +520,20 @@ class TaggedTypeSpecification extends TypeSpecification {
       default:
         throw new ArgumentError.value(kind, "kind");
     }
+
+    var sb = new StringBuffer();
+    sb.write(_kind);
+    if (tag != null) {
+      sb.write(" ");
+      sb.write(tag);
+    }
+
+    _name = sb.toString();
   }
 
   TaggedTypeKinds get kind => _kind;
+
+  String get name => _name;
 
   String toString() {
     var sb = new StringBuffer();

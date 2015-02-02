@@ -74,7 +74,7 @@ TypeName <-
   / CONST? SIGNEDNESS? (CHAR / INT) AttributeSpecifiers? { $$ = new IntegerTypeSpecification(attributes: $4, isConst: $1, name: _createInt([$2, $3])); }
   / CONST? SIGNEDNESS? (SHORT / LONG_TYPE) INT? AttributeSpecifiers? { $$ = new IntegerTypeSpecification(attributes: $5, isConst: $1, name: _createInt([$2, $3, $4])); }
   / CONST? SIGNEDNESS AttributeSpecifiers? { $$ = new IntegerTypeSpecification(attributes: $3, isConst: $1, name: $2); }
-  / CONST? (FLOAT / DOUBLE) AttributeSpecifiers? { $$ = new FloatTypeSpecification(attributes: $3, isConst: $1, kind: $2); }
+  / CONST? (FLOAT / DOUBLE) AttributeSpecifiers? { $$ = new FloatTypeSpecification(attributes: $3, isConst: $1, name: $2); }
   / CONST? VOID AttributeSpecifiers? { $$ = new VoidTypeSpecification(attributes: $3, isConst: $1); }
   / StructTypeName
   / EnumTypeName
