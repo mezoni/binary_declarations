@@ -1,3 +1,7 @@
+## 0.0.24
+
+- Added support of attribute specifiers in `tagged` types
+
 ## 0.0.22
 
 - Initial support of attribute specifiers `__attribute__`

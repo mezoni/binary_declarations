@@ -75,9 +75,9 @@ TypeName <-
   / CONST? SIGNEDNESS? (SHORT / LONG_TYPE) INT? AttributeSpecifiers? { $$ = new IntegerTypeSpecification(attributes: $5, isConst: $1, name: _createInt([$2, $3, $4])); }
   / CONST? SIGNEDNESS AttributeSpecifiers? { $$ = new IntegerTypeSpecification(attributes: $3, isConst: $1, name: $2); }
   / CONST? (FLOAT / DOUBLE) AttributeSpecifiers? { $$ = new FloatTypeSpecification(attributes: $3, isConst: $1, kind: $2); }
-  / CONST? ENUM IDENTIFIER AttributeSpecifiers? { $$ = new TaggedTypeSpecification(attributes: $4, isConst: $1, kind: "enum", tag: $3); }
-  / CONST? (STRUCT / UNION) IDENTIFIER AttributeSpecifiers? { $$ = new TaggedTypeSpecification(attributes: $4, isConst: $1, kind: $2, tag: $3); }
   / CONST? VOID AttributeSpecifiers? { $$ = new VoidTypeSpecification(attributes: $3, isConst: $1); }
+  / StructTypeName
+  / EnumTypeName
 
 AttributeSpecifiers <-
   AttributeSpecifier+ { $$ = new AttributeSpecifications($1); }
@@ -98,6 +98,12 @@ AttributeParameterList <-
 AttributeParameter <-
   IDENT
   / NUMBER
+
+StructTypeName <-
+  CONST? (STRUCT / UNION) AttributeSpecifiers? IDENTIFIER? { $$ = new TaggedTypeSpecification(attributes: $3, isConst: $1, kind: $2, tag: $4); }
+
+EnumTypeName <-
+  CONST? ENUM AttributeSpecifiers? IDENTIFIER? { $$ = new TaggedTypeSpecification(attributes: $3, isConst: $1, kind: $2, tag: $4); }
 
 ArrayType <-
   TypeName ArrayDimension { $$ = _createArray($1, $2); }
@@ -150,7 +156,7 @@ TaggedTypeDeclaration <-
   / EnumDeclaration
 
 StructDeclaration <-
-  (STRUCT / UNION) IDENTIFIER? OPEN_BRACE StructMemberList? CLOSE_BRACE AttributeSpecifiers? { $$ = new StructureDeclaration(attributes: $6, kind: $1, members: $4, tag: $2); }
+  StructTypeName OPEN_BRACE StructMemberList? CLOSE_BRACE AttributeSpecifiers? { $$ = new StructureDeclaration(attributes: $5, taggedType: $1, members: $3); }
 
 StructMemberList <-
   (StructMember)*
@@ -169,7 +175,7 @@ TaggedTypeParameter <-
   (StructDeclaration / EnumDeclaration) IDENTIFIER { $$ = new ParameterDeclaration(name: $2, type: $1.type); }
 
 EnumDeclaration <-
-  ENUM IDENTIFIER? OPEN_BRACE EnumValueList CLOSE_BRACE AttributeSpecifiers? { $$ = new EnumDeclaration(attributes: $6, kind: $1, tag: $2, values: $4); }
+  EnumTypeName OPEN_BRACE EnumValueList CLOSE_BRACE AttributeSpecifiers? { $$ = new EnumDeclaration(attributes: $5, taggedType: $1, values: $3); }
 
 EnumValueList <-
   EnumValue (COMMA EnumValue)* COMMA? { $$ = _list($1, $2); }

@@ -2,12 +2,6 @@ import "package:binary_declarations/binary_declarations.dart";
 import "package:unittest/unittest.dart";
 
 void main() {
-  var text = "struct ss { int x; } __attribute__((type)) s __attribute__((var));";
-  var declarations = new BinaryDeclarations(text);
-  var decl = declarations.toList()[0];
-  decl.toString();
-
-
   group("Declarations.", () {
     group("Functions.", () {
       test("Function declarations.", () {
@@ -262,12 +256,14 @@ void main() {
       list.add("typedef int INT __attribute__((aligned(8), packed));");
       list.add("typedef int __attribute__((foo(baz, 2))) INT;");
       list.add("float __attribute__((type)) f __attribute__((var));");
-      list.add("enum ee __attribute__((type)) e __attribute__((var));");
-      list.add("struct ss __attribute__((type)) s __attribute__((var));");
+      list.add("enum __attribute__((type)) ee e __attribute__((var));");
+      list.add("struct __attribute__((type)) ss s __attribute__((var));");
       list.add("int __attribute__((type)) i __attribute__((var));");
       list.add("int __attribute__((ret)) foo(int __attribute__((type)) x __attribute__((var))) __attribute__((func));");
-      list.add("struct ss { int __attribute__((type)) x __attribute__((var)); } __attribute__((type)) s __attribute__((var));");
-      list.add("enum ee { E } __attribute__((type)) e __attribute__((var));");
+      list.add("struct __attribute__((type1)) { int __attribute__((type2)) x __attribute__((var)); } __attribute__((type3)) s __attribute__((var));");
+      list.add("struct __attribute__((type1)) ss { int __attribute__((type2)) x __attribute__((var)); } __attribute__((type3)) s __attribute__((var));");
+      list.add("enum __attribute__((type1)) { E } __attribute__((type2)) e __attribute__((var));");
+      list.add("enum __attribute__((type1)) ee { E } __attribute__((type2)) e __attribute__((var));");
       list.add("TYPE __attribute__((type)) i __attribute__((var));");
       var text = list.join("\n");
       var declarations = new BinaryDeclarations(text);

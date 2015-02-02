@@ -187,8 +187,8 @@ class EmptyDeclaration extends BinaryDeclaration {
 class EnumDeclaration extends BinaryDeclaration {
   EnumTypeSpecification _type;
 
-  EnumDeclaration({AttributeSpecifications attributes, String kind, String tag, List<EnumValueDeclaration> values}) : super(attributes: attributes) {
-    _type = new EnumTypeSpecification(attributes: attributes, kind: kind, values: values, tag: tag);
+  EnumDeclaration({AttributeSpecifications attributes, TaggedTypeSpecification taggedType, List<EnumValueDeclaration> values}) : super(attributes: attributes) {
+    _type = new EnumTypeSpecification(attributes: attributes, values: values, taggedType: taggedType);
   }
 
   EnumTypeSpecification get type => _type;
@@ -201,27 +201,25 @@ class EnumDeclaration extends BinaryDeclaration {
 }
 
 class EnumTypeSpecification extends TypeSpecification {
-  TaggedTypeSpecification _taggedType;
+  final TaggedTypeSpecification taggedType;
 
   List<EnumValueDeclaration> _values;
 
-  EnumTypeSpecification({AttributeSpecifications attributes, String kind, List<EnumValueDeclaration> values, String tag}) : super(attributes: attributes) {
+  EnumTypeSpecification({AttributeSpecifications attributes, this.taggedType, List<EnumValueDeclaration> values}) : super(attributes: attributes) {
+    if (taggedType == null) {
+      throw new ArgumentError.notNull("taggedType");
+    }
+
+    if (taggedType.kind != TaggedTypeKinds.ENUM) {
+      throw new ArgumentError.value(taggedType, "taggedType");
+    }
+
     if (values == null) {
       throw new ArgumentError.notNull("values");
     }
 
-    _taggedType = new TaggedTypeSpecification(kind: kind, tag: tag);
-    switch (_taggedType.kind) {
-      case TaggedTypeKinds.ENUM:
-        break;
-      default:
-        throw new ArgumentError.value(kind, "kind");
-    }
-
     _values = new _ListCloner<EnumValueDeclaration>(values, "values").list;
   }
-
-  TaggedTypeSpecification get taggedType => _taggedType;
 
   List<EnumValueDeclaration> get values => _values;
 
@@ -430,8 +428,8 @@ class PointerTypeSpecification extends TypeSpecification {
 class StructureDeclaration extends BinaryDeclaration {
   StructureTypeSpecification _type;
 
-  StructureDeclaration({AttributeSpecifications attributes, String kind, List<ParameterDeclaration> members, String tag}) : super(attributes: attributes) {
-    _type = new StructureTypeSpecification(attributes: attributes, kind: kind, members: members, tag: tag);
+  StructureDeclaration({AttributeSpecifications attributes, List<ParameterDeclaration> members, TaggedTypeSpecification taggedType}) : super(attributes: attributes) {
+    _type = new StructureTypeSpecification(attributes: attributes, members: members, taggedType: taggedType);
   }
 
   StructureTypeSpecification get type => _type;
@@ -444,26 +442,27 @@ class StructureDeclaration extends BinaryDeclaration {
 }
 
 class StructureTypeSpecification extends TypeSpecification {
-  TaggedTypeSpecification _taggedType;
+  final TaggedTypeSpecification taggedType;
 
   List<ParameterDeclaration> _members;
 
-  StructureTypeSpecification({AttributeSpecifications attributes, String kind, List<ParameterDeclaration> members, String tag}) : super(attributes: attributes) {
-    _taggedType = new TaggedTypeSpecification(kind: kind, tag: tag);
-    switch (_taggedType.kind) {
+  StructureTypeSpecification({AttributeSpecifications attributes, List<ParameterDeclaration> members, this.taggedType}) : super(attributes: attributes) {
+    if (taggedType == null) {
+      throw new ArgumentError.notNull("taggedType");
+    }
+
+    switch (taggedType.kind) {
       case TaggedTypeKinds.STRUCT:
       case TaggedTypeKinds.UNION:
         break;
       default:
-        throw new ArgumentError.value(kind, "kind");
+        throw new ArgumentError.value(taggedType, "taggedType");
     }
 
     _members = new _ListCloner<ParameterDeclaration>(members, "members").list;
   }
 
   List<ParameterDeclaration> get members => _members;
-
-  TaggedTypeSpecification get taggedType => _taggedType;
 
   String toString() {
     var sb = new StringBuffer();
@@ -530,14 +529,14 @@ class TaggedTypeSpecification extends TypeSpecification {
   String toString() {
     var sb = new StringBuffer();
     sb.write(kind);
-    if (tag != null) {
-      sb.write(" ");
-      sb.write(tag);
-    }
-
     if (attributes != null) {
       sb.write(" ");
       sb.write(attributes);
+    }
+
+    if (tag != null) {
+      sb.write(" ");
+      sb.write(tag);
     }
 
     return sb.toString();
