@@ -27,4 +27,5 @@
 0.0.20 Minor changes in `c.peg` grammar
 0.0.21 Minor improvements and bug fixes in `c.peg` grammar
 0.0.21 Added support of the `bit-field` parameter declarations
-0.0.21 Fixed bug with the preprocessing 
+0.0.21 Fixed bug with the preprocessing
+0.0.22 Initial support of attribute specifiers `__attribute__`

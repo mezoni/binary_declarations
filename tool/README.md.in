@@ -16,12 +16,13 @@ Version: {{VERSION}}
 
 **Current features**
 
+- Attribute specifiers
 - Enum declarations
 - Macro processing
 - Function declarations
-- Struct declarations
+- Struct declarations (with bit-fields)
 - Typedef declarations
-- Union declarations
+- Union declarations (with bit-fields)
 - Variable declarations
 
 {{example/example.dart}}

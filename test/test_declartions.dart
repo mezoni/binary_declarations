@@ -2,6 +2,12 @@ import "package:binary_declarations/binary_declarations.dart";
 import "package:unittest/unittest.dart";
 
 void main() {
+  var text = "struct ss { int x; } __attribute__((type)) s __attribute__((var));";
+  var declarations = new BinaryDeclarations(text);
+  var decl = declarations.toList()[0];
+  decl.toString();
+
+
   group("Declarations.", () {
     group("Functions.", () {
       test("Function declarations.", () {
@@ -91,13 +97,13 @@ void main() {
     group("Enums.", () {
       var baseList = <String>[];
       baseList.add("enum { A }");
-      baseList.add("enum s { A }");
-      baseList.add("enum s { A }");
-      baseList.add("enum s { A, B }");
-      baseList.add("enum s { A = 0 }");
-      baseList.add("enum s { A = 0, B }");
-      baseList.add("enum s { A = 0, B, C = 0 }");
-      baseList.add("enum s { A = 0, B, C = -1 }");
+      baseList.add("enum e { A }");
+      baseList.add("enum e { A }");
+      baseList.add("enum e { A, B }");
+      baseList.add("enum e { A = 0 }");
+      baseList.add("enum e { A = 0, B }");
+      baseList.add("enum e { A = 0, B, C = 0 }");
+      baseList.add("enum e { A = 0, B, C = -1 }");
       test("Enum declarations.", () {
         var lines = baseList.toList();
         lines = _addBeforeAndAfter(lines, "", ";");
@@ -252,9 +258,17 @@ void main() {
 
     test("Attributes.", () {
       var list = <String>[];
-      list.add("typedef __attribute__((aligned(8))) int INT;");
-      list.add("typedef __attribute__((aligned)) int INT;");
-      list.add("typedef __attribute__((foo(baz, 2))) int INT;");
+      list.add("typedef int __attribute__((aligned(8))) __attribute__((packed)) INT;");
+      list.add("typedef int INT __attribute__((aligned(8), packed));");
+      list.add("typedef int __attribute__((foo(baz, 2))) INT;");
+      list.add("float __attribute__((type)) f __attribute__((var));");
+      list.add("enum ee __attribute__((type)) e __attribute__((var));");
+      list.add("struct ss __attribute__((type)) s __attribute__((var));");
+      list.add("int __attribute__((type)) i __attribute__((var));");
+      list.add("int __attribute__((ret)) foo(int __attribute__((type)) x __attribute__((var))) __attribute__((func));");
+      list.add("struct ss { int __attribute__((type)) x __attribute__((var)); } __attribute__((type)) s __attribute__((var));");
+      list.add("enum ee { E } __attribute__((type)) e __attribute__((var));");
+      list.add("TYPE __attribute__((type)) i __attribute__((var));");
       var text = list.join("\n");
       var declarations = new BinaryDeclarations(text);
       _checkPresentation(text, declarations);

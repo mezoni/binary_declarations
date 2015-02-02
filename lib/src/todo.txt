@@ -1,3 +1,0 @@
-unsigned nargs;
-parse error
-Expected 'char', 'int', 'long', 'short' but found 'n'
