@@ -25,3 +25,6 @@
 0.0.18 Generated new `c.peg` parser using new version of `peg` generator
 0.0.19 Breaking change: Function declaration should explicitly specify the return type
 0.0.20 Minor changes in `c.peg` grammar
+0.0.21 Minor improvements and bug fixes in `c.peg` grammar
+0.0.21 Added support of the `bit-field` parameter declarations
+0.0.21 Fixed bug with the preprocessing 

@@ -7,6 +7,7 @@ void main() {
       test("Function declarations.", () {
         var list = <String>[];
         list.add("int foo();");
+        list.add("unsigned foo();");
         list.add("void foo();");
         list.add("short foo(int);");
         list.add("struct Foo foo(int, int*);");
@@ -46,8 +47,9 @@ void main() {
         baseList.add("$kind s { int i; $kind { } s; }");
         baseList.add("$kind s { int i; $kind s { } s; }");
         baseList.add("$kind s { int i; $kind s { int i; } s; }");
+        baseList.add("$kind s { int i; int a : 1; }");
+        baseList.add("$kind s { int i; int : 0; }");
       }
-      ;
 
       test("Structure declarations.", () {
         var lines = baseList.toList();

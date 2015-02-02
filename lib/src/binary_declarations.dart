@@ -5,7 +5,7 @@ class ArrayTypeSpecification extends TypeSpecification {
 
   final TypeSpecification type;
 
-  ArrayTypeSpecification({BinaryAttributes attributes, List<int> dimensions, this.type}) : super(attributes: attributes) {
+  ArrayTypeSpecification({BinaryAttributes attributes, bool isConst, List<int> dimensions, this.type}) : super(attributes: attributes, isConst: isConst) {
     if (dimensions == null) {
       throw new ArgumentError.notNull("dimensions");
     }
@@ -137,23 +137,21 @@ class BinaryDeclarations extends Object with IterableMixin<BinaryDeclaration> {
       return;
     }
 
-    for (var i = 0; i < numberOfBlocks; i++) {
-      var block = blocks[i];
-      var parser = new CParser(block.text);
-      var result = parser.parse_Declarations();
-      if (!parser.success) {
-        var messages = [];
-        for (var error in parser.errors()) {
-          messages.add(new ParserErrorMessage(error.message, error.start, error.position));
-        }
-
-        var strings = ParserErrorFormatter.format(source, messages, offset: block.position);
-        print(strings.join("\n"));
-        throw new FormatException();
+    var text = blocks.map((e) => e.text).join();
+    var parser = new CParser(text);
+    var result = parser.parse_Declarations();
+    if (!parser.success) {
+      var messages = [];
+      for (var error in parser.errors()) {
+        messages.add(new ParserErrorMessage(error.message, error.start, error.position));
       }
 
-      _declarations.addAll(result);
+      var strings = ParserErrorFormatter.format(source, messages);
+      print(strings.join("\n"));
+      throw new FormatException();
     }
+
+    _declarations.addAll(result);
   }
 
   Iterator<BinaryDeclaration> get iterator => _declarations.iterator;
@@ -238,7 +236,7 @@ class EnumValueDeclaration extends BinaryDeclaration {
 class FloatTypeSpecification extends TypeSpecification {
   final String kind;
 
-  FloatTypeSpecification({BinaryAttributes attributes, this.kind}) : super(attributes: attributes) {
+  FloatTypeSpecification({BinaryAttributes attributes, this.kind, bool isConst}) : super(attributes: attributes, isConst: isConst) {
     switch (kind) {
       case "double":
       case "float":
@@ -319,7 +317,7 @@ class FunctionDeclaration extends BinaryDeclaration {
 class IntegerTypeSpecification extends TypeSpecification {
   final String name;
 
-  IntegerTypeSpecification({BinaryAttributes attributes, this.name}) : super(attributes: attributes) {
+  IntegerTypeSpecification({BinaryAttributes attributes, bool isConst, this.name}) : super(attributes: attributes, isConst: isConst) {
     if (name == null) {
       throw new ArgumentError.notNull("name");
     }
@@ -333,18 +331,29 @@ class ParameterDeclaration {
 
   final TypeSpecification type;
 
-  ParameterDeclaration({this.name, this.type}) {
+  final int width;
+
+  ParameterDeclaration({this.name, this.type, this.width}) {
     if (type == null) {
       throw new ArgumentError.notNull("type");
     }
+
+    if (width != null && width < 0) {
+      throw new ArgumentError.value(width, "width");
+    }
   }
 
+  bool get isBitField => width != null;
+
   String toString() {
-    if (name == null) {
-      return type.toString();
-    } else {
-      return type.toStringWithIdentifier(name);
+    var sb = new StringBuffer();
+    sb.write(type.toStringWithIdentifier(name));
+    if (isBitField) {
+      sb.write(" : ");
+      sb.write(width);
     }
+
+    return sb.toString();
   }
 }
 
@@ -363,7 +372,7 @@ class PointerTypeSpecification extends TypeSpecification {
 class StructureDeclaration extends BinaryDeclaration {
   StructureTypeSpecification _type;
 
-  StructureDeclaration({List<BinaryAttribute> attributes, String kind, List<VariableDeclaration> members, String tag}) {
+  StructureDeclaration({List<BinaryAttribute> attributes, String kind, List<ParameterDeclaration> members, String tag}) {
     _type = new StructureTypeSpecification(kind: kind, members: members, tag: tag);
   }
 
@@ -377,9 +386,9 @@ class StructureDeclaration extends BinaryDeclaration {
 class StructureTypeSpecification extends TypeSpecification {
   TaggedTypeSpecification _taggedType;
 
-  List<VariableDeclaration> _members;
+  List<ParameterDeclaration> _members;
 
-  StructureTypeSpecification({BinaryAttributes attributes, String kind, List<VariableDeclaration> members, String tag}) : super(attributes: attributes) {
+  StructureTypeSpecification({BinaryAttributes attributes, String kind, List<ParameterDeclaration> members, String tag}) : super(attributes: attributes) {
     _taggedType = new TaggedTypeSpecification(attributes: attributes, kind: kind, tag: tag);
     switch (_taggedType.kind) {
       case TaggedTypeKinds.STRUCT:
@@ -389,10 +398,10 @@ class StructureTypeSpecification extends TypeSpecification {
         throw new ArgumentError.value(kind, "kind");
     }
 
-    _members = new _ListCloner<VariableDeclaration>(members, "members").list;
+    _members = new _ListCloner<ParameterDeclaration>(members, "members").list;
   }
 
-  List<VariableDeclaration> get members => _members;
+  List<ParameterDeclaration> get members => _members;
 
   TaggedTypeSpecification get taggedType => _taggedType;
 
@@ -431,7 +440,7 @@ class TaggedTypeSpecification extends TypeSpecification {
 
   TaggedTypeKinds _kind;
 
-  TaggedTypeSpecification({BinaryAttributes attributes, String kind, this.tag}) : super(attributes: attributes) {
+  TaggedTypeSpecification({BinaryAttributes attributes, String kind, bool isConst, this.tag}) : super(attributes: attributes, isConst: isConst) {
     if (kind == null) {
       throw new ArgumentError.notNull("kind");
     }
@@ -468,7 +477,17 @@ class TaggedTypeSpecification extends TypeSpecification {
 abstract class TypeSpecification {
   final BinaryAttributes attributes;
 
-  TypeSpecification({this.attributes});
+  bool _isConst;
+
+  TypeSpecification({this.attributes, bool isConst}) {
+    if (isConst == null) {
+      isConst = false;
+    }
+
+    _isConst = isConst;
+  }
+
+  bool get isConst => _isConst;
 
   String toStringWithIdentifier(String identifier) {
     var sb = new StringBuffer();
@@ -526,7 +545,7 @@ class TypedefDeclaration extends BinaryDeclaration {
 class TypedefTypeSpecification extends TypeSpecification {
   final String name;
 
-  TypedefTypeSpecification({BinaryAttributes attributes, this.name}) : super(attributes: attributes) {
+  TypedefTypeSpecification({BinaryAttributes attributes, bool isConst, this.name}) : super(attributes: attributes, isConst: isConst) {
     if (name == null || name.isEmpty) {
       throw new ArgumentError.value(name, "name");
     }
@@ -556,6 +575,8 @@ class VariableDeclaration extends BinaryDeclaration {
 }
 
 class VoidTypeSpecification extends TypeSpecification {
+  VoidTypeSpecification({BinaryAttributes attributes, bool isConst}) : super(attributes: attributes, isConst: isConst);
+
   String toString() => "void";
 }
 
