@@ -5,7 +5,7 @@ class ArrayTypeSpecification extends TypeSpecification {
 
   final TypeSpecification type;
 
-  ArrayTypeSpecification({AttributeSpecifications attributes, bool isConst, List<int> dimensions, this.type}) : super(attributes: attributes, isConst: isConst) {
+  ArrayTypeSpecification({bool isConst, List<int> dimensions, Metadata metadata, this.type}) : super(isConst: isConst, metadata: metadata) {
     if (dimensions == null) {
       throw new ArgumentError.notNull("dimensions");
     }
@@ -61,50 +61,12 @@ class ArrayTypeSpecification extends TypeSpecification {
   }
 }
 
-class AttributeSpecification {
-  List<BinaryAttribute> _values;
-
-  AttributeSpecification(List<BinaryAttribute> values) {
-    _values = new _ListCloner<BinaryAttribute>(values, "values").list;
-  }
-
-  List<BinaryAttribute> get values => _values;
-
-  String toString() {
-    var sb = new StringBuffer();
-    sb.write("__attribute__((");
-    sb.write(_values.join(", "));
-    sb.write("))");
-    return sb.toString();
-  }
-}
-
-class AttributeSpecifications {
-  List<AttributeSpecification> _attributes;
-
-  AttributeSpecifications(List<AttributeSpecification> attributes) {
-    if (attributes != null) {
-      _attributes = new _ListCloner<AttributeSpecification>(attributes, "attributes").list;
-    } else {
-      _attributes = const <AttributeSpecification>[];
-    }
-  }
-
-  List<AttributeSpecification> get attributes => _attributes;
-
-  String toString() {
-    var sb = new StringBuffer();
-    sb.write(_attributes.join(" "));
-    return sb.toString();
-  }
-}
-
-class BinaryAttribute {
+class Attribute {
   final String name;
 
   List<String> _parameters;
 
-  BinaryAttribute(this.name, [List parameters]) {
+  Attribute(this.name, [List parameters]) {
     if (name == null) {
       throw new ArgumentError.notNull("name");
     }
@@ -134,16 +96,34 @@ class BinaryAttribute {
   }
 }
 
-abstract class BinaryDeclaration {
-  final AttributeSpecifications attributes;
+class AttributeList {
+  List<Attribute> _attributes;
 
-  BinaryDeclaration({this.attributes});
+  AttributeList(List<Attribute> values) {
+    _attributes = new _ListCloner<Attribute>(values, "values").list;
+  }
+
+  List<Attribute> get attributes => _attributes;
+
+  String toString() {
+    var sb = new StringBuffer();
+    sb.write("__attribute__((");
+    sb.write(_attributes.join(", "));
+    sb.write("))");
+    return sb.toString();
+  }
 }
 
-class BinaryDeclarations extends Object with IterableMixin<BinaryDeclaration> {
-  List<BinaryDeclaration> _declarations;
+abstract class Declaration {
+  final Metadata metadata;
 
-  BinaryDeclarations(String source, {Map<String, String> environment}) {
+  Declaration({this.metadata});
+}
+
+class Declarations extends Object with IterableMixin<Declaration> {
+  List<Declaration> _declarations;
+
+  Declarations(String source, {Map<String, String> environment}) {
     if (source == null) {
       throw new ArgumentError.notNull("source");
     }
@@ -152,7 +132,7 @@ class BinaryDeclarations extends Object with IterableMixin<BinaryDeclaration> {
       environment = <String, String>{};
     }
 
-    _declarations = <BinaryDeclaration>[];
+    _declarations = <Declaration>[];
     var processor = new MacroProcessor();
     var blocks = processor.process(source, environment);
     var numberOfBlocks = blocks.length;
@@ -177,18 +157,18 @@ class BinaryDeclarations extends Object with IterableMixin<BinaryDeclaration> {
     _declarations.addAll(result);
   }
 
-  Iterator<BinaryDeclaration> get iterator => _declarations.iterator;
+  Iterator<Declaration> get iterator => _declarations.iterator;
 }
 
-class EmptyDeclaration extends BinaryDeclaration {
+class EmptyDeclaration extends Declaration {
   String toString() => ";";
 }
 
-class EnumDeclaration extends BinaryDeclaration {
+class EnumDeclaration extends Declaration {
   EnumTypeSpecification _type;
 
-  EnumDeclaration({AttributeSpecifications attributes, TaggedTypeSpecification taggedType, List<EnumValueDeclaration> values}) : super(attributes: attributes) {
-    _type = new EnumTypeSpecification(attributes: attributes, values: values, taggedType: taggedType);
+  EnumDeclaration({Metadata metadata, TaggedTypeSpecification taggedType, List<EnumValueDeclaration> values}) : super(metadata: metadata) {
+    _type = new EnumTypeSpecification(metadata: metadata, taggedType: taggedType, values: values);
   }
 
   EnumTypeSpecification get type => _type;
@@ -205,7 +185,7 @@ class EnumTypeSpecification extends TypeSpecification {
 
   List<EnumValueDeclaration> _values;
 
-  EnumTypeSpecification({AttributeSpecifications attributes, this.taggedType, List<EnumValueDeclaration> values}) : super(attributes: attributes) {
+  EnumTypeSpecification({Metadata metadata, this.taggedType, List<EnumValueDeclaration> values}) : super(metadata: metadata) {
     if (taggedType == null) {
       throw new ArgumentError.notNull("taggedType");
     }
@@ -229,16 +209,16 @@ class EnumTypeSpecification extends TypeSpecification {
     sb.write(" { ");
     sb.write(values.join(", "));
     sb.write(" }");
-    if (attributes != null) {
+    if (metadata != null) {
       sb.write(" ");
-      sb.write(attributes);
+      sb.write(metadata);
     }
 
     return sb.toString();
   }
 }
 
-class EnumValueDeclaration extends BinaryDeclaration {
+class EnumValueDeclaration extends Declaration {
   final String name;
 
   final int value;
@@ -264,7 +244,7 @@ class EnumValueDeclaration extends BinaryDeclaration {
 class FloatTypeSpecification extends TypeSpecification {
   final String name;
 
-  FloatTypeSpecification({AttributeSpecifications attributes, this.name, bool isConst}) : super(attributes: attributes, isConst: isConst) {
+  FloatTypeSpecification({Metadata metadata, this.name, bool isConst}) : super(isConst: isConst, metadata: metadata) {
     if (name == null) {
       throw new ArgumentError.notNull("name");
     }
@@ -273,23 +253,23 @@ class FloatTypeSpecification extends TypeSpecification {
   String toString() {
     var sb = new StringBuffer();
     sb.write(name);
-    if (attributes != null) {
+    if (metadata != null) {
       sb.write(" ");
-      sb.write(attributes);
+      sb.write(metadata);
     }
 
     return sb.toString();
   }
 }
 
-class FunctionDeclaration extends BinaryDeclaration {
+class FunctionDeclaration extends Declaration {
   final String name;
 
   final TypeSpecification returnType;
 
   List<ParameterDeclaration> _parameters;
 
-  FunctionDeclaration({AttributeSpecifications attributes, this.name, List<ParameterDeclaration> parameters, this.returnType}) : super(attributes: attributes) {
+  FunctionDeclaration({Metadata metadata, this.name, List<ParameterDeclaration> parameters, this.returnType}) : super(metadata: metadata) {
     if (name == null || name.isEmpty) {
       throw new ArgumentError.value(name, "name");
     }
@@ -343,9 +323,9 @@ class FunctionDeclaration extends BinaryDeclaration {
     }
 
     sb.write(")");
-    if (attributes != null) {
+    if (metadata != null) {
       sb.write(" ");
-      sb.write(attributes);
+      sb.write(metadata);
     }
 
     return sb.toString();
@@ -355,7 +335,7 @@ class FunctionDeclaration extends BinaryDeclaration {
 class IntegerTypeSpecification extends TypeSpecification {
   final String name;
 
-  IntegerTypeSpecification({AttributeSpecifications attributes, bool isConst, this.name}) : super(attributes: attributes, isConst: isConst) {
+  IntegerTypeSpecification({Metadata metadata, bool isConst, this.name}) : super(isConst: isConst, metadata: metadata) {
     if (name == null) {
       throw new ArgumentError.notNull("name");
     }
@@ -364,23 +344,43 @@ class IntegerTypeSpecification extends TypeSpecification {
   String toString() {
     var sb = new StringBuffer();
     sb.write(name);
-    if (attributes != null) {
+    if (metadata != null) {
       sb.write(" ");
-      sb.write(attributes);
+      sb.write(metadata);
     }
 
     return sb.toString();
   }
 }
 
-class ParameterDeclaration extends BinaryDeclaration {
+class Metadata {
+  List<AttributeList> _attributeList;
+
+  Metadata(List<AttributeList> attributeList) {
+    if (attributeList != null) {
+      _attributeList = new _ListCloner<AttributeList>(attributeList, "attributeList").list;
+    } else {
+      _attributeList = const <AttributeList>[];
+    }
+  }
+
+  List<AttributeList> get attributeList => _attributeList;
+
+  String toString() {
+    var sb = new StringBuffer();
+    sb.write(_attributeList.join(" "));
+    return sb.toString();
+  }
+}
+
+class ParameterDeclaration extends Declaration {
   final String name;
 
   final TypeSpecification type;
 
   final int width;
 
-  ParameterDeclaration({AttributeSpecifications attributes, this.name, this.type, this.width}) : super(attributes: attributes) {
+  ParameterDeclaration({Metadata metadata, this.name, this.type, this.width}) : super(metadata: metadata) {
     if (type == null) {
       throw new ArgumentError.notNull("type");
     }
@@ -400,9 +400,9 @@ class ParameterDeclaration extends BinaryDeclaration {
       sb.write(width);
     }
 
-    if (attributes != null) {
+    if (metadata != null) {
       sb.write(" ");
-      sb.write(attributes);
+      sb.write(metadata);
     }
 
     return sb.toString();
@@ -412,7 +412,7 @@ class ParameterDeclaration extends BinaryDeclaration {
 class PointerTypeSpecification extends TypeSpecification {
   final TypeSpecification type;
 
-  PointerTypeSpecification({AttributeSpecifications attributes, this.type}) : super(attributes: attributes) {
+  PointerTypeSpecification({Metadata metadata, this.type}) : super(metadata: metadata) {
     if (type == null) {
       throw new ArgumentError.notNull("type");
     }
@@ -421,11 +421,11 @@ class PointerTypeSpecification extends TypeSpecification {
   String toString() => "$type*";
 }
 
-class StructureDeclaration extends BinaryDeclaration {
+class StructureDeclaration extends Declaration {
   StructureTypeSpecification _type;
 
-  StructureDeclaration({AttributeSpecifications attributes, List<ParameterDeclaration> members, TaggedTypeSpecification taggedType}) : super(attributes: attributes) {
-    _type = new StructureTypeSpecification(attributes: attributes, members: members, taggedType: taggedType);
+  StructureDeclaration({Metadata metadata, List<ParameterDeclaration> members, TaggedTypeSpecification taggedType}) : super(metadata: metadata) {
+    _type = new StructureTypeSpecification(metadata: metadata, members: members, taggedType: taggedType);
   }
 
   StructureTypeSpecification get type => _type;
@@ -442,7 +442,7 @@ class StructureTypeSpecification extends TypeSpecification {
 
   List<ParameterDeclaration> _members;
 
-  StructureTypeSpecification({AttributeSpecifications attributes, List<ParameterDeclaration> members, this.taggedType}) : super(attributes: attributes) {
+  StructureTypeSpecification({Metadata metadata, List<ParameterDeclaration> members, this.taggedType}) : super(metadata: metadata) {
     if (taggedType == null) {
       throw new ArgumentError.notNull("taggedType");
     }
@@ -472,9 +472,9 @@ class StructureTypeSpecification extends TypeSpecification {
     }
 
     sb.write("}");
-    if (attributes != null) {
+    if (metadata != null) {
       sb.write(" ");
-      sb.write(attributes);
+      sb.write(metadata);
     }
 
     return sb.toString();
@@ -484,7 +484,7 @@ class StructureTypeSpecification extends TypeSpecification {
 class SynonymTypeSpecification extends TypeSpecification {
   final String name;
 
-  SynonymTypeSpecification({AttributeSpecifications attributes, bool isConst, this.name}) : super(attributes: attributes, isConst: isConst) {
+  SynonymTypeSpecification({Metadata metadata, bool isConst, this.name}) : super(isConst: isConst, metadata: metadata) {
     if (name == null || name.isEmpty) {
       throw new ArgumentError.value(name, "name");
     }
@@ -493,9 +493,9 @@ class SynonymTypeSpecification extends TypeSpecification {
   String toString() {
     var sb = new StringBuffer();
     sb.write(name);
-    if (attributes != null) {
+    if (metadata != null) {
       sb.write(" ");
-      sb.write(attributes);
+      sb.write(metadata);
     }
 
     return sb.toString();
@@ -523,7 +523,7 @@ class TaggedTypeSpecification extends TypeSpecification {
 
   String _name;
 
-  TaggedTypeSpecification({AttributeSpecifications attributes, String kind, bool isConst, this.tag}) : super(attributes: attributes, isConst: isConst) {
+  TaggedTypeSpecification({Metadata metadata, String kind, bool isConst, this.tag}) : super(isConst: isConst, metadata: metadata) {
     if (kind == null) {
       throw new ArgumentError.notNull("kind");
     }
@@ -559,9 +559,9 @@ class TaggedTypeSpecification extends TypeSpecification {
   String toString() {
     var sb = new StringBuffer();
     sb.write(kind);
-    if (attributes != null) {
+    if (metadata != null) {
       sb.write(" ");
-      sb.write(attributes);
+      sb.write(metadata);
     }
 
     if (tag != null) {
@@ -574,11 +574,11 @@ class TaggedTypeSpecification extends TypeSpecification {
 }
 
 abstract class TypeSpecification {
-  final AttributeSpecifications attributes;
-
   bool _isConst;
 
-  TypeSpecification({this.attributes, bool isConst}) {
+  final Metadata metadata;
+
+  TypeSpecification({this.metadata, bool isConst}) {
     if (isConst == null) {
       isConst = false;
     }
@@ -600,10 +600,10 @@ abstract class TypeSpecification {
   }
 }
 
-class TypedefDeclaration extends BinaryDeclaration {
+class TypedefDeclaration extends Declaration {
   final TypedefTypeSpecification type;
 
-  TypedefDeclaration({AttributeSpecifications attributes, this.type}) : super(attributes: attributes) {
+  TypedefDeclaration({Metadata metadata, this.type}) : super(metadata: metadata) {
     if (type == null) {
       throw new ArgumentError.notNull("type");
     }
@@ -612,8 +612,8 @@ class TypedefDeclaration extends BinaryDeclaration {
   String toString() {
     var sb = new StringBuffer();
     sb.write("typedef ");
-    if (attributes != null) {
-      sb.write(attributes);
+    if (metadata != null) {
+      sb.write(metadata);
       sb.write(" ");
     }
 
@@ -627,7 +627,7 @@ class TypedefTypeSpecification extends TypeSpecification {
 
   final TypeSpecification type;
 
-  TypedefTypeSpecification({AttributeSpecifications attributes, bool isConst, this.name, this.type}) : super(attributes: attributes, isConst: isConst) {
+  TypedefTypeSpecification({Metadata metadata, bool isConst, this.name, this.type}) : super(isConst: isConst, metadata: metadata) {
     if (name == null || name.isEmpty) {
       throw new ArgumentError.value(name, "name");
     }
@@ -647,9 +647,9 @@ class TypedefTypeSpecification extends TypeSpecification {
       sb.write(name);
     }
 
-    if (attributes != null) {
+    if (metadata != null) {
       sb.write(" ");
-      sb.write(attributes);
+      sb.write(metadata);
     }
 
     return sb.toString();
@@ -660,12 +660,12 @@ class VaListTypeSpecification extends TypeSpecification {
   String toString() => "...";
 }
 
-class VariableDeclaration extends BinaryDeclaration {
+class VariableDeclaration extends Declaration {
   final String name;
 
   final TypeSpecification type;
 
-  VariableDeclaration({AttributeSpecifications attributes, this.name, this.type}) : super(attributes: attributes) {
+  VariableDeclaration({Metadata metadata, this.name, this.type}) : super(metadata: metadata) {
     if (type == null) {
       throw new ArgumentError.notNull("type");
     }
@@ -674,9 +674,9 @@ class VariableDeclaration extends BinaryDeclaration {
   String toString() {
     var sb = new StringBuffer();
     sb.write(type.toStringWithIdentifier(name));
-    if (attributes != null) {
+    if (metadata != null) {
       sb.write(" ");
-      sb.write(attributes);
+      sb.write(metadata);
     }
 
     return sb.toString();
@@ -684,14 +684,14 @@ class VariableDeclaration extends BinaryDeclaration {
 }
 
 class VoidTypeSpecification extends TypeSpecification {
-  VoidTypeSpecification({AttributeSpecifications attributes, bool isConst}) : super(attributes: attributes, isConst: isConst);
+  VoidTypeSpecification({Metadata metadata, bool isConst}) : super(isConst: isConst, metadata: metadata);
 
   String toString() {
     var sb = new StringBuffer();
     sb.write("void");
-    if (attributes != null) {
+    if (metadata != null) {
       sb.write(" ");
-      sb.write(attributes);
+      sb.write(metadata);
     }
 
     return sb.toString();

@@ -24,7 +24,7 @@ void main() {
         list.add("int foo(int i);");
         list.add("short int* foo(int i, int* ip);");
         var text = list.join("\n");
-        var declarations = new BinaryDeclarations(text);
+        var declarations = new Declarations(text);
         for (var declaration in declarations) {
           expect(declaration is FunctionDeclaration, true, reason: "Not a $FunctionDeclaration");
         }
@@ -55,7 +55,7 @@ void main() {
         var lines = baseList.toList();
         lines = _addBeforeAndAfter(lines, "", ";");
         var text = lines.join("\n");
-        var declarations = new BinaryDeclarations(text);
+        var declarations = new Declarations(text);
         for (var declaration in declarations) {
           expect(declaration is StructureDeclaration, true, reason: "Not a $StructureDeclaration");
         }
@@ -67,7 +67,7 @@ void main() {
         var lines = baseList.toList();
         lines = _addBeforeAndAfter(lines, "", " s1;");
         var text = lines.join("\n");
-        var declarations = new BinaryDeclarations(text);
+        var declarations = new Declarations(text);
         for (var declaration in declarations) {
           expect(declaration is VariableDeclaration, true, reason: "Not a $VariableDeclaration");
         }
@@ -79,7 +79,7 @@ void main() {
         var lines = baseList.toList();
         lines = _addBeforeAndAfter(lines, "typedef ", " s1;");
         var text = lines.join("\n");
-        var declarations = new BinaryDeclarations(text);
+        var declarations = new Declarations(text);
         for (var declaration in declarations) {
           expect(declaration is TypedefDeclaration, true, reason: "Not a $TypedefDeclaration");
         }
@@ -102,7 +102,7 @@ void main() {
         var lines = baseList.toList();
         lines = _addBeforeAndAfter(lines, "", ";");
         var text = lines.join("\n");
-        var declarations = new BinaryDeclarations(text);
+        var declarations = new Declarations(text);
         for (var declaration in declarations) {
           expect(declaration is EnumDeclaration, true, reason: "Not a $EnumDeclaration");
         }
@@ -110,7 +110,7 @@ void main() {
         _checkPresentation(text, declarations);
 
         try {
-          new BinaryDeclarations("enum { A, };");
+          new Declarations("enum { A, };");
         } catch (e) {
           expect(true, false, reason: "Extra comma 'enum { A, }'");
         }
@@ -120,7 +120,7 @@ void main() {
         var lines = baseList.toList();
         lines = _addBeforeAndAfter(lines, "", " s1;");
         var text = lines.join("\n");
-        var declarations = new BinaryDeclarations(text);
+        var declarations = new Declarations(text);
         for (var declaration in declarations) {
           expect(declaration is VariableDeclaration, true, reason: "Not a $VariableDeclaration");
         }
@@ -132,7 +132,7 @@ void main() {
         var lines = baseList.toList();
         lines = _addBeforeAndAfter(lines, "typedef ", " s1;");
         var text = lines.join("\n");
-        var declarations = new BinaryDeclarations(text);
+        var declarations = new Declarations(text);
         for (var declaration in declarations) {
           expect(declaration is TypedefDeclaration, true, reason: "Not a $TypedefDeclaration");
         }
@@ -151,7 +151,7 @@ void main() {
         }
 
         var text = list.join("\n");
-        var declarations = new BinaryDeclarations(text);
+        var declarations = new Declarations(text);
         for (var declaration in declarations) {
           expect(declaration is VariableDeclaration, true, reason: "Not a $VariableDeclaration");
         }
@@ -167,7 +167,7 @@ void main() {
         }
 
         var text = list.join("\n");
-        var declarations = new BinaryDeclarations(text);
+        var declarations = new Declarations(text);
         for (var declaration in declarations) {
           expect(declaration is VariableDeclaration, true, reason: "Not a $VariableDeclaration");
         }
@@ -183,7 +183,7 @@ void main() {
         }
 
         var text = list.join("\n");
-        var declarations = new BinaryDeclarations(text);
+        var declarations = new Declarations(text);
         for (var declaration in declarations) {
           expect(declaration is VariableDeclaration, true, reason: "Not a $VariableDeclaration");
         }
@@ -199,7 +199,7 @@ void main() {
         }
 
         var text = list.join("\n");
-        var declarations = new BinaryDeclarations(text);
+        var declarations = new Declarations(text);
         for (var declaration in declarations) {
           expect(declaration is TypedefDeclaration, true, reason: "Not a $TypedefDeclaration");
         }
@@ -215,7 +215,7 @@ void main() {
         }
 
         var text = list.join("\n");
-        var declarations = new BinaryDeclarations(text);
+        var declarations = new Declarations(text);
         for (var declaration in declarations) {
           expect(declaration is TypedefDeclaration, true, reason: "Not a $TypedefDeclaration");
         }
@@ -231,7 +231,7 @@ void main() {
         }
 
         var text = list.join("\n");
-        var declarations = new BinaryDeclarations(text);
+        var declarations = new Declarations(text);
         for (var declaration in declarations) {
           expect(declaration is TypedefDeclaration, true, reason: "Not a $TypedefDeclaration");
         }
@@ -246,7 +246,7 @@ void main() {
       var list = <String>[];
       list.add("int i[011];");
       var text = list.join("\n");
-      var declarations = new BinaryDeclarations(text);
+      var declarations = new Declarations(text);
       _checkPresentation("int i[9];", declarations);
     });
 
@@ -266,12 +266,12 @@ void main() {
       list.add("TYPE __attribute__((A0)) i __attribute__((A1));");
       list.add("int __attribute__((aligned(8), packed)) i __attribute__((foo(baz, 2)));");
       var text = list.join("\n");
-      var declarations = new BinaryDeclarations(text);
+      var declarations = new Declarations(text);
       _checkPresentation(text, declarations);
     });
 
     test("Semicolons.", () {
-      var declarations = new BinaryDeclarations(";;;");
+      var declarations = new Declarations(";;;");
       _checkPresentation(";;", declarations);
     });
 
@@ -284,7 +284,7 @@ void main() {
       list.add("typedef int LONG;");
       list.add("#endif");
       var text = list.join("\n");
-      var declarations = new BinaryDeclarations(text);
+      var declarations = new Declarations(text);
       _checkPresentation("typedef int INT;", declarations);
     });
   });
@@ -300,7 +300,7 @@ List<String> _addBeforeAndAfter(List<String> lines, String before, String after)
   return result;
 }
 
-void _checkPresentation(String text, BinaryDeclarations declarations) {
+void _checkPresentation(String text, Declarations declarations) {
   var lines = text.split("\n");
   var length = lines.length;
   var list = declarations.toList();

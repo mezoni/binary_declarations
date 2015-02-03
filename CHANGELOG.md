@@ -1,3 +1,7 @@
+## 0.0.27
+
+- Breaking change. Several classes have been renamed for the better consistency with package `binary types`
+
 ## 0.0.26
 
 - Continuing the adjustment of the support of attribute specifiers `__attribute__`
