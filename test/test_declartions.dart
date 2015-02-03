@@ -252,19 +252,19 @@ void main() {
 
     test("Attributes.", () {
       var list = <String>[];
-      list.add("typedef int __attribute__((aligned(8))) __attribute__((packed)) INT;");
-      list.add("typedef int INT __attribute__((aligned(8), packed));");
-      list.add("typedef int __attribute__((foo(baz, 2))) INT;");
-      list.add("float __attribute__((type)) f __attribute__((var));");
-      list.add("enum __attribute__((type)) ee e __attribute__((var));");
-      list.add("struct __attribute__((type)) ss s __attribute__((var));");
-      list.add("int __attribute__((type)) i __attribute__((var));");
-      list.add("int __attribute__((ret)) foo(int __attribute__((type)) x __attribute__((var))) __attribute__((func));");
-      list.add("struct __attribute__((type1)) { int __attribute__((type2)) x __attribute__((var)); } __attribute__((type3)) s __attribute__((var));");
-      list.add("struct __attribute__((type1)) ss { int __attribute__((type2)) x __attribute__((var)); } __attribute__((type3)) s __attribute__((var));");
-      list.add("enum __attribute__((type1)) { E } __attribute__((type2)) e __attribute__((var));");
-      list.add("enum __attribute__((type1)) ee { E } __attribute__((type2)) e __attribute__((var));");
-      list.add("TYPE __attribute__((type)) i __attribute__((var));");
+      list.add("typedef __attribute__((A0)) signed int __attribute__((A1)) INT __attribute__((A2));");
+      list.add("typedef __attribute__((A0)) FOO __attribute__((A1)) BAZ __attribute__((A2));");
+      list.add("float __attribute__((A0)) f __attribute__((A1));");
+      list.add("enum __attribute__((A0)) ee e __attribute__((A1));");
+      list.add("struct __attribute__((A0)) ss s __attribute__((A1));");
+      list.add("int __attribute__((A0)) i __attribute__((A1));");
+      list.add("int __attribute__((A0)) foo(int __attribute__((A1)) x __attribute__((A2))) __attribute__((A3));");
+      list.add("struct __attribute__((A0)) { int __attribute__((A1)) x __attribute__((A2)); } __attribute__((A3)) s __attribute__((A4));");
+      list.add("struct __attribute__((A0)) ss { int __attribute__((A1)) x __attribute__((A2)); } __attribute__((A3)) s __attribute__((A4));");
+      list.add("enum __attribute__((A0)) { E } __attribute__((A1)) e __attribute__((A2));");
+      list.add("enum __attribute__((A0)) ee { E } __attribute__((A1)) e __attribute__((A2));");
+      list.add("TYPE __attribute__((A0)) i __attribute__((A1));");
+      list.add("int __attribute__((aligned(8), packed)) i __attribute__((foo(baz, 2)));");
       var text = list.join("\n");
       var declarations = new BinaryDeclarations(text);
       _checkPresentation(text, declarations);

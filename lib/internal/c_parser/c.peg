@@ -16,13 +16,6 @@ String _createInt(List parts) {
   return list.join(" ");
 }
 
-int parseInt(String sign, String digits, int radix) {
-  if (sign == null) {
-    sign = "";
-  }
-  return int.parse("$sign$digits", radix: radix);
-}
-
 List _createParameters(List parameters, ParameterDeclaration vaList) {    
   var list = <ParameterDeclaration>[];
   list.addAll(parameters);
@@ -40,6 +33,14 @@ PointerTypeSpecification _createPointer(TypeSpecification type, List stars) {
   
   return type;
 }
+
+int _parseInt(String sign, String digits, int radix) {
+  if (sign == null) {
+    sign = "";
+  }
+  return int.parse("$sign$digits", radix: radix);
+}
+
 }%
 
 ### Sentences (nonterminals) ###
@@ -70,7 +71,7 @@ PointerType <-
   TypeName ASTERISK+ { $$ = _createPointer($1, $2); }
 
 TypeName <-
-  CONST? IDENTIFIER AttributeSpecifiers? { $$ = new TypedefTypeSpecification(attributes: $3, isConst: $1, name: $2); }
+  CONST? IDENTIFIER AttributeSpecifiers? { $$ = new SynonymTypeSpecification(attributes: $3, isConst: $1, name: $2); }
   / CONST? SIGNEDNESS? (CHAR / INT) AttributeSpecifiers? { $$ = new IntegerTypeSpecification(attributes: $4, isConst: $1, name: _createInt([$2, $3])); }
   / CONST? SIGNEDNESS? (SHORT / LONG_TYPE) INT? AttributeSpecifiers? { $$ = new IntegerTypeSpecification(attributes: $5, isConst: $1, name: _createInt([$2, $3, $4])); }
   / CONST? SIGNEDNESS AttributeSpecifiers? { $$ = new IntegerTypeSpecification(attributes: $3, isConst: $1, name: $2); }
@@ -138,18 +139,18 @@ SimpleParameter <-
   Type IDENTIFIER? AttributeSpecifiers? { $$ = new ParameterDeclaration(attributes: $3, name: $2, type: $1); }
 
 TypedefDeclaration <-
-  TYPEDEF TypedefTypeDeclaration { $$ = $2; }
+  TYPEDEF AttributeSpecifiers? TypedefTypeSpecification { $$ = new TypedefDeclaration(attributes: $2, type: $3); }
 
-TypedefTypeDeclaration <-
-  TypedefArrayTypeDeclaration
-  / TypedefTaggedTypeDeclaration
-  / TypedefSimpleTypeDeclaration
+TypedefTypeSpecification <-
+  TypedefArrayTypeSpecification
+  / TypedefTaggedTypeSpecification
+  / TypedefSynonymTypeSpecification
 
-TypedefArrayTypeDeclaration <-
-  Type IDENTIFIER ArrayDimension AttributeSpecifiers? { $$ = new TypedefDeclaration(attributes: $4, name: $2, type: _createArray($1, $3)); }
+TypedefArrayTypeSpecification <-
+  Type IDENTIFIER ArrayDimension AttributeSpecifiers? { $$ = new TypedefTypeSpecification(attributes: $4, name: $2, type: _createArray($1, $3)); }
 
-TypedefTaggedTypeDeclaration <-
-  TaggedTypeDeclaration IDENTIFIER AttributeSpecifiers? { $$ = new TypedefDeclaration(attributes: $3, name: $2, type: $1.type); }
+TypedefTaggedTypeSpecification <-
+  TaggedTypeDeclaration IDENTIFIER AttributeSpecifiers? { $$ = new TypedefTypeSpecification(attributes: $3, name: $2, type: $1.type); }
 
 TaggedTypeDeclaration <-
   StructDeclaration
@@ -184,8 +185,8 @@ EnumValue <-
   IDENTIFIER ASSIGN NUMBER { $$ = new EnumValueDeclaration(name: $1, value: $3); }
   / IDENTIFIER { $$ = new EnumValueDeclaration(name: $1); }
 
-TypedefSimpleTypeDeclaration <-
-  Type IDENTIFIER AttributeSpecifiers? { $$ = new TypedefDeclaration(attributes: $3, name: $2, type: $1); }
+TypedefSynonymTypeSpecification <-
+  Type IDENTIFIER AttributeSpecifiers? { $$ = new TypedefTypeSpecification(attributes: $3, name: $2, type: $1); }
 
 VariableDeclaration <-
   ArrayVariableDeclaration
@@ -333,7 +334,7 @@ IDENT_START <-
   [A-Z_a-z]
 
 INTEGER <-
-  SIGN? [0-9]+ SPACING { $$ = parseInt($1, $2.join(), 10); }
+  SIGN? [0-9]+ SPACING { $$ = _parseInt($1, $2.join(), 10); }
 
 LONG <-
   'long' !IDENT_PART SPACING { $$ = $1; }
@@ -342,7 +343,7 @@ MINUS <-
   '-' SPACING { $$ = $1; }
 
 OCTAL_NUMBER <-
-  SIGN? [0] [0-9]+ { $$ = parseInt($1, _flatten([$2, $3]).join(), 8); }
+  SIGN? [0] [0-9]+ { $$ = _parseInt($1, _flatten([$2, $3]).join(), 8); }
 
 PLUS <-
   '+' SPACING { $$ = $1; }

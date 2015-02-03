@@ -481,6 +481,27 @@ class StructureTypeSpecification extends TypeSpecification {
   }
 }
 
+class SynonymTypeSpecification extends TypeSpecification {
+  final String name;
+
+  SynonymTypeSpecification({AttributeSpecifications attributes, bool isConst, this.name}) : super(attributes: attributes, isConst: isConst) {
+    if (name == null || name.isEmpty) {
+      throw new ArgumentError.value(name, "name");
+    }
+  }
+
+  String toString() {
+    var sb = new StringBuffer();
+    sb.write(name);
+    if (attributes != null) {
+      sb.write(" ");
+      sb.write(attributes);
+    }
+
+    return sb.toString();
+  }
+}
+
 class TaggedTypeKinds {
   static const TaggedTypeKinds ENUM = const TaggedTypeKinds("enum");
 
@@ -580,17 +601,9 @@ abstract class TypeSpecification {
 }
 
 class TypedefDeclaration extends BinaryDeclaration {
-  final AttributeSpecifications attributes;
+  final TypedefTypeSpecification type;
 
-  final String name;
-
-  final TypeSpecification type;
-
-  TypedefDeclaration({this.attributes, this.name, this.type}) {
-    if (name == null || name.isEmpty) {
-      throw new ArgumentError.value(name, "name");
-    }
-
+  TypedefDeclaration({AttributeSpecifications attributes, this.type}) : super(attributes: attributes) {
     if (type == null) {
       throw new ArgumentError.notNull("type");
     }
@@ -599,6 +612,29 @@ class TypedefDeclaration extends BinaryDeclaration {
   String toString() {
     var sb = new StringBuffer();
     sb.write("typedef ");
+    if (attributes != null) {
+      sb.write(attributes);
+      sb.write(" ");
+    }
+
+    sb.write(type);
+    return sb.toString();
+  }
+}
+
+class TypedefTypeSpecification extends TypeSpecification {
+  final String name;
+
+  final TypeSpecification type;
+
+  TypedefTypeSpecification({AttributeSpecifications attributes, bool isConst, this.name, this.type}) : super(attributes: attributes, isConst: isConst) {
+    if (name == null || name.isEmpty) {
+      throw new ArgumentError.value(name, "name");
+    }
+  }
+
+  String toString() {
+    var sb = new StringBuffer();
     if (type is ArrayTypeSpecification) {
       var arrayType = type;
       sb.write(arrayType.type);
@@ -611,27 +647,6 @@ class TypedefDeclaration extends BinaryDeclaration {
       sb.write(name);
     }
 
-    if (attributes != null) {
-      sb.write(" ");
-      sb.write(attributes);
-    }
-
-    return sb.toString();
-  }
-}
-
-class TypedefTypeSpecification extends TypeSpecification {
-  final String name;
-
-  TypedefTypeSpecification({AttributeSpecifications attributes, bool isConst, this.name}) : super(attributes: attributes, isConst: isConst) {
-    if (name == null || name.isEmpty) {
-      throw new ArgumentError.value(name, "name");
-    }
-  }
-
-  String toString() {
-    var sb = new StringBuffer();
-    sb.write(name);
     if (attributes != null) {
       sb.write(" ");
       sb.write(attributes);

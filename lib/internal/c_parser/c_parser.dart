@@ -18,13 +18,6 @@ String _createInt(List parts) {
   return list.join(" ");
 }
 
-int parseInt(String sign, String digits, int radix) {
-  if (sign == null) {
-    sign = "";
-  }
-  return int.parse("$sign$digits", radix: radix);
-}
-
 List _createParameters(List parameters, ParameterDeclaration vaList) {    
   var list = <ParameterDeclaration>[];
   list.addAll(parameters);
@@ -42,6 +35,14 @@ PointerTypeSpecification _createPointer(TypeSpecification type, List stars) {
   
   return type;
 }
+
+int _parseInt(String sign, String digits, int radix) {
+  if (sign == null) {
+    sign = "";
+  }
+  return int.parse("$sign$digits", radix: radix);
+}
+
 class CParser {
   static final List<String> _ascii = new List<String>.generate(128, (c) => new String.fromCharCode(c));
   
@@ -4731,7 +4732,7 @@ class CParser {
             // SPACING
             final $3 = seq[2];
             final $start = startPos0;
-            $$ = parseInt($1, $2.join(), 10);
+            $$ = _parseInt($1, $2.join(), 10);
           }
           break;
         }
@@ -5127,7 +5128,7 @@ class CParser {
             // [0-9]+
             final $3 = seq[2];
             final $start = startPos0;
-            $$ = parseInt($1, _flatten([$2, $3]).join(), 8);
+            $$ = _parseInt($1, _flatten([$2, $3]).join(), 8);
           }
           break;
         }
@@ -8112,7 +8113,7 @@ class CParser {
             // AttributeSpecifiers?
             final $3 = seq[2];
             final $start = startPos0;
-            $$ = new TypedefTypeSpecification(attributes: $3, isConst: $1, name: $2);
+            $$ = new SynonymTypeSpecification(attributes: $3, isConst: $1, name: $2);
           }
           break;
         }
@@ -8166,7 +8167,7 @@ class CParser {
               // AttributeSpecifiers?
               final $3 = seq[2];
               final $start = startPos1;
-              $$ = new TypedefTypeSpecification(attributes: $3, isConst: $1, name: $2);
+              $$ = new SynonymTypeSpecification(attributes: $3, isConst: $1, name: $2);
             }
             break;
           }
@@ -8594,9 +8595,9 @@ class CParser {
     return $$;
   }
   
-  dynamic _parse_TypedefArrayTypeDeclaration() {
+  dynamic _parse_TypedefArrayTypeSpecification() {
     // SENTENCE (NONTERMINAL)
-    // TypedefArrayTypeDeclaration <- Type IDENTIFIER ArrayDimension AttributeSpecifiers?
+    // TypedefArrayTypeSpecification <- Type IDENTIFIER ArrayDimension AttributeSpecifiers?
     var $$;
     // => Type IDENTIFIER ArrayDimension AttributeSpecifiers? # Choice
     switch (_getState(_transitions1)) {
@@ -8645,7 +8646,7 @@ class CParser {
             // AttributeSpecifiers?
             final $4 = seq[3];
             final $start = startPos0;
-            $$ = new TypedefDeclaration(attributes: $4, name: $2, type: _createArray($1, $3));
+            $$ = new TypedefTypeSpecification(attributes: $4, name: $2, type: _createArray($1, $3));
           }
           break;
         }
@@ -8672,13 +8673,13 @@ class CParser {
   
   dynamic _parse_TypedefDeclaration() {
     // SENTENCE (NONTERMINAL)
-    // TypedefDeclaration <- TYPEDEF TypedefTypeDeclaration
+    // TypedefDeclaration <- TYPEDEF AttributeSpecifiers? TypedefTypeSpecification
     var $$;
-    // => TYPEDEF TypedefTypeDeclaration # Choice
+    // => TYPEDEF AttributeSpecifiers? TypedefTypeSpecification # Choice
     switch (_ch == 116 ? 0 : _ch == -1 ? 2 : 1) {
       // [t]
       case 0:
-        // => TYPEDEF TypedefTypeDeclaration # Sequence
+        // => TYPEDEF AttributeSpecifiers? TypedefTypeSpecification # Sequence
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
         _startPos = _cursor;
         while (true) {  
@@ -8686,20 +8687,33 @@ class CParser {
           $$ = _parse_TYPEDEF();
           // <= TYPEDEF
           if (!success) break;
-          var seq = new List(2)..[0] = $$;
-          // => TypedefTypeDeclaration
-          $$ = _parse_TypedefTypeDeclaration();
-          // <= TypedefTypeDeclaration
+          var seq = new List(3)..[0] = $$;
+          // => AttributeSpecifiers?
+          var testing0 = _testing;
+          _testing = _cursor;
+          // => AttributeSpecifiers
+          $$ = _parse_AttributeSpecifiers();
+          // <= AttributeSpecifiers
+          success = true; 
+          _testing = testing0;
+          // <= AttributeSpecifiers?
           if (!success) break;
           seq[1] = $$;
+          // => TypedefTypeSpecification
+          $$ = _parse_TypedefTypeSpecification();
+          // <= TypedefTypeSpecification
+          if (!success) break;
+          seq[2] = $$;
           $$ = seq;
           if (success) {    
             // TYPEDEF
             final $1 = seq[0];
-            // TypedefTypeDeclaration
+            // AttributeSpecifiers?
             final $2 = seq[1];
+            // TypedefTypeSpecification
+            final $3 = seq[2];
             final $start = startPos0;
-            $$ = $2;
+            $$ = new TypedefDeclaration(attributes: $2, type: $3);
           }
           break;
         }
@@ -8708,7 +8722,7 @@ class CParser {
           _cursor = pos0;
         }
         _startPos = startPos0;
-        // <= TYPEDEF TypedefTypeDeclaration # Sequence
+        // <= TYPEDEF AttributeSpecifiers? TypedefTypeSpecification # Sequence
         break;
       // No matches
       // EOF
@@ -8722,13 +8736,13 @@ class CParser {
       // Expected: 'typedef'
       _failure(_expect15);
     }
-    // <= TYPEDEF TypedefTypeDeclaration # Choice
+    // <= TYPEDEF AttributeSpecifiers? TypedefTypeSpecification # Choice
     return $$;
   }
   
-  dynamic _parse_TypedefSimpleTypeDeclaration() {
+  dynamic _parse_TypedefSynonymTypeSpecification() {
     // SENTENCE (NONTERMINAL)
-    // TypedefSimpleTypeDeclaration <- Type IDENTIFIER AttributeSpecifiers?
+    // TypedefSynonymTypeSpecification <- Type IDENTIFIER AttributeSpecifiers?
     var $$;
     // => Type IDENTIFIER AttributeSpecifiers? # Choice
     switch (_getState(_transitions1)) {
@@ -8770,7 +8784,7 @@ class CParser {
             // AttributeSpecifiers?
             final $3 = seq[2];
             final $start = startPos0;
-            $$ = new TypedefDeclaration(attributes: $3, name: $2, type: $1);
+            $$ = new TypedefTypeSpecification(attributes: $3, name: $2, type: $1);
           }
           break;
         }
@@ -8795,9 +8809,9 @@ class CParser {
     return $$;
   }
   
-  dynamic _parse_TypedefTaggedTypeDeclaration() {
+  dynamic _parse_TypedefTaggedTypeSpecification() {
     // SENTENCE (NONTERMINAL)
-    // TypedefTaggedTypeDeclaration <- TaggedTypeDeclaration IDENTIFIER AttributeSpecifiers?
+    // TypedefTaggedTypeSpecification <- TaggedTypeDeclaration IDENTIFIER AttributeSpecifiers?
     var $$;
     // => TaggedTypeDeclaration IDENTIFIER AttributeSpecifiers? # Choice
     switch (_getState(_transitions12)) {
@@ -8837,7 +8851,7 @@ class CParser {
             // AttributeSpecifiers?
             final $3 = seq[2];
             final $start = startPos0;
-            $$ = new TypedefDeclaration(attributes: $3, name: $2, type: $1.type);
+            $$ = new TypedefTypeSpecification(attributes: $3, name: $2, type: $1.type);
           }
           break;
         }
@@ -8864,11 +8878,11 @@ class CParser {
     return $$;
   }
   
-  dynamic _parse_TypedefTypeDeclaration() {
+  dynamic _parse_TypedefTypeSpecification() {
     // SENTENCE (NONTERMINAL)
-    // TypedefTypeDeclaration <- TypedefArrayTypeDeclaration / TypedefTaggedTypeDeclaration / TypedefSimpleTypeDeclaration
+    // TypedefTypeSpecification <- TypedefArrayTypeSpecification / TypedefTaggedTypeSpecification / TypedefSynonymTypeSpecification
     var $$;
-    // => TypedefArrayTypeDeclaration / TypedefTaggedTypeDeclaration / TypedefSimpleTypeDeclaration # Choice
+    // => TypedefArrayTypeSpecification / TypedefTaggedTypeSpecification / TypedefSynonymTypeSpecification # Choice
     switch (_getState(_transitions2)) {
       // [A-Z] [_]
       // EOF
@@ -8877,16 +8891,16 @@ class CParser {
         while (true) {
           var startPos0 = _startPos;
           _startPos = _cursor;
-          // => TypedefArrayTypeDeclaration
-          $$ = _parse_TypedefArrayTypeDeclaration();
-          // <= TypedefArrayTypeDeclaration
+          // => TypedefArrayTypeSpecification
+          $$ = _parse_TypedefArrayTypeSpecification();
+          // <= TypedefArrayTypeSpecification
           _startPos = startPos0;
           if (success) break;
           var startPos1 = _startPos;
           _startPos = _cursor;
-          // => TypedefSimpleTypeDeclaration
-          $$ = _parse_TypedefSimpleTypeDeclaration();
-          // <= TypedefSimpleTypeDeclaration
+          // => TypedefSynonymTypeSpecification
+          $$ = _parse_TypedefSynonymTypeSpecification();
+          // <= TypedefSynonymTypeSpecification
           _startPos = startPos1;
           break;
         }
@@ -8896,23 +8910,23 @@ class CParser {
         while (true) {
           var startPos2 = _startPos;
           _startPos = _cursor;
-          // => TypedefArrayTypeDeclaration
-          $$ = _parse_TypedefArrayTypeDeclaration();
-          // <= TypedefArrayTypeDeclaration
+          // => TypedefArrayTypeSpecification
+          $$ = _parse_TypedefArrayTypeSpecification();
+          // <= TypedefArrayTypeSpecification
           _startPos = startPos2;
           if (success) break;
           var startPos3 = _startPos;
           _startPos = _cursor;
-          // => TypedefTaggedTypeDeclaration
-          $$ = _parse_TypedefTaggedTypeDeclaration();
-          // <= TypedefTaggedTypeDeclaration
+          // => TypedefTaggedTypeSpecification
+          $$ = _parse_TypedefTaggedTypeSpecification();
+          // <= TypedefTaggedTypeSpecification
           _startPos = startPos3;
           if (success) break;
           var startPos4 = _startPos;
           _startPos = _cursor;
-          // => TypedefSimpleTypeDeclaration
-          $$ = _parse_TypedefSimpleTypeDeclaration();
-          // <= TypedefSimpleTypeDeclaration
+          // => TypedefSynonymTypeSpecification
+          $$ = _parse_TypedefSynonymTypeSpecification();
+          // <= TypedefSynonymTypeSpecification
           _startPos = startPos4;
           break;
         }
@@ -8927,7 +8941,7 @@ class CParser {
       // Expected: IDENTIFIER, 'char', 'int', 'short', 'long', SIGNEDNESS, 'float', 'double', 'void', 'struct', 'union', 'enum'
       _failure(_expect3);
     }
-    // <= TypedefArrayTypeDeclaration / TypedefTaggedTypeDeclaration / TypedefSimpleTypeDeclaration # Choice
+    // <= TypedefArrayTypeSpecification / TypedefTaggedTypeSpecification / TypedefSynonymTypeSpecification # Choice
     return $$;
   }
   
