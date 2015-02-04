@@ -157,6 +157,12 @@ void main() {
         }
 
         _checkPresentation(text, declarations);
+        for (var declaration in declarations) {
+          var type = (declaration as VariableDeclaration).type;
+          if (type is! IntegerTypeSpecification) {
+            expect(type is IntegerTypeSpecification, true, reason: "Not an $IntegerTypeSpecification");
+          }
+        }
       });
 
       test("Integer array variable declarations.", () {
@@ -227,7 +233,7 @@ void main() {
         var list = <String>[];
         for (var type in types) {
           var ident = type.replaceAll(" ", "");
-          list.add("typedef $type* ${ident}0;");
+          list.add("typedef $type *${ident}0;");
         }
 
         var text = list.join("\n");
@@ -242,6 +248,14 @@ void main() {
   });
 
   group("Misc.", () {
+    test("Typedef.", () {
+      var list = <String>[];
+      list.add("typedef int INT, *PINT, **PPINT, AINTZ[], AINT10[10], *PAINT10_20[10][20];");
+      var text = list.join("\n");
+      var declarations = new Declarations(text);
+      _checkPresentation(text, declarations);
+    });
+
     test("Octal numbers.", () {
       var list = <String>[];
       list.add("int i[011];");
@@ -327,6 +341,8 @@ List<String> _getFullListOfIntegerTypes() {
 
 List<String> _getSignedAndUnsignedTypes(List<String> types) {
   var result = <String>[];
+  result.add("signed");
+  result.add("unsigned");
   for (var type in types) {
     result.add(type);
     result.add("signed $type");

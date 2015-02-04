@@ -1,3 +1,8 @@
+## 0.0.28
+
+- Breaking change. Several classes have been changed and renamed. Added possibility to declare several type synonyms in the one `typedef` declaration 
+- Changes in `c.peg` grammar 
+
 ## 0.0.27
 
 - Breaking change. Several classes have been renamed for the better consistency with package `binary types`

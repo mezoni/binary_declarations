@@ -26,7 +26,7 @@ List _createParameters(List parameters, ParameterDeclaration vaList) {
   return list;
 }
 
-PointerTypeSpecification _createPointer(TypeSpecification type, List stars) {    
+PointerTypeSpecification _createPointerType(TypeSpecification type, List stars) {    
   for (var star in stars) {
     type = new PointerTypeSpecification(type: type);
   }
@@ -68,15 +68,15 @@ Type <-
   / TypeName
 
 PointerType <-
-  TypeName ASTERISK+ { $$ = _createPointer($1, $2); }
+  TypeName ASTERISK+ { $$ = _createPointerType($1, $2); }
 
 TypeName <-
-  CONST? IDENTIFIER Metadata? { $$ = new SynonymTypeSpecification(isConst: $1, metadata: $3, name: $2); }
-  / CONST? SIGNEDNESS? (CHAR / INT) Metadata? { $$ = new IntegerTypeSpecification(isConst: $1, metadata: $4, name: _createInt([$2, $3])); }
-  / CONST? SIGNEDNESS? (SHORT / LONG_TYPE) INT? Metadata? { $$ = new IntegerTypeSpecification(isConst: $1, metadata: $5, name: _createInt([$2, $3, $4])); }
-  / CONST? SIGNEDNESS Metadata? { $$ = new IntegerTypeSpecification(isConst: $1, metadata: $3, name: $2); }
-  / CONST? (FLOAT / DOUBLE) Metadata? { $$ = new FloatTypeSpecification(isConst: $1, metadata: $3, name: $2); }
-  / CONST? VOID Metadata? { $$ = new VoidTypeSpecification(isConst: $1, metadata: $3); }
+  TypeQualifiers? IDENTIFIER Metadata? { $$ = new DefinedTypeSpecification(metadata: $3, name: $2, qualifiers: $1); }
+  / TypeQualifiers? SIGNEDNESS? (SHORT / LONG_TYPE) INT? Metadata? { $$ = new IntegerTypeSpecification(metadata: $5, name: _createInt([$2, $3, $4]), qualifiers: $1); }
+  / TypeQualifiers? SIGNEDNESS? (CHAR / INT / SHORT / LONG_TYPE) Metadata? { $$ = new IntegerTypeSpecification(metadata: $4, name: _createInt([$2, $3]), qualifiers: $1); }
+  / TypeQualifiers? SIGNEDNESS Metadata? { $$ = new IntegerTypeSpecification(metadata: $3, name: $2, qualifiers: $1); }
+  / TypeQualifiers? (FLOAT / DOUBLE) Metadata? { $$ = new FloatTypeSpecification(metadata: $3, name: $2, qualifiers: $1); }
+  / TypeQualifiers? VOID Metadata? { $$ = new VoidTypeSpecification(metadata: $3, qualifiers: $1); }
   / StructTypeName
   / EnumTypeName
 
@@ -101,10 +101,10 @@ AttributeParameter <-
   / NUMBER
 
 StructTypeName <-
-  CONST? (STRUCT / UNION) Metadata? IDENTIFIER? { $$ = new TaggedTypeSpecification(isConst: $1, kind: $2, metadata: $3, tag: $4); }
+  TypeQualifiers? (STRUCT / UNION) Metadata? IDENTIFIER? { $$ = new TaggedTypeSpecification(kind: $2, metadata: $3, qualifiers: $1, tag: $4); }
 
 EnumTypeName <-
-  CONST? ENUM Metadata? IDENTIFIER? { $$ = new TaggedTypeSpecification(isConst: $1, kind: $2, metadata: $3, tag: $4); }
+  TypeQualifiers? ENUM Metadata? IDENTIFIER? { $$ = new TaggedTypeSpecification(kind: $2, metadata: $3, qualifiers: $1, tag: $4); }
 
 ArrayType <-
   TypeName ArrayDimension { $$ = _createArray($1, $2); }
@@ -139,25 +139,15 @@ SimpleParameter <-
   Type IDENTIFIER? Metadata? { $$ = new ParameterDeclaration(metadata: $3, name: $2, type: $1); }
 
 TypedefDeclaration <-
-  TYPEDEF Metadata? TypedefTypeSpecification { $$ = new TypedefDeclaration(metadata: $2, type: $3); }
+  TYPEDEF Metadata? TypedefType TypeSynonymList { $$ = new TypedefDeclaration(metadata: $2, synonyms: $4, type: $3); }
 
-TypedefTypeSpecification <-
-  TypedefArrayTypeSpecification
-  / TypedefTaggedTypeSpecification
-  / TypedefSynonymTypeSpecification
+TypedefType <-
+  StructType
+  / EnumType
+  / TypeName
 
-TypedefArrayTypeSpecification <-
-  Type IDENTIFIER ArrayDimension Metadata? { $$ = new TypedefTypeSpecification(metadata: $4, name: $2, type: _createArray($1, $3)); }
-
-TypedefTaggedTypeSpecification <-
-  TaggedTypeDeclaration IDENTIFIER Metadata? { $$ = new TypedefTypeSpecification(metadata: $3, name: $2, type: $1.type); }
-
-TaggedTypeDeclaration <-
-  StructDeclaration
-  / EnumDeclaration
-
-StructDeclaration <-
-  StructTypeName OPEN_BRACE StructMemberList? CLOSE_BRACE Metadata? { $$ = new StructureDeclaration(metadata: $5, taggedType: $1, members: $3); }
+StructType <-
+  StructTypeName OPEN_BRACE StructMemberList? CLOSE_BRACE Metadata? { $$ = new StructureTypeSpecification(metadata: $5, taggedType: $1, members: $3); }
 
 StructMemberList <-
   (StructMember)*
@@ -175,8 +165,14 @@ BitFieldParameter <-
 TaggedTypeParameter <-
   (StructDeclaration / EnumDeclaration) IDENTIFIER { $$ = new ParameterDeclaration(name: $2, type: $1.type); }
 
+StructDeclaration <-
+  StructType { $$ = new StructureDeclaration(type: $1); }
+
 EnumDeclaration <-
-  EnumTypeName OPEN_BRACE EnumValueList CLOSE_BRACE Metadata? { $$ = new EnumDeclaration(metadata: $5, taggedType: $1, values: $3); }
+  EnumType { $$ = new EnumDeclaration(type: $1); }
+
+EnumType <-
+  EnumTypeName OPEN_BRACE EnumValueList CLOSE_BRACE Metadata? { $$ = new EnumTypeSpecification(metadata: $5, taggedType: $1, values: $3); }
 
 EnumValueList <-
   EnumValue (COMMA EnumValue)* COMMA? { $$ = _list($1, $2); }
@@ -185,8 +181,11 @@ EnumValue <-
   IDENTIFIER ASSIGN NUMBER { $$ = new EnumValueDeclaration(name: $1, value: $3); }
   / IDENTIFIER { $$ = new EnumValueDeclaration(name: $1); }
 
-TypedefSynonymTypeSpecification <-
-  Type IDENTIFIER Metadata? { $$ = new TypedefTypeSpecification(metadata: $3, name: $2, type: $1); }
+TypeSynonymList <-
+  TypeSynonym (COMMA TypeSynonym)* { $$ = _list($1, $2); }
+
+TypeSynonym <-
+  ASTERISK* IDENTIFIER ArrayDimension? Metadata? { $$ = new TypeSynonym(dimensions: $3, metadata: $4, name: $2, pointers: $1.length); }
 
 VariableDeclaration <-
   ArrayVariableDeclaration
@@ -234,9 +233,6 @@ COLON <-
 
 COMMA <-
   ',' SPACING { $$ = $1; }
-
-CONST <-
-  'const' SPACING { $$ = true; }
 
 DOUBLE <-
   'double' !IDENT_PART SPACING { $$ = $1; }
@@ -298,6 +294,9 @@ STRUCT <-
 TYPEDEF <-
   'typedef' SPACING { $$ = $1; }
 
+TypeQualifiers <-
+  TypeQualifier* { $$ = new TypeQualifierList($1); }
+
 UNION <-
   'union' !IDENT_PART SPACING { $$ = $1; }
 
@@ -314,6 +313,9 @@ ZERO_NUMBER <-
 
 COMMENT <-
   '//' (!EOL .)* (EOL / !.)
+
+CONST <-
+  'const' SPACING { $$ = true; }
 
 ELLIPSIS <-
   '...' SPACING { $$ = $1; }
@@ -363,6 +365,9 @@ SPACE <-
 
 SPACING <-
   (SPACE / COMMENT)*
+
+TypeQualifier <-
+  CONST
 
 UNSIGNED <-
   'unsigned' !IDENT_PART SPACING { $$ = $1; }
