@@ -185,7 +185,33 @@ TypeSynonymList <-
   TypeSynonym (COMMA TypeSynonym)* { $$ = _list($1, $2); }
 
 TypeSynonym <-
-  ASTERISK* IDENTIFIER ArrayDimension? Metadata? { $$ = new TypeSynonym(dimensions: $3, metadata: $4, name: $2, pointers: $1.length); }
+  ArrayTypeSynonym
+  / PointerTypeSynonym
+  / SimpleTypeSynonym
+
+ArrayTypeSynonym <-
+  ArrayTypeElementSynonym ArrayDimension Metadata? { $$ = new ArrayTypeSpecification(dimensions: $2, metadata: $3, type: $1); }
+
+ArrayTypeElementSynonym <-
+  PointerTypeSynonymNoMetadata
+  / SimpleTypeSynonymNoMetadata
+
+PointerTypeSynonymNoMetadata <-
+  TypeQualifiers? ASTERISK Metadata? TypeSynonymNoMetadata { $$ = new PointerTypeSpecification(metadata: $3, qualifiers: $1, type: $4); }
+
+TypeSynonymNoMetadata <-
+  ArrayTypeSynonym
+  / PointerTypeSynonymNoMetadata
+  / SimpleTypeSynonymNoMetadata
+
+SimpleTypeSynonymNoMetadata <-
+  TypeQualifiers? IDENTIFIER { $$ = new DefinedTypeSpecification(qualifiers: $1, name: $2); }
+
+PointerTypeSynonym <-
+  TypeQualifiers? ASTERISK Metadata? TypeSynonym { $$ = new PointerTypeSpecification(metadata: $3, qualifiers: $1, type: $4); }
+
+SimpleTypeSynonym <-
+  TypeQualifiers? IDENTIFIER Metadata? { $$ = new DefinedTypeSpecification(metadata: $3, qualifiers: $1, name: $2); }
 
 VariableDeclaration <-
   ArrayVariableDeclaration
@@ -315,7 +341,7 @@ COMMENT <-
   '//' (!EOL .)* (EOL / !.)
 
 CONST <-
-  'const' SPACING { $$ = true; }
+  'const' SPACING { $$ = $1; }
 
 ELLIPSIS <-
   '...' SPACING { $$ = $1; }

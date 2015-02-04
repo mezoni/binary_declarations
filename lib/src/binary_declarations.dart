@@ -27,37 +27,20 @@ class ArrayTypeSpecification extends TypeSpecification {
   String toString() {
     var sb = new StringBuffer();
     sb.write(type);
-    sb.write(_dimensionsToString());
+    sb.write(_Utils.dimensionsToString(dimensions));
     return sb.toString();
   }
 
   String toStringWithIdentifier(String identifier) {
     var sb = new StringBuffer();
-    sb.write(qualifiers);
+    sb.write(_Utils.qualifiersToString(qualifiers));
     sb.write(type);
     if (identifier != null) {
       sb.write(" ");
       sb.write(identifier);
     }
 
-    sb.write(_dimensionsToString());
-    return sb.toString();
-  }
-
-  String _dimensionsToString() {
-    var sb = new StringBuffer();
-    sb.write("[");
-    var result = <String>[];
-    for (var length in dimensions) {
-      if (length == null) {
-        result.add("");
-      } else {
-        result.add("$length");
-      }
-    }
-
-    sb.write(result.join("]["));
-    sb.write("]");
+    sb.write(_Utils.dimensionsToString(dimensions));
     return sb.toString();
   }
 }
@@ -172,7 +155,7 @@ class DefinedTypeSpecification extends TypeSpecification {
 
   String toString() {
     var sb = new StringBuffer();
-    sb.write(qualifiers);
+    sb.write(_Utils.qualifiersToString(qualifiers));
     sb.write(name);
     if (metadata != null) {
       sb.write(" ");
@@ -275,7 +258,7 @@ class FloatTypeSpecification extends TypeSpecification {
 
   String toString() {
     var sb = new StringBuffer();
-    sb.write(qualifiers);
+    sb.write(_Utils.qualifiersToString(qualifiers));
     sb.write(name);
     if (metadata != null) {
       sb.write(" ");
@@ -367,7 +350,7 @@ class IntegerTypeSpecification extends TypeSpecification {
 
   String toString() {
     var sb = new StringBuffer();
-    sb.write(qualifiers);
+    sb.write(_Utils.qualifiersToString(qualifiers));
     sb.write(name);
     if (metadata != null) {
       sb.write(" ");
@@ -437,7 +420,7 @@ class ParameterDeclaration extends Declaration {
 class PointerTypeSpecification extends TypeSpecification {
   final TypeSpecification type;
 
-  PointerTypeSpecification({Metadata metadata, this.type}) : super(metadata: metadata) {
+  PointerTypeSpecification({Metadata metadata, TypeQualifierList qualifiers, this.type}) : super(metadata: metadata, qualifiers: qualifiers) {
     if (type == null) {
       throw new ArgumentError.notNull("type");
     }
@@ -562,7 +545,7 @@ class TaggedTypeSpecification extends TypeSpecification {
 
   String toString() {
     var sb = new StringBuffer();
-    sb.write(qualifiers);
+    sb.write(_Utils.qualifiersToString(qualifiers));
     sb.write(kind);
     if (metadata != null) {
       sb.write(" ");
@@ -619,98 +602,12 @@ abstract class TypeSpecification {
   }
 }
 
-class TypeSynonym {
-  final Metadata metadata;
-
-  final String name;
-
-  final int pointers;
-
-  TypeQualifierList _qualifiers;
-
-  List<int> _dimensions;
-
-  TypeSynonym({List<int> dimensions, this.metadata, this.name, this.pointers, TypeQualifierList qualifiers}) {
-    if (name == null || name.isEmpty) {
-      throw new ArgumentError.value(name, "name");
-    }
-
-    if (pointers == null) {
-      throw new ArgumentError.notNull("pointers");
-    }
-
-    if (qualifiers == null) {
-      qualifiers = new TypeQualifierList(const <String>[]);
-    }
-
-    if (pointers < 0) {
-      throw new ArgumentError.value(pointers, "pointers");
-    }
-
-    if (dimensions != null) {
-      var list = <int>[];
-      for (var dimension in dimensions) {
-        if (dimension == null || (dimension is int && dimension > 0)) {
-          list.add(dimension);
-        } else {
-          throw new ArgumentError("List of dimension contains illegal elements.");
-        }
-      }
-
-      _dimensions = new UnmodifiableListView<int>(list);
-    }
-
-    _qualifiers = qualifiers;
-  }
-
-  List<int> get dimensions => _dimensions;
-
-  TypeQualifierList get qualifiers => _qualifiers;
-
-  String toString() {
-    var sb = new StringBuffer();
-    sb.write(qualifiers);
-    if (pointers != null) {
-      sb.write(new List<String>.filled(pointers, "*").join(""));
-    }
-
-    sb.write(name);
-    if (dimensions != null) {
-      sb.write(_dimensionsToString());
-    }
-
-    if (metadata != null) {
-      sb.write(" ");
-      sb.write(metadata);
-    }
-
-    return sb.toString();
-  }
-
-  String _dimensionsToString() {
-    var sb = new StringBuffer();
-    sb.write("[");
-    var result = <String>[];
-    for (var length in dimensions) {
-      if (length == null) {
-        result.add("");
-      } else {
-        result.add("$length");
-      }
-    }
-
-    sb.write(result.join("]["));
-    sb.write("]");
-    return sb.toString();
-  }
-}
-
 class TypedefDeclaration extends Declaration {
   final TypeSpecification type;
 
-  List<TypeSynonym> _synonyms;
+  List<TypeSpecification> _synonyms;
 
-  TypedefDeclaration({Metadata metadata, List<TypeSynonym> synonyms, this.type}) : super(metadata: metadata) {
+  TypedefDeclaration({Metadata metadata, List<TypeSpecification> synonyms, this.type}) : super(metadata: metadata) {
     if (synonyms == null) {
       throw new ArgumentError.notNull("synonyms");
     }
@@ -719,10 +616,16 @@ class TypedefDeclaration extends Declaration {
       throw new ArgumentError.notNull("type");
     }
 
-    _synonyms = new _ListCloner<TypeSynonym>(synonyms, "synonyms").list;
+    for (var synonym in synonyms) {
+      if (!(synonym is ArrayTypeSpecification || synonym is DefinedTypeSpecification || synonym is PointerTypeSpecification)) {
+        throw new ArgumentError("The list of synonyms contains invalid elements");
+      }
+    }
+
+    _synonyms = new _ListCloner<TypeSpecification>(synonyms, "synonyms").list;
   }
 
-  List<TypeSynonym> get synonyms => _synonyms;
+  List<TypeSpecification> get synonyms => _synonyms;
 
   String toString() {
     var sb = new StringBuffer();
@@ -734,8 +637,36 @@ class TypedefDeclaration extends Declaration {
 
     sb.write(type);
     sb.write(" ");
-    sb.write(synonyms.join(", "));
+    sb.write(synonyms.map((e) => _synonymToString(e)).join(", "));
     return sb.toString();
+  }
+
+  String _synonymToString(TypeSpecification synonym) {
+    if (synonym is DefinedTypeSpecification) {
+      var sb = new StringBuffer();
+      sb.write(synonym);
+      return sb.toString();
+    } else if (synonym is PointerTypeSpecification) {
+      var sb = new StringBuffer();
+      sb.write(_Utils.qualifiersToString(synonym.qualifiers));
+      sb.write("*");
+      var metatada = synonym.metadata;
+      if (metatada != null) {
+        sb.write(" ");
+        sb.write(metatada);
+        sb.write(" ");
+      }
+
+      sb.write(_synonymToString(synonym.type));
+      return sb.toString();
+    } else if (synonym is ArrayTypeSpecification) {
+      var sb = new StringBuffer();
+      sb.write(_synonymToString(synonym.type));
+      sb.write(_Utils.dimensionsToString(synonym.dimensions));
+      return sb.toString();
+    } else {
+      return "<invalid>";
+    }
   }
 }
 
@@ -771,7 +702,7 @@ class VoidTypeSpecification extends TypeSpecification {
 
   String toString() {
     var sb = new StringBuffer();
-    sb.write(qualifiers);
+    sb.write(_Utils.qualifiersToString(qualifiers));
     sb.write("void");
     if (metadata != null) {
       sb.write(" ");
@@ -800,5 +731,35 @@ class _ListCloner<T> {
     }
 
     list = new UnmodifiableListView<T>(temp);
+  }
+}
+
+class _Utils {
+  static String dimensionsToString(List<int> dimensions) {
+    var sb = new StringBuffer();
+    sb.write("[");
+    var result = <String>[];
+    for (var length in dimensions) {
+      if (length == null) {
+        result.add("");
+      } else {
+        result.add("$length");
+      }
+    }
+
+    sb.write(result.join("]["));
+    sb.write("]");
+    return sb.toString();
+  }
+
+  static String qualifiersToString(TypeQualifierList qualifiers) {
+    if (qualifiers == null || qualifiers.qualifiers.isEmpty) {
+      return "";
+    }
+
+    var sb = new StringBuffer();
+    sb.write(qualifiers);
+    sb.write(" ");
+    return sb.toString();
   }
 }

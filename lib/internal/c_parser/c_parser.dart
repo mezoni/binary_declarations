@@ -66,81 +66,83 @@ class CParser {
   
   static final List<String> _expect17 = <String>["IDENTIFIER"];
   
-  static final List<String> _expect18 = <String>["\'=\'"];
+  static final List<String> _expect18 = <String>["\'*\'", "IDENTIFIER"];
   
   static final List<String> _expect19 = <String>["\'*\'"];
   
   static final List<String> _expect2 = <String>["\';\'", "\'char\'", "\'double\'", "\'enum\'", "\'float\'", "\'int\'", "\'long\'", "\'short\'", "\'struct\'", "\'typedef\'", "\'union\'", "\'void\'", "IDENTIFIER", "SIGNEDNESS"];
   
-  static final List<String> _expect20 = <String>["\'char\'"];
+  static final List<String> _expect20 = <String>["\'=\'"];
   
-  static final List<String> _expect21 = <String>["\'}\'"];
+  static final List<String> _expect21 = <String>["\'char\'"];
   
-  static final List<String> _expect22 = <String>["\']\'"];
+  static final List<String> _expect22 = <String>["\'}\'"];
   
-  static final List<String> _expect23 = <String>["\')\'"];
+  static final List<String> _expect23 = <String>["\']\'"];
   
-  static final List<String> _expect24 = <String>["\':\'"];
+  static final List<String> _expect24 = <String>["\')\'"];
   
-  static final List<String> _expect25 = <String>["\'double\'"];
+  static final List<String> _expect25 = <String>["\':\'"];
   
-  static final List<String> _expect26 = <String>["\'float\'"];
+  static final List<String> _expect26 = <String>["\'double\'"];
   
-  static final List<String> _expect27 = <String>["\'int\'"];
+  static final List<String> _expect27 = <String>["\'float\'"];
   
-  static final List<String> _expect28 = <String>["LEADING_SPACES"];
+  static final List<String> _expect28 = <String>["\'int\'"];
   
-  static final List<String> _expect29 = <String>["\'long\'"];
+  static final List<String> _expect29 = <String>["LEADING_SPACES"];
   
   static final List<String> _expect3 = <String>["\'char\'", "\'double\'", "\'enum\'", "\'float\'", "\'int\'", "\'long\'", "\'short\'", "\'struct\'", "\'union\'", "\'void\'", "IDENTIFIER", "SIGNEDNESS"];
   
-  static final List<String> _expect30 = <String>["NUMBER"];
+  static final List<String> _expect30 = <String>["\'long\'"];
   
-  static final List<String> _expect31 = <String>["\'{\'"];
+  static final List<String> _expect31 = <String>["NUMBER"];
   
-  static final List<String> _expect32 = <String>["\'(\'"];
+  static final List<String> _expect32 = <String>["\'{\'"];
   
-  static final List<String> _expect33 = <String>["-"];
+  static final List<String> _expect33 = <String>["\'(\'"];
   
-  static final List<String> _expect34 = <String>["\';\'"];
+  static final List<String> _expect34 = <String>["-"];
   
-  static final List<String> _expect35 = <String>["\'short\'"];
+  static final List<String> _expect35 = <String>["\';\'"];
   
-  static final List<String> _expect36 = <String>["SIGNEDNESS"];
+  static final List<String> _expect36 = <String>["\'short\'"];
   
-  static final List<String> _expect37 = <String>["\'struct\'"];
+  static final List<String> _expect37 = <String>["SIGNEDNESS"];
   
-  static final List<String> _expect38 = <String>["TypeQualifiers"];
+  static final List<String> _expect38 = <String>["\'struct\'"];
   
-  static final List<String> _expect39 = <String>["\'union\'"];
+  static final List<String> _expect39 = <String>["TypeQualifiers"];
   
   static final List<String> _expect4 = <String>["\'long\'", "\'short\'"];
   
-  static final List<String> _expect40 = <String>["\'...\'"];
+  static final List<String> _expect40 = <String>["\'union\'"];
   
-  static final List<String> _expect41 = <String>["\'void\'"];
+  static final List<String> _expect41 = <String>["\'...\'"];
   
-  static final List<String> _expect42 = <String>["ZERO_NUMBER"];
+  static final List<String> _expect42 = <String>["\'void\'"];
   
-  static final List<String> _expect43 = <String>["//"];
+  static final List<String> _expect43 = <String>["ZERO_NUMBER"];
   
-  static final List<String> _expect44 = <String>["const"];
+  static final List<String> _expect44 = <String>["//"];
   
-  static final List<String> _expect45 = <String>["..."];
+  static final List<String> _expect45 = <String>["const"];
   
-  static final List<String> _expect46 = <String>["long"];
+  static final List<String> _expect46 = <String>["..."];
   
-  static final List<String> _expect47 = <String>["+"];
+  static final List<String> _expect47 = <String>["long"];
   
-  static final List<String> _expect48 = <String>["_Bool", "_Complex", "_Imaginary", "auto", "break", "case", "char", "const", "continue", "default", "do", "double", "else", "enum", "extern", "float", "for", "goto", "if", "inline", "int", "long", "register", "restrict", "return", "short", "signed", "sizeof", "static", "struct", "switch", "typedef", "union", "unsigned", "void", "volatile", "while"];
+  static final List<String> _expect48 = <String>["+"];
   
-  static final List<String> _expect49 = <String>["+", "-"];
+  static final List<String> _expect49 = <String>["_Bool", "_Complex", "_Imaginary", "auto", "break", "case", "char", "const", "continue", "default", "do", "double", "else", "enum", "extern", "float", "for", "goto", "if", "inline", "int", "long", "register", "restrict", "return", "short", "signed", "sizeof", "static", "struct", "switch", "typedef", "union", "unsigned", "void", "volatile", "while"];
   
   static final List<String> _expect5 = <String>["\'char\'", "\'int\'", "\'long\'", "\'short\'"];
   
-  static final List<String> _expect50 = <String>["signed"];
+  static final List<String> _expect50 = <String>["+", "-"];
   
-  static final List<String> _expect51 = <String>["unsigned"];
+  static final List<String> _expect51 = <String>["signed"];
+  
+  static final List<String> _expect52 = <String>["unsigned"];
   
   static final List<String> _expect6 = <String>["\'double\'", "\'float\'"];
   
@@ -150,7 +152,7 @@ class CParser {
   
   static final List<String> _expect9 = <String>["\',\'"];
   
-  static final List<bool> _lookahead = _unmap([0x7f800001, 0x7f43ffff, 0x7f2fffff, 0x7ffffc07, 0x7ffffa1f, 0x7e097f7f, 0x800013]);
+  static final List<bool> _lookahead = _unmap([0x7fc07fe5, 0x7fa1ffff, 0x17f7ffff, 0x13fc1, 0x10]);
   
   // '\n', '\r'
   static final List<bool> _mapping0 = _unmap([0x9]);
@@ -294,23 +296,21 @@ class CParser {
   
   static final List<List<int>> _transitions1 = [[99, 99], [105, 105], [108, 108], [115, 115]];
   
-  static final List<List<int>> _transitions10 = [[0, 9, 11, 12, 14, 1114111], [10, 10, 13, 13]];
+  static final List<List<int>> _transitions10 = [[10, 10], [13, 13]];
   
-  static final List<List<int>> _transitions11 = [[10, 10], [13, 13]];
+  static final List<List<int>> _transitions11 = [[48, 57], [65, 90, 95, 95, 97, 122]];
   
-  static final List<List<int>> _transitions12 = [[48, 57], [65, 90, 95, 95, 97, 122]];
+  static final List<List<int>> _transitions12 = [[43, 43, 45, 45, 48, 48]];
   
-  static final List<List<int>> _transitions13 = [[43, 43, 45, 45, 48, 48]];
+  static final List<List<int>> _transitions13 = [[95, 95, 97, 103, 105, 105, 108, 108, 114, 119]];
   
-  static final List<List<int>> _transitions14 = [[95, 95, 97, 103, 105, 105, 108, 108, 114, 119]];
+  static final List<List<int>> _transitions14 = [[95, 95], [97, 97], [98, 98], [99, 99], [100, 100], [101, 101], [102, 102], [103, 103], [105, 105], [108, 108], [114, 114], [115, 115], [116, 116], [117, 117], [118, 118], [119, 119]];
   
-  static final List<List<int>> _transitions15 = [[95, 95], [97, 97], [98, 98], [99, 99], [100, 100], [101, 101], [102, 102], [103, 103], [105, 105], [108, 108], [114, 114], [115, 115], [116, 116], [117, 117], [118, 118], [119, 119]];
+  static final List<List<int>> _transitions15 = [[43, 43], [45, 45]];
   
-  static final List<List<int>> _transitions16 = [[43, 43], [45, 45]];
+  static final List<List<int>> _transitions16 = [[9, 10, 13, 13, 32, 32]];
   
-  static final List<List<int>> _transitions17 = [[9, 10, 13, 13, 32, 32]];
-  
-  static final List<List<int>> _transitions18 = [[9, 10, 13, 13, 32, 32], [47, 47]];
+  static final List<List<int>> _transitions17 = [[9, 10, 13, 13, 32, 32], [47, 47]];
   
   static final List<List<int>> _transitions2 = [[100, 100], [102, 102]];
   
@@ -324,9 +324,9 @@ class CParser {
   
   static final List<List<int>> _transitions7 = [[43, 43, 45, 45, 48, 57]];
   
-  static final List<List<int>> _transitions8 = [[42, 42, 65, 90, 95, 95, 97, 122]];
+  static final List<List<int>> _transitions8 = [[43, 43, 45, 45, 48, 48], [49, 57]];
   
-  static final List<List<int>> _transitions9 = [[43, 43, 45, 45, 48, 48], [49, 57]];
+  static final List<List<int>> _transitions9 = [[0, 9, 11, 12, 14, 1114111], [10, 10, 13, 13]];
   
   List<Map<int, List>> _cache;
   
@@ -701,7 +701,7 @@ class CParser {
     }
     if (!success && _cursor > _testing) {
       // Expected: '='
-      _failure(_expect18);
+      _failure(_expect20);
     }
     // <= '=' SPACING # Choice
     _token = null;
@@ -714,13 +714,13 @@ class CParser {
     // ASTERISK <- '*' SPACING
     var $$;          
     var pos = _cursor;             
-    if(_cachePos[45] >= pos) {
-      $$ = _getFromCache(45);
+    if(_cachePos[52] >= pos) {
+      $$ = _getFromCache(52);
       if($$ != null) {
         return $$[0];       
       }
     } else {
-      _cachePos[45] = pos;
+      _cachePos[52] = pos;
     }  
     _token = 1;    
     _tokenStart = _cursor;    
@@ -779,8 +779,8 @@ class CParser {
       _failure(_expect19);
     }
     // <= '*' SPACING # Choice
-    if (_cacheable[45]) {
-      _addToCache($$, pos, 45);
+    if (_cacheable[52]) {
+      _addToCache($$, pos, 52);
     }    
     _token = null;
     _tokenStart = null;
@@ -1124,6 +1124,135 @@ class CParser {
       _failure(_expect3);
     }
     // <= TypeName ArrayDimension # Choice
+    return $$;
+  }
+  
+  dynamic _parse_ArrayTypeElementSynonym() {
+    // SENTENCE (NONTERMINAL)
+    // ArrayTypeElementSynonym <- PointerTypeSynonymNoMetadata / SimpleTypeSynonymNoMetadata
+    var $$;
+    // => PointerTypeSynonymNoMetadata / SimpleTypeSynonymNoMetadata # Choice
+    switch (_ch >= 0 && _ch <= 1114111 ? 0 : _ch == -1 ? 2 : 1) {
+      // [\u0000-\u0010ffff]
+      case 0:
+        while (true) {
+          var startPos0 = _startPos;
+          _startPos = _cursor;
+          // => PointerTypeSynonymNoMetadata
+          $$ = _parse_PointerTypeSynonymNoMetadata();
+          // <= PointerTypeSynonymNoMetadata
+          _startPos = startPos0;
+          if (success) break;
+          var startPos1 = _startPos;
+          _startPos = _cursor;
+          // => SimpleTypeSynonymNoMetadata
+          $$ = _parse_SimpleTypeSynonymNoMetadata();
+          // <= SimpleTypeSynonymNoMetadata
+          _startPos = startPos1;
+          break;
+        }
+        break;
+      // No matches
+      case 1:
+        $$ = null;
+        success = false;
+        break;
+      // EOF
+      case 2:
+        var startPos2 = _startPos;
+        _startPos = _cursor;
+        // => SimpleTypeSynonymNoMetadata
+        $$ = _parse_SimpleTypeSynonymNoMetadata();
+        // <= SimpleTypeSynonymNoMetadata
+        _startPos = startPos2;
+        break;
+    }
+    if (!success && _cursor > _testing) {
+      // Expected: '*', IDENTIFIER
+      _failure(_expect18);
+    }
+    // <= PointerTypeSynonymNoMetadata / SimpleTypeSynonymNoMetadata # Choice
+    return $$;
+  }
+  
+  dynamic _parse_ArrayTypeSynonym() {
+    // SENTENCE (NONTERMINAL)
+    // ArrayTypeSynonym <- ArrayTypeElementSynonym ArrayDimension Metadata?
+    var $$;          
+    var pos = _cursor;             
+    if(_cachePos[39] >= pos) {
+      $$ = _getFromCache(39);
+      if($$ != null) {
+        return $$[0];       
+      }
+    } else {
+      _cachePos[39] = pos;
+    }  
+    // => ArrayTypeElementSynonym ArrayDimension Metadata? # Choice
+    switch (_ch >= 0 && _ch <= 1114111 ? 0 : _ch == -1 ? 2 : 1) {
+      // [\u0000-\u0010ffff]
+      // EOF
+      case 0:
+      case 2:
+        // => ArrayTypeElementSynonym ArrayDimension Metadata? # Sequence
+        var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
+        _startPos = _cursor;
+        while (true) {  
+          // => ArrayTypeElementSynonym
+          $$ = _parse_ArrayTypeElementSynonym();
+          // <= ArrayTypeElementSynonym
+          if (!success) break;
+          var seq = new List(3)..[0] = $$;
+          // => ArrayDimension
+          $$ = _parse_ArrayDimension();
+          // <= ArrayDimension
+          if (!success) break;
+          seq[1] = $$;
+          // => Metadata?
+          var testing0 = _testing;
+          _testing = _cursor;
+          // => Metadata
+          $$ = _parse_Metadata();
+          // <= Metadata
+          success = true; 
+          _testing = testing0;
+          // <= Metadata?
+          if (!success) break;
+          seq[2] = $$;
+          $$ = seq;
+          if (success) {    
+            // ArrayTypeElementSynonym
+            final $1 = seq[0];
+            // ArrayDimension
+            final $2 = seq[1];
+            // Metadata?
+            final $3 = seq[2];
+            final $start = startPos0;
+            $$ = new ArrayTypeSpecification(dimensions: $2, metadata: $3, type: $1);
+          }
+          break;
+        }
+        if (!success) {
+          _ch = ch0;
+          _cursor = pos0;
+        }
+        _startPos = startPos0;
+        // <= ArrayTypeElementSynonym ArrayDimension Metadata? # Sequence
+        break;
+      // No matches
+      case 1:
+        $$ = null;
+        success = false;
+        break;
+    }
+    if (!success && _cursor > _testing) {
+      // Expected: '*', IDENTIFIER
+      _failure(_expect18);
+    }
+    // <= ArrayTypeElementSynonym ArrayDimension Metadata? # Choice
+    if (_cacheable[39]) {
+      _addToCache($$, pos, 39);
+    }    
     return $$;
   }
   
@@ -1809,7 +1938,7 @@ class CParser {
     }
     if (!success && _cursor > _testing) {
       // Expected: 'char'
-      _failure(_expect20);
+      _failure(_expect21);
     }
     // <= 'char' !IDENT_PART SPACING # Choice
     _token = null;
@@ -1822,13 +1951,13 @@ class CParser {
     // CLOSE_BRACE <- '}' SPACING
     var $$;          
     var pos = _cursor;             
-    if(_cachePos[48] >= pos) {
-      $$ = _getFromCache(48);
+    if(_cachePos[55] >= pos) {
+      $$ = _getFromCache(55);
       if($$ != null) {
         return $$[0];       
       }
     } else {
-      _cachePos[48] = pos;
+      _cachePos[55] = pos;
     }  
     _token = 4;    
     _tokenStart = _cursor;    
@@ -1884,11 +2013,11 @@ class CParser {
     }
     if (!success && _cursor > _testing) {
       // Expected: '}'
-      _failure(_expect21);
+      _failure(_expect22);
     }
     // <= '}' SPACING # Choice
-    if (_cacheable[48]) {
-      _addToCache($$, pos, 48);
+    if (_cacheable[55]) {
+      _addToCache($$, pos, 55);
     }    
     _token = null;
     _tokenStart = null;
@@ -1953,7 +2082,7 @@ class CParser {
     }
     if (!success && _cursor > _testing) {
       // Expected: ']'
-      _failure(_expect22);
+      _failure(_expect23);
     }
     // <= ']' SPACING # Choice
     _token = null;
@@ -1966,13 +2095,13 @@ class CParser {
     // CLOSE_PAREN <- ')' SPACING
     var $$;          
     var pos = _cursor;             
-    if(_cachePos[50] >= pos) {
-      $$ = _getFromCache(50);
+    if(_cachePos[57] >= pos) {
+      $$ = _getFromCache(57);
       if($$ != null) {
         return $$[0];       
       }
     } else {
-      _cachePos[50] = pos;
+      _cachePos[57] = pos;
     }  
     _token = 6;    
     _tokenStart = _cursor;    
@@ -2028,11 +2157,11 @@ class CParser {
     }
     if (!success && _cursor > _testing) {
       // Expected: ')'
-      _failure(_expect23);
+      _failure(_expect24);
     }
     // <= ')' SPACING # Choice
-    if (_cacheable[50]) {
-      _addToCache($$, pos, 50);
+    if (_cacheable[57]) {
+      _addToCache($$, pos, 57);
     }    
     _token = null;
     _tokenStart = null;
@@ -2097,7 +2226,7 @@ class CParser {
     }
     if (!success && _cursor > _testing) {
       // Expected: ':'
-      _failure(_expect24);
+      _failure(_expect25);
     }
     // <= ':' SPACING # Choice
     _token = null;
@@ -2110,13 +2239,13 @@ class CParser {
     // COMMA <- ',' SPACING
     var $$;          
     var pos = _cursor;             
-    if(_cachePos[52] >= pos) {
-      $$ = _getFromCache(52);
+    if(_cachePos[59] >= pos) {
+      $$ = _getFromCache(59);
       if($$ != null) {
         return $$[0];       
       }
     } else {
-      _cachePos[52] = pos;
+      _cachePos[59] = pos;
     }  
     _token = 8;    
     _tokenStart = _cursor;    
@@ -2175,8 +2304,8 @@ class CParser {
       _failure(_expect9);
     }
     // <= ',' SPACING # Choice
-    if (_cacheable[52]) {
-      _addToCache($$, pos, 52);
+    if (_cacheable[59]) {
+      _addToCache($$, pos, 59);
     }    
     _token = null;
     _tokenStart = null;
@@ -2267,7 +2396,7 @@ class CParser {
           if (!success) break;
           seq[1] = $$;
           // => (EOL / !.) # Choice
-          switch (_getState(_transitions10)) {
+          switch (_getState(_transitions9)) {
             // [\u0000-\t] [\u000b-\u000c] [\u000e-\u0010ffff]
             // EOF
             case 0:
@@ -2349,7 +2478,7 @@ class CParser {
     }
     if (!success && _cursor > _testing) {
       // Expected: //
-      _failure(_expect43);
+      _failure(_expect44);
     }
     // <= '//' (!EOL .)* (EOL / !.) # Choice
     return $$;
@@ -2384,7 +2513,7 @@ class CParser {
             // SPACING
             final $2 = seq[1];
             final $start = startPos0;
-            $$ = true;
+            $$ = $1;
           }
           break;
         }
@@ -2405,7 +2534,7 @@ class CParser {
     }
     if (!success && _cursor > _testing) {
       // Expected: const
-      _failure(_expect44);
+      _failure(_expect45);
     }
     // <= 'const' SPACING # Choice
     return $$;
@@ -2479,7 +2608,7 @@ class CParser {
     }
     if (!success && _cursor > _testing) {
       // Expected: 'double'
-      _failure(_expect25);
+      _failure(_expect26);
     }
     // <= 'double' !IDENT_PART SPACING # Choice
     _token = null;
@@ -3139,7 +3268,7 @@ class CParser {
     }
     if (!success && _cursor > _testing) {
       // Expected: ...
-      _failure(_expect45);
+      _failure(_expect46);
     }
     // <= '...' SPACING # Choice
     return $$;
@@ -3270,7 +3399,7 @@ class CParser {
     // EOL <- '\r\n' / [\n\r]
     var $$;
     // => '\r\n' / [\n\r] # Choice
-    switch (_getState(_transitions11)) {
+    switch (_getState(_transitions10)) {
       // [\n]
       case 0:
         var startPos0 = _startPos;
@@ -3320,13 +3449,13 @@ class CParser {
     // EnumDeclaration <- EnumType
     var $$;          
     var pos = _cursor;             
-    if(_cachePos[34] >= pos) {
-      $$ = _getFromCache(34);
+    if(_cachePos[33] >= pos) {
+      $$ = _getFromCache(33);
       if($$ != null) {
         return $$[0];       
       }
     } else {
-      _cachePos[34] = pos;
+      _cachePos[33] = pos;
     }  
     // => EnumType # Choice
     switch (_ch >= 0 && _ch <= 1114111 ? 0 : _ch == -1 ? 2 : 1) {
@@ -3358,8 +3487,8 @@ class CParser {
       _failure(_expect12);
     }
     // <= EnumType # Choice
-    if (_cacheable[34]) {
-      _addToCache($$, pos, 34);
+    if (_cacheable[33]) {
+      _addToCache($$, pos, 33);
     }    
     return $$;
   }
@@ -3369,13 +3498,13 @@ class CParser {
     // EnumType <- EnumTypeName OPEN_BRACE EnumValueList CLOSE_BRACE Metadata?
     var $$;          
     var pos = _cursor;             
-    if(_cachePos[33] >= pos) {
-      $$ = _getFromCache(33);
+    if(_cachePos[34] >= pos) {
+      $$ = _getFromCache(34);
       if($$ != null) {
         return $$[0];       
       }
     } else {
-      _cachePos[33] = pos;
+      _cachePos[34] = pos;
     }  
     // => EnumTypeName OPEN_BRACE EnumValueList CLOSE_BRACE Metadata? # Choice
     switch (_ch >= 0 && _ch <= 1114111 ? 0 : _ch == -1 ? 2 : 1) {
@@ -3453,8 +3582,8 @@ class CParser {
       _failure(_expect12);
     }
     // <= EnumTypeName OPEN_BRACE EnumValueList CLOSE_BRACE Metadata? # Choice
-    if (_cacheable[33]) {
-      _addToCache($$, pos, 33);
+    if (_cacheable[34]) {
+      _addToCache($$, pos, 34);
     }    
     return $$;
   }
@@ -3839,7 +3968,7 @@ class CParser {
     }
     if (!success && _cursor > _testing) {
       // Expected: 'float'
-      _failure(_expect26);
+      _failure(_expect27);
     }
     // <= 'float' !IDENT_PART SPACING # Choice
     _token = null;
@@ -4224,13 +4353,13 @@ class CParser {
     // IDENT <- IDENT_START IDENT_CONT* SPACING
     var $$;          
     var pos = _cursor;             
-    if(_cachePos[57] >= pos) {
-      $$ = _getFromCache(57);
+    if(_cachePos[64] >= pos) {
+      $$ = _getFromCache(64);
       if($$ != null) {
         return $$[0];       
       }
     } else {
-      _cachePos[57] = pos;
+      _cachePos[64] = pos;
     }  
     _token = 13;    
     _tokenStart = _cursor;    
@@ -4304,8 +4433,8 @@ class CParser {
       _failure(_expect8);
     }
     // <= IDENT_START IDENT_CONT* SPACING # Choice
-    if (_cacheable[57]) {
-      _addToCache($$, pos, 57);
+    if (_cacheable[64]) {
+      _addToCache($$, pos, 64);
     }    
     _token = null;
     _tokenStart = null;
@@ -4317,13 +4446,13 @@ class CParser {
     // IDENTIFIER <- !RESERVED_WORD IDENT_START IDENT_CONT* SPACING
     var $$;          
     var pos = _cursor;             
-    if(_cachePos[58] >= pos) {
-      $$ = _getFromCache(58);
+    if(_cachePos[65] >= pos) {
+      $$ = _getFromCache(65);
       if($$ != null) {
         return $$[0];       
       }
     } else {
-      _cachePos[58] = pos;
+      _cachePos[65] = pos;
     }  
     _token = 14;    
     _tokenStart = _cursor;    
@@ -4413,8 +4542,8 @@ class CParser {
       _failure(_expect17);
     }
     // <= !RESERVED_WORD IDENT_START IDENT_CONT* SPACING # Choice
-    if (_cacheable[58]) {
-      _addToCache($$, pos, 58);
+    if (_cacheable[65]) {
+      _addToCache($$, pos, 65);
     }    
     _token = null;
     _tokenStart = null;
@@ -4426,7 +4555,7 @@ class CParser {
     // IDENT_CONT <- IDENT_START / [0-9]
     var $$;
     // => IDENT_START / [0-9] # Choice
-    switch (_getState(_transitions12)) {
+    switch (_getState(_transitions11)) {
       // [0-9]
       case 0:
         var startPos0 = _startPos;
@@ -4466,7 +4595,7 @@ class CParser {
     // IDENT_PART <- IDENT_START / IDENT_CONT
     var $$;
     // => IDENT_START / IDENT_CONT # Choice
-    switch (_getState(_transitions12)) {
+    switch (_getState(_transitions11)) {
       // [0-9]
       case 0:
         var startPos0 = _startPos;
@@ -4547,13 +4676,13 @@ class CParser {
     // INT <- 'int' !IDENT_PART SPACING
     var $$;          
     var pos = _cursor;             
-    if(_cachePos[59] >= pos) {
-      $$ = _getFromCache(59);
+    if(_cachePos[66] >= pos) {
+      $$ = _getFromCache(66);
       if($$ != null) {
         return $$[0];       
       }
     } else {
-      _cachePos[59] = pos;
+      _cachePos[66] = pos;
     }  
     _token = 15;    
     _tokenStart = _cursor;    
@@ -4619,11 +4748,11 @@ class CParser {
     }
     if (!success && _cursor > _testing) {
       // Expected: 'int'
-      _failure(_expect27);
+      _failure(_expect28);
     }
     // <= 'int' !IDENT_PART SPACING # Choice
-    if (_cacheable[59]) {
-      _addToCache($$, pos, 59);
+    if (_cacheable[66]) {
+      _addToCache($$, pos, 66);
     }    
     _token = null;
     _tokenStart = null;
@@ -4748,7 +4877,7 @@ class CParser {
     }
     if (!success && _cursor > _testing) {
       // Expected: LEADING_SPACES
-      _failure(_expect28);
+      _failure(_expect29);
     }
     // <= SPACING # Choice
     _token = null;
@@ -4822,7 +4951,7 @@ class CParser {
     }
     if (!success && _cursor > _testing) {
       // Expected: long
-      _failure(_expect46);
+      _failure(_expect47);
     }
     // <= 'long' !IDENT_PART SPACING # Choice
     return $$;
@@ -4833,13 +4962,13 @@ class CParser {
     // LONG_TYPE <- LONG LONG / LONG
     var $$;          
     var pos = _cursor;             
-    if(_cachePos[61] >= pos) {
-      $$ = _getFromCache(61);
+    if(_cachePos[68] >= pos) {
+      $$ = _getFromCache(68);
       if($$ != null) {
         return $$[0];       
       }
     } else {
-      _cachePos[61] = pos;
+      _cachePos[68] = pos;
     }  
     _token = 17;    
     _tokenStart = _cursor;    
@@ -4899,11 +5028,11 @@ class CParser {
     }
     if (!success && _cursor > _testing) {
       // Expected: 'long'
-      _failure(_expect29);
+      _failure(_expect30);
     }
     // <= LONG LONG / LONG # Choice
-    if (_cacheable[61]) {
-      _addToCache($$, pos, 61);
+    if (_cacheable[68]) {
+      _addToCache($$, pos, 68);
     }    
     _token = null;
     _tokenStart = null;
@@ -4966,7 +5095,7 @@ class CParser {
     }
     if (!success && _cursor > _testing) {
       // Expected: -
-      _failure(_expect33);
+      _failure(_expect34);
     }
     // <= '-' SPACING # Choice
     return $$;
@@ -5048,18 +5177,18 @@ class CParser {
     // NUMBER <- OCTAL_NUMBER / INTEGER
     var $$;          
     var pos = _cursor;             
-    if(_cachePos[62] >= pos) {
-      $$ = _getFromCache(62);
+    if(_cachePos[69] >= pos) {
+      $$ = _getFromCache(69);
       if($$ != null) {
         return $$[0];       
       }
     } else {
-      _cachePos[62] = pos;
+      _cachePos[69] = pos;
     }  
     _token = 18;    
     _tokenStart = _cursor;    
     // => OCTAL_NUMBER / INTEGER # Choice
-    switch (_getState(_transitions9)) {
+    switch (_getState(_transitions8)) {
       // [+] [-] [0]
       case 0:
         while (true) {
@@ -5098,11 +5227,11 @@ class CParser {
     }
     if (!success && _cursor > _testing) {
       // Expected: NUMBER
-      _failure(_expect30);
+      _failure(_expect31);
     }
     // <= OCTAL_NUMBER / INTEGER # Choice
-    if (_cacheable[62]) {
-      _addToCache($$, pos, 62);
+    if (_cacheable[69]) {
+      _addToCache($$, pos, 69);
     }    
     _token = null;
     _tokenStart = null;
@@ -5114,7 +5243,7 @@ class CParser {
     // OCTAL_NUMBER <- SIGN? [0] [0-9]+
     var $$;
     // => SIGN? [0] [0-9]+ # Choice
-    switch (_getState(_transitions13)) {
+    switch (_getState(_transitions12)) {
       // [+] [-] [0]
       case 0:
         // => SIGN? [0] [0-9]+ # Sequence
@@ -5205,13 +5334,13 @@ class CParser {
     // OPEN_BRACE <- '{' SPACING
     var $$;          
     var pos = _cursor;             
-    if(_cachePos[63] >= pos) {
-      $$ = _getFromCache(63);
+    if(_cachePos[70] >= pos) {
+      $$ = _getFromCache(70);
       if($$ != null) {
         return $$[0];       
       }
     } else {
-      _cachePos[63] = pos;
+      _cachePos[70] = pos;
     }  
     _token = 19;    
     _tokenStart = _cursor;    
@@ -5267,11 +5396,11 @@ class CParser {
     }
     if (!success && _cursor > _testing) {
       // Expected: '{'
-      _failure(_expect31);
+      _failure(_expect32);
     }
     // <= '{' SPACING # Choice
-    if (_cacheable[63]) {
-      _addToCache($$, pos, 63);
+    if (_cacheable[70]) {
+      _addToCache($$, pos, 70);
     }    
     _token = null;
     _tokenStart = null;
@@ -5349,13 +5478,13 @@ class CParser {
     // OPEN_PAREN <- '(' SPACING
     var $$;          
     var pos = _cursor;             
-    if(_cachePos[65] >= pos) {
-      $$ = _getFromCache(65);
+    if(_cachePos[72] >= pos) {
+      $$ = _getFromCache(72);
       if($$ != null) {
         return $$[0];       
       }
     } else {
-      _cachePos[65] = pos;
+      _cachePos[72] = pos;
     }  
     _token = 21;    
     _tokenStart = _cursor;    
@@ -5411,11 +5540,11 @@ class CParser {
     }
     if (!success && _cursor > _testing) {
       // Expected: '('
-      _failure(_expect32);
+      _failure(_expect33);
     }
     // <= '(' SPACING # Choice
-    if (_cacheable[65]) {
-      _addToCache($$, pos, 65);
+    if (_cacheable[72]) {
+      _addToCache($$, pos, 72);
     }    
     _token = null;
     _tokenStart = null;
@@ -5478,7 +5607,7 @@ class CParser {
     }
     if (!success && _cursor > _testing) {
       // Expected: +
-      _failure(_expect47);
+      _failure(_expect48);
     }
     // <= '+' SPACING # Choice
     return $$;
@@ -5489,13 +5618,13 @@ class CParser {
     // POSITIVE_NUMBER <- !('-' SPACING) (OCTAL_NUMBER / INTEGER)
     var $$;          
     var pos = _cursor;             
-    if(_cachePos[66] >= pos) {
-      $$ = _getFromCache(66);
+    if(_cachePos[73] >= pos) {
+      $$ = _getFromCache(73);
       if($$ != null) {
         return $$[0];       
       }
     } else {
-      _cachePos[66] = pos;
+      _cachePos[73] = pos;
     }  
     _token = 22;    
     _tokenStart = _cursor;    
@@ -5556,7 +5685,7 @@ class CParser {
           }
           if (!success && _cursor > _testing) {
             // Expected: -
-            _failure(_expect33);
+            _failure(_expect34);
           }
           // <= ('-' SPACING) # Choice
           _ch = ch1;
@@ -5568,7 +5697,7 @@ class CParser {
           if (!success) break;
           var seq = new List(2)..[0] = $$;
           // => (OCTAL_NUMBER / INTEGER) # Choice
-          switch (_getState(_transitions9)) {
+          switch (_getState(_transitions8)) {
             // [+] [-] [0]
             case 0:
               while (true) {
@@ -5641,8 +5770,8 @@ class CParser {
       _failure(_expect14);
     }
     // <= !('-' SPACING) (OCTAL_NUMBER / INTEGER) # Choice
-    if (_cacheable[66]) {
-      _addToCache($$, pos, 66);
+    if (_cacheable[73]) {
+      _addToCache($$, pos, 73);
     }    
     _token = null;
     _tokenStart = null;
@@ -5826,6 +5955,182 @@ class CParser {
     return $$;
   }
   
+  dynamic _parse_PointerTypeSynonym() {
+    // SENTENCE (NONTERMINAL)
+    // PointerTypeSynonym <- TypeQualifiers? ASTERISK Metadata? TypeSynonym
+    var $$;
+    // => TypeQualifiers? ASTERISK Metadata? TypeSynonym # Choice
+    switch (_ch >= 0 && _ch <= 1114111 ? 0 : _ch == -1 ? 2 : 1) {
+      // [\u0000-\u0010ffff]
+      case 0:
+        // => TypeQualifiers? ASTERISK Metadata? TypeSynonym # Sequence
+        var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
+        _startPos = _cursor;
+        while (true) {  
+          // => TypeQualifiers?
+          var testing0 = _testing;
+          _testing = _cursor;
+          // => TypeQualifiers
+          $$ = _parse_TypeQualifiers();
+          // <= TypeQualifiers
+          success = true; 
+          _testing = testing0;
+          // <= TypeQualifiers?
+          if (!success) break;
+          var seq = new List(4)..[0] = $$;
+          // => ASTERISK
+          $$ = _parse_ASTERISK();
+          // <= ASTERISK
+          if (!success) break;
+          seq[1] = $$;
+          // => Metadata?
+          var testing1 = _testing;
+          _testing = _cursor;
+          // => Metadata
+          $$ = _parse_Metadata();
+          // <= Metadata
+          success = true; 
+          _testing = testing1;
+          // <= Metadata?
+          if (!success) break;
+          seq[2] = $$;
+          // => TypeSynonym
+          $$ = _parse_TypeSynonym();
+          // <= TypeSynonym
+          if (!success) break;
+          seq[3] = $$;
+          $$ = seq;
+          if (success) {    
+            // TypeQualifiers?
+            final $1 = seq[0];
+            // ASTERISK
+            final $2 = seq[1];
+            // Metadata?
+            final $3 = seq[2];
+            // TypeSynonym
+            final $4 = seq[3];
+            final $start = startPos0;
+            $$ = new PointerTypeSpecification(metadata: $3, qualifiers: $1, type: $4);
+          }
+          break;
+        }
+        if (!success) {
+          _ch = ch0;
+          _cursor = pos0;
+        }
+        _startPos = startPos0;
+        // <= TypeQualifiers? ASTERISK Metadata? TypeSynonym # Sequence
+        break;
+      // No matches
+      // EOF
+      case 1:
+      case 2:
+        $$ = null;
+        success = false;
+        break;
+    }
+    if (!success && _cursor > _testing) {
+      // Expected: '*'
+      _failure(_expect19);
+    }
+    // <= TypeQualifiers? ASTERISK Metadata? TypeSynonym # Choice
+    return $$;
+  }
+  
+  dynamic _parse_PointerTypeSynonymNoMetadata() {
+    // SENTENCE (NONTERMINAL)
+    // PointerTypeSynonymNoMetadata <- TypeQualifiers? ASTERISK Metadata? TypeSynonymNoMetadata
+    var $$;          
+    var pos = _cursor;             
+    if(_cachePos[41] >= pos) {
+      $$ = _getFromCache(41);
+      if($$ != null) {
+        return $$[0];       
+      }
+    } else {
+      _cachePos[41] = pos;
+    }  
+    // => TypeQualifiers? ASTERISK Metadata? TypeSynonymNoMetadata # Choice
+    switch (_ch >= 0 && _ch <= 1114111 ? 0 : _ch == -1 ? 2 : 1) {
+      // [\u0000-\u0010ffff]
+      case 0:
+        // => TypeQualifiers? ASTERISK Metadata? TypeSynonymNoMetadata # Sequence
+        var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
+        _startPos = _cursor;
+        while (true) {  
+          // => TypeQualifiers?
+          var testing0 = _testing;
+          _testing = _cursor;
+          // => TypeQualifiers
+          $$ = _parse_TypeQualifiers();
+          // <= TypeQualifiers
+          success = true; 
+          _testing = testing0;
+          // <= TypeQualifiers?
+          if (!success) break;
+          var seq = new List(4)..[0] = $$;
+          // => ASTERISK
+          $$ = _parse_ASTERISK();
+          // <= ASTERISK
+          if (!success) break;
+          seq[1] = $$;
+          // => Metadata?
+          var testing1 = _testing;
+          _testing = _cursor;
+          // => Metadata
+          $$ = _parse_Metadata();
+          // <= Metadata
+          success = true; 
+          _testing = testing1;
+          // <= Metadata?
+          if (!success) break;
+          seq[2] = $$;
+          // => TypeSynonymNoMetadata
+          $$ = _parse_TypeSynonymNoMetadata();
+          // <= TypeSynonymNoMetadata
+          if (!success) break;
+          seq[3] = $$;
+          $$ = seq;
+          if (success) {    
+            // TypeQualifiers?
+            final $1 = seq[0];
+            // ASTERISK
+            final $2 = seq[1];
+            // Metadata?
+            final $3 = seq[2];
+            // TypeSynonymNoMetadata
+            final $4 = seq[3];
+            final $start = startPos0;
+            $$ = new PointerTypeSpecification(metadata: $3, qualifiers: $1, type: $4);
+          }
+          break;
+        }
+        if (!success) {
+          _ch = ch0;
+          _cursor = pos0;
+        }
+        _startPos = startPos0;
+        // <= TypeQualifiers? ASTERISK Metadata? TypeSynonymNoMetadata # Sequence
+        break;
+      // No matches
+      // EOF
+      case 1:
+      case 2:
+        $$ = null;
+        success = false;
+        break;
+    }
+    if (!success && _cursor > _testing) {
+      // Expected: '*'
+      _failure(_expect19);
+    }
+    // <= TypeQualifiers? ASTERISK Metadata? TypeSynonymNoMetadata # Choice
+    if (_cacheable[41]) {
+      _addToCache($$, pos, 41);
+    }    
+    return $$;
+  }
+  
   dynamic _parse_PointerVariableDeclaration() {
     // SENTENCE (NONTERMINAL)
     // PointerVariableDeclaration <- PointerType IDENTIFIER Metadata?
@@ -5900,7 +6205,7 @@ class CParser {
     // RESERVED_WORD <- ('auto' / 'break' / 'case' / 'char' / 'const' / 'continue' / 'default' / 'do' / 'double' / 'else' / 'enum' / 'extern' / 'float' / 'for' / 'goto' / 'if' / 'inline' / 'int' / 'long' / 'register' / 'restrict' / 'return' / 'short' / 'signed' / 'sizeof' / 'static' / 'struct' / 'switch' / 'typedef' / 'union' / 'unsigned' / 'void' / 'volatile' / 'while' / '_Bool' / '_Complex' / '_Imaginary') !(IDENT_START / IDENT_CONT)
     var $$;
     // => ('auto' / 'break' / 'case' / 'char' / 'const' / 'continue' / 'default' / 'do' / 'double' / 'else' / 'enum' / 'extern' / 'float' / 'for' / 'goto' / 'if' / 'inline' / 'int' / 'long' / 'register' / 'restrict' / 'return' / 'short' / 'signed' / 'sizeof' / 'static' / 'struct' / 'switch' / 'typedef' / 'union' / 'unsigned' / 'void' / 'volatile' / 'while' / '_Bool' / '_Complex' / '_Imaginary') !(IDENT_START / IDENT_CONT) # Choice
-    switch (_getState(_transitions14)) {
+    switch (_getState(_transitions13)) {
       // [_] [a-g] [i] [l] [r-w]
       case 0:
         // => ('auto' / 'break' / 'case' / 'char' / 'const' / 'continue' / 'default' / 'do' / 'double' / 'else' / 'enum' / 'extern' / 'float' / 'for' / 'goto' / 'if' / 'inline' / 'int' / 'long' / 'register' / 'restrict' / 'return' / 'short' / 'signed' / 'sizeof' / 'static' / 'struct' / 'switch' / 'typedef' / 'union' / 'unsigned' / 'void' / 'volatile' / 'while' / '_Bool' / '_Complex' / '_Imaginary') !(IDENT_START / IDENT_CONT) # Sequence
@@ -5908,7 +6213,7 @@ class CParser {
         _startPos = _cursor;
         while (true) {  
           // => ('auto' / 'break' / 'case' / 'char' / 'const' / 'continue' / 'default' / 'do' / 'double' / 'else' / 'enum' / 'extern' / 'float' / 'for' / 'goto' / 'if' / 'inline' / 'int' / 'long' / 'register' / 'restrict' / 'return' / 'short' / 'signed' / 'sizeof' / 'static' / 'struct' / 'switch' / 'typedef' / 'union' / 'unsigned' / 'void' / 'volatile' / 'while' / '_Bool' / '_Complex' / '_Imaginary') # Choice
-          switch (_getState(_transitions15)) {
+          switch (_getState(_transitions14)) {
             // [_]
             case 0:
               while (true) {
@@ -6240,7 +6545,7 @@ class CParser {
           }
           if (!success && _cursor > _testing) {
             // Expected: auto, break, case, char, const, continue, default, do, double, else, enum, extern, float, for, goto, if, inline, int, long, register, restrict, return, short, signed, sizeof, static, struct, switch, typedef, union, unsigned, void, volatile, while, _Bool, _Complex, _Imaginary
-            _failure(_expect48);
+            _failure(_expect49);
           }
           // <= ('auto' / 'break' / 'case' / 'char' / 'const' / 'continue' / 'default' / 'do' / 'double' / 'else' / 'enum' / 'extern' / 'float' / 'for' / 'goto' / 'if' / 'inline' / 'int' / 'long' / 'register' / 'restrict' / 'return' / 'short' / 'signed' / 'sizeof' / 'static' / 'struct' / 'switch' / 'typedef' / 'union' / 'unsigned' / 'void' / 'volatile' / 'while' / '_Bool' / '_Complex' / '_Imaginary') # Choice
           if (!success) break;
@@ -6249,7 +6554,7 @@ class CParser {
           var ch1 = _ch, pos1 = _cursor, testing0 = _testing; 
           _testing = _inputLen + 1;
           // => (IDENT_START / IDENT_CONT) # Choice
-          switch (_getState(_transitions12)) {
+          switch (_getState(_transitions11)) {
             // [0-9]
             case 0:
               var startPos38 = _startPos;
@@ -6327,7 +6632,7 @@ class CParser {
     }
     if (!success && _cursor > _testing) {
       // Expected: auto, break, case, char, const, continue, default, do, double, else, enum, extern, float, for, goto, if, inline, int, long, register, restrict, return, short, signed, sizeof, static, struct, switch, typedef, union, unsigned, void, volatile, while, _Bool, _Complex, _Imaginary
-      _failure(_expect48);
+      _failure(_expect49);
     }
     // <= ('auto' / 'break' / 'case' / 'char' / 'const' / 'continue' / 'default' / 'do' / 'double' / 'else' / 'enum' / 'extern' / 'float' / 'for' / 'goto' / 'if' / 'inline' / 'int' / 'long' / 'register' / 'restrict' / 'return' / 'short' / 'signed' / 'sizeof' / 'static' / 'struct' / 'switch' / 'typedef' / 'union' / 'unsigned' / 'void' / 'volatile' / 'while' / '_Bool' / '_Complex' / '_Imaginary') !(IDENT_START / IDENT_CONT) # Choice
     return $$;
@@ -6338,13 +6643,13 @@ class CParser {
     // SEMICOLON <- ';' SPACING
     var $$;          
     var pos = _cursor;             
-    if(_cachePos[67] >= pos) {
-      $$ = _getFromCache(67);
+    if(_cachePos[74] >= pos) {
+      $$ = _getFromCache(74);
       if($$ != null) {
         return $$[0];       
       }
     } else {
-      _cachePos[67] = pos;
+      _cachePos[74] = pos;
     }  
     _token = 23;    
     _tokenStart = _cursor;    
@@ -6400,11 +6705,11 @@ class CParser {
     }
     if (!success && _cursor > _testing) {
       // Expected: ';'
-      _failure(_expect34);
+      _failure(_expect35);
     }
     // <= ';' SPACING # Choice
-    if (_cacheable[67]) {
-      _addToCache($$, pos, 67);
+    if (_cacheable[74]) {
+      _addToCache($$, pos, 74);
     }    
     _token = null;
     _tokenStart = null;
@@ -6416,13 +6721,13 @@ class CParser {
     // SHORT <- 'short' !IDENT_PART SPACING
     var $$;          
     var pos = _cursor;             
-    if(_cachePos[68] >= pos) {
-      $$ = _getFromCache(68);
+    if(_cachePos[75] >= pos) {
+      $$ = _getFromCache(75);
       if($$ != null) {
         return $$[0];       
       }
     } else {
-      _cachePos[68] = pos;
+      _cachePos[75] = pos;
     }  
     _token = 24;    
     _tokenStart = _cursor;    
@@ -6488,11 +6793,11 @@ class CParser {
     }
     if (!success && _cursor > _testing) {
       // Expected: 'short'
-      _failure(_expect35);
+      _failure(_expect36);
     }
     // <= 'short' !IDENT_PART SPACING # Choice
-    if (_cacheable[68]) {
-      _addToCache($$, pos, 68);
+    if (_cacheable[75]) {
+      _addToCache($$, pos, 75);
     }    
     _token = null;
     _tokenStart = null;
@@ -6504,7 +6809,7 @@ class CParser {
     // SIGN <- PLUS / MINUS
     var $$;
     // => PLUS / MINUS # Choice
-    switch (_getState(_transitions16)) {
+    switch (_getState(_transitions15)) {
       // [+]
       case 0:
         var startPos0 = _startPos;
@@ -6533,7 +6838,7 @@ class CParser {
     }
     if (!success && _cursor > _testing) {
       // Expected: +, -
-      _failure(_expect49);
+      _failure(_expect50);
     }
     // <= PLUS / MINUS # Choice
     return $$;
@@ -6605,7 +6910,7 @@ class CParser {
     }
     if (!success && _cursor > _testing) {
       // Expected: signed
-      _failure(_expect50);
+      _failure(_expect51);
     }
     // <= 'signed' !IDENT_PART SPACING # Choice
     return $$;
@@ -6616,13 +6921,13 @@ class CParser {
     // SIGNEDNESS <- SIGNED / UNSIGNED
     var $$;          
     var pos = _cursor;             
-    if(_cachePos[69] >= pos) {
-      $$ = _getFromCache(69);
+    if(_cachePos[76] >= pos) {
+      $$ = _getFromCache(76);
       if($$ != null) {
         return $$[0];       
       }
     } else {
-      _cachePos[69] = pos;
+      _cachePos[76] = pos;
     }  
     _token = 25;    
     _tokenStart = _cursor;    
@@ -6656,11 +6961,11 @@ class CParser {
     }
     if (!success && _cursor > _testing) {
       // Expected: SIGNEDNESS
-      _failure(_expect36);
+      _failure(_expect37);
     }
     // <= SIGNED / UNSIGNED # Choice
-    if (_cacheable[69]) {
-      _addToCache($$, pos, 69);
+    if (_cacheable[76]) {
+      _addToCache($$, pos, 76);
     }    
     _token = null;
     _tokenStart = null;
@@ -6672,7 +6977,7 @@ class CParser {
     // SPACE <- [\t-\n\r ]
     var $$;
     // => [\t-\n\r ] # Choice
-    switch (_getState(_transitions17)) {
+    switch (_getState(_transitions16)) {
       // [\t-\n] [\r] [ ]
       case 0:
         var startPos0 = _startPos;
@@ -6715,7 +7020,7 @@ class CParser {
         for (var reps = []; ; ) {
           _testing = _cursor;
           // => (SPACE / COMMENT) # Choice
-          switch (_getState(_transitions18)) {
+          switch (_getState(_transitions17)) {
             // [\t-\n] [\r] [ ]
             case 0:
               var startPos1 = _startPos;
@@ -6841,7 +7146,7 @@ class CParser {
     }
     if (!success && _cursor > _testing) {
       // Expected: 'struct'
-      _failure(_expect37);
+      _failure(_expect38);
     }
     // <= 'struct' !IDENT_PART SPACING # Choice
     _token = null;
@@ -6936,6 +7241,155 @@ class CParser {
     return $$;
   }
   
+  dynamic _parse_SimpleTypeSynonym() {
+    // SENTENCE (NONTERMINAL)
+    // SimpleTypeSynonym <- TypeQualifiers? IDENTIFIER Metadata?
+    var $$;
+    // => TypeQualifiers? IDENTIFIER Metadata? # Choice
+    switch (_ch >= 0 && _ch <= 1114111 ? 0 : _ch == -1 ? 2 : 1) {
+      // [\u0000-\u0010ffff]
+      // EOF
+      case 0:
+      case 2:
+        // => TypeQualifiers? IDENTIFIER Metadata? # Sequence
+        var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
+        _startPos = _cursor;
+        while (true) {  
+          // => TypeQualifiers?
+          var testing0 = _testing;
+          _testing = _cursor;
+          // => TypeQualifiers
+          $$ = _parse_TypeQualifiers();
+          // <= TypeQualifiers
+          success = true; 
+          _testing = testing0;
+          // <= TypeQualifiers?
+          if (!success) break;
+          var seq = new List(3)..[0] = $$;
+          // => IDENTIFIER
+          $$ = _parse_IDENTIFIER();
+          // <= IDENTIFIER
+          if (!success) break;
+          seq[1] = $$;
+          // => Metadata?
+          var testing1 = _testing;
+          _testing = _cursor;
+          // => Metadata
+          $$ = _parse_Metadata();
+          // <= Metadata
+          success = true; 
+          _testing = testing1;
+          // <= Metadata?
+          if (!success) break;
+          seq[2] = $$;
+          $$ = seq;
+          if (success) {    
+            // TypeQualifiers?
+            final $1 = seq[0];
+            // IDENTIFIER
+            final $2 = seq[1];
+            // Metadata?
+            final $3 = seq[2];
+            final $start = startPos0;
+            $$ = new DefinedTypeSpecification(metadata: $3, qualifiers: $1, name: $2);
+          }
+          break;
+        }
+        if (!success) {
+          _ch = ch0;
+          _cursor = pos0;
+        }
+        _startPos = startPos0;
+        // <= TypeQualifiers? IDENTIFIER Metadata? # Sequence
+        break;
+      // No matches
+      case 1:
+        $$ = null;
+        success = false;
+        break;
+    }
+    if (!success && _cursor > _testing) {
+      // Expected: IDENTIFIER
+      _failure(_expect17);
+    }
+    // <= TypeQualifiers? IDENTIFIER Metadata? # Choice
+    return $$;
+  }
+  
+  dynamic _parse_SimpleTypeSynonymNoMetadata() {
+    // SENTENCE (NONTERMINAL)
+    // SimpleTypeSynonymNoMetadata <- TypeQualifiers? IDENTIFIER
+    var $$;          
+    var pos = _cursor;             
+    if(_cachePos[43] >= pos) {
+      $$ = _getFromCache(43);
+      if($$ != null) {
+        return $$[0];       
+      }
+    } else {
+      _cachePos[43] = pos;
+    }  
+    // => TypeQualifiers? IDENTIFIER # Choice
+    switch (_ch >= 0 && _ch <= 1114111 ? 0 : _ch == -1 ? 2 : 1) {
+      // [\u0000-\u0010ffff]
+      // EOF
+      case 0:
+      case 2:
+        // => TypeQualifiers? IDENTIFIER # Sequence
+        var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
+        _startPos = _cursor;
+        while (true) {  
+          // => TypeQualifiers?
+          var testing0 = _testing;
+          _testing = _cursor;
+          // => TypeQualifiers
+          $$ = _parse_TypeQualifiers();
+          // <= TypeQualifiers
+          success = true; 
+          _testing = testing0;
+          // <= TypeQualifiers?
+          if (!success) break;
+          var seq = new List(2)..[0] = $$;
+          // => IDENTIFIER
+          $$ = _parse_IDENTIFIER();
+          // <= IDENTIFIER
+          if (!success) break;
+          seq[1] = $$;
+          $$ = seq;
+          if (success) {    
+            // TypeQualifiers?
+            final $1 = seq[0];
+            // IDENTIFIER
+            final $2 = seq[1];
+            final $start = startPos0;
+            $$ = new DefinedTypeSpecification(qualifiers: $1, name: $2);
+          }
+          break;
+        }
+        if (!success) {
+          _ch = ch0;
+          _cursor = pos0;
+        }
+        _startPos = startPos0;
+        // <= TypeQualifiers? IDENTIFIER # Sequence
+        break;
+      // No matches
+      case 1:
+        $$ = null;
+        success = false;
+        break;
+    }
+    if (!success && _cursor > _testing) {
+      // Expected: IDENTIFIER
+      _failure(_expect17);
+    }
+    // <= TypeQualifiers? IDENTIFIER # Choice
+    if (_cacheable[43]) {
+      _addToCache($$, pos, 43);
+    }    
+    return $$;
+  }
+  
   dynamic _parse_SimpleVariableDeclaration() {
     // SENTENCE (NONTERMINAL)
     // SimpleVariableDeclaration <- Type IDENTIFIER Metadata?
@@ -7010,13 +7464,13 @@ class CParser {
     // StructDeclaration <- StructType
     var $$;          
     var pos = _cursor;             
-    if(_cachePos[28] >= pos) {
-      $$ = _getFromCache(28);
+    if(_cachePos[32] >= pos) {
+      $$ = _getFromCache(32);
       if($$ != null) {
         return $$[0];       
       }
     } else {
-      _cachePos[28] = pos;
+      _cachePos[32] = pos;
     }  
     // => StructType # Choice
     switch (_ch >= 0 && _ch <= 1114111 ? 0 : _ch == -1 ? 2 : 1) {
@@ -7048,8 +7502,8 @@ class CParser {
       _failure(_expect11);
     }
     // <= StructType # Choice
-    if (_cacheable[28]) {
-      _addToCache($$, pos, 28);
+    if (_cacheable[32]) {
+      _addToCache($$, pos, 32);
     }    
     return $$;
   }
@@ -8645,7 +9099,7 @@ class CParser {
     }
     if (!success && _cursor > _testing) {
       // Expected: const
-      _failure(_expect44);
+      _failure(_expect45);
     }
     // <= CONST # Choice
     return $$;
@@ -8698,7 +9152,7 @@ class CParser {
     }
     if (!success && _cursor > _testing) {
       // Expected: TypeQualifiers
-      _failure(_expect38);
+      _failure(_expect39);
     }
     // <= TypeQualifier* # Choice
     _token = null;
@@ -8708,7 +9162,7 @@ class CParser {
   
   dynamic _parse_TypeSynonym() {
     // SENTENCE (NONTERMINAL)
-    // TypeSynonym <- ASTERISK* IDENTIFIER ArrayDimension? Metadata?
+    // TypeSynonym <- ArrayTypeSynonym / PointerTypeSynonym / SimpleTypeSynonym
     var $$;          
     var pos = _cursor;             
     if(_cachePos[38] >= pos) {
@@ -8719,95 +9173,64 @@ class CParser {
     } else {
       _cachePos[38] = pos;
     }  
-    // => ASTERISK* IDENTIFIER ArrayDimension? Metadata? # Choice
-    switch (_getState(_transitions8)) {
-      // [*] [A-Z] [_] [a-z]
-      // EOF
+    // => ArrayTypeSynonym / PointerTypeSynonym / SimpleTypeSynonym # Choice
+    switch (_ch >= 0 && _ch <= 1114111 ? 0 : _ch == -1 ? 2 : 1) {
+      // [\u0000-\u0010ffff]
       case 0:
-      case 2:
-        // => ASTERISK* IDENTIFIER ArrayDimension? Metadata? # Sequence
-        var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
-        _startPos = _cursor;
-        while (true) {  
-          // => ASTERISK*
-          var testing0 = _testing; 
-          for (var reps = []; ; ) {
-            _testing = _cursor;
-            // => ASTERISK
-            $$ = _parse_ASTERISK();
-            // <= ASTERISK
-            if (success) {  
-              reps.add($$);
-            } else {
-              success = true;
-              _testing = testing0;
-              $$ = reps;
-              break; 
-            }
-          }
-          // <= ASTERISK*
-          if (!success) break;
-          var seq = new List(4)..[0] = $$;
-          // => IDENTIFIER
-          $$ = _parse_IDENTIFIER();
-          // <= IDENTIFIER
-          if (!success) break;
-          seq[1] = $$;
-          // => ArrayDimension?
-          var testing1 = _testing;
-          _testing = _cursor;
-          // => ArrayDimension
-          $$ = _parse_ArrayDimension();
-          // <= ArrayDimension
-          success = true; 
-          _testing = testing1;
-          // <= ArrayDimension?
-          if (!success) break;
-          seq[2] = $$;
-          // => Metadata?
-          var testing2 = _testing;
-          _testing = _cursor;
-          // => Metadata
-          $$ = _parse_Metadata();
-          // <= Metadata
-          success = true; 
-          _testing = testing2;
-          // <= Metadata?
-          if (!success) break;
-          seq[3] = $$;
-          $$ = seq;
-          if (success) {    
-            // ASTERISK*
-            final $1 = seq[0];
-            // IDENTIFIER
-            final $2 = seq[1];
-            // ArrayDimension?
-            final $3 = seq[2];
-            // Metadata?
-            final $4 = seq[3];
-            final $start = startPos0;
-            $$ = new TypeSynonym(dimensions: $3, metadata: $4, name: $2, pointers: $1.length);
-          }
+        while (true) {
+          var startPos0 = _startPos;
+          _startPos = _cursor;
+          // => ArrayTypeSynonym
+          $$ = _parse_ArrayTypeSynonym();
+          // <= ArrayTypeSynonym
+          _startPos = startPos0;
+          if (success) break;
+          var startPos1 = _startPos;
+          _startPos = _cursor;
+          // => PointerTypeSynonym
+          $$ = _parse_PointerTypeSynonym();
+          // <= PointerTypeSynonym
+          _startPos = startPos1;
+          if (success) break;
+          var startPos2 = _startPos;
+          _startPos = _cursor;
+          // => SimpleTypeSynonym
+          $$ = _parse_SimpleTypeSynonym();
+          // <= SimpleTypeSynonym
+          _startPos = startPos2;
           break;
         }
-        if (!success) {
-          _ch = ch0;
-          _cursor = pos0;
-        }
-        _startPos = startPos0;
-        // <= ASTERISK* IDENTIFIER ArrayDimension? Metadata? # Sequence
         break;
       // No matches
       case 1:
         $$ = null;
         success = false;
         break;
+      // EOF
+      case 2:
+        while (true) {
+          var startPos3 = _startPos;
+          _startPos = _cursor;
+          // => ArrayTypeSynonym
+          $$ = _parse_ArrayTypeSynonym();
+          // <= ArrayTypeSynonym
+          _startPos = startPos3;
+          if (success) break;
+          var startPos4 = _startPos;
+          _startPos = _cursor;
+          // => SimpleTypeSynonym
+          $$ = _parse_SimpleTypeSynonym();
+          // <= SimpleTypeSynonym
+          _startPos = startPos4;
+          break;
+        }
+        break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: IDENTIFIER
-      _failure(_expect17);
+      // Expected: '*', IDENTIFIER
+      _failure(_expect18);
     }
-    // <= ASTERISK* IDENTIFIER ArrayDimension? Metadata? # Choice
+    // <= ArrayTypeSynonym / PointerTypeSynonym / SimpleTypeSynonym # Choice
     if (_cacheable[38]) {
       _addToCache($$, pos, 38);
     }    
@@ -8819,8 +9242,8 @@ class CParser {
     // TypeSynonymList <- TypeSynonym (COMMA TypeSynonym)*
     var $$;
     // => TypeSynonym (COMMA TypeSynonym)* # Choice
-    switch (_getState(_transitions8)) {
-      // [*] [A-Z] [_] [a-z]
+    switch (_ch >= 0 && _ch <= 1114111 ? 0 : _ch == -1 ? 2 : 1) {
+      // [\u0000-\u0010ffff]
       // EOF
       case 0:
       case 2:
@@ -8915,10 +9338,75 @@ class CParser {
         break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: IDENTIFIER
-      _failure(_expect17);
+      // Expected: '*', IDENTIFIER
+      _failure(_expect18);
     }
     // <= TypeSynonym (COMMA TypeSynonym)* # Choice
+    return $$;
+  }
+  
+  dynamic _parse_TypeSynonymNoMetadata() {
+    // SENTENCE (NONTERMINAL)
+    // TypeSynonymNoMetadata <- ArrayTypeSynonym / PointerTypeSynonymNoMetadata / SimpleTypeSynonymNoMetadata
+    var $$;
+    // => ArrayTypeSynonym / PointerTypeSynonymNoMetadata / SimpleTypeSynonymNoMetadata # Choice
+    switch (_ch >= 0 && _ch <= 1114111 ? 0 : _ch == -1 ? 2 : 1) {
+      // [\u0000-\u0010ffff]
+      case 0:
+        while (true) {
+          var startPos0 = _startPos;
+          _startPos = _cursor;
+          // => ArrayTypeSynonym
+          $$ = _parse_ArrayTypeSynonym();
+          // <= ArrayTypeSynonym
+          _startPos = startPos0;
+          if (success) break;
+          var startPos1 = _startPos;
+          _startPos = _cursor;
+          // => PointerTypeSynonymNoMetadata
+          $$ = _parse_PointerTypeSynonymNoMetadata();
+          // <= PointerTypeSynonymNoMetadata
+          _startPos = startPos1;
+          if (success) break;
+          var startPos2 = _startPos;
+          _startPos = _cursor;
+          // => SimpleTypeSynonymNoMetadata
+          $$ = _parse_SimpleTypeSynonymNoMetadata();
+          // <= SimpleTypeSynonymNoMetadata
+          _startPos = startPos2;
+          break;
+        }
+        break;
+      // No matches
+      case 1:
+        $$ = null;
+        success = false;
+        break;
+      // EOF
+      case 2:
+        while (true) {
+          var startPos3 = _startPos;
+          _startPos = _cursor;
+          // => ArrayTypeSynonym
+          $$ = _parse_ArrayTypeSynonym();
+          // <= ArrayTypeSynonym
+          _startPos = startPos3;
+          if (success) break;
+          var startPos4 = _startPos;
+          _startPos = _cursor;
+          // => SimpleTypeSynonymNoMetadata
+          $$ = _parse_SimpleTypeSynonymNoMetadata();
+          // <= SimpleTypeSynonymNoMetadata
+          _startPos = startPos4;
+          break;
+        }
+        break;
+    }
+    if (!success && _cursor > _testing) {
+      // Expected: IDENTIFIER, '*'
+      _failure(_expect18);
+    }
+    // <= ArrayTypeSynonym / PointerTypeSynonymNoMetadata / SimpleTypeSynonymNoMetadata # Choice
     return $$;
   }
   
@@ -9121,7 +9609,7 @@ class CParser {
     }
     if (!success && _cursor > _testing) {
       // Expected: 'union'
-      _failure(_expect39);
+      _failure(_expect40);
     }
     // <= 'union' !IDENT_PART SPACING # Choice
     _token = null;
@@ -9195,7 +9683,7 @@ class CParser {
     }
     if (!success && _cursor > _testing) {
       // Expected: unsigned
-      _failure(_expect51);
+      _failure(_expect52);
     }
     // <= 'unsigned' !IDENT_PART SPACING # Choice
     return $$;
@@ -9234,7 +9722,7 @@ class CParser {
     }
     if (!success && _cursor > _testing) {
       // Expected: '...'
-      _failure(_expect40);
+      _failure(_expect41);
     }
     // <= ELLIPSIS # Choice
     _token = null;
@@ -9310,7 +9798,7 @@ class CParser {
     }
     if (!success && _cursor > _testing) {
       // Expected: 'void'
-      _failure(_expect41);
+      _failure(_expect42);
     }
     // <= 'void' !IDENT_PART SPACING # Choice
     _token = null;
@@ -9558,7 +10046,7 @@ class CParser {
     }
     if (!success && _cursor > _testing) {
       // Expected: ZERO_NUMBER
-      _failure(_expect42);
+      _failure(_expect43);
     }
     // <= ZERO SPACING # Choice
     _token = null;
@@ -9780,9 +10268,9 @@ class CParser {
       throw new RangeError('pos');
     }      
     _cursor = pos;
-    _cache = new List<Map<int, List>>(98);
-    _cachePos = new List<int>.filled(98, -1);  
-    _cacheable = new List<bool>.filled(98, false);
+    _cache = new List<Map<int, List>>(105);
+    _cachePos = new List<int>.filled(105, -1);  
+    _cacheable = new List<bool>.filled(105, false);
     _ch = -1;
     _errors = <CParserError>[];   
     _expected = <String>[];

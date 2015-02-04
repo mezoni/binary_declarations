@@ -1,6 +1,11 @@
+## 0.0.29
+
+- Breaking change. Removed class `TypeSynonym` 
+- Changes in `c.peg` grammar
+
 ## 0.0.28
 
-- Breaking change. Several classes have been changed and renamed. Added possibility to declare several type synonyms in the one `typedef` declaration 
+- Breaking change. Several classes have been changed and renamed. Added possibility to declare several type synonyms in the one `typedef` declaration
 - Changes in `c.peg` grammar 
 
 ## 0.0.27

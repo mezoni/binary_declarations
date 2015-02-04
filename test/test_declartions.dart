@@ -248,9 +248,18 @@ void main() {
   });
 
   group("Misc.", () {
-    test("Typedef.", () {
+    test("Typedefs.", () {
       var list = <String>[];
       list.add("typedef int INT, *PINT, **PPINT, AINTZ[], AINT10[10], *PAINT10_20[10][20];");
+      var text = list.join("\n");
+      var declarations = new Declarations(text);
+      _checkPresentation(text, declarations);
+    });
+
+    test("Type qualifiers.", () {
+      var list = <String>[];
+      list.add("const int i;");
+      list.add("typedef const const int const const INT;");
       var text = list.join("\n");
       var declarations = new Declarations(text);
       _checkPresentation(text, declarations);
@@ -279,6 +288,8 @@ void main() {
       list.add("enum __attribute__((A0)) ee { E } __attribute__((A1)) e __attribute__((A2));");
       list.add("TYPE __attribute__((A0)) i __attribute__((A1));");
       list.add("int __attribute__((aligned(8), packed)) i __attribute__((foo(baz, 2)));");
+      list.add("typedef __attribute__((A0)) int __attribute__((A1)) * __attribute__((A2)) *INT __attribute__((A3));");
+      // list.add("typedef const __attribute__((A0)) int __attribute__((A1)) * __attribute__((A2)) *INT __attribute__((A3));");
       var text = list.join("\n");
       var declarations = new Declarations(text);
       _checkPresentation(text, declarations);
