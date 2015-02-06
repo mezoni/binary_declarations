@@ -1,21 +1,17 @@
 part of binary_declarations;
 
-class ArrayTypeSpecification extends TypeSpecification {
+class ArrayDimensions {
   List<int> _dimensions;
 
-  final TypeSpecification type;
+  final Metadata metadata;
 
-  ArrayTypeSpecification({List<int> dimensions, Metadata metadata, this.type}) : super(metadata: metadata) {
-    if (dimensions == null) {
-      throw new ArgumentError.notNull("dimensions");
-    }
-
+  ArrayDimensions({List<int> dimensions, this.metadata}) {
     var list = <int>[];
     for (var dimension in dimensions) {
       if (dimension == null || (dimension is int && dimension > 0)) {
         list.add(dimension);
       } else {
-        throw new ArgumentError("List of dimension contains illegal elements.");
+        throw new ArgumentError("List of dimensions contains illegal elements.");
       }
     }
 
@@ -26,8 +22,46 @@ class ArrayTypeSpecification extends TypeSpecification {
 
   String toString() {
     var sb = new StringBuffer();
+    sb.write("[");
+    var result = <String>[];
+    for (var dimension in _dimensions) {
+      if (dimension == null) {
+        result.add("");
+      } else {
+        result.add("$dimension");
+      }
+    }
+
+    sb.write(result.join("]["));
+    sb.write("]");
+    return sb.toString();
+  }
+}
+
+class ArrayTypeSpecification extends TypeSpecification {
+  final ArrayDimensions dimensions;
+
+  final TypeSpecification type;
+
+  ArrayTypeSpecification({this.dimensions, Metadata metadata, this.type}) {
+    if (dimensions == null) {
+      throw new ArgumentError.notNull("dimensions");
+    }
+  }
+
+  String get name {
+    var sb = new StringBuffer();
+    sb.write(type.name);
+    sb.write(dimensions);
+    return sb.toString();
+  }
+
+  TypeSpecificationKind get typeKind => TypeSpecificationKind.ARRAY;
+
+  String toString() {
+    var sb = new StringBuffer();
     sb.write(type);
-    sb.write(_Utils.dimensionsToString(dimensions));
+    sb.write(dimensions);
     return sb.toString();
   }
 
@@ -40,7 +74,7 @@ class ArrayTypeSpecification extends TypeSpecification {
       sb.write(identifier);
     }
 
-    sb.write(_Utils.dimensionsToString(dimensions));
+    sb.write(dimensions);
     return sb.toString();
   }
 }
@@ -153,6 +187,8 @@ class DefinedTypeSpecification extends TypeSpecification {
     }
   }
 
+  TypeSpecificationKind get typeKind => TypeSpecificationKind.DEFINED;
+
   String toString() {
     var sb = new StringBuffer();
     sb.write(_Utils.qualifiersToString(qualifiers));
@@ -196,7 +232,7 @@ class EnumTypeSpecification extends TypeSpecification {
       throw new ArgumentError.notNull("taggedType");
     }
 
-    if (taggedType.kind != TaggedTypeKinds.ENUM) {
+    if (taggedType.tagKind != TaggedTypeKinds.ENUM) {
       throw new ArgumentError.value(taggedType, "taggedType");
     }
 
@@ -206,6 +242,10 @@ class EnumTypeSpecification extends TypeSpecification {
 
     _values = new _ListCloner<EnumValueDeclaration>(values, "values").list;
   }
+
+  String get name => taggedType.name;
+
+  TypeSpecificationKind get typeKind => TypeSpecificationKind.ENUM;
 
   List<EnumValueDeclaration> get values => _values;
 
@@ -256,6 +296,8 @@ class FloatTypeSpecification extends TypeSpecification {
     }
   }
 
+  TypeSpecificationKind get typeKind => TypeSpecificationKind.FLOAT;
+
   String toString() {
     var sb = new StringBuffer();
     sb.write(_Utils.qualifiersToString(qualifiers));
@@ -269,22 +311,12 @@ class FloatTypeSpecification extends TypeSpecification {
   }
 }
 
-class FunctionDeclaration extends Declaration {
-  final String name;
-
-  final TypeSpecification returnType;
+class FunctionParameters {
+  final Metadata metadata;
 
   List<ParameterDeclaration> _parameters;
 
-  FunctionDeclaration({Metadata metadata, this.name, List<ParameterDeclaration> parameters, this.returnType}) : super(metadata: metadata) {
-    if (name == null || name.isEmpty) {
-      throw new ArgumentError.value(name, "name");
-    }
-
-    if (returnType == null) {
-      throw new ArgumentError.value(returnType, "returnType");
-    }
-
+  FunctionParameters({this.metadata, List<ParameterDeclaration> parameters}) {
     var list = <ParameterDeclaration>[];
     if (parameters != null) {
       var length = parameters.length;
@@ -318,18 +350,71 @@ class FunctionDeclaration extends Declaration {
 
   String toString() {
     var sb = new StringBuffer();
+    sb.write("(");
+    sb.write(parameters.join(", "));
+    sb.write(")");
+    if (metadata != null) {
+      sb.write(" ");
+      sb.write(metadata);
+    }
+
+    return sb.toString();
+  }
+}
+
+class FunctionDeclaration extends Declaration {
+  final Identifier identifier;
+
+  final TypeSpecification returnType;
+
+  final FunctionParameters parameters;
+
+  FunctionDeclaration({Metadata metadata, this.identifier, this.parameters, this.returnType}) : super(metadata: metadata) {
+    if (identifier == null) {
+      throw new ArgumentError.notNull("identifier");
+    }
+
+    if (parameters == null) {
+      throw new ArgumentError.notNull("parameters");
+    }
+
+    if (returnType == null) {
+      throw new ArgumentError.notNull("returnType");
+    }
+  }
+
+  String toString() {
+    var sb = new StringBuffer();
+    if (metadata != null) {
+      sb.write(metadata);
+      sb.write(" ");
+    }
+
     if (returnType != null) {
       sb.write(returnType);
       sb.write(" ");
     }
 
-    sb.write(name);
-    sb.write("(");
-    if (parameters != null) {
-      sb.write(parameters.join(", "));
-    }
+    sb.write(identifier);
+    sb.write(parameters);
+    return sb.toString();
+  }
+}
 
-    sb.write(")");
+class Identifier extends Declaration {
+  final Metadata metadata;
+
+  final String name;
+
+  Identifier({this.metadata, this.name}) {
+    if (name == null || name.isEmpty) {
+      throw new ArgumentError.value(name, "name");
+    }
+  }
+
+  String toString() {
+    var sb = new StringBuffer();
+    sb.write(name);
     if (metadata != null) {
       sb.write(" ");
       sb.write(metadata);
@@ -347,6 +432,8 @@ class IntegerTypeSpecification extends TypeSpecification {
       throw new ArgumentError.value(name, "name");
     }
   }
+
+  TypeSpecificationKind get typeKind => TypeSpecificationKind.INTEGER;
 
   String toString() {
     var sb = new StringBuffer();
@@ -382,13 +469,13 @@ class Metadata {
 }
 
 class ParameterDeclaration extends Declaration {
-  final String name;
+  final Identifier identifier;
 
   final TypeSpecification type;
 
   final int width;
 
-  ParameterDeclaration({Metadata metadata, this.name, this.type, this.width}) : super(metadata: metadata) {
+  ParameterDeclaration({this.identifier, Metadata metadata, this.type, this.width}) : super(metadata: metadata) {
     if (type == null) {
       throw new ArgumentError.notNull("type");
     }
@@ -402,7 +489,12 @@ class ParameterDeclaration extends Declaration {
 
   String toString() {
     var sb = new StringBuffer();
-    sb.write(type.toStringWithIdentifier(name));
+    if (identifier != null) {
+      sb.write(type.toStringWithIdentifier(identifier.toString()));
+    } else {
+      sb.write(type);
+    }
+
     if (isBitField) {
       sb.write(" : ");
       sb.write(width);
@@ -426,7 +518,31 @@ class PointerTypeSpecification extends TypeSpecification {
     }
   }
 
-  String toString() => "$type*";
+  String get name {
+    var sb = new StringBuffer();
+    if (type.typeKind == TypeSpecificationKind.ARRAY) {
+      sb.write(type.toStringWithIdentifier("${type.name}*"));
+    } else {
+      sb.write(type.name);
+      sb.write("*");
+    }
+
+    return sb.toString();
+  }
+
+  TypeSpecificationKind get typeKind => TypeSpecificationKind.POINTER;
+
+  String toString() {
+    var sb = new StringBuffer();
+    if (type.typeKind == TypeSpecificationKind.ARRAY) {
+      sb.write(type.toStringWithIdentifier("${type}*"));
+    } else {
+      sb.write(type);
+      sb.write("*");
+    }
+
+    return sb.toString();
+  }
 }
 
 class StructureDeclaration extends Declaration {
@@ -455,7 +571,7 @@ class StructureTypeSpecification extends TypeSpecification {
       throw new ArgumentError.notNull("taggedType");
     }
 
-    switch (taggedType.kind) {
+    switch (taggedType.tagKind) {
       case TaggedTypeKinds.STRUCT:
       case TaggedTypeKinds.UNION:
         break;
@@ -467,6 +583,10 @@ class StructureTypeSpecification extends TypeSpecification {
   }
 
   List<ParameterDeclaration> get members => _members;
+
+  String get name => taggedType.name;
+
+  TypeSpecificationKind get typeKind => TypeSpecificationKind.STRUCTURE;
 
   String toString() {
     var sb = new StringBuffer();
@@ -539,14 +659,16 @@ class TaggedTypeSpecification extends TypeSpecification {
     _name = sb.toString();
   }
 
-  TaggedTypeKinds get kind => _kind;
-
   String get name => _name;
+
+  TaggedTypeKinds get tagKind => _kind;
+
+  TypeSpecificationKind get typeKind => TypeSpecificationKind.TAGGED;
 
   String toString() {
     var sb = new StringBuffer();
     sb.write(_Utils.qualifiersToString(qualifiers));
-    sb.write(kind);
+    sb.write(tagKind);
     if (metadata != null) {
       sb.write(" ");
       sb.write(metadata);
@@ -588,7 +710,11 @@ abstract class TypeSpecification {
     _qualifiers = qualifiers;
   }
 
+  String get name;
+
   TypeQualifierList get qualifiers => _qualifiers;
+
+  TypeSpecificationKind get typeKind;
 
   String toStringWithIdentifier(String identifier) {
     var sb = new StringBuffer();
@@ -602,12 +728,42 @@ abstract class TypeSpecification {
   }
 }
 
+class TypeSpecificationKind {
+  static const TypeSpecificationKind ARRAY = const TypeSpecificationKind("ARRAY");
+
+  static const TypeSpecificationKind DEFINED = const TypeSpecificationKind("DEFINED");
+
+  static const TypeSpecificationKind ENUM = const TypeSpecificationKind("ENUM");
+
+  static const TypeSpecificationKind FLOAT = const TypeSpecificationKind("FLOAT");
+
+  static const TypeSpecificationKind INTEGER = const TypeSpecificationKind("INTEGER");
+
+  static const TypeSpecificationKind POINTER = const TypeSpecificationKind("POINTER");
+
+  static const TypeSpecificationKind STRUCTURE = const TypeSpecificationKind("STRUCTURE");
+
+  static const TypeSpecificationKind TAGGED = const TypeSpecificationKind("TAGGED");
+
+  static const TypeSpecificationKind VA_LIST = const TypeSpecificationKind("VA_LIST");
+
+  static const TypeSpecificationKind VOID = const TypeSpecificationKind("VOID");
+
+  final String _name;
+
+  const TypeSpecificationKind(this._name);
+
+  String toString() => _name;
+}
+
 class TypedefDeclaration extends Declaration {
   final TypeSpecification type;
 
+  final TypedefSpecifier typedef;
+
   List<TypeSpecification> _synonyms;
 
-  TypedefDeclaration({Metadata metadata, List<TypeSpecification> synonyms, this.type}) : super(metadata: metadata) {
+  TypedefDeclaration({Metadata metadata, List<TypeSpecification> synonyms, this.type, this.typedef}) : super(metadata: metadata) {
     if (synonyms == null) {
       throw new ArgumentError.notNull("synonyms");
     }
@@ -616,25 +772,30 @@ class TypedefDeclaration extends Declaration {
       throw new ArgumentError.notNull("type");
     }
 
-    for (var synonym in synonyms) {
+    if (typedef == null) {
+      throw new ArgumentError.notNull("typedef");
+    }
+
+    _synonyms = new _ListCloner<TypeSpecification>(synonyms, "synonyms").list;
+
+    for (var synonym in _synonyms) {
       if (!(synonym is ArrayTypeSpecification || synonym is DefinedTypeSpecification || synonym is PointerTypeSpecification)) {
         throw new ArgumentError("The list of synonyms contains invalid elements");
       }
     }
-
-    _synonyms = new _ListCloner<TypeSpecification>(synonyms, "synonyms").list;
   }
 
   List<TypeSpecification> get synonyms => _synonyms;
 
   String toString() {
     var sb = new StringBuffer();
-    sb.write("typedef ");
     if (metadata != null) {
       sb.write(metadata);
       sb.write(" ");
     }
 
+    sb.write(typedef);
+    sb.write(" ");
     sb.write(type);
     sb.write(" ");
     sb.write(synonyms.map((e) => _synonymToString(e)).join(", "));
@@ -662,7 +823,7 @@ class TypedefDeclaration extends Declaration {
     } else if (synonym is ArrayTypeSpecification) {
       var sb = new StringBuffer();
       sb.write(_synonymToString(synonym.type));
-      sb.write(_Utils.dimensionsToString(synonym.dimensions));
+      sb.write(synonym.dimensions);
       return sb.toString();
     } else {
       return "<invalid>";
@@ -670,24 +831,14 @@ class TypedefDeclaration extends Declaration {
   }
 }
 
-class VaListTypeSpecification extends TypeSpecification {
-  String toString() => "...";
-}
+class TypedefSpecifier {
+  final Metadata metadata;
 
-class VariableDeclaration extends Declaration {
-  final String name;
-
-  final TypeSpecification type;
-
-  VariableDeclaration({Metadata metadata, this.name, this.type}) : super(metadata: metadata) {
-    if (type == null) {
-      throw new ArgumentError.notNull("type");
-    }
-  }
+  TypedefSpecifier({this.metadata});
 
   String toString() {
     var sb = new StringBuffer();
-    sb.write(type.toStringWithIdentifier(name));
+    sb.write("typedef");
     if (metadata != null) {
       sb.write(" ");
       sb.write(metadata);
@@ -697,8 +848,43 @@ class VariableDeclaration extends Declaration {
   }
 }
 
+class VaListTypeSpecification extends TypeSpecification {
+  String get name => "...";
+
+  TypeSpecificationKind get typeKind => TypeSpecificationKind.VA_LIST;
+
+  String toString() => "...";
+}
+
+class VariableDeclaration extends Declaration {
+  final Identifier identifier;
+
+  final TypeSpecification type;
+
+  VariableDeclaration({this.identifier, Metadata metadata, this.type}) : super(metadata: metadata) {
+    if (type == null) {
+      throw new ArgumentError.notNull("type");
+    }
+  }
+
+  String toString() {
+    var sb = new StringBuffer();
+    if (metadata != null) {
+      sb.write(metadata);
+      sb.write(" ");
+    }
+
+    sb.write(type.toStringWithIdentifier(identifier.toString()));
+    return sb.toString();
+  }
+}
+
 class VoidTypeSpecification extends TypeSpecification {
   VoidTypeSpecification({Metadata metadata, TypeQualifierList qualifiers}) : super(metadata: metadata, qualifiers: qualifiers);
+
+  String get name => "void";
+
+  TypeSpecificationKind get typeKind => TypeSpecificationKind.VOID;
 
   String toString() {
     var sb = new StringBuffer();
@@ -735,23 +921,6 @@ class _ListCloner<T> {
 }
 
 class _Utils {
-  static String dimensionsToString(List<int> dimensions) {
-    var sb = new StringBuffer();
-    sb.write("[");
-    var result = <String>[];
-    for (var length in dimensions) {
-      if (length == null) {
-        result.add("");
-      } else {
-        result.add("$length");
-      }
-    }
-
-    sb.write(result.join("]["));
-    sb.write("]");
-    return sb.toString();
-  }
-
   static String qualifiersToString(TypeQualifierList qualifiers) {
     if (qualifiers == null || qualifiers.qualifiers.isEmpty) {
       return "";

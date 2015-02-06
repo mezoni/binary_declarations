@@ -1,16 +1,21 @@
+## 0.0.30
+
+- Breaking changes. Several classes have been renamed and changed for extending the functionality 
+- Changes in `c.peg` grammar
+
 ## 0.0.29
 
-- Breaking change. Removed class `TypeSynonym` 
+- Breaking changes. Removed class `TypeSynonym`
 - Changes in `c.peg` grammar
 
 ## 0.0.28
 
-- Breaking change. Several classes have been changed and renamed. Added possibility to declare several type synonyms in the one `typedef` declaration
+- Breaking changes. Several classes have been changed and renamed. Added possibility to declare several type synonyms in the one `typedef` declaration
 - Changes in `c.peg` grammar 
 
 ## 0.0.27
 
-- Breaking change. Several classes have been renamed for the better consistency with package `binary types`
+- Breaking changes. Several classes have been renamed for the better consistency with package `binary types`
 
 ## 0.0.26
 
@@ -36,7 +41,7 @@
 
 ## 0.0.19
 
-- Breaking change: Function declaration should explicitly specify the return type
+- Breaking changes: Function declaration should explicitly specify the return type
 
 ## 0.0.18
 
@@ -56,7 +61,7 @@
 
 ## 0.0.12
 
-- Breaking change. Most of classes reworked
+- Breaking changes. Most of classes reworked
 - Initial support of enums
 
 ## 0.0.11
