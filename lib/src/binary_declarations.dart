@@ -3,9 +3,7 @@ part of binary_declarations;
 class ArrayDimensions {
   List<int> _dimensions;
 
-  final Metadata metadata;
-
-  ArrayDimensions({List<int> dimensions, this.metadata}) {
+  ArrayDimensions({List<int> dimensions}) {
     var list = <int>[];
     for (var dimension in dimensions) {
       if (dimension == null || (dimension is int && dimension > 0)) {
@@ -209,7 +207,7 @@ class EmptyDeclaration extends Declaration {
 class EnumDeclaration extends Declaration {
   final EnumTypeSpecification type;
 
-  EnumDeclaration({this.type}) {
+  EnumDeclaration({Metadata metadata, this.type}) : super(metadata: metadata) {
     if (type == null) {
       throw new ArgumentError.notNull("type");
     }
@@ -217,6 +215,11 @@ class EnumDeclaration extends Declaration {
 
   String toString() {
     var sb = new StringBuffer();
+    if (metadata != null) {
+      sb.write(metadata);
+      sb.write(" ");
+    }
+
     sb.write(type);
     return sb.toString();
   }
@@ -548,7 +551,7 @@ class PointerTypeSpecification extends TypeSpecification {
 class StructureDeclaration extends Declaration {
   final StructureTypeSpecification type;
 
-  StructureDeclaration({this.type}) {
+  StructureDeclaration({Metadata metadata, this.type}) : super(metadata: metadata) {
     if (type == null) {
       throw new ArgumentError.notNull("type");
     }
@@ -556,6 +559,11 @@ class StructureDeclaration extends Declaration {
 
   String toString() {
     var sb = new StringBuffer();
+    if (metadata != null) {
+      sb.write(metadata);
+      sb.write(" ");
+    }
+
     sb.write(type);
     return sb.toString();
   }

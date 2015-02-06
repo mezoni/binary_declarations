@@ -1,8 +1,8 @@
 %{
 import "package:binary_declarations/binary_declarations.dart";
 
-ArrayTypeSpecification _createArray(TypeSpecification type, ArrayDimensions dimensions) {  
-  return new ArrayTypeSpecification(dimensions: dimensions, type: type);
+ArrayTypeSpecification _createArray(TypeSpecification type, ArrayDimensions dimensions, Metadata metadata) {  
+  return new ArrayTypeSpecification(dimensions: dimensions, metadata: metadata, type: type);
 }
 
 String _createInt(List parts) {
@@ -26,9 +26,9 @@ List _createParameters(List parameters, ParameterDeclaration vaList) {
   return list;
 }
 
-PointerTypeSpecification _createPointerType(TypeSpecification type, List stars) {    
+PointerTypeSpecification _createPointerType(TypeSpecification type, List stars, Metadata metadata) {    
   for (var star in stars) {
-    type = new PointerTypeSpecification(type: type);
+    type = new PointerTypeSpecification(metadata: metadata, type: type);
   }
   
   return type;
@@ -88,7 +88,7 @@ Type <-
   / TypeName
 
 PointerType <-
-  TypeName ASTERISK+ { $$ = _createPointerType($1, $2); }
+  TypeName ASTERISK+ Metadata? { $$ = _createPointerType($1, $2, $3); }
 
 TypeName <-
   TypeQualifiers? IDENTIFIER Metadata? { $$ = new DefinedTypeSpecification(metadata: $3, name: $2, qualifiers: $1); }
@@ -107,10 +107,10 @@ EnumTypeName <-
   TypeQualifiers? ENUM Metadata? IDENTIFIER? { $$ = new TaggedTypeSpecification(kind: $2, metadata: $3, qualifiers: $1, tag: $4); }
 
 ArrayType <-
-  TypeName ArrayDimensions { $$ = _createArray($1, $2); }
+  TypeName ArrayDimensions Metadata? { $$ = _createArray($1, $2, $3); }
 
 ArrayDimensions <-
-  Dimension+ Metadata? { $$ = new ArrayDimensions(dimensions: $1, metadata: $2); }
+  Dimension+ { $$ = new ArrayDimensions(dimensions: $1); }
 
 Dimension <-
   OPEN_BRACKET ArraySize? CLOSE_BRACKET { $$ = $2; }
@@ -136,7 +136,7 @@ FunctionParameter <-
   / SimpleParameter
 
 ArrayParameter <-
-  Metadata? Type Identifier? ArrayDimensions { $$ = new ParameterDeclaration(identifier: $3, metadata: $1, type: _createArray($2, $4)); }
+  Metadata? Type Identifier? ArrayDimensions Metadata? { $$ = new ParameterDeclaration(identifier: $3, metadata: $1, type: _createArray($2, $4, $5)); }
 
 PointerParameter <-
   Metadata? PointerType IdentifierMD? { $$ = new ParameterDeclaration(identifier: $3, metadata: $1, type: $2); }
@@ -172,16 +172,16 @@ StructMember <-
   / SimpleParameter SEMICOLON { $$ = $1; }
 
 BitFieldParameter <-
-  Type Identifier? COLON POSITIVE_NUMBER { $$ = new ParameterDeclaration(identifier: $2, type: $1, width: $4); }
+  Metadata? Type Identifier? COLON POSITIVE_NUMBER { $$ = new ParameterDeclaration(identifier: $3, metadata: $1, type: $2, width: $5); }
 
 TaggedTypeParameter <-
-  (StructDeclaration / EnumDeclaration) IdentifierMD { $$ = new ParameterDeclaration(identifier: $2, type: $1.type); }
+  Metadata? (StructDeclaration / EnumDeclaration) IdentifierMD { $$ = new ParameterDeclaration(identifier: $3, metadata: $1, type: $2.type); }
 
 StructDeclaration <-
-  StructType { $$ = new StructureDeclaration(type: $1); }
+  Metadata? StructType { $$ = new StructureDeclaration(metadata: $1, type: $2); }
 
 EnumDeclaration <-
-  EnumType { $$ = new EnumDeclaration(type: $1); }
+  Metadata? EnumType { $$ = new EnumDeclaration(metadata: $1, type: $2); }
 
 EnumType <-
   EnumTypeName OPEN_BRACE EnumValueList CLOSE_BRACE Metadata? { $$ = new EnumTypeSpecification(metadata: $5, taggedType: $1, values: $3); }
@@ -202,7 +202,7 @@ TypeSynonym <-
   / SimpleTypeSynonym
 
 ArrayTypeSynonym <-
-  ArrayTypeElementSynonym ArrayDimensions { $$ = new ArrayTypeSpecification(dimensions: $2, type: $1); }
+  ArrayTypeElementSynonym ArrayDimensions Metadata? { $$ = new ArrayTypeSpecification(dimensions: $2, metadata: $3, type: $1); }
 
 ArrayTypeElementSynonym <-
   PointerTypeSynonymNoMetadata
@@ -232,7 +232,7 @@ VariableDeclaration <-
   / SimpleVariableDeclaration
 
 ArrayVariableDeclaration <-
-  Metadata? Type Identifier ArrayDimensions { $$ = new VariableDeclaration(identifier: $3, metadata: $1, type: _createArray($2, $4)); }
+  Metadata? Type Identifier ArrayDimensions Metadata? { $$ = new VariableDeclaration(identifier: $3, metadata: $1, type: _createArray($2, $4, $5)); }
 
 TaggedTypeVariableDeclaration <-
   Metadata? (StructDeclaration / EnumDeclaration) IdentifierMD { $$ = new VariableDeclaration(identifier: $3, metadata: $1, type: $2.type); }
