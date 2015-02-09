@@ -80,31 +80,39 @@ class ArrayTypeSpecification extends TypeSpecification {
 class Attribute {
   final String name;
 
-  List<String> _parameters;
+  List<dynamic> _parameters;
 
-  Attribute(this.name, [List parameters]) {
+  Attribute(this.name, [List<dynamic> parameters]) {
     if (name == null || name.isEmpty) {
       throw new ArgumentError.value(name, "name");
     }
 
-    var list = <String>[];
+    var list = [];
     if (parameters != null) {
       for (var value in parameters) {
-        list.add(value.toString());
+        list.add(value);
       }
     }
 
-    _parameters = new UnmodifiableListView<String>(list);
+    _parameters = new UnmodifiableListView<dynamic>(list);
   }
 
-  List<String> get parameters => _parameters;
+  List<dynamic> get parameters => _parameters;
 
   String toString() {
     var sb = new StringBuffer();
     sb.write(name);
     if (!parameters.isEmpty) {
       sb.write("(");
-      sb.write(parameters.join(", "));
+      var list = parameters.map((e) {
+        if (e is String) {
+          return "\"$e\"";
+        } else {
+          return e.toString();
+        }
+      });
+
+      sb.write(list.join(", "));
       sb.write(")");
     }
 

@@ -36,6 +36,34 @@ PointerTypeSpecification _createPointerType(TypeSpecification type, List stars, 
   return type;
 }
 
+int _escape(String ch) {
+  switch(ch) {
+    case "a":
+      return 0x07;
+    case "b":
+      return 0x08;
+    case "f":
+      return 0x0c;
+    case "n":
+      return 0x0a;
+    case "r":
+      return 0x0d;
+    case "t":
+      return 0x09;
+    case "v":
+      return 0x0b;
+    case "\'":
+      return 0x27;
+    case "\"":
+      return 0x22;
+    case "\?":
+      return 0x3f;
+    default:
+      throw new StateError("Unknown escape sequence: \\$ch");  
+  }
+}
+
+
 int _parseInt(String sign, String digits, int radix) {
   if (sign == null) {
     sign = "";
@@ -110,58 +138,75 @@ class CParser {
   
   static final List<String> _expect37 = <String>["SIGNEDNESS"];
   
-  static final List<String> _expect38 = <String>["\'struct\'"];
+  static final List<String> _expect38 = <String>["STRING"];
   
-  static final List<String> _expect39 = <String>["TypeQualifiers"];
+  static final List<String> _expect39 = <String>["\'struct\'"];
   
   static final List<String> _expect4 = <String>["\'__attribute__\'"];
   
-  static final List<String> _expect40 = <String>["\'union\'"];
+  static final List<String> _expect40 = <String>["TypeQualifiers"];
   
-  static final List<String> _expect41 = <String>["\'...\'"];
+  static final List<String> _expect41 = <String>["\'union\'"];
   
-  static final List<String> _expect42 = <String>["\'void\'"];
+  static final List<String> _expect42 = <String>["\'...\'"];
   
-  static final List<String> _expect43 = <String>["ZERO_NUMBER"];
+  static final List<String> _expect43 = <String>["\'void\'"];
   
-  static final List<String> _expect44 = <String>["//"];
+  static final List<String> _expect44 = <String>["ZERO_NUMBER"];
   
-  static final List<String> _expect45 = <String>["const"];
+  static final List<String> _expect45 = <String>["//"];
   
-  static final List<String> _expect46 = <String>["..."];
+  static final List<String> _expect46 = <String>["const"];
   
-  static final List<String> _expect47 = <String>["long"];
+  static final List<String> _expect47 = <String>["..."];
   
-  static final List<String> _expect48 = <String>["+"];
+  static final List<String> _expect48 = <String>["\\x"];
   
-  static final List<String> _expect49 = <String>["_Bool", "_Complex", "_Imaginary", "auto", "break", "case", "char", "const", "continue", "default", "do", "double", "else", "enum", "extern", "float", "for", "goto", "if", "inline", "int", "long", "register", "restrict", "return", "short", "signed", "sizeof", "static", "struct", "switch", "typedef", "union", "unsigned", "void", "volatile", "while"];
+  static final List<String> _expect49 = <String>["long"];
   
   static final List<String> _expect5 = <String>["IDENT"];
   
-  static final List<String> _expect50 = <String>["+", "-"];
+  static final List<String> _expect50 = <String>["\\"];
   
-  static final List<String> _expect51 = <String>["signed"];
+  static final List<String> _expect51 = <String>["+"];
   
-  static final List<String> _expect52 = <String>["unsigned"];
+  static final List<String> _expect52 = <String>["_Bool", "_Complex", "_Imaginary", "auto", "break", "case", "char", "const", "continue", "default", "do", "double", "else", "enum", "extern", "float", "for", "goto", "if", "inline", "int", "long", "register", "restrict", "return", "short", "signed", "sizeof", "static", "struct", "switch", "typedef", "union", "unsigned", "void", "volatile", "while"];
+  
+  static final List<String> _expect53 = <String>["+", "-"];
+  
+  static final List<String> _expect54 = <String>["signed"];
+  
+  static final List<String> _expect55 = <String>["\\U", "\\u"];
+  
+  static final List<String> _expect56 = <String>["unsigned"];
   
   static final List<String> _expect6 = <String>["\',\'"];
   
-  static final List<String> _expect7 = <String>["IDENT", "NUMBER"];
+  static final List<String> _expect7 = <String>["NUMBER", "STRING"];
   
   static final List<String> _expect8 = <String>["\'long\'", "\'short\'"];
   
   static final List<String> _expect9 = <String>["\'char\'", "\'int\'", "\'long\'", "\'short\'"];
   
-  static final List<bool> _lookahead = _unmap([0x7fc07fe5, 0x7fa1ffff, 0x17f7ffff, 0x13fc1, 0x4000030]);
+  static final List<bool> _lookahead = _unmap([0x7ffe03ff, 0x7ffd0fff, 0x7fffffff, 0x7fffffff, 0x3ff28061, 0x60000, 0x60000000, 0x13fc12fe, 0x30000, 0x80]);
   
   // '\n', '\r'
   static final List<bool> _mapping0 = _unmap([0x9]);
   
+  // '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ':', ';', '<', '=', '>', '?', '@', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '[', '\\', ']', '^', '_', '`', 'a', 'f'
+  static final List<bool> _mapping1 = _unmap([0x7fffffff, 0x87ffff]);
+  
   // 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '_', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'
-  static final List<bool> _mapping1 = _unmap([0x43ffffff, 0x7fffffe]);
+  static final List<bool> _mapping2 = _unmap([0x43ffffff, 0x7fffffe]);
+  
+  // '\"', '\'', '?', '\\', 'a', 'b', 'f', 'n', 'r', 't', 'v'
+  static final List<bool> _mapping3 = _unmap([0x20000021, 0x8000000, 0x544046]);
   
   // '\t', '\n', '\r', ' '
-  static final List<bool> _mapping2 = _unmap([0x800013]);
+  static final List<bool> _mapping4 = _unmap([0x800013]);
+  
+  // '\n', '\r', '\"', '\\'
+  static final List<bool> _mapping5 = _unmap([0x1000009, 0x0, 0x100000]);
   
   // '__attribute__'
   static final List<int> _strings0 = <int>[95, 95, 97, 116, 116, 114, 105, 98, 117, 116, 101, 95, 95];
@@ -169,107 +214,119 @@ class CParser {
   // 'char'
   static final List<int> _strings1 = <int>[99, 104, 97, 114];
   
+  // 'union'
+  static final List<int> _strings10 = <int>[117, 110, 105, 111, 110];
+  
   // 'void'
-  static final List<int> _strings10 = <int>[118, 111, 105, 100];
+  static final List<int> _strings11 = <int>[118, 111, 105, 100];
   
   // '//'
-  static final List<int> _strings11 = <int>[47, 47];
+  static final List<int> _strings12 = <int>[47, 47];
   
   // 'const'
-  static final List<int> _strings12 = <int>[99, 111, 110, 115, 116];
+  static final List<int> _strings13 = <int>[99, 111, 110, 115, 116];
   
   // '...'
-  static final List<int> _strings13 = <int>[46, 46, 46];
+  static final List<int> _strings14 = <int>[46, 46, 46];
   
   // '\r\n'
-  static final List<int> _strings14 = <int>[13, 10];
+  static final List<int> _strings15 = <int>[13, 10];
+  
+  // '\x'
+  static final List<int> _strings16 = <int>[92, 120];
   
   // 'long'
-  static final List<int> _strings15 = <int>[108, 111, 110, 103];
+  static final List<int> _strings17 = <int>[108, 111, 110, 103];
   
   // '_Bool'
-  static final List<int> _strings16 = <int>[95, 66, 111, 111, 108];
+  static final List<int> _strings18 = <int>[95, 66, 111, 111, 108];
   
   // '_Complex'
-  static final List<int> _strings17 = <int>[95, 67, 111, 109, 112, 108, 101, 120];
-  
-  // '_Imaginary'
-  static final List<int> _strings18 = <int>[95, 73, 109, 97, 103, 105, 110, 97, 114, 121];
-  
-  // 'auto'
-  static final List<int> _strings19 = <int>[97, 117, 116, 111];
+  static final List<int> _strings19 = <int>[95, 67, 111, 109, 112, 108, 101, 120];
   
   // 'double'
   static final List<int> _strings2 = <int>[100, 111, 117, 98, 108, 101];
   
+  // '_Imaginary'
+  static final List<int> _strings20 = <int>[95, 73, 109, 97, 103, 105, 110, 97, 114, 121];
+  
+  // 'auto'
+  static final List<int> _strings21 = <int>[97, 117, 116, 111];
+  
   // 'break'
-  static final List<int> _strings20 = <int>[98, 114, 101, 97, 107];
+  static final List<int> _strings22 = <int>[98, 114, 101, 97, 107];
   
   // 'case'
-  static final List<int> _strings21 = <int>[99, 97, 115, 101];
+  static final List<int> _strings23 = <int>[99, 97, 115, 101];
   
   // 'continue'
-  static final List<int> _strings22 = <int>[99, 111, 110, 116, 105, 110, 117, 101];
+  static final List<int> _strings24 = <int>[99, 111, 110, 116, 105, 110, 117, 101];
   
   // 'default'
-  static final List<int> _strings23 = <int>[100, 101, 102, 97, 117, 108, 116];
+  static final List<int> _strings25 = <int>[100, 101, 102, 97, 117, 108, 116];
   
   // 'do'
-  static final List<int> _strings24 = <int>[100, 111];
+  static final List<int> _strings26 = <int>[100, 111];
   
   // 'else'
-  static final List<int> _strings25 = <int>[101, 108, 115, 101];
+  static final List<int> _strings27 = <int>[101, 108, 115, 101];
   
   // 'extern'
-  static final List<int> _strings26 = <int>[101, 120, 116, 101, 114, 110];
+  static final List<int> _strings28 = <int>[101, 120, 116, 101, 114, 110];
   
   // 'for'
-  static final List<int> _strings27 = <int>[102, 111, 114];
-  
-  // 'goto'
-  static final List<int> _strings28 = <int>[103, 111, 116, 111];
-  
-  // 'if'
-  static final List<int> _strings29 = <int>[105, 102];
+  static final List<int> _strings29 = <int>[102, 111, 114];
   
   // 'enum'
   static final List<int> _strings3 = <int>[101, 110, 117, 109];
   
+  // 'goto'
+  static final List<int> _strings30 = <int>[103, 111, 116, 111];
+  
+  // 'if'
+  static final List<int> _strings31 = <int>[105, 102];
+  
   // 'inline'
-  static final List<int> _strings30 = <int>[105, 110, 108, 105, 110, 101];
+  static final List<int> _strings32 = <int>[105, 110, 108, 105, 110, 101];
   
   // 'register'
-  static final List<int> _strings31 = <int>[114, 101, 103, 105, 115, 116, 101, 114];
+  static final List<int> _strings33 = <int>[114, 101, 103, 105, 115, 116, 101, 114];
   
   // 'restrict'
-  static final List<int> _strings32 = <int>[114, 101, 115, 116, 114, 105, 99, 116];
+  static final List<int> _strings34 = <int>[114, 101, 115, 116, 114, 105, 99, 116];
   
   // 'return'
-  static final List<int> _strings33 = <int>[114, 101, 116, 117, 114, 110];
+  static final List<int> _strings35 = <int>[114, 101, 116, 117, 114, 110];
   
   // 'signed'
-  static final List<int> _strings34 = <int>[115, 105, 103, 110, 101, 100];
+  static final List<int> _strings36 = <int>[115, 105, 103, 110, 101, 100];
   
   // 'sizeof'
-  static final List<int> _strings35 = <int>[115, 105, 122, 101, 111, 102];
+  static final List<int> _strings37 = <int>[115, 105, 122, 101, 111, 102];
   
   // 'static'
-  static final List<int> _strings36 = <int>[115, 116, 97, 116, 105, 99];
+  static final List<int> _strings38 = <int>[115, 116, 97, 116, 105, 99];
   
   // 'switch'
-  static final List<int> _strings37 = <int>[115, 119, 105, 116, 99, 104];
-  
-  // 'unsigned'
-  static final List<int> _strings38 = <int>[117, 110, 115, 105, 103, 110, 101, 100];
-  
-  // 'volatile'
-  static final List<int> _strings39 = <int>[118, 111, 108, 97, 116, 105, 108, 101];
+  static final List<int> _strings39 = <int>[115, 119, 105, 116, 99, 104];
   
   // 'float'
   static final List<int> _strings4 = <int>[102, 108, 111, 97, 116];
   
+  // 'unsigned'
+  static final List<int> _strings40 = <int>[117, 110, 115, 105, 103, 110, 101, 100];
+  
+  // 'volatile'
+  static final List<int> _strings41 = <int>[118, 111, 108, 97, 116, 105, 108, 101];
+  
   // 'while'
-  static final List<int> _strings40 = <int>[119, 104, 105, 108, 101];
+  static final List<int> _strings42 = <int>[119, 104, 105, 108, 101];
+  
+  // '\U'
+  static final List<int> _strings43 = <int>[92, 85];
+  
+  // '\u'
+  static final List<int> _strings44 = <int>[92, 117];
   
   // 'int'
   static final List<int> _strings5 = <int>[105, 110, 116];
@@ -277,44 +334,50 @@ class CParser {
   // 'short'
   static final List<int> _strings6 = <int>[115, 104, 111, 114, 116];
   
+  // 'L"'
+  static final List<int> _strings7 = <int>[76, 34];
+  
   // 'struct'
-  static final List<int> _strings7 = <int>[115, 116, 114, 117, 99, 116];
+  static final List<int> _strings8 = <int>[115, 116, 114, 117, 99, 116];
   
   // 'typedef'
-  static final List<int> _strings8 = <int>[116, 121, 112, 101, 100, 101, 102];
+  static final List<int> _strings9 = <int>[116, 121, 112, 101, 100, 101, 102];
   
-  // 'union'
-  static final List<int> _strings9 = <int>[117, 110, 105, 111, 110];
+  final List<String> _tokenAliases = ["\'=\'", "\'*\'", "\'__attribute__\'", "\'char\'", "\'}\'", "\']\'", "\')\'", "\':\'", "\',\'", "\'double\'", "\'enum\'", "EOF", "\'float\'", "IDENT", "IDENTIFIER", "\'int\'", "LEADING_SPACES", "\'long\'", "NUMBER", "\'{\'", "\'[\'", "\'(\'", "POSITIVE_NUMBER", "\';\'", "\'short\'", "SIGNEDNESS", "STRING", "\'struct\'", "\'typedef\'", "TypeQualifiers", "\'union\'", "\'...\'", "\'void\'", "ZERO_NUMBER"];
   
-  final List<String> _tokenAliases = ["\'=\'", "\'*\'", "\'__attribute__\'", "\'char\'", "\'}\'", "\']\'", "\')\'", "\':\'", "\',\'", "\'double\'", "\'enum\'", "EOF", "\'float\'", "IDENT", "IDENTIFIER", "\'int\'", "LEADING_SPACES", "\'long\'", "NUMBER", "\'{\'", "\'[\'", "\'(\'", "POSITIVE_NUMBER", "\';\'", "\'short\'", "SIGNEDNESS", "\'struct\'", "\'typedef\'", "TypeQualifiers", "\'union\'", "\'...\'", "\'void\'", "ZERO_NUMBER"];
+  final List<int> _tokenFlags = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
   
-  final List<int> _tokenFlags = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
-  
-  final List<String> _tokenNames = ["ASSIGN", "ASTERISK", "ATTRIBUTE", "CHAR", "CLOSE_BRACE", "CLOSE_BRACKET", "CLOSE_PAREN", "COLON", "COMMA", "DOUBLE", "ENUM", "EOF", "FLOAT", "IDENT", "IDENTIFIER", "INT", "LEADING_SPACES", "LONG_TYPE", "NUMBER", "OPEN_BRACE", "OPEN_BRACKET", "OPEN_PAREN", "POSITIVE_NUMBER", "SEMICOLON", "SHORT", "SIGNEDNESS", "STRUCT", "TYPEDEF", "TypeQualifiers", "UNION", "VA_LIST_PARAMETER", "VOID", "ZERO_NUMBER"];
+  final List<String> _tokenNames = ["ASSIGN", "ASTERISK", "ATTRIBUTE", "CHAR", "CLOSE_BRACE", "CLOSE_BRACKET", "CLOSE_PAREN", "COLON", "COMMA", "DOUBLE", "ENUM", "EOF", "FLOAT", "IDENT", "IDENTIFIER", "INT", "LEADING_SPACES", "LONG_TYPE", "NUMBER", "OPEN_BRACE", "OPEN_BRACKET", "OPEN_PAREN", "POSITIVE_NUMBER", "SEMICOLON", "SHORT", "SIGNEDNESS", "STRING", "STRUCT", "TYPEDEF", "TypeQualifiers", "UNION", "VA_LIST_PARAMETER", "VOID", "ZERO_NUMBER"];
   
   static final List<List<int>> _transitions0 = [[65, 90, 95, 95, 97, 122]];
   
-  static final List<List<int>> _transitions1 = [[43, 43, 45, 45, 48, 57, 65, 90, 95, 95, 97, 122]];
+  static final List<List<int>> _transitions1 = [[34, 34, 43, 43, 45, 45, 48, 57, 76, 76]];
   
-  static final List<List<int>> _transitions10 = [[0, 9, 11, 12, 14, 1114111], [10, 10, 13, 13]];
+  static final List<List<int>> _transitions10 = [[34, 34], [76, 76]];
   
-  static final List<List<int>> _transitions11 = [[10, 10], [13, 13]];
+  static final List<List<int>> _transitions11 = [[0, 9, 11, 12, 14, 1114111], [10, 10, 13, 13]];
   
-  static final List<List<int>> _transitions12 = [[48, 57], [65, 90, 95, 95, 97, 122]];
+  static final List<List<int>> _transitions12 = [[10, 10], [13, 13]];
   
-  static final List<List<int>> _transitions13 = [[43, 43, 45, 45, 48, 48]];
+  static final List<List<int>> _transitions13 = [[48, 97, 102, 102]];
   
-  static final List<List<int>> _transitions14 = [[95, 95, 97, 103, 105, 105, 108, 108, 114, 119]];
+  static final List<List<int>> _transitions14 = [[0, 47, 98, 101, 103, 1114111], [48, 97, 102, 102]];
   
-  static final List<List<int>> _transitions15 = [[95, 95], [97, 97], [98, 98], [99, 99], [100, 100], [101, 101], [102, 102], [103, 103], [105, 105], [108, 108], [114, 114], [115, 115], [116, 116], [117, 117], [118, 118], [119, 119]];
+  static final List<List<int>> _transitions15 = [[48, 57], [65, 90, 95, 95, 97, 122]];
   
-  static final List<List<int>> _transitions16 = [[43, 43], [45, 45]];
+  static final List<List<int>> _transitions16 = [[43, 43, 45, 45, 48, 48]];
   
-  static final List<List<int>> _transitions17 = [[9, 10, 13, 13, 32, 32]];
+  static final List<List<int>> _transitions17 = [[95, 95, 97, 103, 105, 105, 108, 108, 114, 119]];
   
-  static final List<List<int>> _transitions18 = [[9, 10, 13, 13, 32, 32], [47, 47]];
+  static final List<List<int>> _transitions18 = [[95, 95], [97, 97], [98, 98], [99, 99], [100, 100], [101, 101], [102, 102], [103, 103], [105, 105], [108, 108], [114, 114], [115, 115], [116, 116], [117, 117], [118, 118], [119, 119]];
   
-  static final List<List<int>> _transitions2 = [[43, 43, 45, 45, 48, 57], [65, 90, 95, 95, 97, 122]];
+  static final List<List<int>> _transitions19 = [[43, 43], [45, 45]];
+  
+  static final List<List<int>> _transitions2 = [[34, 34, 76, 76], [43, 43, 45, 45, 48, 57]];
+  
+  static final List<List<int>> _transitions20 = [[9, 10, 13, 13, 32, 32]];
+  
+  static final List<List<int>> _transitions21 = [[9, 10, 13, 13, 32, 32], [47, 47]];
   
   static final List<List<int>> _transitions3 = [[108, 108], [115, 115]];
   
@@ -1593,7 +1656,7 @@ class CParser {
   
   dynamic _parse_AttributeParameter() {
     // SENTENCE (NONTERMINAL)
-    // AttributeParameter <- IDENT / NUMBER
+    // AttributeParameter <- STRING / NUMBER
     var $$;          
     var pos = _cursor;             
     if(_cachePos[9] >= pos) {
@@ -1604,24 +1667,24 @@ class CParser {
     } else {
       _cachePos[9] = pos;
     }  
-    // => IDENT / NUMBER # Choice
+    // => STRING / NUMBER # Choice
     switch (_getState(_transitions2)) {
-      // [+] [-] [0-9]
+      // [\"] [L]
       case 0:
         var startPos0 = _startPos;
+        _startPos = _cursor;
+        // => STRING
+        $$ = _parse_STRING();
+        // <= STRING
+        _startPos = startPos0;
+        break;
+      // [+] [-] [0-9]
+      case 1:
+        var startPos1 = _startPos;
         _startPos = _cursor;
         // => NUMBER
         $$ = _parse_NUMBER();
         // <= NUMBER
-        _startPos = startPos0;
-        break;
-      // [A-Z] [_] [a-z]
-      case 1:
-        var startPos1 = _startPos;
-        _startPos = _cursor;
-        // => IDENT
-        $$ = _parse_IDENT();
-        // <= IDENT
         _startPos = startPos1;
         break;
       // No matches
@@ -1633,10 +1696,10 @@ class CParser {
         break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: IDENT, NUMBER
+      // Expected: STRING, NUMBER
       _failure(_expect7);
     }
-    // <= IDENT / NUMBER # Choice
+    // <= STRING / NUMBER # Choice
     if (_cacheable[9]) {
       _addToCache($$, pos, 9);
     }    
@@ -1649,7 +1712,7 @@ class CParser {
     var $$;
     // => AttributeParameter (COMMA AttributeParameter)* # Choice
     switch (_getState(_transitions1)) {
-      // [+] [-] [0-9] [A-Z] [_] [a-z]
+      // [\"] [+] [-] [0-9] [L]
       case 0:
         // => AttributeParameter (COMMA AttributeParameter)* # Sequence
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
@@ -1744,7 +1807,7 @@ class CParser {
         break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: IDENT, NUMBER
+      // Expected: STRING, NUMBER
       _failure(_expect7);
     }
     // <= AttributeParameter (COMMA AttributeParameter)* # Choice
@@ -2385,7 +2448,7 @@ class CParser {
         _startPos = _cursor;
         while (true) {  
           // => '//'
-          $$ = _matchString(_strings11, '//');
+          $$ = _matchString(_strings12, '//');
           // <= '//'
           if (!success) break;
           var seq = new List(3)..[0] = $$;
@@ -2456,7 +2519,7 @@ class CParser {
           if (!success) break;
           seq[1] = $$;
           // => (EOL / !.) # Choice
-          switch (_getState(_transitions10)) {
+          switch (_getState(_transitions11)) {
             // [\u0000-\t] [\u000b-\u000c] [\u000e-\u0010ffff]
             // EOF
             case 0:
@@ -2538,7 +2601,7 @@ class CParser {
     }
     if (!success && _cursor > _testing) {
       // Expected: //
-      _failure(_expect44);
+      _failure(_expect45);
     }
     // <= '//' (!EOL .)* (EOL / !.) # Choice
     return $$;
@@ -2557,7 +2620,7 @@ class CParser {
         _startPos = _cursor;
         while (true) {  
           // => 'const'
-          $$ = _matchString(_strings12, 'const');
+          $$ = _matchString(_strings13, 'const');
           // <= 'const'
           if (!success) break;
           var seq = new List(2)..[0] = $$;
@@ -2594,7 +2657,7 @@ class CParser {
     }
     if (!success && _cursor > _testing) {
       // Expected: const
-      _failure(_expect45);
+      _failure(_expect46);
     }
     // <= 'const' SPACING # Choice
     return $$;
@@ -3291,7 +3354,7 @@ class CParser {
         _startPos = _cursor;
         while (true) {  
           // => '...'
-          $$ = _matchString(_strings13, '...');
+          $$ = _matchString(_strings14, '...');
           // <= '...'
           if (!success) break;
           var seq = new List(2)..[0] = $$;
@@ -3328,7 +3391,7 @@ class CParser {
     }
     if (!success && _cursor > _testing) {
       // Expected: ...
-      _failure(_expect46);
+      _failure(_expect47);
     }
     // <= '...' SPACING # Choice
     return $$;
@@ -3459,7 +3522,7 @@ class CParser {
     // EOL <- '\r\n' / [\n\r]
     var $$;
     // => '\r\n' / [\n\r] # Choice
-    switch (_getState(_transitions11)) {
+    switch (_getState(_transitions12)) {
       // [\n]
       case 0:
         var startPos0 = _startPos;
@@ -3475,7 +3538,7 @@ class CParser {
           var startPos1 = _startPos;
           _startPos = _cursor;
           // => '\r\n'
-          $$ = _matchString(_strings14, '\r\n');
+          $$ = _matchString(_strings15, '\r\n');
           // <= '\r\n'
           _startPos = startPos1;
           if (success) break;
@@ -3501,6 +3564,61 @@ class CParser {
       _failure(const [null]);
     }
     // <= '\r\n' / [\n\r] # Choice
+    return $$;
+  }
+  
+  dynamic _parse_ESCAPE_SEQUENCE() {
+    // MORHEME
+    // ESCAPE_SEQUENCE <- SIMPLE_ESCAPE_SEQUENCE / OCTAL_ESCAPE_SEQUENCE / HEXADECIMAL_ESCAPE_SEQUENCE / UNIVERSAL_CHARCTER_NAME
+    var $$;
+    // => SIMPLE_ESCAPE_SEQUENCE / OCTAL_ESCAPE_SEQUENCE / HEXADECIMAL_ESCAPE_SEQUENCE / UNIVERSAL_CHARCTER_NAME # Choice
+    switch (_ch == 92 ? 0 : _ch == -1 ? 2 : 1) {
+      // [\\]
+      case 0:
+        while (true) {
+          var startPos0 = _startPos;
+          _startPos = _cursor;
+          // => SIMPLE_ESCAPE_SEQUENCE
+          $$ = _parse_SIMPLE_ESCAPE_SEQUENCE();
+          // <= SIMPLE_ESCAPE_SEQUENCE
+          _startPos = startPos0;
+          if (success) break;
+          var startPos1 = _startPos;
+          _startPos = _cursor;
+          // => OCTAL_ESCAPE_SEQUENCE
+          $$ = _parse_OCTAL_ESCAPE_SEQUENCE();
+          // <= OCTAL_ESCAPE_SEQUENCE
+          _startPos = startPos1;
+          if (success) break;
+          var startPos2 = _startPos;
+          _startPos = _cursor;
+          // => HEXADECIMAL_ESCAPE_SEQUENCE
+          $$ = _parse_HEXADECIMAL_ESCAPE_SEQUENCE();
+          // <= HEXADECIMAL_ESCAPE_SEQUENCE
+          _startPos = startPos2;
+          if (success) break;
+          var startPos3 = _startPos;
+          _startPos = _cursor;
+          // => UNIVERSAL_CHARCTER_NAME
+          $$ = _parse_UNIVERSAL_CHARCTER_NAME();
+          // <= UNIVERSAL_CHARCTER_NAME
+          _startPos = startPos3;
+          break;
+        }
+        break;
+      // No matches
+      // EOF
+      case 1:
+      case 2:
+        $$ = null;
+        success = false;
+        break;
+    }
+    if (!success && _cursor > _testing) {
+      // Expected: 
+      _failure(const [null]);
+    }
+    // <= SIMPLE_ESCAPE_SEQUENCE / OCTAL_ESCAPE_SEQUENCE / HEXADECIMAL_ESCAPE_SEQUENCE / UNIVERSAL_CHARCTER_NAME # Choice
     return $$;
   }
   
@@ -4495,6 +4613,247 @@ class CParser {
     return $$;
   }
   
+  dynamic _parse_HEXADECIMAL_DIGIT() {
+    // MORHEME
+    // HEXADECIMAL_DIGIT <- [0-af]
+    var $$;
+    // => [0-af] # Choice
+    switch (_getState(_transitions13)) {
+      // [0-a] [f]
+      case 0:
+        var startPos0 = _startPos;
+        _startPos = _cursor;
+        // => [0-af]
+        $$ = _matchMapping(48, 102, _mapping1);
+        // <= [0-af]
+        _startPos = startPos0;
+        break;
+      // No matches
+      // EOF
+      case 1:
+      case 2:
+        $$ = null;
+        success = false;
+        break;
+    }
+    if (!success && _cursor > _testing) {
+      // Expected: 
+      _failure(const [null]);
+    }
+    // <= [0-af] # Choice
+    return $$;
+  }
+  
+  dynamic _parse_HEXADECIMAL_ESCAPE_SEQUENCE() {
+    // MORHEME
+    // HEXADECIMAL_ESCAPE_SEQUENCE <- '\\x' HEXADECIMAL_DIGIT HEXADECIMAL_ESCAPE_SEQUENCE1
+    var $$;
+    // => '\\x' HEXADECIMAL_DIGIT HEXADECIMAL_ESCAPE_SEQUENCE1 # Choice
+    switch (_ch == 92 ? 0 : _ch == -1 ? 2 : 1) {
+      // [\\]
+      case 0:
+        // => '\\x' HEXADECIMAL_DIGIT HEXADECIMAL_ESCAPE_SEQUENCE1 # Sequence
+        var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
+        _startPos = _cursor;
+        while (true) {  
+          // => '\\x'
+          $$ = _matchString(_strings16, '\\x');
+          // <= '\\x'
+          if (!success) break;
+          var seq = new List(3)..[0] = $$;
+          // => HEXADECIMAL_DIGIT
+          $$ = _parse_HEXADECIMAL_DIGIT();
+          // <= HEXADECIMAL_DIGIT
+          if (!success) break;
+          seq[1] = $$;
+          // => HEXADECIMAL_ESCAPE_SEQUENCE1
+          $$ = _parse_HEXADECIMAL_ESCAPE_SEQUENCE1();
+          // <= HEXADECIMAL_ESCAPE_SEQUENCE1
+          if (!success) break;
+          seq[2] = $$;
+          $$ = seq;
+          if (success) {    
+            // '\\x'
+            final $1 = seq[0];
+            // HEXADECIMAL_DIGIT
+            final $2 = seq[1];
+            // HEXADECIMAL_ESCAPE_SEQUENCE1
+            final $3 = seq[2];
+            final $start = startPos0;
+            $$ = int.parse(_text(2), radix: 16);
+          }
+          break;
+        }
+        if (!success) {
+          _ch = ch0;
+          _cursor = pos0;
+        }
+        _startPos = startPos0;
+        // <= '\\x' HEXADECIMAL_DIGIT HEXADECIMAL_ESCAPE_SEQUENCE1 # Sequence
+        break;
+      // No matches
+      // EOF
+      case 1:
+      case 2:
+        $$ = null;
+        success = false;
+        break;
+    }
+    if (!success && _cursor > _testing) {
+      // Expected: \x
+      _failure(_expect48);
+    }
+    // <= '\\x' HEXADECIMAL_DIGIT HEXADECIMAL_ESCAPE_SEQUENCE1 # Choice
+    return $$;
+  }
+  
+  dynamic _parse_HEXADECIMAL_ESCAPE_SEQUENCE1() {
+    // MORHEME
+    // HEXADECIMAL_ESCAPE_SEQUENCE1 <- HEXADECIMAL_DIGIT HEXADECIMAL_ESCAPE_SEQUENCE1 / ''
+    var $$;
+    // => HEXADECIMAL_DIGIT HEXADECIMAL_ESCAPE_SEQUENCE1 / '' # Choice
+    switch (_getState(_transitions14)) {
+      // [\u0000-/] [b-e] [g-\u0010ffff]
+      // EOF
+      case 0:
+      case 3:
+        var startPos0 = _startPos;
+        _startPos = _cursor;
+        // => ''
+        success = true;
+        $$ = '';
+        // <= ''
+        _startPos = startPos0;
+        break;
+      // [0-a] [f]
+      case 1:
+        while (true) {
+          // => HEXADECIMAL_DIGIT HEXADECIMAL_ESCAPE_SEQUENCE1 # Sequence
+          var ch0 = _ch, pos0 = _cursor, startPos1 = _startPos;
+          _startPos = _cursor;
+          while (true) {  
+            // => HEXADECIMAL_DIGIT
+            $$ = _parse_HEXADECIMAL_DIGIT();
+            // <= HEXADECIMAL_DIGIT
+            if (!success) break;
+            var seq = new List(2)..[0] = $$;
+            // => HEXADECIMAL_ESCAPE_SEQUENCE1
+            $$ = _parse_HEXADECIMAL_ESCAPE_SEQUENCE1();
+            // <= HEXADECIMAL_ESCAPE_SEQUENCE1
+            if (!success) break;
+            seq[1] = $$;
+            $$ = seq;
+            if (success) {    
+              // HEXADECIMAL_DIGIT
+              final $1 = seq[0];
+              // HEXADECIMAL_ESCAPE_SEQUENCE1
+              final $2 = seq[1];
+              final $start = startPos1;
+              $$ = _text();
+            }
+            break;
+          }
+          if (!success) {
+            _ch = ch0;
+            _cursor = pos0;
+          }
+          _startPos = startPos1;
+          // <= HEXADECIMAL_DIGIT HEXADECIMAL_ESCAPE_SEQUENCE1 # Sequence
+          if (success) break;
+          var startPos2 = _startPos;
+          _startPos = _cursor;
+          // => ''
+          success = true;
+          $$ = '';
+          // <= ''
+          _startPos = startPos2;
+          break;
+        }
+        break;
+      // No matches
+      case 2:
+        $$ = null;
+        success = false;
+        break;
+    }
+    if (!success && _cursor > _testing) {
+      // Expected: 
+      _failure(const [null]);
+    }
+    // <= HEXADECIMAL_DIGIT HEXADECIMAL_ESCAPE_SEQUENCE1 / '' # Choice
+    return $$;
+  }
+  
+  dynamic _parse_HEX_QUAD() {
+    // MORHEME
+    // HEX_QUAD <- HEXADECIMAL_DIGIT HEXADECIMAL_DIGIT HEXADECIMAL_DIGIT HEXADECIMAL_DIGIT
+    var $$;
+    // => HEXADECIMAL_DIGIT HEXADECIMAL_DIGIT HEXADECIMAL_DIGIT HEXADECIMAL_DIGIT # Choice
+    switch (_getState(_transitions13)) {
+      // [0-a] [f]
+      case 0:
+        // => HEXADECIMAL_DIGIT HEXADECIMAL_DIGIT HEXADECIMAL_DIGIT HEXADECIMAL_DIGIT # Sequence
+        var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
+        _startPos = _cursor;
+        while (true) {  
+          // => HEXADECIMAL_DIGIT
+          $$ = _parse_HEXADECIMAL_DIGIT();
+          // <= HEXADECIMAL_DIGIT
+          if (!success) break;
+          var seq = new List(4)..[0] = $$;
+          // => HEXADECIMAL_DIGIT
+          $$ = _parse_HEXADECIMAL_DIGIT();
+          // <= HEXADECIMAL_DIGIT
+          if (!success) break;
+          seq[1] = $$;
+          // => HEXADECIMAL_DIGIT
+          $$ = _parse_HEXADECIMAL_DIGIT();
+          // <= HEXADECIMAL_DIGIT
+          if (!success) break;
+          seq[2] = $$;
+          // => HEXADECIMAL_DIGIT
+          $$ = _parse_HEXADECIMAL_DIGIT();
+          // <= HEXADECIMAL_DIGIT
+          if (!success) break;
+          seq[3] = $$;
+          $$ = seq;
+          if (success) {    
+            // HEXADECIMAL_DIGIT
+            final $1 = seq[0];
+            // HEXADECIMAL_DIGIT
+            final $2 = seq[1];
+            // HEXADECIMAL_DIGIT
+            final $3 = seq[2];
+            // HEXADECIMAL_DIGIT
+            final $4 = seq[3];
+            final $start = startPos0;
+            $$ = _text();
+          }
+          break;
+        }
+        if (!success) {
+          _ch = ch0;
+          _cursor = pos0;
+        }
+        _startPos = startPos0;
+        // <= HEXADECIMAL_DIGIT HEXADECIMAL_DIGIT HEXADECIMAL_DIGIT HEXADECIMAL_DIGIT # Sequence
+        break;
+      // No matches
+      // EOF
+      case 1:
+      case 2:
+        $$ = null;
+        success = false;
+        break;
+    }
+    if (!success && _cursor > _testing) {
+      // Expected: 
+      _failure(const [null]);
+    }
+    // <= HEXADECIMAL_DIGIT HEXADECIMAL_DIGIT HEXADECIMAL_DIGIT HEXADECIMAL_DIGIT # Choice
+    return $$;
+  }
+  
   dynamic _parse_IDENT() {
     // LEXEME (TOKEN)
     // IDENT <- IDENT_START IDENT_CONT* SPACING
@@ -4702,7 +5061,7 @@ class CParser {
     // IDENT_CONT <- IDENT_START / [0-9]
     var $$;
     // => IDENT_START / [0-9] # Choice
-    switch (_getState(_transitions12)) {
+    switch (_getState(_transitions15)) {
       // [0-9]
       case 0:
         var startPos0 = _startPos;
@@ -4742,7 +5101,7 @@ class CParser {
     // IDENT_PART <- IDENT_START / IDENT_CONT
     var $$;
     // => IDENT_START / IDENT_CONT # Choice
-    switch (_getState(_transitions12)) {
+    switch (_getState(_transitions15)) {
       // [0-9]
       case 0:
         var startPos0 = _startPos;
@@ -4798,7 +5157,7 @@ class CParser {
         var startPos0 = _startPos;
         _startPos = _cursor;
         // => [A-Z_a-z]
-        $$ = _matchMapping(65, 122, _mapping1);
+        $$ = _matchMapping(65, 122, _mapping2);
         // <= [A-Z_a-z]
         _startPos = startPos0;
         break;
@@ -5168,7 +5527,7 @@ class CParser {
         _startPos = _cursor;
         while (true) {  
           // => 'long'
-          $$ = _matchString(_strings15, 'long');
+          $$ = _matchString(_strings17, 'long');
           // <= 'long'
           if (!success) break;
           var seq = new List(3)..[0] = $$;
@@ -5221,7 +5580,7 @@ class CParser {
     }
     if (!success && _cursor > _testing) {
       // Expected: long
-      _failure(_expect47);
+      _failure(_expect49);
     }
     // <= 'long' !IDENT_PART SPACING # Choice
     return $$;
@@ -5508,12 +5867,205 @@ class CParser {
     return $$;
   }
   
+  dynamic _parse_OCTAL_DIGIT() {
+    // MORHEME
+    // OCTAL_DIGIT <- [0-7]
+    var $$;
+    // => [0-7] # Choice
+    switch (_ch >= 48 && _ch <= 55 ? 0 : _ch == -1 ? 2 : 1) {
+      // [0-7]
+      case 0:
+        var startPos0 = _startPos;
+        _startPos = _cursor;
+        // => [0-7]
+        $$ = _matchRange(48, 55);
+        // <= [0-7]
+        _startPos = startPos0;
+        break;
+      // No matches
+      // EOF
+      case 1:
+      case 2:
+        $$ = null;
+        success = false;
+        break;
+    }
+    if (!success && _cursor > _testing) {
+      // Expected: 
+      _failure(const [null]);
+    }
+    // <= [0-7] # Choice
+    return $$;
+  }
+  
+  dynamic _parse_OCTAL_ESCAPE_SEQUENCE() {
+    // MORHEME
+    // OCTAL_ESCAPE_SEQUENCE <- '\\' OCTAL_DIGIT OCTAL_DIGIT OCTAL_DIGIT / '\\' OCTAL_DIGIT OCTAL_DIGIT / '\\' OCTAL_DIGIT
+    var $$;
+    // => '\\' OCTAL_DIGIT OCTAL_DIGIT OCTAL_DIGIT / '\\' OCTAL_DIGIT OCTAL_DIGIT / '\\' OCTAL_DIGIT # Choice
+    switch (_ch == 92 ? 0 : _ch == -1 ? 2 : 1) {
+      // [\\]
+      case 0:
+        while (true) {
+          // => '\\' OCTAL_DIGIT OCTAL_DIGIT OCTAL_DIGIT # Sequence
+          var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
+          _startPos = _cursor;
+          while (true) {  
+            // => '\\'
+            $$ = '\\';
+            success = true;
+            if (++_cursor < _inputLen) {
+              _ch = _input[_cursor];
+            } else {
+              _ch = -1;
+            }
+            // <= '\\'
+            if (!success) break;
+            var seq = new List(4)..[0] = $$;
+            // => OCTAL_DIGIT
+            $$ = _parse_OCTAL_DIGIT();
+            // <= OCTAL_DIGIT
+            if (!success) break;
+            seq[1] = $$;
+            // => OCTAL_DIGIT
+            $$ = _parse_OCTAL_DIGIT();
+            // <= OCTAL_DIGIT
+            if (!success) break;
+            seq[2] = $$;
+            // => OCTAL_DIGIT
+            $$ = _parse_OCTAL_DIGIT();
+            // <= OCTAL_DIGIT
+            if (!success) break;
+            seq[3] = $$;
+            $$ = seq;
+            if (success) {    
+              // '\\'
+              final $1 = seq[0];
+              // OCTAL_DIGIT
+              final $2 = seq[1];
+              // OCTAL_DIGIT
+              final $3 = seq[2];
+              // OCTAL_DIGIT
+              final $4 = seq[3];
+              final $start = startPos0;
+              $$ = int.parse(_text(1), radix: 8);
+            }
+            break;
+          }
+          if (!success) {
+            _ch = ch0;
+            _cursor = pos0;
+          }
+          _startPos = startPos0;
+          // <= '\\' OCTAL_DIGIT OCTAL_DIGIT OCTAL_DIGIT # Sequence
+          if (success) break;
+          // => '\\' OCTAL_DIGIT OCTAL_DIGIT # Sequence
+          var ch1 = _ch, pos1 = _cursor, startPos1 = _startPos;
+          _startPos = _cursor;
+          while (true) {  
+            // => '\\'
+            $$ = '\\';
+            success = true;
+            if (++_cursor < _inputLen) {
+              _ch = _input[_cursor];
+            } else {
+              _ch = -1;
+            }
+            // <= '\\'
+            if (!success) break;
+            var seq = new List(3)..[0] = $$;
+            // => OCTAL_DIGIT
+            $$ = _parse_OCTAL_DIGIT();
+            // <= OCTAL_DIGIT
+            if (!success) break;
+            seq[1] = $$;
+            // => OCTAL_DIGIT
+            $$ = _parse_OCTAL_DIGIT();
+            // <= OCTAL_DIGIT
+            if (!success) break;
+            seq[2] = $$;
+            $$ = seq;
+            if (success) {    
+              // '\\'
+              final $1 = seq[0];
+              // OCTAL_DIGIT
+              final $2 = seq[1];
+              // OCTAL_DIGIT
+              final $3 = seq[2];
+              final $start = startPos1;
+              $$ = int.parse(_text(1), radix: 8);
+            }
+            break;
+          }
+          if (!success) {
+            _ch = ch1;
+            _cursor = pos1;
+          }
+          _startPos = startPos1;
+          // <= '\\' OCTAL_DIGIT OCTAL_DIGIT # Sequence
+          if (success) break;
+          // => '\\' OCTAL_DIGIT # Sequence
+          var ch2 = _ch, pos2 = _cursor, startPos2 = _startPos;
+          _startPos = _cursor;
+          while (true) {  
+            // => '\\'
+            $$ = '\\';
+            success = true;
+            if (++_cursor < _inputLen) {
+              _ch = _input[_cursor];
+            } else {
+              _ch = -1;
+            }
+            // <= '\\'
+            if (!success) break;
+            var seq = new List(2)..[0] = $$;
+            // => OCTAL_DIGIT
+            $$ = _parse_OCTAL_DIGIT();
+            // <= OCTAL_DIGIT
+            if (!success) break;
+            seq[1] = $$;
+            $$ = seq;
+            if (success) {    
+              // '\\'
+              final $1 = seq[0];
+              // OCTAL_DIGIT
+              final $2 = seq[1];
+              final $start = startPos2;
+              $$ = int.parse($2, radix: 8);
+            }
+            break;
+          }
+          if (!success) {
+            _ch = ch2;
+            _cursor = pos2;
+          }
+          _startPos = startPos2;
+          // <= '\\' OCTAL_DIGIT # Sequence
+          break;
+        }
+        break;
+      // No matches
+      // EOF
+      case 1:
+      case 2:
+        $$ = null;
+        success = false;
+        break;
+    }
+    if (!success && _cursor > _testing) {
+      // Expected: \
+      _failure(_expect50);
+    }
+    // <= '\\' OCTAL_DIGIT OCTAL_DIGIT OCTAL_DIGIT / '\\' OCTAL_DIGIT OCTAL_DIGIT / '\\' OCTAL_DIGIT # Choice
+    return $$;
+  }
+  
   dynamic _parse_OCTAL_NUMBER() {
     // MORHEME
     // OCTAL_NUMBER <- SIGN? [0] [0-9]+
     var $$;
     // => SIGN? [0] [0-9]+ # Choice
-    switch (_getState(_transitions13)) {
+    switch (_getState(_transitions16)) {
       // [+] [-] [0]
       case 0:
         // => SIGN? [0] [0-9]+ # Sequence
@@ -5877,7 +6429,7 @@ class CParser {
     }
     if (!success && _cursor > _testing) {
       // Expected: +
-      _failure(_expect48);
+      _failure(_expect51);
     }
     // <= '+' SPACING # Choice
     return $$;
@@ -6488,7 +7040,7 @@ class CParser {
     // RESERVED_WORD <- ('auto' / 'break' / 'case' / 'char' / 'const' / 'continue' / 'default' / 'do' / 'double' / 'else' / 'enum' / 'extern' / 'float' / 'for' / 'goto' / 'if' / 'inline' / 'int' / 'long' / 'register' / 'restrict' / 'return' / 'short' / 'signed' / 'sizeof' / 'static' / 'struct' / 'switch' / 'typedef' / 'union' / 'unsigned' / 'void' / 'volatile' / 'while' / '_Bool' / '_Complex' / '_Imaginary') !(IDENT_START / IDENT_CONT)
     var $$;
     // => ('auto' / 'break' / 'case' / 'char' / 'const' / 'continue' / 'default' / 'do' / 'double' / 'else' / 'enum' / 'extern' / 'float' / 'for' / 'goto' / 'if' / 'inline' / 'int' / 'long' / 'register' / 'restrict' / 'return' / 'short' / 'signed' / 'sizeof' / 'static' / 'struct' / 'switch' / 'typedef' / 'union' / 'unsigned' / 'void' / 'volatile' / 'while' / '_Bool' / '_Complex' / '_Imaginary') !(IDENT_START / IDENT_CONT) # Choice
-    switch (_getState(_transitions14)) {
+    switch (_getState(_transitions17)) {
       // [_] [a-g] [i] [l] [r-w]
       case 0:
         // => ('auto' / 'break' / 'case' / 'char' / 'const' / 'continue' / 'default' / 'do' / 'double' / 'else' / 'enum' / 'extern' / 'float' / 'for' / 'goto' / 'if' / 'inline' / 'int' / 'long' / 'register' / 'restrict' / 'return' / 'short' / 'signed' / 'sizeof' / 'static' / 'struct' / 'switch' / 'typedef' / 'union' / 'unsigned' / 'void' / 'volatile' / 'while' / '_Bool' / '_Complex' / '_Imaginary') !(IDENT_START / IDENT_CONT) # Sequence
@@ -6496,28 +7048,28 @@ class CParser {
         _startPos = _cursor;
         while (true) {  
           // => ('auto' / 'break' / 'case' / 'char' / 'const' / 'continue' / 'default' / 'do' / 'double' / 'else' / 'enum' / 'extern' / 'float' / 'for' / 'goto' / 'if' / 'inline' / 'int' / 'long' / 'register' / 'restrict' / 'return' / 'short' / 'signed' / 'sizeof' / 'static' / 'struct' / 'switch' / 'typedef' / 'union' / 'unsigned' / 'void' / 'volatile' / 'while' / '_Bool' / '_Complex' / '_Imaginary') # Choice
-          switch (_getState(_transitions15)) {
+          switch (_getState(_transitions18)) {
             // [_]
             case 0:
               while (true) {
                 var startPos1 = _startPos;
                 _startPos = _cursor;
                 // => '_Bool'
-                $$ = _matchString(_strings16, '_Bool');
+                $$ = _matchString(_strings18, '_Bool');
                 // <= '_Bool'
                 _startPos = startPos1;
                 if (success) break;
                 var startPos2 = _startPos;
                 _startPos = _cursor;
                 // => '_Complex'
-                $$ = _matchString(_strings17, '_Complex');
+                $$ = _matchString(_strings19, '_Complex');
                 // <= '_Complex'
                 _startPos = startPos2;
                 if (success) break;
                 var startPos3 = _startPos;
                 _startPos = _cursor;
                 // => '_Imaginary'
-                $$ = _matchString(_strings18, '_Imaginary');
+                $$ = _matchString(_strings20, '_Imaginary');
                 // <= '_Imaginary'
                 _startPos = startPos3;
                 break;
@@ -6528,7 +7080,7 @@ class CParser {
               var startPos4 = _startPos;
               _startPos = _cursor;
               // => 'auto'
-              $$ = _matchString(_strings19, 'auto');
+              $$ = _matchString(_strings21, 'auto');
               // <= 'auto'
               _startPos = startPos4;
               break;
@@ -6537,7 +7089,7 @@ class CParser {
               var startPos5 = _startPos;
               _startPos = _cursor;
               // => 'break'
-              $$ = _matchString(_strings20, 'break');
+              $$ = _matchString(_strings22, 'break');
               // <= 'break'
               _startPos = startPos5;
               break;
@@ -6547,7 +7099,7 @@ class CParser {
                 var startPos6 = _startPos;
                 _startPos = _cursor;
                 // => 'case'
-                $$ = _matchString(_strings21, 'case');
+                $$ = _matchString(_strings23, 'case');
                 // <= 'case'
                 _startPos = startPos6;
                 if (success) break;
@@ -6561,14 +7113,14 @@ class CParser {
                 var startPos8 = _startPos;
                 _startPos = _cursor;
                 // => 'const'
-                $$ = _matchString(_strings12, 'const');
+                $$ = _matchString(_strings13, 'const');
                 // <= 'const'
                 _startPos = startPos8;
                 if (success) break;
                 var startPos9 = _startPos;
                 _startPos = _cursor;
                 // => 'continue'
-                $$ = _matchString(_strings22, 'continue');
+                $$ = _matchString(_strings24, 'continue');
                 // <= 'continue'
                 _startPos = startPos9;
                 break;
@@ -6580,14 +7132,14 @@ class CParser {
                 var startPos10 = _startPos;
                 _startPos = _cursor;
                 // => 'default'
-                $$ = _matchString(_strings23, 'default');
+                $$ = _matchString(_strings25, 'default');
                 // <= 'default'
                 _startPos = startPos10;
                 if (success) break;
                 var startPos11 = _startPos;
                 _startPos = _cursor;
                 // => 'do'
-                $$ = _matchString(_strings24, 'do');
+                $$ = _matchString(_strings26, 'do');
                 // <= 'do'
                 _startPos = startPos11;
                 if (success) break;
@@ -6606,7 +7158,7 @@ class CParser {
                 var startPos13 = _startPos;
                 _startPos = _cursor;
                 // => 'else'
-                $$ = _matchString(_strings25, 'else');
+                $$ = _matchString(_strings27, 'else');
                 // <= 'else'
                 _startPos = startPos13;
                 if (success) break;
@@ -6620,7 +7172,7 @@ class CParser {
                 var startPos15 = _startPos;
                 _startPos = _cursor;
                 // => 'extern'
-                $$ = _matchString(_strings26, 'extern');
+                $$ = _matchString(_strings28, 'extern');
                 // <= 'extern'
                 _startPos = startPos15;
                 break;
@@ -6639,7 +7191,7 @@ class CParser {
                 var startPos17 = _startPos;
                 _startPos = _cursor;
                 // => 'for'
-                $$ = _matchString(_strings27, 'for');
+                $$ = _matchString(_strings29, 'for');
                 // <= 'for'
                 _startPos = startPos17;
                 break;
@@ -6650,7 +7202,7 @@ class CParser {
               var startPos18 = _startPos;
               _startPos = _cursor;
               // => 'goto'
-              $$ = _matchString(_strings28, 'goto');
+              $$ = _matchString(_strings30, 'goto');
               // <= 'goto'
               _startPos = startPos18;
               break;
@@ -6660,14 +7212,14 @@ class CParser {
                 var startPos19 = _startPos;
                 _startPos = _cursor;
                 // => 'if'
-                $$ = _matchString(_strings29, 'if');
+                $$ = _matchString(_strings31, 'if');
                 // <= 'if'
                 _startPos = startPos19;
                 if (success) break;
                 var startPos20 = _startPos;
                 _startPos = _cursor;
                 // => 'inline'
-                $$ = _matchString(_strings30, 'inline');
+                $$ = _matchString(_strings32, 'inline');
                 // <= 'inline'
                 _startPos = startPos20;
                 if (success) break;
@@ -6685,7 +7237,7 @@ class CParser {
               var startPos22 = _startPos;
               _startPos = _cursor;
               // => 'long'
-              $$ = _matchString(_strings15, 'long');
+              $$ = _matchString(_strings17, 'long');
               // <= 'long'
               _startPos = startPos22;
               break;
@@ -6695,21 +7247,21 @@ class CParser {
                 var startPos23 = _startPos;
                 _startPos = _cursor;
                 // => 'register'
-                $$ = _matchString(_strings31, 'register');
+                $$ = _matchString(_strings33, 'register');
                 // <= 'register'
                 _startPos = startPos23;
                 if (success) break;
                 var startPos24 = _startPos;
                 _startPos = _cursor;
                 // => 'restrict'
-                $$ = _matchString(_strings32, 'restrict');
+                $$ = _matchString(_strings34, 'restrict');
                 // <= 'restrict'
                 _startPos = startPos24;
                 if (success) break;
                 var startPos25 = _startPos;
                 _startPos = _cursor;
                 // => 'return'
-                $$ = _matchString(_strings33, 'return');
+                $$ = _matchString(_strings35, 'return');
                 // <= 'return'
                 _startPos = startPos25;
                 break;
@@ -6728,35 +7280,35 @@ class CParser {
                 var startPos27 = _startPos;
                 _startPos = _cursor;
                 // => 'signed'
-                $$ = _matchString(_strings34, 'signed');
+                $$ = _matchString(_strings36, 'signed');
                 // <= 'signed'
                 _startPos = startPos27;
                 if (success) break;
                 var startPos28 = _startPos;
                 _startPos = _cursor;
                 // => 'sizeof'
-                $$ = _matchString(_strings35, 'sizeof');
+                $$ = _matchString(_strings37, 'sizeof');
                 // <= 'sizeof'
                 _startPos = startPos28;
                 if (success) break;
                 var startPos29 = _startPos;
                 _startPos = _cursor;
                 // => 'static'
-                $$ = _matchString(_strings36, 'static');
+                $$ = _matchString(_strings38, 'static');
                 // <= 'static'
                 _startPos = startPos29;
                 if (success) break;
                 var startPos30 = _startPos;
                 _startPos = _cursor;
                 // => 'struct'
-                $$ = _matchString(_strings7, 'struct');
+                $$ = _matchString(_strings8, 'struct');
                 // <= 'struct'
                 _startPos = startPos30;
                 if (success) break;
                 var startPos31 = _startPos;
                 _startPos = _cursor;
                 // => 'switch'
-                $$ = _matchString(_strings37, 'switch');
+                $$ = _matchString(_strings39, 'switch');
                 // <= 'switch'
                 _startPos = startPos31;
                 break;
@@ -6767,7 +7319,7 @@ class CParser {
               var startPos32 = _startPos;
               _startPos = _cursor;
               // => 'typedef'
-              $$ = _matchString(_strings8, 'typedef');
+              $$ = _matchString(_strings9, 'typedef');
               // <= 'typedef'
               _startPos = startPos32;
               break;
@@ -6777,14 +7329,14 @@ class CParser {
                 var startPos33 = _startPos;
                 _startPos = _cursor;
                 // => 'union'
-                $$ = _matchString(_strings9, 'union');
+                $$ = _matchString(_strings10, 'union');
                 // <= 'union'
                 _startPos = startPos33;
                 if (success) break;
                 var startPos34 = _startPos;
                 _startPos = _cursor;
                 // => 'unsigned'
-                $$ = _matchString(_strings38, 'unsigned');
+                $$ = _matchString(_strings40, 'unsigned');
                 // <= 'unsigned'
                 _startPos = startPos34;
                 break;
@@ -6796,14 +7348,14 @@ class CParser {
                 var startPos35 = _startPos;
                 _startPos = _cursor;
                 // => 'void'
-                $$ = _matchString(_strings10, 'void');
+                $$ = _matchString(_strings11, 'void');
                 // <= 'void'
                 _startPos = startPos35;
                 if (success) break;
                 var startPos36 = _startPos;
                 _startPos = _cursor;
                 // => 'volatile'
-                $$ = _matchString(_strings39, 'volatile');
+                $$ = _matchString(_strings41, 'volatile');
                 // <= 'volatile'
                 _startPos = startPos36;
                 break;
@@ -6814,7 +7366,7 @@ class CParser {
               var startPos37 = _startPos;
               _startPos = _cursor;
               // => 'while'
-              $$ = _matchString(_strings40, 'while');
+              $$ = _matchString(_strings42, 'while');
               // <= 'while'
               _startPos = startPos37;
               break;
@@ -6828,7 +7380,7 @@ class CParser {
           }
           if (!success && _cursor > _testing) {
             // Expected: auto, break, case, char, const, continue, default, do, double, else, enum, extern, float, for, goto, if, inline, int, long, register, restrict, return, short, signed, sizeof, static, struct, switch, typedef, union, unsigned, void, volatile, while, _Bool, _Complex, _Imaginary
-            _failure(_expect49);
+            _failure(_expect52);
           }
           // <= ('auto' / 'break' / 'case' / 'char' / 'const' / 'continue' / 'default' / 'do' / 'double' / 'else' / 'enum' / 'extern' / 'float' / 'for' / 'goto' / 'if' / 'inline' / 'int' / 'long' / 'register' / 'restrict' / 'return' / 'short' / 'signed' / 'sizeof' / 'static' / 'struct' / 'switch' / 'typedef' / 'union' / 'unsigned' / 'void' / 'volatile' / 'while' / '_Bool' / '_Complex' / '_Imaginary') # Choice
           if (!success) break;
@@ -6837,7 +7389,7 @@ class CParser {
           var ch1 = _ch, pos1 = _cursor, testing0 = _testing; 
           _testing = _inputLen + 1;
           // => (IDENT_START / IDENT_CONT) # Choice
-          switch (_getState(_transitions12)) {
+          switch (_getState(_transitions15)) {
             // [0-9]
             case 0:
               var startPos38 = _startPos;
@@ -6915,7 +7467,7 @@ class CParser {
     }
     if (!success && _cursor > _testing) {
       // Expected: auto, break, case, char, const, continue, default, do, double, else, enum, extern, float, for, goto, if, inline, int, long, register, restrict, return, short, signed, sizeof, static, struct, switch, typedef, union, unsigned, void, volatile, while, _Bool, _Complex, _Imaginary
-      _failure(_expect49);
+      _failure(_expect52);
     }
     // <= ('auto' / 'break' / 'case' / 'char' / 'const' / 'continue' / 'default' / 'do' / 'double' / 'else' / 'enum' / 'extern' / 'float' / 'for' / 'goto' / 'if' / 'inline' / 'int' / 'long' / 'register' / 'restrict' / 'return' / 'short' / 'signed' / 'sizeof' / 'static' / 'struct' / 'switch' / 'typedef' / 'union' / 'unsigned' / 'void' / 'volatile' / 'while' / '_Bool' / '_Complex' / '_Imaginary') !(IDENT_START / IDENT_CONT) # Choice
     return $$;
@@ -7092,7 +7644,7 @@ class CParser {
     // SIGN <- PLUS / MINUS
     var $$;
     // => PLUS / MINUS # Choice
-    switch (_getState(_transitions16)) {
+    switch (_getState(_transitions19)) {
       // [+]
       case 0:
         var startPos0 = _startPos;
@@ -7121,7 +7673,7 @@ class CParser {
     }
     if (!success && _cursor > _testing) {
       // Expected: +, -
-      _failure(_expect50);
+      _failure(_expect53);
     }
     // <= PLUS / MINUS # Choice
     return $$;
@@ -7140,7 +7692,7 @@ class CParser {
         _startPos = _cursor;
         while (true) {  
           // => 'signed'
-          $$ = _matchString(_strings34, 'signed');
+          $$ = _matchString(_strings36, 'signed');
           // <= 'signed'
           if (!success) break;
           var seq = new List(3)..[0] = $$;
@@ -7193,7 +7745,7 @@ class CParser {
     }
     if (!success && _cursor > _testing) {
       // Expected: signed
-      _failure(_expect51);
+      _failure(_expect54);
     }
     // <= 'signed' !IDENT_PART SPACING # Choice
     return $$;
@@ -7255,18 +7807,80 @@ class CParser {
     return $$;
   }
   
+  dynamic _parse_SIMPLE_ESCAPE_SEQUENCE() {
+    // MORHEME
+    // SIMPLE_ESCAPE_SEQUENCE <- [\\] ["'?\\a-bfnrtv]
+    var $$;
+    // => [\\] ["'?\\a-bfnrtv] # Choice
+    switch (_ch == 92 ? 0 : _ch == -1 ? 2 : 1) {
+      // [\\]
+      case 0:
+        // => [\\] ["'?\\a-bfnrtv] # Sequence
+        var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
+        _startPos = _cursor;
+        while (true) {  
+          // => [\\]
+          $$ = '\\';
+          success = true;
+          if (++_cursor < _inputLen) {
+            _ch = _input[_cursor];
+          } else {
+            _ch = -1;
+          }
+          // <= [\\]
+          if (!success) break;
+          var seq = new List(2)..[0] = $$;
+          // => ["'?\\a-bfnrtv]
+          $$ = _matchMapping(34, 118, _mapping3);
+          // <= ["'?\\a-bfnrtv]
+          if (!success) break;
+          seq[1] = $$;
+          $$ = seq;
+          if (success) {    
+            // [\\]
+            final $1 = seq[0];
+            // ["'?\\a-bfnrtv]
+            final $2 = seq[1];
+            final $start = startPos0;
+            $$ = _escape($1);
+          }
+          break;
+        }
+        if (!success) {
+          _ch = ch0;
+          _cursor = pos0;
+        }
+        _startPos = startPos0;
+        // <= [\\] ["'?\\a-bfnrtv] # Sequence
+        break;
+      // No matches
+      // EOF
+      case 1:
+      case 2:
+        $$ = null;
+        success = false;
+        break;
+    }
+    if (!success && _cursor > _testing) {
+      // Expected: 
+      _failure(const [null]);
+    }
+    // <= [\\] ["'?\\a-bfnrtv] # Choice
+    return $$;
+  }
+  
   dynamic _parse_SPACE() {
     // MORHEME
     // SPACE <- [\t-\n\r ]
     var $$;
     // => [\t-\n\r ] # Choice
-    switch (_getState(_transitions17)) {
+    switch (_getState(_transitions20)) {
       // [\t-\n] [\r] [ ]
       case 0:
         var startPos0 = _startPos;
         _startPos = _cursor;
         // => [\t-\n\r ]
-        $$ = _matchMapping(9, 32, _mapping2);
+        $$ = _matchMapping(9, 32, _mapping4);
         // <= [\t-\n\r ]
         _startPos = startPos0;
         break;
@@ -7303,7 +7917,7 @@ class CParser {
         for (var reps = []; ; ) {
           _testing = _cursor;
           // => (SPACE / COMMENT) # Choice
-          switch (_getState(_transitions18)) {
+          switch (_getState(_transitions21)) {
             // [\t-\n] [\r] [ ]
             case 0:
               var startPos1 = _startPos;
@@ -7361,11 +7975,306 @@ class CParser {
     return $$;
   }
   
+  dynamic _parse_STRING() {
+    // LEXEME (TOKEN)
+    // STRING <- '"' STRING_CHAR_SEQUENCE? '"' / 'L"' STRING_CHAR_SEQUENCE? '"'
+    var $$;
+    _token = 26;  
+    _tokenStart = _cursor;  
+    // => '"' STRING_CHAR_SEQUENCE? '"' / 'L"' STRING_CHAR_SEQUENCE? '"' # Choice
+    switch (_getState(_transitions10)) {
+      // [\"]
+      case 0:
+        // => '"' STRING_CHAR_SEQUENCE? '"' # Sequence
+        var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
+        _startPos = _cursor;
+        while (true) {  
+          // => '"'
+          $$ = '\"';
+          success = true;
+          if (++_cursor < _inputLen) {
+            _ch = _input[_cursor];
+          } else {
+            _ch = -1;
+          }
+          // <= '"'
+          if (!success) break;
+          var seq = new List(3)..[0] = $$;
+          // => STRING_CHAR_SEQUENCE?
+          var testing0 = _testing;
+          _testing = _cursor;
+          // => STRING_CHAR_SEQUENCE
+          $$ = _parse_STRING_CHAR_SEQUENCE();
+          // <= STRING_CHAR_SEQUENCE
+          success = true; 
+          _testing = testing0;
+          // <= STRING_CHAR_SEQUENCE?
+          if (!success) break;
+          seq[1] = $$;
+          // => '"'
+          $$ = _matchChar(34, '\"');
+          // <= '"'
+          if (!success) break;
+          seq[2] = $$;
+          $$ = seq;
+          if (success) {    
+            // '"'
+            final $1 = seq[0];
+            // STRING_CHAR_SEQUENCE?
+            final $2 = seq[1];
+            // '"'
+            final $3 = seq[2];
+            final $start = startPos0;
+            $$ = $2 == null ? "" : new String.fromCharCodes($2);
+          }
+          break;
+        }
+        if (!success) {
+          _ch = ch0;
+          _cursor = pos0;
+        }
+        _startPos = startPos0;
+        // <= '"' STRING_CHAR_SEQUENCE? '"' # Sequence
+        break;
+      // [L]
+      case 1:
+        // => 'L"' STRING_CHAR_SEQUENCE? '"' # Sequence
+        var ch1 = _ch, pos1 = _cursor, startPos1 = _startPos;
+        _startPos = _cursor;
+        while (true) {  
+          // => 'L"'
+          $$ = _matchString(_strings7, 'L\"');
+          // <= 'L"'
+          if (!success) break;
+          var seq = new List(3)..[0] = $$;
+          // => STRING_CHAR_SEQUENCE?
+          var testing1 = _testing;
+          _testing = _cursor;
+          // => STRING_CHAR_SEQUENCE
+          $$ = _parse_STRING_CHAR_SEQUENCE();
+          // <= STRING_CHAR_SEQUENCE
+          success = true; 
+          _testing = testing1;
+          // <= STRING_CHAR_SEQUENCE?
+          if (!success) break;
+          seq[1] = $$;
+          // => '"'
+          $$ = _matchChar(34, '\"');
+          // <= '"'
+          if (!success) break;
+          seq[2] = $$;
+          $$ = seq;
+          if (success) {    
+            // 'L"'
+            final $1 = seq[0];
+            // STRING_CHAR_SEQUENCE?
+            final $2 = seq[1];
+            // '"'
+            final $3 = seq[2];
+            final $start = startPos1;
+            $$ = $2 == null ? "" : new String.fromCharCodes($2);
+          }
+          break;
+        }
+        if (!success) {
+          _ch = ch1;
+          _cursor = pos1;
+        }
+        _startPos = startPos1;
+        // <= 'L"' STRING_CHAR_SEQUENCE? '"' # Sequence
+        break;
+      // No matches
+      // EOF
+      case 2:
+      case 3:
+        $$ = null;
+        success = false;
+        break;
+    }
+    if (!success && _cursor > _testing) {
+      // Expected: STRING
+      _failure(_expect38);
+    }
+    // <= '"' STRING_CHAR_SEQUENCE? '"' / 'L"' STRING_CHAR_SEQUENCE? '"' # Choice
+    _token = null;
+    _tokenStart = null;
+    return $$;
+  }
+  
+  dynamic _parse_STRING_CHAR() {
+    // MORHEME
+    // STRING_CHAR <- ![\n\r"\\] . / ESCAPE_SEQUENCE
+    var $$;
+    // => ![\n\r"\\] . / ESCAPE_SEQUENCE # Choice
+    switch (_ch >= 0 && _ch <= 1114111 ? 0 : _ch == -1 ? 2 : 1) {
+      // [\u0000-\u0010ffff]
+      case 0:
+        while (true) {
+          // => ![\n\r"\\] . # Sequence
+          var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
+          _startPos = _cursor;
+          while (true) {  
+            // => ![\n\r"\\]
+            var ch1 = _ch, pos1 = _cursor, testing0 = _testing; 
+            _testing = _inputLen + 1;
+            // => [\n\r"\\]
+            $$ = _matchMapping(10, 92, _mapping5);
+            // <= [\n\r"\\]
+            _ch = ch1;
+            _cursor = pos1; 
+            _testing = testing0;
+            $$ = null;
+            success = !success;
+            // <= ![\n\r"\\]
+            if (!success) break;
+            var seq = new List(2)..[0] = $$;
+            // => .
+            $$ = _matchAny();
+            // <= .
+            if (!success) break;
+            seq[1] = $$;
+            $$ = seq;
+            if (success) {    
+              // ![\n\r"\\]
+              final $1 = seq[0];
+              // .
+              final $2 = seq[1];
+              final $start = startPos0;
+              $$ = $2.codeUnitAt(0);
+            }
+            break;
+          }
+          if (!success) {
+            _ch = ch0;
+            _cursor = pos0;
+          }
+          _startPos = startPos0;
+          // <= ![\n\r"\\] . # Sequence
+          if (success) break;
+          var startPos1 = _startPos;
+          _startPos = _cursor;
+          // => ESCAPE_SEQUENCE
+          $$ = _parse_ESCAPE_SEQUENCE();
+          // <= ESCAPE_SEQUENCE
+          _startPos = startPos1;
+          break;
+        }
+        break;
+      // No matches
+      case 1:
+        $$ = null;
+        success = false;
+        break;
+      // EOF
+      case 2:
+        // => ![\n\r"\\] . # Sequence
+        var ch2 = _ch, pos2 = _cursor, startPos2 = _startPos;
+        _startPos = _cursor;
+        while (true) {  
+          // => ![\n\r"\\]
+          var ch3 = _ch, pos3 = _cursor, testing1 = _testing; 
+          _testing = _inputLen + 1;
+          // => [\n\r"\\]
+          $$ = _matchMapping(10, 92, _mapping5);
+          // <= [\n\r"\\]
+          _ch = ch3;
+          _cursor = pos3; 
+          _testing = testing1;
+          $$ = null;
+          success = !success;
+          // <= ![\n\r"\\]
+          if (!success) break;
+          var seq = new List(2)..[0] = $$;
+          // => .
+          $$ = _matchAny();
+          // <= .
+          if (!success) break;
+          seq[1] = $$;
+          $$ = seq;
+          if (success) {    
+            // ![\n\r"\\]
+            final $1 = seq[0];
+            // .
+            final $2 = seq[1];
+            final $start = startPos2;
+            $$ = $2.codeUnitAt(0);
+          }
+          break;
+        }
+        if (!success) {
+          _ch = ch2;
+          _cursor = pos2;
+        }
+        _startPos = startPos2;
+        // <= ![\n\r"\\] . # Sequence
+        break;
+    }
+    if (!success && _cursor > _testing) {
+      // Expected: 
+      _failure(const [null]);
+    }
+    // <= ![\n\r"\\] . / ESCAPE_SEQUENCE # Choice
+    return $$;
+  }
+  
+  dynamic _parse_STRING_CHAR_SEQUENCE() {
+    // MORHEME
+    // STRING_CHAR_SEQUENCE <- STRING_CHAR+
+    var $$;
+    // => STRING_CHAR+ # Choice
+    switch (_ch >= 0 && _ch <= 1114111 ? 0 : _ch == -1 ? 2 : 1) {
+      // [\u0000-\u0010ffff]
+      // EOF
+      case 0:
+      case 2:
+        var startPos0 = _startPos;
+        _startPos = _cursor;
+        // => STRING_CHAR+
+        var testing0;
+        for (var first = true, reps; ;) {  
+          // => STRING_CHAR  
+          $$ = _parse_STRING_CHAR();  
+          // <= STRING_CHAR  
+          if (success) {
+           if (first) {      
+              first = false;
+              reps = [$$];
+              testing0 = _testing;                  
+            } else {
+              reps.add($$);
+            }
+            _testing = _cursor;   
+          } else {
+            success = !first;
+            if (success) {      
+              _testing = testing0;
+              $$ = reps;      
+            } else $$ = null;
+            break;
+          }  
+        }
+        // <= STRING_CHAR+
+        _startPos = startPos0;
+        break;
+      // No matches
+      case 1:
+        $$ = null;
+        success = false;
+        break;
+    }
+    if (!success && _cursor > _testing) {
+      // Expected: 
+      _failure(const [null]);
+    }
+    // <= STRING_CHAR+ # Choice
+    return $$;
+  }
+  
   dynamic _parse_STRUCT() {
     // LEXEME (TOKEN)
     // STRUCT <- 'struct' !IDENT_PART SPACING
     var $$;
-    _token = 26;  
+    _token = 27;  
     _tokenStart = _cursor;  
     // => 'struct' !IDENT_PART SPACING # Choice
     switch (_ch == 115 ? 0 : _ch == -1 ? 2 : 1) {
@@ -7376,7 +8285,7 @@ class CParser {
         _startPos = _cursor;
         while (true) {  
           // => 'struct'
-          $$ = _matchString(_strings7, 'struct');
+          $$ = _matchString(_strings8, 'struct');
           // <= 'struct'
           if (!success) break;
           var seq = new List(3)..[0] = $$;
@@ -7429,7 +8338,7 @@ class CParser {
     }
     if (!success && _cursor > _testing) {
       // Expected: 'struct'
-      _failure(_expect38);
+      _failure(_expect39);
     }
     // <= 'struct' !IDENT_PART SPACING # Choice
     _token = null;
@@ -8522,7 +9431,7 @@ class CParser {
     // LEXEME (TOKEN)
     // TYPEDEF <- 'typedef' SPACING
     var $$;
-    _token = 27;  
+    _token = 28;  
     _tokenStart = _cursor;  
     // => 'typedef' SPACING # Choice
     switch (_ch == 116 ? 0 : _ch == -1 ? 2 : 1) {
@@ -8533,7 +9442,7 @@ class CParser {
         _startPos = _cursor;
         while (true) {  
           // => 'typedef'
-          $$ = _matchString(_strings8, 'typedef');
+          $$ = _matchString(_strings9, 'typedef');
           // <= 'typedef'
           if (!success) break;
           var seq = new List(2)..[0] = $$;
@@ -8575,6 +9484,37 @@ class CParser {
     // <= 'typedef' SPACING # Choice
     _token = null;
     _tokenStart = null;
+    return $$;
+  }
+  
+  dynamic _parse_TYPE_QUALIFIER() {
+    // MORHEME
+    // TYPE_QUALIFIER <- CONST
+    var $$;
+    // => CONST # Choice
+    switch (_ch == 99 ? 0 : _ch == -1 ? 2 : 1) {
+      // [c]
+      case 0:
+        var startPos0 = _startPos;
+        _startPos = _cursor;
+        // => CONST
+        $$ = _parse_CONST();
+        // <= CONST
+        _startPos = startPos0;
+        break;
+      // No matches
+      // EOF
+      case 1:
+      case 2:
+        $$ = null;
+        success = false;
+        break;
+    }
+    if (!success && _cursor > _testing) {
+      // Expected: const
+      _failure(_expect46);
+    }
+    // <= CONST # Choice
     return $$;
   }
   
@@ -9395,44 +10335,13 @@ class CParser {
     return $$;
   }
   
-  dynamic _parse_TypeQualifier() {
-    // MORHEME
-    // TypeQualifier <- CONST
-    var $$;
-    // => CONST # Choice
-    switch (_ch == 99 ? 0 : _ch == -1 ? 2 : 1) {
-      // [c]
-      case 0:
-        var startPos0 = _startPos;
-        _startPos = _cursor;
-        // => CONST
-        $$ = _parse_CONST();
-        // <= CONST
-        _startPos = startPos0;
-        break;
-      // No matches
-      // EOF
-      case 1:
-      case 2:
-        $$ = null;
-        success = false;
-        break;
-    }
-    if (!success && _cursor > _testing) {
-      // Expected: const
-      _failure(_expect45);
-    }
-    // <= CONST # Choice
-    return $$;
-  }
-  
   dynamic _parse_TypeQualifiers() {
     // LEXEME (TOKEN)
-    // TypeQualifiers <- TypeQualifier*
+    // TypeQualifiers <- TYPE_QUALIFIER*
     var $$;
-    _token = 28;  
+    _token = 29;  
     _tokenStart = _cursor;  
-    // => TypeQualifier* # Choice
+    // => TYPE_QUALIFIER* # Choice
     switch (_ch >= 0 && _ch <= 1114111 ? 0 : _ch == -1 ? 2 : 1) {
       // [\u0000-\u0010ffff]
       // EOF
@@ -9440,13 +10349,13 @@ class CParser {
       case 2:
         var startPos0 = _startPos;
         _startPos = _cursor;
-        // => TypeQualifier*
+        // => TYPE_QUALIFIER*
         var testing0 = _testing; 
         for (var reps = []; ; ) {
           _testing = _cursor;
-          // => TypeQualifier
-          $$ = _parse_TypeQualifier();
-          // <= TypeQualifier
+          // => TYPE_QUALIFIER
+          $$ = _parse_TYPE_QUALIFIER();
+          // <= TYPE_QUALIFIER
           if (success) {  
             reps.add($$);
           } else {
@@ -9456,9 +10365,9 @@ class CParser {
             break; 
           }
         }
-        // <= TypeQualifier*
+        // <= TYPE_QUALIFIER*
         if (success) {    
-          // TypeQualifier*
+          // TYPE_QUALIFIER*
           final $1 = $$;
           final $start = startPos0;
           $$ = new TypeQualifierList($1);
@@ -9473,9 +10382,9 @@ class CParser {
     }
     if (!success && _cursor > _testing) {
       // Expected: TypeQualifiers
-      _failure(_expect39);
+      _failure(_expect40);
     }
-    // <= TypeQualifier* # Choice
+    // <= TYPE_QUALIFIER* # Choice
     _token = null;
     _tokenStart = null;
     return $$;
@@ -9928,7 +10837,7 @@ class CParser {
     // LEXEME (TOKEN)
     // UNION <- 'union' !IDENT_PART SPACING
     var $$;
-    _token = 29;  
+    _token = 30;  
     _tokenStart = _cursor;  
     // => 'union' !IDENT_PART SPACING # Choice
     switch (_ch == 117 ? 0 : _ch == -1 ? 2 : 1) {
@@ -9939,7 +10848,7 @@ class CParser {
         _startPos = _cursor;
         while (true) {  
           // => 'union'
-          $$ = _matchString(_strings9, 'union');
+          $$ = _matchString(_strings10, 'union');
           // <= 'union'
           if (!success) break;
           var seq = new List(3)..[0] = $$;
@@ -9992,11 +10901,109 @@ class CParser {
     }
     if (!success && _cursor > _testing) {
       // Expected: 'union'
-      _failure(_expect40);
+      _failure(_expect41);
     }
     // <= 'union' !IDENT_PART SPACING # Choice
     _token = null;
     _tokenStart = null;
+    return $$;
+  }
+  
+  dynamic _parse_UNIVERSAL_CHARCTER_NAME() {
+    // MORHEME
+    // UNIVERSAL_CHARCTER_NAME <- '\\U' HEX_QUAD HEX_QUAD / '\\u' HEX_QUAD
+    var $$;
+    // => '\\U' HEX_QUAD HEX_QUAD / '\\u' HEX_QUAD # Choice
+    switch (_ch == 92 ? 0 : _ch == -1 ? 2 : 1) {
+      // [\\]
+      case 0:
+        while (true) {
+          // => '\\U' HEX_QUAD HEX_QUAD # Sequence
+          var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
+          _startPos = _cursor;
+          while (true) {  
+            // => '\\U'
+            $$ = _matchString(_strings43, '\\U');
+            // <= '\\U'
+            if (!success) break;
+            var seq = new List(3)..[0] = $$;
+            // => HEX_QUAD
+            $$ = _parse_HEX_QUAD();
+            // <= HEX_QUAD
+            if (!success) break;
+            seq[1] = $$;
+            // => HEX_QUAD
+            $$ = _parse_HEX_QUAD();
+            // <= HEX_QUAD
+            if (!success) break;
+            seq[2] = $$;
+            $$ = seq;
+            if (success) {    
+              // '\\U'
+              final $1 = seq[0];
+              // HEX_QUAD
+              final $2 = seq[1];
+              // HEX_QUAD
+              final $3 = seq[2];
+              final $start = startPos0;
+              $$ = int.parse(_text(2), radix: 16);
+            }
+            break;
+          }
+          if (!success) {
+            _ch = ch0;
+            _cursor = pos0;
+          }
+          _startPos = startPos0;
+          // <= '\\U' HEX_QUAD HEX_QUAD # Sequence
+          if (success) break;
+          // => '\\u' HEX_QUAD # Sequence
+          var ch1 = _ch, pos1 = _cursor, startPos1 = _startPos;
+          _startPos = _cursor;
+          while (true) {  
+            // => '\\u'
+            $$ = _matchString(_strings44, '\\u');
+            // <= '\\u'
+            if (!success) break;
+            var seq = new List(2)..[0] = $$;
+            // => HEX_QUAD
+            $$ = _parse_HEX_QUAD();
+            // <= HEX_QUAD
+            if (!success) break;
+            seq[1] = $$;
+            $$ = seq;
+            if (success) {    
+              // '\\u'
+              final $1 = seq[0];
+              // HEX_QUAD
+              final $2 = seq[1];
+              final $start = startPos1;
+              $$ = int.parse(_text(2), radix: 16);
+            }
+            break;
+          }
+          if (!success) {
+            _ch = ch1;
+            _cursor = pos1;
+          }
+          _startPos = startPos1;
+          // <= '\\u' HEX_QUAD # Sequence
+          break;
+        }
+        break;
+      // No matches
+      // EOF
+      case 1:
+      case 2:
+        $$ = null;
+        success = false;
+        break;
+    }
+    if (!success && _cursor > _testing) {
+      // Expected: \U, \u
+      _failure(_expect55);
+    }
+    // <= '\\U' HEX_QUAD HEX_QUAD / '\\u' HEX_QUAD # Choice
     return $$;
   }
   
@@ -10013,7 +11020,7 @@ class CParser {
         _startPos = _cursor;
         while (true) {  
           // => 'unsigned'
-          $$ = _matchString(_strings38, 'unsigned');
+          $$ = _matchString(_strings40, 'unsigned');
           // <= 'unsigned'
           if (!success) break;
           var seq = new List(3)..[0] = $$;
@@ -10066,7 +11073,7 @@ class CParser {
     }
     if (!success && _cursor > _testing) {
       // Expected: unsigned
-      _failure(_expect52);
+      _failure(_expect56);
     }
     // <= 'unsigned' !IDENT_PART SPACING # Choice
     return $$;
@@ -10076,7 +11083,7 @@ class CParser {
     // LEXEME (TOKEN)
     // VA_LIST_PARAMETER <- ELLIPSIS
     var $$;
-    _token = 30;  
+    _token = 31;  
     _tokenStart = _cursor;  
     // => ELLIPSIS # Choice
     switch (_ch == 46 ? 0 : _ch == -1 ? 2 : 1) {
@@ -10105,7 +11112,7 @@ class CParser {
     }
     if (!success && _cursor > _testing) {
       // Expected: '...'
-      _failure(_expect41);
+      _failure(_expect42);
     }
     // <= ELLIPSIS # Choice
     _token = null;
@@ -10117,7 +11124,7 @@ class CParser {
     // LEXEME (TOKEN)
     // VOID <- 'void' !IDENT_PART SPACING
     var $$;
-    _token = 31;  
+    _token = 32;  
     _tokenStart = _cursor;  
     // => 'void' !IDENT_PART SPACING # Choice
     switch (_ch == 118 ? 0 : _ch == -1 ? 2 : 1) {
@@ -10128,7 +11135,7 @@ class CParser {
         _startPos = _cursor;
         while (true) {  
           // => 'void'
-          $$ = _matchString(_strings10, 'void');
+          $$ = _matchString(_strings11, 'void');
           // <= 'void'
           if (!success) break;
           var seq = new List(3)..[0] = $$;
@@ -10181,7 +11188,7 @@ class CParser {
     }
     if (!success && _cursor > _testing) {
       // Expected: 'void'
-      _failure(_expect42);
+      _failure(_expect43);
     }
     // <= 'void' !IDENT_PART SPACING # Choice
     _token = null;
@@ -10381,7 +11388,7 @@ class CParser {
     // LEXEME (TOKEN)
     // ZERO_NUMBER <- ZERO SPACING
     var $$;
-    _token = 32;  
+    _token = 33;  
     _tokenStart = _cursor;  
     // => ZERO SPACING # Choice
     switch (_ch == 48 ? 0 : _ch == -1 ? 2 : 1) {
@@ -10429,7 +11436,7 @@ class CParser {
     }
     if (!success && _cursor > _testing) {
       // Expected: ZERO_NUMBER
-      _failure(_expect43);
+      _failure(_expect44);
     }
     // <= ZERO SPACING # Choice
     _token = null;
@@ -10651,9 +11658,9 @@ class CParser {
       throw new RangeError('pos');
     }      
     _cursor = pos;
-    _cache = new List<Map<int, List>>(109);
-    _cachePos = new List<int>.filled(109, -1);  
-    _cacheable = new List<bool>.filled(109, false);
+    _cache = new List<Map<int, List>>(121);
+    _cachePos = new List<int>.filled(121, -1);  
+    _cacheable = new List<bool>.filled(121, false);
     _ch = -1;
     _errors = <CParserError>[];   
     _expected = <String>[];

@@ -287,10 +287,10 @@ void main() {
       list.add("__attribute__((A0)) enum __attribute__((A1)) { E } __attribute__((A2)) e __attribute__((A3));");
       list.add("__attribute__((A0)) enum __attribute__((A1)) ee { E } __attribute__((A2)) e __attribute__((A3));");
       list.add("__attribute__((A0)) TYPE __attribute__((A1)) i __attribute__((A2));");
-      list.add("__attribute__((A0)) int __attribute__((aligned(8), packed)) i __attribute__((foo(baz, 2)));");
+      list.add("__attribute__((A0)) int __attribute__((aligned(8), packed)) i __attribute__((foo(\"baz\", 2)));");
       list.add("__attribute__((A0)) typedef __attribute__((A1)) int __attribute__((A2)) * __attribute__((A3)) *INT __attribute__((A4));");
       list.add("__attribute__((A0)) typedef __attribute__((A1)) const int __attribute__((A3)) * __attribute__((A4)) *INT __attribute__((A5));");
-      list.add("char* strncpy(char* destination, const char* source, size_t num) __attribute__((alias(_sprintf_p)));");
+      list.add("char* strncpy(char* destination, const char* source, size_t num) __attribute__((alias(\"_sprintf_p\")));");
       var text = list.join("\n");
       var declarations = new Declarations(text);
       _checkPresentation(text, declarations);

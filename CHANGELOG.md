@@ -1,6 +1,11 @@
+## 0.0.32
+
+- Breaking changes. Attribute parameters can be only `integers` or `strings`  
+- Changes in `c.peg` grammar
+
 ## 0.0.30
 
-- Breaking changes. Several classes have been renamed and changed for extending the functionality 
+- Breaking changes. Several classes have been renamed and changed for extending the functionality
 - Changes in `c.peg` grammar
 
 ## 0.0.29

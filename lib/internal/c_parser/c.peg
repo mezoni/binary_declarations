@@ -34,6 +34,34 @@ PointerTypeSpecification _createPointerType(TypeSpecification type, List stars, 
   return type;
 }
 
+int _escape(String ch) {
+  switch(ch) {
+    case "a":
+      return 0x07;
+    case "b":
+      return 0x08;
+    case "f":
+      return 0x0c;
+    case "n":
+      return 0x0a;
+    case "r":
+      return 0x0d;
+    case "t":
+      return 0x09;
+    case "v":
+      return 0x0b;
+    case "\'":
+      return 0x27;
+    case "\"":
+      return 0x22;
+    case "\?":
+      return 0x3f;
+    default:
+      throw new StateError("Unknown escape sequence: \\$ch");  
+  }
+}
+
+
 int _parseInt(String sign, String digits, int radix) {
   if (sign == null) {
     sign = "";
@@ -79,7 +107,7 @@ AttributeParameterList <-
   AttributeParameter (COMMA AttributeParameter)* { $$ = _list($1, $2); }
 
 AttributeParameter <-
-  IDENT
+  STRING
   / NUMBER
 
 Type <-
@@ -91,20 +119,20 @@ PointerType <-
   TypeName ASTERISK+ Metadata? { $$ = _createPointerType($1, $2, $3); }
 
 TypeName <-
-  TypeQualifiers? IDENTIFIER Metadata? { $$ = new DefinedTypeSpecification(metadata: $3, name: $2, qualifiers: $1); }
-  / TypeQualifiers? SIGNEDNESS? (SHORT / LONG_TYPE) INT? Metadata? { $$ = new IntegerTypeSpecification(metadata: $5, name: _createInt([$2, $3, $4]), qualifiers: $1); }
-  / TypeQualifiers? SIGNEDNESS? (CHAR / INT / SHORT / LONG_TYPE) Metadata? { $$ = new IntegerTypeSpecification(metadata: $4, name: _createInt([$2, $3]), qualifiers: $1); }
-  / TypeQualifiers? SIGNEDNESS Metadata? { $$ = new IntegerTypeSpecification(metadata: $3, name: $2, qualifiers: $1); }
-  / TypeQualifiers? (FLOAT / DOUBLE) Metadata? { $$ = new FloatTypeSpecification(metadata: $3, name: $2, qualifiers: $1); }
-  / TypeQualifiers? VOID Metadata? { $$ = new VoidTypeSpecification(metadata: $3, qualifiers: $1); }
+  TYPE_QUALIFIERS? IDENTIFIER Metadata? { $$ = new DefinedTypeSpecification(metadata: $3, name: $2, qualifiers: $1); }
+  / TYPE_QUALIFIERS? SIGNEDNESS? (SHORT / LONG_TYPE) INT? Metadata? { $$ = new IntegerTypeSpecification(metadata: $5, name: _createInt([$2, $3, $4]), qualifiers: $1); }
+  / TYPE_QUALIFIERS? SIGNEDNESS? (CHAR / INT / SHORT / LONG_TYPE) Metadata? { $$ = new IntegerTypeSpecification(metadata: $4, name: _createInt([$2, $3]), qualifiers: $1); }
+  / TYPE_QUALIFIERS? SIGNEDNESS Metadata? { $$ = new IntegerTypeSpecification(metadata: $3, name: $2, qualifiers: $1); }
+  / TYPE_QUALIFIERS? (FLOAT / DOUBLE) Metadata? { $$ = new FloatTypeSpecification(metadata: $3, name: $2, qualifiers: $1); }
+  / TYPE_QUALIFIERS? VOID Metadata? { $$ = new VoidTypeSpecification(metadata: $3, qualifiers: $1); }
   / StructTypeName
   / EnumTypeName
 
 StructTypeName <-
-  TypeQualifiers? (STRUCT / UNION) Metadata? IDENTIFIER? { $$ = new TaggedTypeSpecification(kind: $2, metadata: $3, qualifiers: $1, tag: $4); }
+  TYPE_QUALIFIERS? (STRUCT / UNION) Metadata? IDENTIFIER? { $$ = new TaggedTypeSpecification(kind: $2, metadata: $3, qualifiers: $1, tag: $4); }
 
 EnumTypeName <-
-  TypeQualifiers? ENUM Metadata? IDENTIFIER? { $$ = new TaggedTypeSpecification(kind: $2, metadata: $3, qualifiers: $1, tag: $4); }
+  TYPE_QUALIFIERS? ENUM Metadata? IDENTIFIER? { $$ = new TaggedTypeSpecification(kind: $2, metadata: $3, qualifiers: $1, tag: $4); }
 
 ArrayType <-
   TypeName ArrayDimensions Metadata? { $$ = _createArray($1, $2, $3); }
@@ -209,7 +237,7 @@ ArrayTypeElementSynonym <-
   / SimpleTypeSynonymNoMetadata
 
 PointerTypeSynonymNoMetadata <-
-  TypeQualifiers? ASTERISK Metadata? TypeSynonymNoMetadata { $$ = new PointerTypeSpecification(metadata: $3, qualifiers: $1, type: $4); }
+  TYPE_QUALIFIERS? ASTERISK Metadata? TypeSynonymNoMetadata { $$ = new PointerTypeSpecification(metadata: $3, qualifiers: $1, type: $4); }
 
 TypeSynonymNoMetadata <-
   ArrayTypeSynonym
@@ -217,13 +245,13 @@ TypeSynonymNoMetadata <-
   / SimpleTypeSynonymNoMetadata
 
 SimpleTypeSynonymNoMetadata <-
-  TypeQualifiers? IDENTIFIER { $$ = new DefinedTypeSpecification(qualifiers: $1, name: $2); }
+  TYPE_QUALIFIERS? IDENTIFIER { $$ = new DefinedTypeSpecification(qualifiers: $1, name: $2); }
 
 PointerTypeSynonym <-
-  TypeQualifiers? ASTERISK Metadata? TypeSynonym { $$ = new PointerTypeSpecification(metadata: $3, qualifiers: $1, type: $4); }
+  TYPE_QUALIFIERS? ASTERISK Metadata? TypeSynonym { $$ = new PointerTypeSpecification(metadata: $3, qualifiers: $1, type: $4); }
 
 SimpleTypeSynonym <-
-  TypeQualifiers? IDENTIFIER Metadata? { $$ = new DefinedTypeSpecification(metadata: $3, qualifiers: $1, name: $2); }
+  TYPE_QUALIFIERS? IDENTIFIER Metadata? { $$ = new DefinedTypeSpecification(metadata: $3, qualifiers: $1, name: $2); }
 
 VariableDeclaration <-
   ArrayVariableDeclaration
@@ -326,14 +354,18 @@ SIGNEDNESS <-
   SIGNED
   / UNSIGNED
 
+STRING <-
+  '"' STRING_CHAR_SEQUENCE? '"' { $$ = $2 == null ? "" : new String.fromCharCodes($2); }
+  / 'L"' STRING_CHAR_SEQUENCE? '"' { $$ = $2 == null ? "" : new String.fromCharCodes($2); }
+
 STRUCT <-
   'struct' !IDENT_PART SPACING { $$ = $1; }
 
 TYPEDEF <-
   'typedef' SPACING { $$ = $1; }
 
-TypeQualifiers <-
-  TypeQualifier* { $$ = new TypeQualifierList($1); }
+TYPE_QUALIFIERS <-
+  TYPE_QUALIFIER* { $$ = new TypeQualifierList($1); }
 
 UNION <-
   'union' !IDENT_PART SPACING { $$ = $1; }
@@ -362,6 +394,25 @@ EOL <-
   '\r\n'
   / [\n\r]
 
+ESCAPE_SEQUENCE <-
+  SIMPLE_ESCAPE_SEQUENCE
+  / OCTAL_ESCAPE_SEQUENCE
+  / HEXADECIMAL_ESCAPE_SEQUENCE
+  / UNIVERSAL_CHARCTER_NAME
+
+HEXADECIMAL_DIGIT <-
+  [0-af]
+
+HEXADECIMAL_ESCAPE_SEQUENCE <-
+  '\\x' HEXADECIMAL_DIGIT HEXADECIMAL_ESCAPE_SEQUENCE1 { $$ = int.parse(_text(2), radix: 16); }
+
+HEXADECIMAL_ESCAPE_SEQUENCE1 <-
+  HEXADECIMAL_DIGIT HEXADECIMAL_ESCAPE_SEQUENCE1 { $$ = _text(); }
+  / ''
+
+HEX_QUAD <-
+  HEXADECIMAL_DIGIT HEXADECIMAL_DIGIT HEXADECIMAL_DIGIT HEXADECIMAL_DIGIT { $$ = _text(); }
+
 IDENT_CONT <-
   IDENT_START
   / [0-9]
@@ -382,6 +433,14 @@ LONG <-
 MINUS <-
   '-' SPACING { $$ = $1; }
 
+OCTAL_DIGIT <-
+  [0-7]
+
+OCTAL_ESCAPE_SEQUENCE <-
+  '\\' OCTAL_DIGIT OCTAL_DIGIT OCTAL_DIGIT { $$ = int.parse(_text(1), radix: 8); }
+  / '\\' OCTAL_DIGIT OCTAL_DIGIT { $$ = int.parse(_text(1), radix: 8); }
+  / '\\' OCTAL_DIGIT { $$ = int.parse($2, radix: 8); }
+
 OCTAL_NUMBER <-
   SIGN? [0] [0-9]+ { $$ = _parseInt($1, _flatten([$2, $3]).join(), 8); }
 
@@ -398,14 +457,28 @@ SIGN <-
 SIGNED <-
   'signed' !IDENT_PART SPACING { $$ = $1; }
 
+SIMPLE_ESCAPE_SEQUENCE <-
+  [\\] ["'?\\a-bfnrtv] { $$ = _escape($1); }
+
 SPACE <-
   [\t-\n\r ]
 
 SPACING <-
   (SPACE / COMMENT)*
 
-TypeQualifier <-
+STRING_CHAR <-
+  ![\n\r"\\] . { $$ = $2.codeUnitAt(0); }
+  / ESCAPE_SEQUENCE
+
+STRING_CHAR_SEQUENCE <-
+  STRING_CHAR+
+
+TYPE_QUALIFIER <-
   CONST
+
+UNIVERSAL_CHARCTER_NAME <-
+  '\\U' HEX_QUAD HEX_QUAD { $$ = int.parse(_text(2), radix: 16); }
+  / '\\u' HEX_QUAD { $$ = int.parse(_text(2), radix: 16); }
 
 UNSIGNED <-
   'unsigned' !IDENT_PART SPACING { $$ = $1; }
