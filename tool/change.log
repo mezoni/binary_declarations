@@ -40,3 +40,4 @@
 0.0.30 Breaking changes. Several classes have been renamed and changed for extending the functionality
 0.0.32 Changes in `c.peg` grammar
 0.0.32 Breaking changes. Attribute parameters can be only `integers` or `strings`  
+0.0.33 Added library `attribute_reader`

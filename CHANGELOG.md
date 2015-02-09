@@ -1,3 +1,7 @@
+## 0.0.33
+
+- Added library `attribute_reader`
+
 ## 0.0.32
 
 - Breaking changes. Attribute parameters can be only `integers` or `strings`  
