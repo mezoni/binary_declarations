@@ -81,10 +81,10 @@ DeclarationList <-
 
 Declaration <-
   FunctionDeclartion SEMICOLON+ { $$ = $1; }
+  / StructDeclaration SEMICOLON+ { $$ = $1; }
+  / EnumDeclaration SEMICOLON+ { $$ = $1; }  
   / TypedefDeclaration SEMICOLON+ { $$ = $1; }
   / VariableDeclaration SEMICOLON+ { $$ = $1; }
-  / StructDeclaration SEMICOLON+ { $$ = $1; }
-  / EnumDeclaration SEMICOLON+ { $$ = $1; }
   / SEMICOLON+ { $$ = new EmptyDeclaration(); }
 
 FunctionDeclartion <-
@@ -130,6 +130,9 @@ TypeName <-
 
 StructTypeName <-
   TYPE_QUALIFIERS? (STRUCT / UNION) Metadata? IDENTIFIER? { $$ = new TaggedTypeSpecification(kind: $2, metadata: $3, qualifiers: $1, tag: $4); }
+
+StructTypeNameWithTag <-
+  TYPE_QUALIFIERS? (STRUCT / UNION) Metadata? IDENTIFIER { $$ = new TaggedTypeSpecification(kind: $2, metadata: $3, qualifiers: $1, tag: $4); }
 
 EnumTypeName <-
   TYPE_QUALIFIERS? ENUM Metadata? IDENTIFIER? { $$ = new TaggedTypeSpecification(kind: $2, metadata: $3, qualifiers: $1, tag: $4); }
@@ -187,10 +190,10 @@ TypedefType <-
   / TypeName
 
 StructType <-
-  StructTypeName OPEN_BRACE StructMemberList? CLOSE_BRACE Metadata? { $$ = new StructureTypeSpecification(metadata: $5, taggedType: $1, members: $3); }
+  StructTypeName StructMemberList Metadata? { $$ = new StructureTypeSpecification(metadata: $3, taggedType: $1, members: $2); }
 
 StructMemberList <-
-  (StructMember)*
+  OPEN_BRACE StructMember* CLOSE_BRACE { $$ = $2; }
 
 StructMember <-
   BitFieldParameter SEMICOLON { $$ = $1; }
@@ -207,9 +210,10 @@ TaggedTypeParameter <-
 
 StructDeclaration <-
   Metadata? StructType { $$ = new StructureDeclaration(metadata: $1, type: $2); }
+  / Metadata? StructTypeNameWithTag { $$ = new StructureDeclaration(metadata: $1, type: new StructureTypeSpecification(taggedType: $2)); }
 
 EnumDeclaration <-
-  Metadata? EnumType { $$ = new EnumDeclaration(metadata: $1, type: $2); }
+  Metadata? EnumType { $$ = new EnumDeclaration(metadata: $1, type: $2); }  
 
 EnumType <-
   EnumTypeName OPEN_BRACE EnumValueList CLOSE_BRACE Metadata? { $$ = new EnumTypeSpecification(metadata: $5, taggedType: $1, values: $3); }

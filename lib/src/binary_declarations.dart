@@ -41,7 +41,7 @@ class ArrayTypeSpecification extends TypeSpecification {
 
   final TypeSpecification type;
 
-  ArrayTypeSpecification({this.dimensions, Metadata metadata, this.type}) {
+  ArrayTypeSpecification({this.dimensions, Metadata metadata, this.type}) : super(metadata: metadata) {
     if (dimensions == null) {
       throw new ArgumentError.notNull("dimensions");
     }
@@ -60,6 +60,11 @@ class ArrayTypeSpecification extends TypeSpecification {
     var sb = new StringBuffer();
     sb.write(type);
     sb.write(dimensions);
+    if (metadata != null) {
+      sb.write(" ");
+      sb.write(metadata);
+    }
+
     return sb.toString();
   }
 
@@ -73,6 +78,11 @@ class ArrayTypeSpecification extends TypeSpecification {
     }
 
     sb.write(dimensions);
+    if (metadata != null) {
+      sb.write(" ");
+      sb.write(metadata);
+    }
+
     return sb.toString();
   }
 }
@@ -552,6 +562,11 @@ class PointerTypeSpecification extends TypeSpecification {
       sb.write("*");
     }
 
+    if (metadata != null) {
+      sb.write(" ");
+      sb.write(metadata);
+    }
+
     return sb.toString();
   }
 }
@@ -580,6 +595,8 @@ class StructureDeclaration extends Declaration {
 class StructureTypeSpecification extends TypeSpecification {
   final TaggedTypeSpecification taggedType;
 
+  bool _hasBraces;
+
   List<ParameterDeclaration> _members;
 
   StructureTypeSpecification({Metadata metadata, List<ParameterDeclaration> members, this.taggedType}) : super(metadata: metadata) {
@@ -595,6 +612,7 @@ class StructureTypeSpecification extends TypeSpecification {
         throw new ArgumentError.value(taggedType, "taggedType");
     }
 
+    _hasBraces = members != null;
     _members = new _ListCloner<ParameterDeclaration>(members, "members").list;
   }
 
@@ -607,7 +625,10 @@ class StructureTypeSpecification extends TypeSpecification {
   String toString() {
     var sb = new StringBuffer();
     sb.write(taggedType);
-    sb.write(" { ");
+    if (_hasBraces) {
+      sb.write(" { ");
+    }
+
     if (!members.isEmpty) {
       for (var member in members) {
         sb.write(member);
@@ -615,7 +636,10 @@ class StructureTypeSpecification extends TypeSpecification {
       }
     }
 
-    sb.write("}");
+    if (_hasBraces) {
+      sb.write("}");
+    }
+
     if (metadata != null) {
       sb.write(" ");
       sb.write(metadata);

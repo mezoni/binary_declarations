@@ -38,6 +38,7 @@ void main() {
       var baseList = <String>[];
       for (var kind in kinds) {
         baseList.add("$kind { }");
+        baseList.add("$kind s");
         baseList.add("$kind s { }");
         baseList.add("$kind s { int i; }");
         baseList.add("$kind s { int i; int* ip; }");

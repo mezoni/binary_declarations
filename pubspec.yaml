@@ -1,5 +1,5 @@
 name: binary_declarations
-version: 0.0.33
+version: 0.0.34
 author: Andrew Mezoni <andrew.mezoni@gmail.com>
 description: Binary declarations is a set of classes for parsing declarations of the binary types specified in textual form.
 homepage: https://github.com/mezoni/binary_declarations
