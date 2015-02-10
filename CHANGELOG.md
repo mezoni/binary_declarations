@@ -1,3 +1,8 @@
+## 0.0.35
+
+- Added support of the `typedef` the function types
+- Changes in `c.peg` grammar
+
 ## 0.0.33
 
 - Added library `attribute_reader`

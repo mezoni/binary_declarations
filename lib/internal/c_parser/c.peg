@@ -80,15 +80,15 @@ DeclarationList <-
   Declaration*
 
 Declaration <-
-  FunctionDeclartion SEMICOLON+ { $$ = $1; }
+  FunctionDeclaration SEMICOLON+ { $$ = $1; }
   / StructDeclaration SEMICOLON+ { $$ = $1; }
-  / EnumDeclaration SEMICOLON+ { $$ = $1; }  
+  / EnumDeclaration SEMICOLON+ { $$ = $1; }
   / TypedefDeclaration SEMICOLON+ { $$ = $1; }
   / VariableDeclaration SEMICOLON+ { $$ = $1; }
   / SEMICOLON+ { $$ = new EmptyDeclaration(); }
 
-FunctionDeclartion <-
-  Metadata? Type Identifier FunctionParameters { $$ = new FunctionDeclaration(metadata: $1, identifier: $3, parameters: $4, returnType: $2); }
+FunctionDeclaration <-
+  Metadata? FunctionType { $$ = new FunctionDeclaration(metadata: $1, type: $2); }
 
 Metadata <-
   AttributeSpecifier+ { $$ = new Metadata($1); }
@@ -110,6 +110,9 @@ AttributeParameter <-
   STRING
   / NUMBER
 
+FunctionType <-
+  Type? Identifier FunctionParameters Metadata? { $$ = new FunctionTypeSpecification(metadata: $4, identifier: $2, parameters: $3, returnType: $1); }
+
 Type <-
   PointerType
   / ArrayType
@@ -130,9 +133,6 @@ TypeName <-
 
 StructTypeName <-
   TYPE_QUALIFIERS? (STRUCT / UNION) Metadata? IDENTIFIER? { $$ = new TaggedTypeSpecification(kind: $2, metadata: $3, qualifiers: $1, tag: $4); }
-
-StructTypeNameWithTag <-
-  TYPE_QUALIFIERS? (STRUCT / UNION) Metadata? IDENTIFIER { $$ = new TaggedTypeSpecification(kind: $2, metadata: $3, qualifiers: $1, tag: $4); }
 
 EnumTypeName <-
   TYPE_QUALIFIERS? ENUM Metadata? IDENTIFIER? { $$ = new TaggedTypeSpecification(kind: $2, metadata: $3, qualifiers: $1, tag: $4); }
@@ -178,16 +178,9 @@ IdentifierMD <-
 SimpleParameter <-
   Metadata? Type IdentifierMD? { $$ = new ParameterDeclaration(identifier: $3, metadata: $1, type: $2); }
 
-TypedefDeclaration <-
-  Metadata? TypedefSpecifier TypedefType TypeSynonymList { $$ = new TypedefDeclaration(metadata: $1, synonyms: $4, typedef: $2, type: $3); }
-
-TypedefSpecifier <-
-  TYPEDEF Metadata? { $$ = new TypedefSpecifier(metadata: $2); }
-
-TypedefType <-
-  StructType
-  / EnumType
-  / TypeName
+StructDeclaration <-
+  Metadata? StructType { $$ = new StructureDeclaration(metadata: $1, type: $2); }
+  / Metadata? StructTypeNameWithTag { $$ = new StructureDeclaration(metadata: $1, type: new StructureTypeSpecification(taggedType: $2)); }
 
 StructType <-
   StructTypeName StructMemberList Metadata? { $$ = new StructureTypeSpecification(metadata: $3, taggedType: $1, members: $2); }
@@ -206,14 +199,10 @@ BitFieldParameter <-
   Metadata? Type Identifier? COLON POSITIVE_NUMBER { $$ = new ParameterDeclaration(identifier: $3, metadata: $1, type: $2, width: $5); }
 
 TaggedTypeParameter <-
-  Metadata? (StructDeclaration / EnumDeclaration) IdentifierMD { $$ = new ParameterDeclaration(identifier: $3, metadata: $1, type: $2.type); }
-
-StructDeclaration <-
-  Metadata? StructType { $$ = new StructureDeclaration(metadata: $1, type: $2); }
-  / Metadata? StructTypeNameWithTag { $$ = new StructureDeclaration(metadata: $1, type: new StructureTypeSpecification(taggedType: $2)); }
+  Metadata? (StructDeclaration / EnumDeclaration) IdentifierMD? { $$ = new ParameterDeclaration(identifier: $3, metadata: $1, type: $2.type); }
 
 EnumDeclaration <-
-  Metadata? EnumType { $$ = new EnumDeclaration(metadata: $1, type: $2); }  
+  Metadata? EnumType { $$ = new EnumDeclaration(metadata: $1, type: $2); }
 
 EnumType <-
   EnumTypeName OPEN_BRACE EnumValueList CLOSE_BRACE Metadata? { $$ = new EnumTypeSpecification(metadata: $5, taggedType: $1, values: $3); }
@@ -225,13 +214,39 @@ EnumValue <-
   IDENTIFIER ASSIGN NUMBER { $$ = new EnumValueDeclaration(name: $1, value: $3); }
   / IDENTIFIER { $$ = new EnumValueDeclaration(name: $1); }
 
+StructTypeNameWithTag <-
+  TYPE_QUALIFIERS? (STRUCT / UNION) Metadata? IDENTIFIER { $$ = new TaggedTypeSpecification(kind: $2, metadata: $3, qualifiers: $1, tag: $4); }
+
+TypedefDeclaration <-
+  Metadata? TypedefSpecifier TypedefType TypeSynonymList { $$ = new TypedefDeclaration(metadata: $1, synonyms: $4, type: $3, typedef: $2); }
+
+TypedefSpecifier <-
+  TYPEDEF Metadata? { $$ = new TypedefSpecifier(metadata: $2); }
+
+TypedefType <-
+  StructType
+  / EnumType
+  / TypeName
+
 TypeSynonymList <-
   TypeSynonym (COMMA TypeSynonym)* { $$ = _list($1, $2); }
 
 TypeSynonym <-
-  ArrayTypeSynonym
+  FunctionTypeNoReturn
+  / FunctionTypeSynonym
+  / FunctionPointerTypeSynonym
+  / ArrayTypeSynonym
   / PointerTypeSynonym
   / SimpleTypeSynonym
+
+FunctionTypeNoReturn <-
+  Identifier FunctionParameters Metadata? { $$ = new FunctionTypeSpecification(metadata: $3, identifier: $1, parameters: $2); }
+
+FunctionTypeSynonym <-
+  TYPE_QUALIFIERS? OPEN_PAREN Identifier CLOSE_PAREN FunctionParameters Metadata? { $$ = new FunctionTypeSpecification(metadata: $6, identifier: $3, parameters: $5); }
+
+FunctionPointerTypeSynonym <-
+  TYPE_QUALIFIERS? OPEN_PAREN ASTERISK+ Metadata? Identifier CLOSE_PAREN FunctionParameters Metadata? { $$ = _createPointerType(new FunctionTypeSpecification(metadata: $8, identifier: $5, parameters: $7), $3, $4); }
 
 ArrayTypeSynonym <-
   ArrayTypeElementSynonym ArrayDimensions Metadata? { $$ = new ArrayTypeSpecification(dimensions: $2, metadata: $3, type: $1); }

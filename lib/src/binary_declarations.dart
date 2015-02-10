@@ -332,6 +332,27 @@ class FloatTypeSpecification extends TypeSpecification {
   }
 }
 
+class FunctionDeclaration extends Declaration {
+  final FunctionTypeSpecification type;
+
+  FunctionDeclaration({Metadata metadata, this.type}) : super(metadata: metadata) {
+    if (type == null) {
+      throw new ArgumentError.notNull("type");
+    }
+  }
+
+  String toString() {
+    var sb = new StringBuffer();
+    if (metadata != null) {
+      sb.write(metadata);
+      sb.write(" ");
+    }
+
+    sb.write(type);
+    return sb.toString();
+  }
+}
+
 class FunctionParameters {
   final Metadata metadata;
 
@@ -383,14 +404,14 @@ class FunctionParameters {
   }
 }
 
-class FunctionDeclaration extends Declaration {
+class FunctionTypeSpecification extends TypeSpecification {
   final Identifier identifier;
 
   final TypeSpecification returnType;
 
   final FunctionParameters parameters;
 
-  FunctionDeclaration({Metadata metadata, this.identifier, this.parameters, this.returnType}) : super(metadata: metadata) {
+  FunctionTypeSpecification({this.identifier, Metadata metadata, this.parameters, this.returnType}) : super(metadata: metadata) {
     if (identifier == null) {
       throw new ArgumentError.notNull("identifier");
     }
@@ -398,19 +419,14 @@ class FunctionDeclaration extends Declaration {
     if (parameters == null) {
       throw new ArgumentError.notNull("parameters");
     }
-
-    if (returnType == null) {
-      throw new ArgumentError.notNull("returnType");
-    }
   }
+
+  String get name => identifier.name;
+
+  TypeSpecificationKind get typeKind => TypeSpecificationKind.FUNCTION;
 
   String toString() {
     var sb = new StringBuffer();
-    if (metadata != null) {
-      sb.write(metadata);
-      sb.write(" ");
-    }
-
     if (returnType != null) {
       sb.write(returnType);
       sb.write(" ");
@@ -418,6 +434,11 @@ class FunctionDeclaration extends Declaration {
 
     sb.write(identifier);
     sb.write(parameters);
+    if (metadata != null) {
+      sb.write(metadata);
+      sb.write(" ");
+    }
+
     return sb.toString();
   }
 }
@@ -777,6 +798,8 @@ class TypeSpecificationKind {
 
   static const TypeSpecificationKind FLOAT = const TypeSpecificationKind("FLOAT");
 
+  static const TypeSpecificationKind FUNCTION = const TypeSpecificationKind("FUNCTION");
+
   static const TypeSpecificationKind INTEGER = const TypeSpecificationKind("INTEGER");
 
   static const TypeSpecificationKind POINTER = const TypeSpecificationKind("POINTER");
@@ -819,7 +842,7 @@ class TypedefDeclaration extends Declaration {
     _synonyms = new _ListCloner<TypeSpecification>(synonyms, "synonyms").list;
 
     for (var synonym in _synonyms) {
-      if (!(synonym is ArrayTypeSpecification || synonym is DefinedTypeSpecification || synonym is PointerTypeSpecification)) {
+      if (!(synonym is ArrayTypeSpecification || synonym is DefinedTypeSpecification || synonym is FunctionTypeSpecification || synonym is PointerTypeSpecification)) {
         throw new ArgumentError("The list of synonyms contains invalid elements");
       }
     }
@@ -843,30 +866,37 @@ class TypedefDeclaration extends Declaration {
   }
 
   String _synonymToString(TypeSpecification synonym) {
-    if (synonym is DefinedTypeSpecification) {
-      var sb = new StringBuffer();
-      sb.write(synonym);
-      return sb.toString();
-    } else if (synonym is PointerTypeSpecification) {
-      var sb = new StringBuffer();
-      sb.write(_Utils.qualifiersToString(synonym.qualifiers));
-      sb.write("*");
-      var metatada = synonym.metadata;
-      if (metatada != null) {
-        sb.write(" ");
-        sb.write(metatada);
-        sb.write(" ");
-      }
+    switch (synonym.typeKind) {
+      case TypeSpecificationKind.DEFINED:
+        var sb = new StringBuffer();
+        sb.write(synonym);
+        return sb.toString();
+      case TypeSpecificationKind.POINTER:
+        var pointerType = synonym as PointerTypeSpecification;
+        var sb = new StringBuffer();
+        sb.write(_Utils.qualifiersToString(pointerType.qualifiers));
+        sb.write("*");
+        var metatada = pointerType.metadata;
+        if (metatada != null) {
+          sb.write(" ");
+          sb.write(metatada);
+          sb.write(" ");
+        }
 
-      sb.write(_synonymToString(synonym.type));
-      return sb.toString();
-    } else if (synonym is ArrayTypeSpecification) {
-      var sb = new StringBuffer();
-      sb.write(_synonymToString(synonym.type));
-      sb.write(synonym.dimensions);
-      return sb.toString();
-    } else {
-      return "<invalid>";
+        sb.write(_synonymToString(pointerType.type));
+        return sb.toString();
+      case TypeSpecificationKind.ARRAY:
+        var arrayType = synonym as ArrayTypeSpecification;
+        var sb = new StringBuffer();
+        sb.write(_synonymToString(arrayType.type));
+        sb.write(arrayType.dimensions);
+        return sb.toString();
+      case TypeSpecificationKind.FUNCTION:
+        var sb = new StringBuffer();
+        sb.write(synonym);
+        return sb.toString();
+      default:
+        return "<invalid>";
     }
   }
 }

@@ -40,6 +40,7 @@ void main() {
         baseList.add("$kind { }");
         baseList.add("$kind s");
         baseList.add("$kind s { }");
+        baseList.add("$kind s { struct ss { int i; }; }");
         baseList.add("$kind s { int i; }");
         baseList.add("$kind s { int i; int* ip; }");
         baseList.add("$kind s { int i; int* ip; int ia[]; }");
@@ -252,9 +253,18 @@ void main() {
     test("Typedefs.", () {
       var list = <String>[];
       list.add("typedef int INT, *PINT, **PPINT, AINTZ[], AINT10[10], *PAINT10_20[10][20];");
+      list.add("typedef int FOO(int, char*), BAZ();");
       var text = list.join("\n");
       var declarations = new Declarations(text);
       _checkPresentation(text, declarations);
+
+      text = "typedef int (FOO)(int, char*);";
+      declarations = new Declarations(text);
+      _checkPresentation("typedef int FOO(int, char*);", declarations);
+
+      text = "typedef int (**FOO)(int, char*);";
+      declarations = new Declarations(text);
+      _checkPresentation("typedef int **FOO(int, char*);", declarations);
     });
 
     test("Type qualifiers.", () {
