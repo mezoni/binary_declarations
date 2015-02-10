@@ -218,6 +218,45 @@ class DefinedTypeSpecification extends TypeSpecification {
   }
 }
 
+class ElaboratedTypeSpecifier {
+  final String kind;
+
+  final Metadata metadata;
+
+  final Identifier tag;
+
+  ElaboratedTypeSpecifier({this.kind, this.metadata, this.tag}) {
+    if (kind == null) {
+      throw new ArgumentError.notNull("kind");
+    }
+
+    switch (kind) {
+      case "enum":
+      case "struct":
+      case "union":
+        break;
+      default:
+        throw new ArgumentError.value(kind, "kind");
+    }
+  }
+
+  String toString() {
+    var sb = new StringBuffer();
+    sb.write(kind);
+    if (metadata != null) {
+      sb.write(" ");
+      sb.write(metadata);
+    }
+
+    if (tag != null) {
+      sb.write(" ");
+      sb.write(tag);
+    }
+
+    return sb.toString();
+  }
+}
+
 class EmptyDeclaration extends Declaration {
   String toString() => ";";
 }
@@ -244,27 +283,23 @@ class EnumDeclaration extends Declaration {
 }
 
 class EnumTypeSpecification extends TypeSpecification {
-  final TaggedTypeSpecification taggedType;
+  final ElaboratedTypeSpecifier elaboratedType;
 
   List<EnumValueDeclaration> _values;
 
-  EnumTypeSpecification({Metadata metadata, this.taggedType, List<EnumValueDeclaration> values}) : super(metadata: metadata) {
-    if (taggedType == null) {
-      throw new ArgumentError.notNull("taggedType");
+  EnumTypeSpecification({this.elaboratedType, Metadata metadata, List<EnumValueDeclaration> values}) : super(metadata: metadata) {
+    if (elaboratedType == null) {
+      throw new ArgumentError.notNull("elaboratedType");
     }
 
-    if (taggedType.tagKind != TaggedTypeKinds.ENUM) {
-      throw new ArgumentError.value(taggedType, "taggedType");
-    }
-
-    if (values == null) {
-      throw new ArgumentError.notNull("values");
+    if (elaboratedType.kind != "enum") {
+      throw new ArgumentError.value(elaboratedType, "elaboratedType");
     }
 
     _values = new _ListCloner<EnumValueDeclaration>(values, "values").list;
   }
 
-  String get name => taggedType.name;
+  String get name => elaboratedType.kind;
 
   TypeSpecificationKind get typeKind => TypeSpecificationKind.ENUM;
 
@@ -272,10 +307,13 @@ class EnumTypeSpecification extends TypeSpecification {
 
   String toString() {
     var sb = new StringBuffer();
-    sb.write(taggedType);
-    sb.write(" { ");
-    sb.write(values.join(", "));
-    sb.write(" }");
+    sb.write(elaboratedType);
+    if (!values.isEmpty) {
+      sb.write(" { ");
+      sb.write(values.join(", "));
+      sb.write(" }");
+    }
+
     if (metadata != null) {
       sb.write(" ");
       sb.write(metadata);
@@ -614,50 +652,42 @@ class StructureDeclaration extends Declaration {
 }
 
 class StructureTypeSpecification extends TypeSpecification {
-  final TaggedTypeSpecification taggedType;
-
-  bool _hasBraces;
+  final ElaboratedTypeSpecifier elaboratedType;
 
   List<ParameterDeclaration> _members;
 
-  StructureTypeSpecification({Metadata metadata, List<ParameterDeclaration> members, this.taggedType}) : super(metadata: metadata) {
-    if (taggedType == null) {
-      throw new ArgumentError.notNull("taggedType");
+  StructureTypeSpecification({this.elaboratedType, Metadata metadata, List<ParameterDeclaration> members}) : super(metadata: metadata) {
+    if (elaboratedType == null) {
+      throw new ArgumentError.notNull("elaboratedType");
     }
 
-    switch (taggedType.tagKind) {
-      case TaggedTypeKinds.STRUCT:
-      case TaggedTypeKinds.UNION:
+    switch (elaboratedType.kind) {
+      case "struct":
+      case "union":
         break;
       default:
-        throw new ArgumentError.value(taggedType, "taggedType");
+        throw new ArgumentError.value(elaboratedType, "elaboratedType");
     }
 
-    _hasBraces = members != null;
     _members = new _ListCloner<ParameterDeclaration>(members, "members").list;
   }
 
   List<ParameterDeclaration> get members => _members;
 
-  String get name => taggedType.name;
+  String get name => elaboratedType.toString();
 
   TypeSpecificationKind get typeKind => TypeSpecificationKind.STRUCTURE;
 
   String toString() {
     var sb = new StringBuffer();
-    sb.write(taggedType);
-    if (_hasBraces) {
-      sb.write(" { ");
-    }
-
+    sb.write(elaboratedType);
     if (!members.isEmpty) {
+      sb.write(" { ");
       for (var member in members) {
         sb.write(member);
         sb.write("; ");
       }
-    }
 
-    if (_hasBraces) {
       sb.write("}");
     }
 
@@ -682,66 +712,6 @@ class TaggedTypeKinds {
   const TaggedTypeKinds(this.name);
 
   String toString() => name;
-}
-
-class TaggedTypeSpecification extends TypeSpecification {
-  final String tag;
-
-  TaggedTypeKinds _kind;
-
-  String _name;
-
-  TaggedTypeSpecification({Metadata metadata, String kind, TypeQualifierList qualifiers, this.tag}) : super(metadata: metadata, qualifiers: qualifiers) {
-    if (kind == null) {
-      throw new ArgumentError.notNull("kind");
-    }
-
-    switch (kind) {
-      case "enum":
-        _kind = TaggedTypeKinds.ENUM;
-        break;
-      case "struct":
-        _kind = TaggedTypeKinds.STRUCT;
-        break;
-      case "union":
-        _kind = TaggedTypeKinds.UNION;
-        break;
-      default:
-        throw new ArgumentError.value(kind, "kind");
-    }
-
-    var sb = new StringBuffer();
-    sb.write(_kind);
-    if (tag != null) {
-      sb.write(" ");
-      sb.write(tag);
-    }
-
-    _name = sb.toString();
-  }
-
-  String get name => _name;
-
-  TaggedTypeKinds get tagKind => _kind;
-
-  TypeSpecificationKind get typeKind => TypeSpecificationKind.TAGGED;
-
-  String toString() {
-    var sb = new StringBuffer();
-    sb.write(_Utils.qualifiersToString(qualifiers));
-    sb.write(tagKind);
-    if (metadata != null) {
-      sb.write(" ");
-      sb.write(metadata);
-    }
-
-    if (tag != null) {
-      sb.write(" ");
-      sb.write(tag);
-    }
-
-    return sb.toString();
-  }
 }
 
 class TypeQualifierList {
@@ -805,8 +775,6 @@ class TypeSpecificationKind {
   static const TypeSpecificationKind POINTER = const TypeSpecificationKind("POINTER");
 
   static const TypeSpecificationKind STRUCTURE = const TypeSpecificationKind("STRUCTURE");
-
-  static const TypeSpecificationKind TAGGED = const TypeSpecificationKind("TAGGED");
 
   static const TypeSpecificationKind VA_LIST = const TypeSpecificationKind("VA_LIST");
 

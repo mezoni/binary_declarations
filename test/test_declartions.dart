@@ -11,6 +11,7 @@ void main() {
         list.add("void foo();");
         list.add("short foo(int);");
         list.add("struct Foo foo(int, int*);");
+        list.add("struct { int i : 8; } foo(enum e { A } e, int*);");
         list.add("void** foo(int, int*);");
         list.add("enum Color* foo(int, int*, int[]);");
         list.add("unsigned long long int foo(int, int*, int[], struct s);");
@@ -37,17 +38,15 @@ void main() {
       var kinds = <String>["struct", "union"];
       var baseList = <String>[];
       for (var kind in kinds) {
-        baseList.add("$kind { }");
         baseList.add("$kind s");
-        baseList.add("$kind s { }");
         baseList.add("$kind s { struct ss { int i; }; }");
         baseList.add("$kind s { int i; }");
         baseList.add("$kind s { int i; int* ip; }");
         baseList.add("$kind s { int i; int* ip; int ia[]; }");
         baseList.add("$kind s { int i; int* ip; int ia[10]; }");
         baseList.add("$kind s { int i; int* ip; int ia[10]; }");
-        baseList.add("$kind s { int i; $kind { } s; }");
-        baseList.add("$kind s { int i; $kind s { } s; }");
+        baseList.add("$kind s { int i; $kind s; }");
+        baseList.add("$kind s { int i; $kind s s; }");
         baseList.add("$kind s { int i; $kind s { int i; } s; }");
         baseList.add("$kind s { int i; int a : 1; }");
         baseList.add("$kind s { int i; int : 0; }");
