@@ -385,7 +385,7 @@ class ElaboratedTypeSpecifier {
     if (tag == null) {
       _name = kind;
     } else {
-      _name = "kind $tag";
+      _name = "$kind $tag";
     }
   }
 
