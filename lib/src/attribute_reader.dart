@@ -100,7 +100,7 @@ class AttributeReader {
       _wrongNumberOfArguments(name);
     }
 
-    if (maxLength != null && length > minLength) {
+    if (maxLength != null && length > maxLength) {
       _wrongNumberOfArguments(name);
     }
   }

@@ -99,6 +99,7 @@ void main() {
 
     group("Enums.", () {
       var baseList = <String>[];
+      baseList.add("enum e");
       baseList.add("enum { A }");
       baseList.add("enum e { A }");
       baseList.add("enum e { A }");
