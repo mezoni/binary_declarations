@@ -4277,7 +4277,7 @@ class CParser {
               // TypeQualifiers?
               final $6 = seq[5];
               final $start = startPos0;
-              $$ = new EnumTypeSpecification(metadata: $5, elaboratedType: $1, qualifiers: $6, values: $3);
+              $$ = new EnumTypeSpecification(metadata: $5, elaboratedType: $1, qualifiers: $6, enumerators: $3);
             }
             break;
           }

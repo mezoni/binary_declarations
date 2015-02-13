@@ -266,8 +266,6 @@ class Declarator {
     }
   }
 
-  bool get isPointers => pointers != null;
-
   bool get isArray => dimensions != null;
 
   bool get isBitField => width != null;
@@ -275,6 +273,8 @@ class Declarator {
   bool get isFunction => parameters != null;
 
   bool get isFunctionPointer => functionPointers != null;
+
+  bool get isPointers => pointers != null;
 
   String toString() {
     var sb = new StringBuffer();
@@ -441,9 +441,9 @@ class EnumDeclaration extends Declaration {
 class EnumTypeSpecification extends TypeSpecification {
   final ElaboratedTypeSpecifier elaboratedType;
 
-  List<Enumerator> _values;
+  List<Enumerator> _enumerators;
 
-  EnumTypeSpecification({this.elaboratedType, DeclarationSpecifiers metadata, TypeQualifiers qualifiers, List<Enumerator> values}) : super(metadata: metadata, qualifiers: qualifiers) {
+  EnumTypeSpecification({this.elaboratedType, List<Enumerator> enumerators, DeclarationSpecifiers metadata, TypeQualifiers qualifiers}) : super(metadata: metadata, qualifiers: qualifiers) {
     if (elaboratedType == null) {
       throw new ArgumentError.notNull("elaboratedType");
     }
@@ -452,21 +452,21 @@ class EnumTypeSpecification extends TypeSpecification {
       throw new ArgumentError.value(elaboratedType, "elaboratedType");
     }
 
-    _values = new _ListCloner<Enumerator>(values, "values").list;
+    _enumerators = new _ListCloner<Enumerator>(enumerators, "values").list;
   }
+
+  List<Enumerator> get enumerators => _enumerators;
 
   String get name => elaboratedType.name;
 
   TypeSpecificationKind get typeKind => TypeSpecificationKind.ENUM;
 
-  List<Enumerator> get values => _values;
-
   String toString() {
     var sb = new StringBuffer();
     sb.write(elaboratedType);
-    if (!values.isEmpty) {
+    if (!enumerators.isEmpty) {
       sb.write(" { ");
-      sb.write(values.join(", "));
+      sb.write(enumerators.join(", "));
       sb.write(" }");
     }
 
