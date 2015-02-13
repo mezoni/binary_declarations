@@ -1,3 +1,9 @@
+## 0.0.37
+
+- Breaking changes. Significant changes of several classes
+- Declarations are now based on the declarator. The declarator is the main concept of C-like declarations
+- Significant changes in `c.peg` grammar. 
+
 ## 0.0.36
 
 - Breaking changes. Several classes have been changed and renamed

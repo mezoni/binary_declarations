@@ -1,126 +1,149 @@
 part of binary_declarations.attribute_reader;
 
 class AttributeReader {
-  Map<String, List<List<dynamic>>> _attributes;
+  Map<String, List<List<dynamic>>> _arguments;
 
-  AttributeReader(List<Metadata> metadataList) {
-    if (metadataList == null) {
-      throw new ArgumentError.notNull("metadataList");
+  AttributeReader(List<DeclarationSpecifiers> specifiers) {
+    if (specifiers == null) {
+      throw new ArgumentError.notNull("specifiers");
     }
 
-    _attributes = _joinMetadata(metadataList);
+    _arguments = _joinArguments(specifiers);
   }
 
-  String get alias {
-    var values = getFirstValues("alias");
-    if (values == null) {
-      return null;
-    }
-
-    if (values.isEmpty) {
-      wrongNumberOfArguments("alias");
-    }
-
-    var parameter = values.first;
-    if (parameter is! String) {
-      wrongArgumentType("alias", "string");
-    }
-
-    return parameter;
-  }
-
-  int get aligned {
-    var values = getLastValues("aligned");
-    if (values == null) {
-      return null;
-    }
-
-    if (values.isEmpty) {
-      return 16;
-    }
-
-    if (values.length != 1) {
-      wrongNumberOfArguments("aligned");
-    }
-
-    var parameter = values.first;
-    if (parameter is! int) {
-      wrongArgumentType("aligned", "integer");
-    }
-
-    return parameter;
-  }
-
-  bool get packed {
-    var values = getLastValues("packed");
-    if (values == null) {
+  bool defined(String name, {int maxLength: 0, int minLength: 0}) {
+    var arguments = getArguments(name, fromEnd: true);
+    if (arguments == null) {
       return false;
     }
 
-    if (!values.isEmpty) {
-      wrongNumberOfArguments("packed");
-    }
-
+    _checkNumberOfArguments(name, arguments.length, maxLength, minLength);
     return true;
   }
 
-  List<String> getFirstValues(String name) {
-    var values = _attributes[name];
-    if (values == null) {
+  dynamic getArgument(String name, int index, dynamic value, {bool fromEnd: true, int maxLength, int minLength}) {
+    if (name == null) {
+      throw new ArgumentError.notNull("name");
+    }
+
+    if (index == null) {
+      throw new ArgumentError.notNull("index");
+    }
+
+    if (index < 0) {
+      throw new ArgumentError.value(index, "index");
+    }
+
+    if (fromEnd == null) {
+      throw new ArgumentError.value(fromEnd, "last");
+    }
+
+    var arguments = getArguments(name, fromEnd: fromEnd);
+    if (arguments == null) {
       return null;
     }
 
-    return values.first;
+    var length = arguments.length;
+    _checkNumberOfArguments(name, length, maxLength, minLength);
+    if (length == null) {
+      return value;
+    }
+
+    if (index > length - 1) {
+      _wrongNumberOfArguments(name);
+    }
+
+    return arguments[index];
   }
 
-  List<String> getLastValues(String name) {
-    var values = _attributes[name];
-    if (values == null) {
+  List<dynamic> getArguments(String name, {bool fromEnd: true}) {
+    if (name == null) {
+      throw new ArgumentError.notNull("name");
+    }
+
+    if (fromEnd == null) {
+      throw new ArgumentError.notNull("first");
+    }
+
+    var arguments = _arguments[name];
+    if (arguments == null) {
       return null;
     }
 
-    return values.last;
+    if (fromEnd) {
+      return arguments.last;
+    } else {
+      return arguments.first;
+    }
   }
 
-  void wrongArgumentType(String name, String type) {
-    throw new StateError("Attribute '$name' argument not a $type");
-  }
-
-  void wrongNumberOfArguments(String name) {
-    throw new StateError("Wrong number of arguments specified for '$name' attribute");
-  }
-
-  Map<String, List<List<dynamic>>> _getAttributes(Metadata metadata, Map<String, List<List<String>>> attributes) {
-    if (attributes == null) {
-      attributes = <String, List<List<dynamic>>>{};
+  String getIntegerArgument(String name, int index, String value, {bool fromEnd: true, int maxLength, int minLength}) {
+    var argument = getArgument(name, index, value, fromEnd: fromEnd, maxLength: maxLength, minLength: minLength);
+    if (argument != null && argument is! int) {
+      _wrongArgumentType(name, "integer");
     }
 
-    if (metadata == null) {
-      return attributes;
+    return argument;
+  }
+
+  String getStringArgument(String name, int index, String value, {bool fromEnd: true, int maxLength, int minLength}) {
+    var argument = getArgument(name, index, value, fromEnd: fromEnd, maxLength: maxLength, minLength: minLength);
+    if (argument != null && argument is! String) {
+      _wrongArgumentType(name, "string");
     }
 
-    for (var attributeList in metadata.attributeList) {
-      for (var value in attributeList.attributes) {
-        var name = value.name;
-        var list = attributes[name];
+    return argument;
+  }
+
+  void _checkNumberOfArguments(String name, int length, int maxLength, int minLength) {
+    if (minLength != null && length < minLength) {
+      _wrongNumberOfArguments(name);
+    }
+
+    if (maxLength != null && length > minLength) {
+      _wrongNumberOfArguments(name);
+    }
+  }
+
+  Map<String, List<List<dynamic>>> _getArguments(DeclarationSpecifiers specifier, Map<String, List<List<String>>> arguments) {
+    if (arguments == null) {
+      arguments = <String, List<List<dynamic>>>{};
+    }
+
+    if (specifier == null) {
+      return arguments;
+    }
+
+    for (var specifier in specifier.specifiers) {
+      for (var modifier in specifier.modifiers.modifiers) {
+        var name = modifier.name;
+        var list = arguments[name];
         if (list == null) {
           list = <List<dynamic>>[];
-          attributes[name] = list;
+          arguments[name] = list;
         }
 
-        list.add(value.parameters);
+        list.add(modifier.arguments);
       }
     }
 
-    return attributes;
+    return arguments;
   }
 
-  Map<String, List<List<dynamic>>> _joinMetadata(List<Metadata> metadataList) {
-    Map<String, List<List<dynamic>>> result;
-    for (var metadata in metadataList) {
-      result = _getAttributes(metadata, result);
+  Map<String, List<List<dynamic>>> _joinArguments(List<DeclarationSpecifiers> specifiers) {
+    Map<String, List<List<dynamic>>> arguments;
+    for (var specifier in specifiers) {
+      arguments = _getArguments(specifier, arguments);
     }
 
-    return result;
+    return arguments;
+  }
+
+  void _wrongArgumentType(String name, String type) {
+    throw new StateError("Attribute '$name' argument not a $type");
+  }
+
+  void _wrongNumberOfArguments(String name) {
+    throw new StateError("Wrong number of arguments specified for '$name' attribute");
   }
 }

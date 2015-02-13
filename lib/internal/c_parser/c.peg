@@ -1,11 +1,7 @@
 %{
 import "package:binary_declarations/binary_declarations.dart";
 
-ArrayTypeSpecification _createArray(TypeSpecification type, ArrayDimensions dimensions, Metadata metadata) {  
-  return new ArrayTypeSpecification(dimensions: dimensions, metadata: metadata, type: type);
-}
-
-String _createInt(List parts) {
+Identifier _ident(List parts) {
   var list = [];
   for (var part in parts) {
     if (part != null) {
@@ -13,7 +9,7 @@ String _createInt(List parts) {
     }
   }
 
-  return list.join(" ");
+  return new Identifier(name: list.join(" "));
 }
 
 List _createParameters(List parameters, ParameterDeclaration vaList) {    
@@ -24,14 +20,6 @@ List _createParameters(List parameters, ParameterDeclaration vaList) {
   }
   
   return list;
-}
-
-PointerTypeSpecification _createPointerType(TypeSpecification type, List stars, Metadata metadata) {    
-  for (var star in stars) {
-    type = new PointerTypeSpecification(metadata: metadata, type: type);
-  }
-  
-  return type;
 }
 
 int _escape(String ch) {
@@ -61,7 +49,6 @@ int _escape(String ch) {
   }
 }
 
-
 int _parseInt(String sign, String digits, int radix) {
   if (sign == null) {
     sign = "";
@@ -88,63 +75,121 @@ Declaration <-
   / SEMICOLON+ { $$ = new EmptyDeclaration(); }
 
 FunctionDeclaration <-
-  Metadata? FunctionType { $$ = new FunctionDeclaration(metadata: $1, type: $2); }
+  Metadata? TypeQualifiers? FunctionDeclarator { $$ = new FunctionDeclaration(declarator: $3, metadata: $1, qualifiers: $2); }
+  / Metadata? TypeQualifiers? Type FunctionDeclarator { $$ = new FunctionDeclaration(declarator: $4, metadata: $1, qualifiers: $2, type: $3); }
 
 Metadata <-
-  AttributeSpecifier+ { $$ = new Metadata($1); }
+  DeclarationSpecifier+ { $$ = new DeclarationSpecifiers($1); }
 
-AttributeSpecifier <-
-  ATTRIBUTE OPEN_PAREN OPEN_PAREN AttributeList? CLOSE_PAREN CLOSE_PAREN { $$ = new AttributeList($4); }
+DeclarationSpecifier <-
+  ATTRIBUTE OPEN_PAREN OPEN_PAREN DeclarationModifierList? CLOSE_PAREN CLOSE_PAREN { $$ = new DeclarationSpecifier($4); }
 
-AttributeList <-
-  Attribute (COMMA Attribute)* { $$ = _list($1, $2); }
+DeclarationModifierList <-
+  DeclarationModifier (COMMA DeclarationModifier)* { $$ = new DeclarationModifiers(_list($1, $2)); }
 
-Attribute <-
-  IDENT OPEN_PAREN AttributeParameterList? CLOSE_PAREN { $$ = new Attribute($1, $3); }
-  / IDENT { $$ = new Attribute($1); }
+DeclarationModifier <-
+  IDENT OPEN_PAREN DeclarationModifierArgumentList? CLOSE_PAREN { $$ = new DeclarationModifier($1, $3); }
+  / IDENT { $$ = new DeclarationModifier($1); }
 
-AttributeParameterList <-
-  AttributeParameter (COMMA AttributeParameter)* { $$ = _list($1, $2); }
+DeclarationModifierArgumentList <-
+  DeclarationModifierArgument (COMMA DeclarationModifierArgument)* { $$ = _list($1, $2); }
 
-AttributeParameter <-
+DeclarationModifierArgument <-
   STRING
   / NUMBER
 
-FunctionType <-
-  (PointerType / Type)? Identifier FunctionParameters Metadata? { $$ = new FunctionTypeSpecification(metadata: $4, identifier: $2, parameters: $3, returnType: $1); }
+TypeQualifiers <-
+  TypeQualifier+ { $$ = new TypeQualifiers($1); }
 
-PointerType <-
-  Type ASTERISK+ Metadata? { $$ = _createPointerType($1, $2, $3); }
+TypeQualifier <-
+  (Const / Volatile) Metadata? { $$ = new TypeQualifier(identifier: $1, metadata: $2); }
+
+FunctionDeclarator <-
+  PointerSpecifiers? Identifier FunctionParameters Metadata? { $$ = new Declarator(identifier: $2, metadata: $4, parameters: $3, pointers: $1); }
+
+PointerSpecifiers <-
+  PointerSpecifier+ { $$ = new PointerSpecifiers($1); }
+
+PointerSpecifier <-
+  ASTERISK Metadata? TypeQualifiers? { $$ = new PointerSpecifier(metadata: $2, qualifiers: $3); }
+
+FunctionParameters <-
+  OPEN_PAREN FunctionParameterList? CLOSE_PAREN { $$ = new FunctionParameters($2); }
+
+FunctionParameterList <-
+  FunctionParameterListNoVaList (COMMA VA_LIST_PARAMETER { $$ = $2; })? { $$ = _createParameters($1, $2); }
+
+FunctionParameterListNoVaList <-
+  FunctionParameterDeclaration (COMMA FunctionParameterDeclaration)* { $$ = _list($1, $2); }
+
+FunctionParameterDeclaration <-
+  ParameterDeclarationNotAbstract
+  / ParameterDeclarationAbstract
+
+ParameterDeclarationNotAbstract <-
+  Metadata? TypeQualifiers? Type FunctionDeclarator { $$ = new ParameterDeclaration(declarator: $4, metadata: $1, qualifiers: $2,  type: $3); }
+  / Metadata? TypeQualifiers? Type FunctionPointerDeclarator { $$ = new ParameterDeclaration(declarator: $4, metadata: $1, qualifiers: $2,  type: $3); }
+  / Metadata? TypeQualifiers? Type DeclaratorNotAbstract { $$ = new ParameterDeclaration(declarator: $4, metadata: $1, qualifiers: $2,  type: $3); }
 
 Type <-
-  StructureType
+  DefinedType
+  / IntegerType
+  / FloatType
+  / VoidType
+  / BoolType
+  / StructureType
   / EnumType
-  / PrimitiveType
+
+DefinedType <-
+  Identifier Metadata? TypeQualifiers? { $$ = new DefinedTypeSpecification(identifier: $1, metadata: $2, qualifiers: $3); }
+
+IntegerType <-
+  SIGNEDNESS? (SHORT / LONG_TYPE) INT? Metadata? TypeQualifiers? { $$ = new BuiltinTypeSpecification(identifier: _ident([$1, $2, $3]), metadata: $4, qualifiers: $5, typeKind: TypeSpecificationKind.INTEGER); }
+  / SIGNEDNESS? (CHAR / INT / SHORT / LONG_TYPE) Metadata? TypeQualifiers? { $$ = new BuiltinTypeSpecification(identifier: _ident([$1, $2]), metadata: $3, qualifiers: $4, typeKind: TypeSpecificationKind.INTEGER); }
+  / SIGNEDNESS Metadata? TypeQualifiers? { $$ = new BuiltinTypeSpecification(identifier: _ident([$1]), metadata: $2, qualifiers: $3, typeKind: TypeSpecificationKind.INTEGER); }
+
+FloatType <-
+  (FLOAT / DOUBLE) Metadata? TypeQualifiers? { $$ = new BuiltinTypeSpecification(identifier: _ident([$1]), metadata: $2, qualifiers: $3, typeKind: TypeSpecificationKind.FLOAT); }
+
+VoidType <-
+  VOID Metadata? TypeQualifiers? { $$ = new BuiltinTypeSpecification(identifier: _ident([$1]), metadata: $2, qualifiers: $3, typeKind: TypeSpecificationKind.VOID); }
+
+BoolType <-
+  BOOL Metadata? TypeQualifiers? { $$ = new BuiltinTypeSpecification(identifier: _ident([$1]), metadata: $2, qualifiers: $3, typeKind: TypeSpecificationKind.BOOL); }
 
 StructureType <-
-  StructureTypeSpecifier StructureMemberList Metadata? { $$ = new StructureTypeSpecification(metadata: $3, elaboratedType: $1, members: $2); }
-  / StructureTypeSpecifierWithTag Metadata? { $$ = new StructureTypeSpecification(metadata: $2, elaboratedType: $1); }
+  StructureTypeSpecifier StructureMemberList Metadata? TypeQualifiers? { $$ = new StructureTypeSpecification(metadata: $3, elaboratedType: $1, members: $2, qualifiers: $4); }
+  / StructureTypeSpecifierWithTag Metadata? TypeQualifiers? { $$ = new StructureTypeSpecification(metadata: $2, elaboratedType: $1, qualifiers: $3); }
 
 StructureTypeSpecifier <-
   (STRUCT / UNION) Metadata? Identifier? { $$ = new ElaboratedTypeSpecifier(kind: $1, metadata: $2, tag: $3); }
-
-Identifier <-
-  IDENTIFIER { $$ = new Identifier(name: $1); }
 
 StructureMemberList <-
   OPEN_BRACE StructureMember+ CLOSE_BRACE { $$ = $2; }
 
 StructureMember <-
-  BitFieldParameter SEMICOLON { $$ = $1; }
-  / ArrayParameter SEMICOLON { $$ = $1; }
-  / PointerParameter SEMICOLON { $$ = $1; }
-  / TypeParameter SEMICOLON { $$ = $1; }
+  BitFieldParameterDeclaration SEMICOLON { $$ = $1; }
+  / ParameterDeclarationNotAbstract SEMICOLON { $$ = $1; }
+  / ParameterDeclarationAbstract SEMICOLON { $$ = $1; }
 
-BitFieldParameter <-
-  Metadata? Type Identifier? COLON POSITIVE_NUMBER { $$ = new ParameterDeclaration(identifier: $3, metadata: $1, type: $2, width: $5); }
+BitFieldParameterDeclaration <-
+  Metadata? TypeQualifiers? IntegerType BitFieldDeclaratorNotAbstract { $$ = new ParameterDeclaration(declarator: $4, metadata: $1, qualifiers: $2,  type: $3); }
+  / Metadata? TypeQualifiers? IntegerType BitFieldDeclaratorAbstract { $$ = new ParameterDeclaration(declarator: $4, metadata: $1, qualifiers: $2, type: $3); }
 
-ArrayParameter <-
-  Metadata? Type Identifier? ArrayDimensions Metadata? { $$ = new ParameterDeclaration(identifier: $3, metadata: $1, type: _createArray($2, $4, $5)); }
+BitFieldDeclaratorNotAbstract <-
+  Identifier COLON POSITIVE_NUMBER Metadata? { $$ = new Declarator(identifier: $1, metadata: $4, width: $3); }
+
+BitFieldDeclaratorAbstract <-
+  Identifier? COLON POSITIVE_NUMBER Metadata? { $$ = new Declarator(identifier: $1, metadata: $4, width: $3); }
+
+ParameterDeclarationAbstract <-
+  Metadata? TypeQualifiers? Type DeclaratorAbstract { $$ = new ParameterDeclaration(declarator: $4, metadata: $1, qualifiers: $2, type: $3); }
+  / Metadata? TypeQualifiers? Type { $$ = new ParameterDeclaration(metadata: $1, qualifiers: $2, type: $3); }
+
+DeclaratorAbstract <-
+  PointerSpecifiers ArrayDimensions Metadata? { $$ = new Declarator(dimensions: $2, metadata: $3, pointers: $1); }
+  / PointerSpecifiers? ArrayDimensions Metadata? { $$ = new Declarator(dimensions: $2, metadata: $3, pointers: $1); }
+  / PointerSpecifiers ArrayDimensions? Metadata? { $$ = new Declarator(dimensions: $2, metadata: $3, pointers: $1); }
 
 ArrayDimensions <-
   Dimension+ { $$ = new ArrayDimensions(dimensions: $1); }
@@ -155,131 +200,64 @@ Dimension <-
 ArraySize <-
   !ZERO_NUMBER POSITIVE_NUMBER { $$ = $2; }
 
-PointerParameter <-
-  Metadata? PointerType IdentifierMD? { $$ = new ParameterDeclaration(identifier: $3, metadata: $1, type: $2); }
-
-IdentifierMD <-
-  IDENTIFIER Metadata? { $$ = new Identifier(metadata: $2, name: $1); }
-
-TypeParameter <-
-  Metadata? Type IdentifierMD? { $$ = new ParameterDeclaration(identifier: $3, metadata: $1, type: $2); }
-
 StructureTypeSpecifierWithTag <-
   (STRUCT / UNION) Metadata? Identifier { $$ = new ElaboratedTypeSpecifier(kind: $1, metadata: $2, tag: $3); }
 
 EnumType <-
-  EnumTypeSpecifier OPEN_BRACE EnumValueList CLOSE_BRACE Metadata? { $$ = new EnumTypeSpecification(metadata: $5, elaboratedType: $1, values: $3); }
-  / EnumTypeSpecifierWithTag Metadata? { $$ = new EnumTypeSpecification(metadata: $2, elaboratedType: $1); }
+  EnumTypeSpecifier OPEN_BRACE EnumeratorList CLOSE_BRACE Metadata? TypeQualifiers? { $$ = new EnumTypeSpecification(metadata: $5, elaboratedType: $1, qualifiers: $6, values: $3); }
+  / EnumTypeSpecifierWithTag Metadata? TypeQualifiers? { $$ = new EnumTypeSpecification(metadata: $2, elaboratedType: $1, qualifiers: $3); }
 
 EnumTypeSpecifier <-
   ENUM Metadata? Identifier? { $$ = new ElaboratedTypeSpecifier(kind: $1, metadata: $2, tag: $3); }
 
-EnumValueList <-
-  EnumValue (COMMA EnumValue)* COMMA? { $$ = _list($1, $2); }
+EnumeratorList <-
+  Enumerator (COMMA Enumerator)* COMMA? { $$ = _list($1, $2); }
 
-EnumValue <-
-  IDENTIFIER ASSIGN NUMBER { $$ = new EnumValueDeclaration(name: $1, value: $3); }
-  / IDENTIFIER { $$ = new EnumValueDeclaration(name: $1); }
+Enumerator <-
+  Identifier ASSIGN NUMBER { $$ = new Enumerator(identifier: $1, value: $3); }
+  / Identifier { $$ = new Enumerator(identifier: $1); }
 
 EnumTypeSpecifierWithTag <-
   ENUM Metadata? Identifier { $$ = new ElaboratedTypeSpecifier(kind: $1, metadata: $2, tag: $3); }
 
-PrimitiveType <-
-  TYPE_QUALIFIERS? IDENTIFIER Metadata? { $$ = new DefinedTypeSpecification(metadata: $3, name: $2, qualifiers: $1); }
-  / TYPE_QUALIFIERS? SIGNEDNESS? (SHORT / LONG_TYPE) INT? Metadata? { $$ = new IntegerTypeSpecification(metadata: $5, name: _createInt([$2, $3, $4]), qualifiers: $1); }
-  / TYPE_QUALIFIERS? SIGNEDNESS? (CHAR / INT / SHORT / LONG_TYPE) Metadata? { $$ = new IntegerTypeSpecification(metadata: $4, name: _createInt([$2, $3]), qualifiers: $1); }
-  / TYPE_QUALIFIERS? SIGNEDNESS Metadata? { $$ = new IntegerTypeSpecification(metadata: $3, name: $2, qualifiers: $1); }
-  / TYPE_QUALIFIERS? (FLOAT / DOUBLE) Metadata? { $$ = new FloatTypeSpecification(metadata: $3, name: $2, qualifiers: $1); }
-  / TYPE_QUALIFIERS? VOID Metadata? { $$ = new VoidTypeSpecification(metadata: $3, qualifiers: $1); }
+FunctionPointerDeclarator <-
+  PointerSpecifiers? OPEN_PAREN PointerSpecifiers Identifier CLOSE_PAREN FunctionParameters ArrayDimensions? Metadata? { $$ = new Declarator(dimensions: $7, functionPointers: $3, identifier: $4, metadata: $8, parameters: $6, pointers: $1); }
 
-FunctionParameters <-
-  OPEN_PAREN FunctionParameterList? CLOSE_PAREN Metadata? { $$ = new FunctionParameters(metadata: $4, parameters: $2); }
-
-FunctionParameterList <-
-  FunctionParameterListNoVaList (COMMA VA_LIST_PARAMETER { $$ = $2; })? { $$ = _createParameters($1, $2); }
-
-FunctionParameterListNoVaList <-
-  FunctionParameter (COMMA FunctionParameter)* { $$ = _list($1, $2); }
-
-FunctionParameter <-
-  ArrayParameter
-  / PointerParameter
-  / TypeParameter
+DeclaratorNotAbstract <-
+  PointerSpecifiers? Identifier ArrayDimensions? Metadata? { $$ = new Declarator(dimensions: $3, identifier: $2, metadata: $4, pointers: $1); }
 
 StructureDeclaration <-
-  Metadata? StructureType { $$ = new StructureDeclaration(metadata: $1, type: $2); }
+  Metadata? TypeQualifiers? StructureType { $$ = new StructureDeclaration(metadata: $1, qualifiers: $2, type: $3); }
 
 EnumDeclaration <-
-  Metadata? EnumType { $$ = new EnumDeclaration(metadata: $1, type: $2); }
+  Metadata? TypeQualifiers? EnumType { $$ = new EnumDeclaration(metadata: $1, qualifiers: $2, type: $3); }
 
 TypedefDeclaration <-
-  Metadata? TypedefSpecifier TypedefType TypeSynonymList { $$ = new TypedefDeclaration(metadata: $1, synonyms: $4, type: $3, typedef: $2); }
+  Metadata? TypeQualifiers? TypedefSpecifier Type TypeDeclaratorList { $$ = new TypedefDeclaration(declarators: $5, metadata: $1, qualifiers: $2, type: $4, typedef: $3); }
 
 TypedefSpecifier <-
-  TYPEDEF Metadata? { $$ = new TypedefSpecifier(metadata: $2); }
+  TYPEDEF Metadata? TypeQualifiers? { $$ = new TypedefSpecifier(metadata: $2, qualifiers: $3); }
 
-TypedefType <-
-  StructureType
-  / EnumType
-  / PrimitiveType
+TypeDeclaratorList <-
+  TypeDeclarator (COMMA TypeDeclarator)* { $$ = _list($1, $2); }
 
-TypeSynonymList <-
-  TypeSynonym (COMMA TypeSynonym)* { $$ = _list($1, $2); }
+TypeDeclarator <-
+  FunctionDeclarator
+  / FunctionPointerDeclarator
+  / DeclaratorNotAbstract
+  / TypedefFunctionDeclarator
 
-TypeSynonym <-
-  FunctionTypeNoReturn
-  / FunctionTypeSynonym
-  / FunctionPointerTypeSynonym
-  / ArrayTypeSynonym
-  / PointerTypeSynonym
-  / SimpleTypeSynonym
-
-FunctionTypeNoReturn <-
-  Identifier FunctionParameters Metadata? { $$ = new FunctionTypeSpecification(metadata: $3, identifier: $1, parameters: $2); }
-
-FunctionTypeSynonym <-
-  TYPE_QUALIFIERS? OPEN_PAREN Identifier CLOSE_PAREN FunctionParameters Metadata? { $$ = new FunctionTypeSpecification(metadata: $6, identifier: $3, parameters: $5); }
-
-FunctionPointerTypeSynonym <-
-  TYPE_QUALIFIERS? OPEN_PAREN ASTERISK+ Metadata? Identifier CLOSE_PAREN FunctionParameters Metadata? { $$ = _createPointerType(new FunctionTypeSpecification(metadata: $8, identifier: $5, parameters: $7), $3, $4); }
-
-ArrayTypeSynonym <-
-  ArrayTypeElementSynonym ArrayDimensions Metadata? { $$ = new ArrayTypeSpecification(dimensions: $2, metadata: $3, type: $1); }
-
-ArrayTypeElementSynonym <-
-  PointerTypeSynonymNoMetadata
-  / SimpleTypeSynonymNoMetadata
-
-PointerTypeSynonymNoMetadata <-
-  TYPE_QUALIFIERS? ASTERISK Metadata? TypeSynonymNoMetadata { $$ = new PointerTypeSpecification(metadata: $3, qualifiers: $1, type: $4); }
-
-TypeSynonymNoMetadata <-
-  ArrayTypeSynonym
-  / PointerTypeSynonymNoMetadata
-  / SimpleTypeSynonymNoMetadata
-
-SimpleTypeSynonymNoMetadata <-
-  TYPE_QUALIFIERS? IDENTIFIER { $$ = new DefinedTypeSpecification(qualifiers: $1, name: $2); }
-
-PointerTypeSynonym <-
-  TYPE_QUALIFIERS? ASTERISK Metadata? TypeSynonym { $$ = new PointerTypeSpecification(metadata: $3, qualifiers: $1, type: $4); }
-
-SimpleTypeSynonym <-
-  TYPE_QUALIFIERS? IDENTIFIER Metadata? { $$ = new DefinedTypeSpecification(metadata: $3, qualifiers: $1, name: $2); }
+TypedefFunctionDeclarator <-
+  PointerSpecifiers? OPEN_PAREN Identifier CLOSE_PAREN FunctionParameters Metadata? { $$ = new Declarator(identifier: $3, metadata: $6, parameters: $5, pointers: $1); }
 
 VariableDeclaration <-
-  ArrayVariableDeclaration
-  / PointerVariableDeclaration
-  / TypeVariableDeclaration
+  Metadata? TypeQualifiers? Type VariableDeclaratorList { $$ = new VariableDeclaration(declarators: $4, metadata: $1, qualifiers: $2, type: $3); }
 
-ArrayVariableDeclaration <-
-  Metadata? Type Identifier ArrayDimensions Metadata? { $$ = new VariableDeclaration(identifier: $3, metadata: $1, type: _createArray($2, $4, $5)); }
+VariableDeclaratorList <-
+  VariableDeclarator (COMMA VariableDeclarator)* { $$ = _list($1, $2); }
 
-PointerVariableDeclaration <-
-  Metadata? PointerType IdentifierMD { $$ = new VariableDeclaration(identifier: $3, metadata: $1, type: $2); }
-
-TypeVariableDeclaration <-
-  Metadata? Type IdentifierMD { $$ = new VariableDeclaration(identifier: $3, metadata: $1, type: $2); }
+VariableDeclarator <-
+  DeclaratorNotAbstract
 
 ### Lexemes (tokens) ###
 
@@ -291,6 +269,9 @@ ASTERISK <-
 
 ATTRIBUTE <-
   '__attribute__' SPACING { $$ = $1; }
+
+BOOL <-
+  '_Bool' SPACING { $$ = $1; }
 
 CHAR <-
   'char' !IDENT_PART SPACING { $$ = $1; }
@@ -310,6 +291,9 @@ COLON <-
 COMMA <-
   ',' SPACING { $$ = $1; }
 
+Const <-
+  CONST { $$ = new Identifier(name: $1); }
+
 DOUBLE <-
   'double' !IDENT_PART SPACING { $$ = $1; }
 
@@ -325,17 +309,17 @@ FLOAT <-
 IDENT <-
   IDENT_START IDENT_CONT* SPACING { $$ = _flatten([$1, $2]).join(); }
 
-IDENTIFIER <-
-  !RESERVED_WORD IDENT_START IDENT_CONT* SPACING { $$ = _flatten([$2, $3]).join(); }
-
 INT <-
   'int' !IDENT_PART SPACING { $$ = $1; }
+
+Identifier <-
+  IDENTIFIER { $$ = new Identifier(name: $1); }
 
 LEADING_SPACES <-
   SPACING
 
 LONG_TYPE <-
-  LONG LONG { $$ = _createInt([$1, $2]); }
+  LONG LONG { $$ = "long long"; }
   / LONG
 
 NUMBER <-
@@ -374,17 +358,17 @@ STRUCT <-
 TYPEDEF <-
   'typedef' SPACING { $$ = $1; }
 
-TYPE_QUALIFIERS <-
-  TYPE_QUALIFIER* { $$ = new TypeQualifierList($1); }
-
 UNION <-
   'union' !IDENT_PART SPACING { $$ = $1; }
 
 VA_LIST_PARAMETER <-
-  ELLIPSIS { $$ = new ParameterDeclaration(type: new VaListTypeSpecification()); }
+  VA_LIST_TYPE { $$ = new ParameterDeclaration(type: $1); }
 
 VOID <-
   'void' !IDENT_PART SPACING { $$ = $1; }
+
+Volatile <-
+  VOLATILE { $$ = new Identifier(name: $1); }
 
 ZERO_NUMBER <-
   ZERO SPACING { $$ = $1; }
@@ -422,6 +406,9 @@ HEXADECIMAL_ESCAPE_SEQUENCE1 <-
 
 HEX_QUAD <-
   HEXADECIMAL_DIGIT HEXADECIMAL_DIGIT HEXADECIMAL_DIGIT HEXADECIMAL_DIGIT { $$ = _text(); }
+
+IDENTIFIER <-
+  !RESERVED_WORD IDENT_START IDENT_CONT* SPACING { $$ = _flatten([$2, $3]).join(); }
 
 IDENT_CONT <-
   IDENT_START
@@ -483,15 +470,18 @@ STRING_CHAR <-
 STRING_CHAR_SEQUENCE <-
   STRING_CHAR+
 
-TYPE_QUALIFIER <-
-  CONST
-
 UNIVERSAL_CHARCTER_NAME <-
   '\\U' HEX_QUAD HEX_QUAD { $$ = int.parse(_text(2), radix: 16); }
   / '\\u' HEX_QUAD { $$ = int.parse(_text(2), radix: 16); }
 
 UNSIGNED <-
   'unsigned' !IDENT_PART SPACING { $$ = $1; }
+
+VA_LIST_TYPE <-
+  ELLIPSIS { $$ = new VaListTypeSpecification(); }
+
+VOLATILE <-
+  'volatile' SPACING { $$ = $1; }
 
 ZERO <-
   [0]+ ![0-9]+ { $$ = 0; }

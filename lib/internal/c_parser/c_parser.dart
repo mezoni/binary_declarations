@@ -3,11 +3,7 @@
 
 import "package:binary_declarations/binary_declarations.dart";
 
-ArrayTypeSpecification _createArray(TypeSpecification type, ArrayDimensions dimensions, Metadata metadata) {  
-  return new ArrayTypeSpecification(dimensions: dimensions, metadata: metadata, type: type);
-}
-
-String _createInt(List parts) {
+Identifier _ident(List parts) {
   var list = [];
   for (var part in parts) {
     if (part != null) {
@@ -15,7 +11,7 @@ String _createInt(List parts) {
     }
   }
 
-  return list.join(" ");
+  return new Identifier(name: list.join(" "));
 }
 
 List _createParameters(List parameters, ParameterDeclaration vaList) {    
@@ -26,14 +22,6 @@ List _createParameters(List parameters, ParameterDeclaration vaList) {
   }
   
   return list;
-}
-
-PointerTypeSpecification _createPointerType(TypeSpecification type, List stars, Metadata metadata) {    
-  for (var star in stars) {
-    type = new PointerTypeSpecification(metadata: metadata, type: type);
-  }
-  
-  return type;
 }
 
 int _escape(String ch) {
@@ -63,7 +51,6 @@ int _escape(String ch) {
   }
 }
 
-
 int _parseInt(String sign, String digits, int radix) {
   if (sign == null) {
     sign = "";
@@ -78,119 +65,127 @@ class CParser {
   
   static final List<String> _expect1 = <String>[];
   
-  static final List<String> _expect10 = <String>["\'{\'"];
+  static final List<String> _expect10 = <String>["\'*\'"];
   
-  static final List<String> _expect11 = <String>["\'[\'"];
+  static final List<String> _expect11 = <String>["\'(\'"];
   
-  static final List<String> _expect12 = <String>["POSITIVE_NUMBER"];
+  static final List<String> _expect12 = <String>["\'char\'", "\'int\'", "\'long\'", "\'short\'", "SIGNEDNESS"];
   
-  static final List<String> _expect13 = <String>["\'enum\'"];
+  static final List<String> _expect13 = <String>["\'char\'", "\'int\'", "\'long\'", "\'short\'"];
   
-  static final List<String> _expect14 = <String>["\'char\'", "\'double\'", "\'float\'", "\'int\'", "\'long\'", "\'short\'", "\'void\'", "IDENTIFIER", "SIGNEDNESS"];
+  static final List<String> _expect14 = <String>["\'long\'", "\'short\'"];
   
-  static final List<String> _expect15 = <String>["\'long\'", "\'short\'"];
+  static final List<String> _expect15 = <String>["\'double\'", "\'float\'"];
   
-  static final List<String> _expect16 = <String>["\'char\'", "\'int\'", "\'long\'", "\'short\'"];
+  static final List<String> _expect16 = <String>["\'void\'"];
   
-  static final List<String> _expect17 = <String>["\'double\'", "\'float\'"];
+  static final List<String> _expect17 = <String>["\'_Bool\'"];
   
-  static final List<String> _expect18 = <String>["\'(\'"];
+  static final List<String> _expect18 = <String>["\'struct\'", "\'union\'"];
   
-  static final List<String> _expect19 = <String>["\'typedef\'"];
+  static final List<String> _expect19 = <String>["\'{\'"];
   
-  static final List<String> _expect2 = <String>["\';\'", "\'char\'", "\'double\'", "\'enum\'", "\'float\'", "\'int\'", "\'long\'", "\'short\'", "\'struct\'", "\'typedef\'", "\'union\'", "\'void\'", "IDENTIFIER", "SIGNEDNESS"];
+  static final List<String> _expect2 = <String>["\';\'", "\'_Bool\'", "\'char\'", "\'double\'", "\'enum\'", "\'float\'", "\'int\'", "\'long\'", "\'short\'", "\'struct\'", "\'typedef\'", "\'union\'", "\'void\'", "Identifier", "SIGNEDNESS"];
   
-  static final List<String> _expect20 = <String>["\'(\'", "\'*\'", "IDENTIFIER"];
+  static final List<String> _expect20 = <String>["\':\'"];
   
-  static final List<String> _expect21 = <String>["\'*\'", "IDENTIFIER"];
+  static final List<String> _expect21 = <String>["\'*\'", "\'[\'"];
   
-  static final List<String> _expect22 = <String>["\'*\'"];
+  static final List<String> _expect22 = <String>["\'[\'"];
   
-  static final List<String> _expect23 = <String>["\'=\'"];
+  static final List<String> _expect23 = <String>["POSITIVE_NUMBER"];
   
-  static final List<String> _expect24 = <String>["\'char\'"];
+  static final List<String> _expect24 = <String>["\'enum\'"];
   
-  static final List<String> _expect25 = <String>["\'}\'"];
+  static final List<String> _expect25 = <String>["\'typedef\'"];
   
-  static final List<String> _expect26 = <String>["\']\'"];
+  static final List<String> _expect26 = <String>["\'(\'", "Identifier"];
   
-  static final List<String> _expect27 = <String>["\')\'"];
+  static final List<String> _expect27 = <String>["\'=\'"];
   
-  static final List<String> _expect28 = <String>["\':\'"];
+  static final List<String> _expect28 = <String>["\'char\'"];
   
-  static final List<String> _expect29 = <String>["\'double\'"];
+  static final List<String> _expect29 = <String>["\'}\'"];
   
-  static final List<String> _expect3 = <String>["IDENTIFIER"];
+  static final List<String> _expect3 = <String>["\'_Bool\'", "\'char\'", "\'double\'", "\'enum\'", "\'float\'", "\'int\'", "\'long\'", "\'short\'", "\'struct\'", "\'union\'", "\'void\'", "Identifier", "SIGNEDNESS"];
   
-  static final List<String> _expect30 = <String>["\'float\'"];
+  static final List<String> _expect30 = <String>["\']\'"];
   
-  static final List<String> _expect31 = <String>["\'int\'"];
+  static final List<String> _expect31 = <String>["\')\'"];
   
-  static final List<String> _expect32 = <String>["LEADING_SPACES"];
+  static final List<String> _expect32 = <String>["\'const\'"];
   
-  static final List<String> _expect33 = <String>["\'long\'"];
+  static final List<String> _expect33 = <String>["\'double\'"];
   
-  static final List<String> _expect34 = <String>["NUMBER"];
+  static final List<String> _expect34 = <String>["\'float\'"];
   
-  static final List<String> _expect35 = <String>["-"];
+  static final List<String> _expect35 = <String>["\'int\'"];
   
-  static final List<String> _expect36 = <String>["\';\'"];
+  static final List<String> _expect36 = <String>["LEADING_SPACES"];
   
-  static final List<String> _expect37 = <String>["\'short\'"];
+  static final List<String> _expect37 = <String>["\'long\'"];
   
-  static final List<String> _expect38 = <String>["SIGNEDNESS"];
+  static final List<String> _expect38 = <String>["NUMBER"];
   
-  static final List<String> _expect39 = <String>["STRING"];
+  static final List<String> _expect39 = <String>["-"];
   
   static final List<String> _expect4 = <String>["\'__attribute__\'"];
   
-  static final List<String> _expect40 = <String>["\'struct\'"];
+  static final List<String> _expect40 = <String>["\';\'"];
   
-  static final List<String> _expect41 = <String>["TYPE_QUALIFIERS"];
+  static final List<String> _expect41 = <String>["\'short\'"];
   
-  static final List<String> _expect42 = <String>["\'union\'"];
+  static final List<String> _expect42 = <String>["SIGNEDNESS"];
   
-  static final List<String> _expect43 = <String>["\'...\'"];
+  static final List<String> _expect43 = <String>["STRING"];
   
-  static final List<String> _expect44 = <String>["\'void\'"];
+  static final List<String> _expect44 = <String>["\'struct\'"];
   
-  static final List<String> _expect45 = <String>["ZERO_NUMBER"];
+  static final List<String> _expect45 = <String>["\'union\'"];
   
-  static final List<String> _expect46 = <String>["//"];
+  static final List<String> _expect46 = <String>["\'...\'"];
   
-  static final List<String> _expect47 = <String>["const"];
+  static final List<String> _expect47 = <String>["\'volatile\'"];
   
-  static final List<String> _expect48 = <String>["..."];
+  static final List<String> _expect48 = <String>["ZERO_NUMBER"];
   
-  static final List<String> _expect49 = <String>["\\x"];
+  static final List<String> _expect49 = <String>["//"];
   
   static final List<String> _expect5 = <String>["IDENT"];
   
-  static final List<String> _expect50 = <String>["long"];
+  static final List<String> _expect50 = <String>["const"];
   
-  static final List<String> _expect51 = <String>["\\"];
+  static final List<String> _expect51 = <String>["..."];
   
-  static final List<String> _expect52 = <String>["+"];
+  static final List<String> _expect52 = <String>["\\x"];
   
-  static final List<String> _expect53 = <String>["_Bool", "_Complex", "_Imaginary", "auto", "break", "case", "char", "const", "continue", "default", "do", "double", "else", "enum", "extern", "float", "for", "goto", "if", "inline", "int", "long", "register", "restrict", "return", "short", "signed", "sizeof", "static", "struct", "switch", "typedef", "union", "unsigned", "void", "volatile", "while"];
+  static final List<String> _expect53 = <String>["long"];
   
-  static final List<String> _expect54 = <String>["+", "-"];
+  static final List<String> _expect54 = <String>["\\"];
   
-  static final List<String> _expect55 = <String>["signed"];
+  static final List<String> _expect55 = <String>["+"];
   
-  static final List<String> _expect56 = <String>["\\U", "\\u"];
+  static final List<String> _expect56 = <String>["_Bool", "_Complex", "_Imaginary", "auto", "break", "case", "char", "const", "continue", "default", "do", "double", "else", "enum", "extern", "float", "for", "goto", "if", "inline", "int", "long", "register", "restrict", "return", "short", "signed", "sizeof", "static", "struct", "switch", "typedef", "union", "unsigned", "void", "volatile", "while"];
   
-  static final List<String> _expect57 = <String>["unsigned"];
+  static final List<String> _expect57 = <String>["+", "-"];
+  
+  static final List<String> _expect58 = <String>["signed"];
+  
+  static final List<String> _expect59 = <String>["\\U", "\\u"];
   
   static final List<String> _expect6 = <String>["\',\'"];
   
+  static final List<String> _expect60 = <String>["unsigned"];
+  
+  static final List<String> _expect61 = <String>["volatile"];
+  
   static final List<String> _expect7 = <String>["NUMBER", "STRING"];
   
-  static final List<String> _expect8 = <String>["\'char\'", "\'double\'", "\'enum\'", "\'float\'", "\'int\'", "\'long\'", "\'short\'", "\'struct\'", "\'union\'", "\'void\'", "IDENTIFIER", "SIGNEDNESS"];
+  static final List<String> _expect8 = <String>["\'const\'", "\'volatile\'"];
   
-  static final List<String> _expect9 = <String>["\'struct\'", "\'union\'"];
+  static final List<String> _expect9 = <String>["Identifier"];
   
-  static final List<bool> _lookahead = _unmap([0x7ffe03ff, 0x7ffd0fff, 0x7fffffff, 0x7fffffff, 0x3ff28061, 0x60000, 0x60000000, 0x13fc12fe, 0x30000, 0x40000340]);
+  static final List<bool> _lookahead = _unmap([0x7e000005, 0x7d0fffff, 0x3fffff, 0x7fffe080, 0x7fffd0ff, 0x7c07ffff, 0x7a1fffff, 0x607fffff, 0x50ffffff, 0x7fffffff, 0x7fffffff, 0x61fff, 0x0, 0x3ff28060, 0x60000, 0x60000000, 0x11fc12fe, 0x234000, 0x14740, 0x1e81208c, 0x80001]);
   
   // '\n', '\r'
   static final List<bool> _mapping0 = _unmap([0x9]);
@@ -213,41 +208,41 @@ class CParser {
   // '__attribute__'
   static final List<int> _strings0 = <int>[95, 95, 97, 116, 116, 114, 105, 98, 117, 116, 101, 95, 95];
   
-  // 'char'
-  static final List<int> _strings1 = <int>[99, 104, 97, 114];
+  // '_Bool'
+  static final List<int> _strings1 = <int>[95, 66, 111, 111, 108];
+  
+  // 'typedef'
+  static final List<int> _strings10 = <int>[116, 121, 112, 101, 100, 101, 102];
   
   // 'union'
-  static final List<int> _strings10 = <int>[117, 110, 105, 111, 110];
+  static final List<int> _strings11 = <int>[117, 110, 105, 111, 110];
   
   // 'void'
-  static final List<int> _strings11 = <int>[118, 111, 105, 100];
+  static final List<int> _strings12 = <int>[118, 111, 105, 100];
   
   // '//'
-  static final List<int> _strings12 = <int>[47, 47];
+  static final List<int> _strings13 = <int>[47, 47];
   
   // 'const'
-  static final List<int> _strings13 = <int>[99, 111, 110, 115, 116];
+  static final List<int> _strings14 = <int>[99, 111, 110, 115, 116];
   
   // '...'
-  static final List<int> _strings14 = <int>[46, 46, 46];
+  static final List<int> _strings15 = <int>[46, 46, 46];
   
   // '\r\n'
-  static final List<int> _strings15 = <int>[13, 10];
+  static final List<int> _strings16 = <int>[13, 10];
   
   // '\x'
-  static final List<int> _strings16 = <int>[92, 120];
+  static final List<int> _strings17 = <int>[92, 120];
   
   // 'long'
-  static final List<int> _strings17 = <int>[108, 111, 110, 103];
-  
-  // '_Bool'
-  static final List<int> _strings18 = <int>[95, 66, 111, 111, 108];
+  static final List<int> _strings18 = <int>[108, 111, 110, 103];
   
   // '_Complex'
   static final List<int> _strings19 = <int>[95, 67, 111, 109, 112, 108, 101, 120];
   
-  // 'double'
-  static final List<int> _strings2 = <int>[100, 111, 117, 98, 108, 101];
+  // 'char'
+  static final List<int> _strings2 = <int>[99, 104, 97, 114];
   
   // '_Imaginary'
   static final List<int> _strings20 = <int>[95, 73, 109, 97, 103, 105, 110, 97, 114, 121];
@@ -279,8 +274,8 @@ class CParser {
   // 'for'
   static final List<int> _strings29 = <int>[102, 111, 114];
   
-  // 'enum'
-  static final List<int> _strings3 = <int>[101, 110, 117, 109];
+  // 'double'
+  static final List<int> _strings3 = <int>[100, 111, 117, 98, 108, 101];
   
   // 'goto'
   static final List<int> _strings30 = <int>[103, 111, 116, 111];
@@ -312,8 +307,8 @@ class CParser {
   // 'switch'
   static final List<int> _strings39 = <int>[115, 119, 105, 116, 99, 104];
   
-  // 'float'
-  static final List<int> _strings4 = <int>[102, 108, 111, 97, 116];
+  // 'enum'
+  static final List<int> _strings4 = <int>[101, 110, 117, 109];
   
   // 'unsigned'
   static final List<int> _strings40 = <int>[117, 110, 115, 105, 103, 110, 101, 100];
@@ -330,80 +325,106 @@ class CParser {
   // '\u'
   static final List<int> _strings44 = <int>[92, 117];
   
+  // 'float'
+  static final List<int> _strings5 = <int>[102, 108, 111, 97, 116];
+  
   // 'int'
-  static final List<int> _strings5 = <int>[105, 110, 116];
+  static final List<int> _strings6 = <int>[105, 110, 116];
   
   // 'short'
-  static final List<int> _strings6 = <int>[115, 104, 111, 114, 116];
+  static final List<int> _strings7 = <int>[115, 104, 111, 114, 116];
   
   // 'L"'
-  static final List<int> _strings7 = <int>[76, 34];
+  static final List<int> _strings8 = <int>[76, 34];
   
   // 'struct'
-  static final List<int> _strings8 = <int>[115, 116, 114, 117, 99, 116];
+  static final List<int> _strings9 = <int>[115, 116, 114, 117, 99, 116];
   
-  // 'typedef'
-  static final List<int> _strings9 = <int>[116, 121, 112, 101, 100, 101, 102];
+  final List<String> _tokenAliases = ["\'=\'", "\'*\'", "\'__attribute__\'", "\'_Bool\'", "\'char\'", "\'}\'", "\']\'", "\')\'", "\':\'", "\',\'", "\'const\'", "\'double\'", "\'enum\'", "EOF", "\'float\'", "IDENT", "\'int\'", "Identifier", "LEADING_SPACES", "\'long\'", "NUMBER", "\'{\'", "\'[\'", "\'(\'", "POSITIVE_NUMBER", "\';\'", "\'short\'", "SIGNEDNESS", "STRING", "\'struct\'", "\'typedef\'", "\'union\'", "\'...\'", "\'void\'", "\'volatile\'", "ZERO_NUMBER"];
   
-  final List<String> _tokenAliases = ["\'=\'", "\'*\'", "\'__attribute__\'", "\'char\'", "\'}\'", "\']\'", "\')\'", "\':\'", "\',\'", "\'double\'", "\'enum\'", "EOF", "\'float\'", "IDENT", "IDENTIFIER", "\'int\'", "LEADING_SPACES", "\'long\'", "NUMBER", "\'{\'", "\'[\'", "\'(\'", "POSITIVE_NUMBER", "\';\'", "\'short\'", "SIGNEDNESS", "STRING", "\'struct\'", "\'typedef\'", "TYPE_QUALIFIERS", "\'union\'", "\'...\'", "\'void\'", "ZERO_NUMBER"];
+  final List<int> _tokenFlags = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
   
-  final List<int> _tokenFlags = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
+  final List<String> _tokenNames = ["ASSIGN", "ASTERISK", "ATTRIBUTE", "BOOL", "CHAR", "CLOSE_BRACE", "CLOSE_BRACKET", "CLOSE_PAREN", "COLON", "COMMA", "Const", "DOUBLE", "ENUM", "EOF", "FLOAT", "IDENT", "INT", "Identifier", "LEADING_SPACES", "LONG_TYPE", "NUMBER", "OPEN_BRACE", "OPEN_BRACKET", "OPEN_PAREN", "POSITIVE_NUMBER", "SEMICOLON", "SHORT", "SIGNEDNESS", "STRING", "STRUCT", "TYPEDEF", "UNION", "VA_LIST_PARAMETER", "VOID", "Volatile", "ZERO_NUMBER"];
   
-  final List<String> _tokenNames = ["ASSIGN", "ASTERISK", "ATTRIBUTE", "CHAR", "CLOSE_BRACE", "CLOSE_BRACKET", "CLOSE_PAREN", "COLON", "COMMA", "DOUBLE", "ENUM", "EOF", "FLOAT", "IDENT", "IDENTIFIER", "INT", "LEADING_SPACES", "LONG_TYPE", "NUMBER", "OPEN_BRACE", "OPEN_BRACKET", "OPEN_PAREN", "POSITIVE_NUMBER", "SEMICOLON", "SHORT", "SIGNEDNESS", "STRING", "STRUCT", "TYPEDEF", "TYPE_QUALIFIERS", "UNION", "VA_LIST_PARAMETER", "VOID", "ZERO_NUMBER"];
+  static final List<List<int>> _transitions0 = [[42, 42], [59, 59], [65, 90], [95, 95, 97, 122]];
   
-  static final List<List<int>> _transitions0 = [[65, 90, 95, 95, 97, 122]];
+  static final List<List<int>> _transitions1 = [[42, 42], [65, 90, 95, 95, 97, 122]];
   
-  static final List<List<int>> _transitions1 = [[34, 34, 43, 43, 45, 45, 48, 57, 76, 76]];
+  static final List<List<int>> _transitions10 = [[99, 99], [105, 105], [108, 108], [115, 115]];
   
-  static final List<List<int>> _transitions10 = [[95, 95, 115, 115, 117, 117]];
+  static final List<List<int>> _transitions11 = [[108, 108], [115, 115]];
   
-  static final List<List<int>> _transitions11 = [[95, 95, 101, 101]];
+  static final List<List<int>> _transitions12 = [[100, 100, 102, 102]];
   
-  static final List<List<int>> _transitions12 = [[95, 95, 116, 116]];
+  static final List<List<int>> _transitions13 = [[100, 100], [102, 102]];
   
-  static final List<List<int>> _transitions13 = [[0, 64, 91, 94, 96, 96, 123, 1114111], [65, 90, 95, 95, 97, 122]];
+  static final List<List<int>> _transitions14 = [[115, 115, 117, 117]];
   
-  static final List<List<int>> _transitions14 = [[43, 43, 45, 45, 48, 48], [49, 57]];
+  static final List<List<int>> _transitions15 = [[115, 115], [117, 117]];
   
-  static final List<List<int>> _transitions15 = [[34, 34], [76, 76]];
+  static final List<List<int>> _transitions16 = [[65, 90, 97, 98, 100, 104, 106, 107, 109, 114, 116, 116, 119, 122], [95, 95, 99, 99, 105, 105, 108, 108, 115, 115, 117, 118]];
   
-  static final List<List<int>> _transitions16 = [[0, 9, 11, 12, 14, 1114111], [10, 10, 13, 13]];
+  static final List<List<int>> _transitions17 = [[95, 95, 99, 99, 105, 105, 108, 108, 115, 115, 117, 118]];
   
-  static final List<List<int>> _transitions17 = [[10, 10], [13, 13]];
+  static final List<List<int>> _transitions18 = [[58, 58, 65, 90, 95, 95, 97, 122]];
   
-  static final List<List<int>> _transitions18 = [[48, 97, 102, 102]];
+  static final List<List<int>> _transitions19 = [[42, 42], [91, 91]];
   
-  static final List<List<int>> _transitions19 = [[0, 47, 98, 101, 103, 1114111], [48, 97, 102, 102]];
+  static final List<List<int>> _transitions2 = [[65, 90, 95, 95, 97, 122]];
   
-  static final List<List<int>> _transitions2 = [[34, 34, 76, 76], [43, 43, 45, 45, 48, 57]];
+  static final List<List<int>> _transitions20 = [[43, 43, 45, 45, 48, 57]];
   
-  static final List<List<int>> _transitions20 = [[48, 57], [65, 90, 95, 95, 97, 122]];
+  static final List<List<int>> _transitions21 = [[40, 40, 42, 42]];
   
-  static final List<List<int>> _transitions21 = [[43, 43, 45, 45, 48, 48]];
+  static final List<List<int>> _transitions22 = [[95, 95, 99, 99, 115, 115, 117, 118]];
   
-  static final List<List<int>> _transitions22 = [[95, 95, 97, 103, 105, 105, 108, 108, 114, 119]];
+  static final List<List<int>> _transitions23 = [[95, 95, 99, 99, 101, 101, 118, 118]];
   
-  static final List<List<int>> _transitions23 = [[95, 95], [97, 97], [98, 98], [99, 99], [100, 100], [101, 101], [102, 102], [103, 103], [105, 105], [108, 108], [114, 114], [115, 115], [116, 116], [117, 117], [118, 118], [119, 119]];
+  static final List<List<int>> _transitions24 = [[95, 95, 99, 99, 116, 116, 118, 118]];
   
-  static final List<List<int>> _transitions24 = [[43, 43], [45, 45]];
+  static final List<List<int>> _transitions25 = [[40, 40, 42, 42, 65, 90, 95, 95, 97, 122]];
   
-  static final List<List<int>> _transitions25 = [[9, 10, 13, 13, 32, 32]];
+  static final List<List<int>> _transitions26 = [[40, 40], [42, 42], [65, 90, 95, 95, 97, 122]];
   
-  static final List<List<int>> _transitions26 = [[9, 10, 13, 13, 32, 32], [47, 47]];
+  static final List<List<int>> _transitions27 = [[43, 43, 45, 45, 48, 48], [49, 57]];
   
-  static final List<List<int>> _transitions3 = [[0, 100, 102, 114, 116, 116, 118, 1114111], [101, 101], [115, 115, 117, 117]];
+  static final List<List<int>> _transitions28 = [[34, 34], [76, 76]];
   
-  static final List<List<int>> _transitions4 = [[115, 115, 117, 117]];
+  static final List<List<int>> _transitions29 = [[0, 9, 11, 12, 14, 1114111], [10, 10, 13, 13]];
   
-  static final List<List<int>> _transitions5 = [[115, 115], [117, 117]];
+  static final List<List<int>> _transitions3 = [[34, 34, 43, 43, 45, 45, 48, 57, 76, 76]];
   
-  static final List<List<int>> _transitions6 = [[43, 43, 45, 45, 48, 57]];
+  static final List<List<int>> _transitions30 = [[10, 10], [13, 13]];
   
-  static final List<List<int>> _transitions7 = [[108, 108], [115, 115]];
+  static final List<List<int>> _transitions31 = [[48, 97, 102, 102]];
   
-  static final List<List<int>> _transitions8 = [[99, 99], [105, 105], [108, 108], [115, 115]];
+  static final List<List<int>> _transitions32 = [[0, 47, 98, 101, 103, 1114111], [48, 97, 102, 102]];
   
-  static final List<List<int>> _transitions9 = [[100, 100], [102, 102]];
+  static final List<List<int>> _transitions33 = [[48, 57], [65, 90, 95, 95, 97, 122]];
+  
+  static final List<List<int>> _transitions34 = [[43, 43, 45, 45, 48, 48]];
+  
+  static final List<List<int>> _transitions35 = [[95, 95, 97, 103, 105, 105, 108, 108, 114, 119]];
+  
+  static final List<List<int>> _transitions36 = [[95, 95], [97, 97], [98, 98], [99, 99], [100, 100], [101, 101], [102, 102], [103, 103], [105, 105], [108, 108], [114, 114], [115, 115], [116, 116], [117, 117], [118, 118], [119, 119]];
+  
+  static final List<List<int>> _transitions37 = [[43, 43], [45, 45]];
+  
+  static final List<List<int>> _transitions38 = [[9, 10, 13, 13, 32, 32]];
+  
+  static final List<List<int>> _transitions39 = [[9, 10, 13, 13, 32, 32], [47, 47]];
+  
+  static final List<List<int>> _transitions4 = [[34, 34, 76, 76], [43, 43, 45, 45, 48, 57]];
+  
+  static final List<List<int>> _transitions5 = [[99, 99, 118, 118]];
+  
+  static final List<List<int>> _transitions6 = [[99, 99], [118, 118]];
+  
+  static final List<List<int>> _transitions7 = [[42, 42, 65, 90, 95, 95, 97, 122]];
+  
+  static final List<List<int>> _transitions8 = [[65, 90], [95, 95], [97, 122]];
+  
+  static final List<List<int>> _transitions9 = [[99, 99, 105, 105], [108, 108], [115, 115, 117, 117]];
   
   List<Map<int, List>> _cache;
   
@@ -778,7 +799,7 @@ class CParser {
     }
     if (!success && _cursor > _testing) {
       // Expected: '='
-      _failure(_expect23);
+      _failure(_expect27);
     }
     // <= '=' SPACING # Choice
     _token = null;
@@ -789,18 +810,9 @@ class CParser {
   dynamic _parse_ASTERISK() {
     // LEXEME (TOKEN)
     // ASTERISK <- '*' SPACING
-    var $$;          
-    var pos = _cursor;             
-    if(_cachePos[59] >= pos) {
-      $$ = _getFromCache(59);
-      if($$ != null) {
-        return $$[0];       
-      }
-    } else {
-      _cachePos[59] = pos;
-    }  
-    _token = 1;    
-    _tokenStart = _cursor;    
+    var $$;
+    _token = 1;  
+    _tokenStart = _cursor;  
     // => '*' SPACING # Choice
     switch (_ch == 42 ? 0 : _ch == -1 ? 2 : 1) {
       // [*]
@@ -853,12 +865,9 @@ class CParser {
     }
     if (!success && _cursor > _testing) {
       // Expected: '*'
-      _failure(_expect22);
+      _failure(_expect10);
     }
     // <= '*' SPACING # Choice
-    if (_cacheable[59]) {
-      _addToCache($$, pos, 59);
-    }    
     _token = null;
     _tokenStart = null;
     return $$;
@@ -929,13 +938,13 @@ class CParser {
     // ArrayDimensions <- Dimension+
     var $$;          
     var pos = _cursor;             
-    if(_cachePos[19] >= pos) {
-      $$ = _getFromCache(19);
+    if(_cachePos[35] >= pos) {
+      $$ = _getFromCache(35);
       if($$ != null) {
         return $$[0];       
       }
     } else {
-      _cachePos[19] = pos;
+      _cachePos[35] = pos;
     }  
     // => Dimension+ # Choice
     switch (_ch == 91 ? 0 : _ch == -1 ? 2 : 1) {
@@ -986,118 +995,11 @@ class CParser {
     }
     if (!success && _cursor > _testing) {
       // Expected: '['
-      _failure(_expect11);
+      _failure(_expect22);
     }
     // <= Dimension+ # Choice
-    if (_cacheable[19]) {
-      _addToCache($$, pos, 19);
-    }    
-    return $$;
-  }
-  
-  dynamic _parse_ArrayParameter() {
-    // SENTENCE (NONTERMINAL)
-    // ArrayParameter <- Metadata? Type Identifier? ArrayDimensions Metadata?
-    var $$;          
-    var pos = _cursor;             
-    if(_cachePos[18] >= pos) {
-      $$ = _getFromCache(18);
-      if($$ != null) {
-        return $$[0];       
-      }
-    } else {
-      _cachePos[18] = pos;
-    }  
-    // => Metadata? Type Identifier? ArrayDimensions Metadata? # Choice
-    switch (_ch >= 0 && _ch <= 1114111 ? 0 : _ch == -1 ? 2 : 1) {
-      // [\u0000-\u0010ffff]
-      // EOF
-      case 0:
-      case 2:
-        // => Metadata? Type Identifier? ArrayDimensions Metadata? # Sequence
-        var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
-        _startPos = _cursor;
-        while (true) {  
-          // => Metadata?
-          var testing0 = _testing;
-          _testing = _cursor;
-          // => Metadata
-          $$ = _parse_Metadata();
-          // <= Metadata
-          success = true; 
-          _testing = testing0;
-          // <= Metadata?
-          if (!success) break;
-          var seq = new List(5)..[0] = $$;
-          // => Type
-          $$ = _parse_Type();
-          // <= Type
-          if (!success) break;
-          seq[1] = $$;
-          // => Identifier?
-          var testing1 = _testing;
-          _testing = _cursor;
-          // => Identifier
-          $$ = _parse_Identifier();
-          // <= Identifier
-          success = true; 
-          _testing = testing1;
-          // <= Identifier?
-          if (!success) break;
-          seq[2] = $$;
-          // => ArrayDimensions
-          $$ = _parse_ArrayDimensions();
-          // <= ArrayDimensions
-          if (!success) break;
-          seq[3] = $$;
-          // => Metadata?
-          var testing2 = _testing;
-          _testing = _cursor;
-          // => Metadata
-          $$ = _parse_Metadata();
-          // <= Metadata
-          success = true; 
-          _testing = testing2;
-          // <= Metadata?
-          if (!success) break;
-          seq[4] = $$;
-          $$ = seq;
-          if (success) {    
-            // Metadata?
-            final $1 = seq[0];
-            // Type
-            final $2 = seq[1];
-            // Identifier?
-            final $3 = seq[2];
-            // ArrayDimensions
-            final $4 = seq[3];
-            // Metadata?
-            final $5 = seq[4];
-            final $start = startPos0;
-            $$ = new ParameterDeclaration(identifier: $3, metadata: $1, type: _createArray($2, $4, $5));
-          }
-          break;
-        }
-        if (!success) {
-          _ch = ch0;
-          _cursor = pos0;
-        }
-        _startPos = startPos0;
-        // <= Metadata? Type Identifier? ArrayDimensions Metadata? # Sequence
-        break;
-      // No matches
-      case 1:
-        $$ = null;
-        success = false;
-        break;
-    }
-    if (!success && _cursor > _testing) {
-      // Expected: 'struct', 'union', 'enum', IDENTIFIER, 'short', 'long', 'char', 'int', SIGNEDNESS, 'float', 'double', 'void'
-      _failure(_expect8);
-    }
-    // <= Metadata? Type Identifier? ArrayDimensions Metadata? # Choice
-    if (_cacheable[18]) {
-      _addToCache($$, pos, 18);
+    if (_cacheable[35]) {
+      _addToCache($$, pos, 35);
     }    
     return $$;
   }
@@ -1107,7 +1009,7 @@ class CParser {
     // ArraySize <- !ZERO_NUMBER POSITIVE_NUMBER
     var $$;
     // => !ZERO_NUMBER POSITIVE_NUMBER # Choice
-    switch (_getState(_transitions6)) {
+    switch (_getState(_transitions20)) {
       // [+] [-] [0-9]
       // EOF
       case 0:
@@ -1161,114 +1063,44 @@ class CParser {
     }
     if (!success && _cursor > _testing) {
       // Expected: POSITIVE_NUMBER
-      _failure(_expect12);
+      _failure(_expect23);
     }
     // <= !ZERO_NUMBER POSITIVE_NUMBER # Choice
     return $$;
   }
   
-  dynamic _parse_ArrayTypeElementSynonym() {
-    // SENTENCE (NONTERMINAL)
-    // ArrayTypeElementSynonym <- PointerTypeSynonymNoMetadata / SimpleTypeSynonymNoMetadata
+  dynamic _parse_BOOL() {
+    // LEXEME (TOKEN)
+    // BOOL <- '_Bool' SPACING
     var $$;
-    // => PointerTypeSynonymNoMetadata / SimpleTypeSynonymNoMetadata # Choice
-    switch (_ch >= 0 && _ch <= 1114111 ? 0 : _ch == -1 ? 2 : 1) {
-      // [\u0000-\u0010ffff]
+    _token = 3;  
+    _tokenStart = _cursor;  
+    // => '_Bool' SPACING # Choice
+    switch (_ch == 95 ? 0 : _ch == -1 ? 2 : 1) {
+      // [_]
       case 0:
-        while (true) {
-          var startPos0 = _startPos;
-          _startPos = _cursor;
-          // => PointerTypeSynonymNoMetadata
-          $$ = _parse_PointerTypeSynonymNoMetadata();
-          // <= PointerTypeSynonymNoMetadata
-          _startPos = startPos0;
-          if (success) break;
-          var startPos1 = _startPos;
-          _startPos = _cursor;
-          // => SimpleTypeSynonymNoMetadata
-          $$ = _parse_SimpleTypeSynonymNoMetadata();
-          // <= SimpleTypeSynonymNoMetadata
-          _startPos = startPos1;
-          break;
-        }
-        break;
-      // No matches
-      case 1:
-        $$ = null;
-        success = false;
-        break;
-      // EOF
-      case 2:
-        var startPos2 = _startPos;
-        _startPos = _cursor;
-        // => SimpleTypeSynonymNoMetadata
-        $$ = _parse_SimpleTypeSynonymNoMetadata();
-        // <= SimpleTypeSynonymNoMetadata
-        _startPos = startPos2;
-        break;
-    }
-    if (!success && _cursor > _testing) {
-      // Expected: '*', IDENTIFIER
-      _failure(_expect21);
-    }
-    // <= PointerTypeSynonymNoMetadata / SimpleTypeSynonymNoMetadata # Choice
-    return $$;
-  }
-  
-  dynamic _parse_ArrayTypeSynonym() {
-    // SENTENCE (NONTERMINAL)
-    // ArrayTypeSynonym <- ArrayTypeElementSynonym ArrayDimensions Metadata?
-    var $$;          
-    var pos = _cursor;             
-    if(_cachePos[47] >= pos) {
-      $$ = _getFromCache(47);
-      if($$ != null) {
-        return $$[0];       
-      }
-    } else {
-      _cachePos[47] = pos;
-    }  
-    // => ArrayTypeElementSynonym ArrayDimensions Metadata? # Choice
-    switch (_ch >= 0 && _ch <= 1114111 ? 0 : _ch == -1 ? 2 : 1) {
-      // [\u0000-\u0010ffff]
-      // EOF
-      case 0:
-      case 2:
-        // => ArrayTypeElementSynonym ArrayDimensions Metadata? # Sequence
+        // => '_Bool' SPACING # Sequence
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
         _startPos = _cursor;
         while (true) {  
-          // => ArrayTypeElementSynonym
-          $$ = _parse_ArrayTypeElementSynonym();
-          // <= ArrayTypeElementSynonym
+          // => '_Bool'
+          $$ = _matchString(_strings1, '_Bool');
+          // <= '_Bool'
           if (!success) break;
-          var seq = new List(3)..[0] = $$;
-          // => ArrayDimensions
-          $$ = _parse_ArrayDimensions();
-          // <= ArrayDimensions
+          var seq = new List(2)..[0] = $$;
+          // => SPACING
+          $$ = _parse_SPACING();
+          // <= SPACING
           if (!success) break;
           seq[1] = $$;
-          // => Metadata?
-          var testing0 = _testing;
-          _testing = _cursor;
-          // => Metadata
-          $$ = _parse_Metadata();
-          // <= Metadata
-          success = true; 
-          _testing = testing0;
-          // <= Metadata?
-          if (!success) break;
-          seq[2] = $$;
           $$ = seq;
           if (success) {    
-            // ArrayTypeElementSynonym
+            // '_Bool'
             final $1 = seq[0];
-            // ArrayDimensions
+            // SPACING
             final $2 = seq[1];
-            // Metadata?
-            final $3 = seq[2];
             final $start = startPos0;
-            $$ = new ArrayTypeSpecification(dimensions: $2, metadata: $3, type: $1);
+            $$ = $1;
           }
           break;
         }
@@ -1277,65 +1109,61 @@ class CParser {
           _cursor = pos0;
         }
         _startPos = startPos0;
-        // <= ArrayTypeElementSynonym ArrayDimensions Metadata? # Sequence
+        // <= '_Bool' SPACING # Sequence
         break;
       // No matches
+      // EOF
       case 1:
+      case 2:
         $$ = null;
         success = false;
         break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: '*', IDENTIFIER
-      _failure(_expect21);
+      // Expected: '_Bool'
+      _failure(_expect17);
     }
-    // <= ArrayTypeElementSynonym ArrayDimensions Metadata? # Choice
-    if (_cacheable[47]) {
-      _addToCache($$, pos, 47);
-    }    
+    // <= '_Bool' SPACING # Choice
+    _token = null;
+    _tokenStart = null;
     return $$;
   }
   
-  dynamic _parse_ArrayVariableDeclaration() {
+  dynamic _parse_BitFieldDeclaratorAbstract() {
     // SENTENCE (NONTERMINAL)
-    // ArrayVariableDeclaration <- Metadata? Type Identifier ArrayDimensions Metadata?
+    // BitFieldDeclaratorAbstract <- Identifier? COLON POSITIVE_NUMBER Metadata?
     var $$;
-    // => Metadata? Type Identifier ArrayDimensions Metadata? # Choice
-    switch (_ch >= 0 && _ch <= 1114111 ? 0 : _ch == -1 ? 2 : 1) {
-      // [\u0000-\u0010ffff]
+    // => Identifier? COLON POSITIVE_NUMBER Metadata? # Choice
+    switch (_getState(_transitions18)) {
+      // [:] [A-Z] [_] [a-z]
       // EOF
       case 0:
       case 2:
-        // => Metadata? Type Identifier ArrayDimensions Metadata? # Sequence
+        // => Identifier? COLON POSITIVE_NUMBER Metadata? # Sequence
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
         _startPos = _cursor;
         while (true) {  
-          // => Metadata?
+          // => Identifier?
           var testing0 = _testing;
           _testing = _cursor;
-          // => Metadata
-          $$ = _parse_Metadata();
-          // <= Metadata
-          success = true; 
-          _testing = testing0;
-          // <= Metadata?
-          if (!success) break;
-          var seq = new List(5)..[0] = $$;
-          // => Type
-          $$ = _parse_Type();
-          // <= Type
-          if (!success) break;
-          seq[1] = $$;
           // => Identifier
           $$ = _parse_Identifier();
           // <= Identifier
+          success = true; 
+          _testing = testing0;
+          // <= Identifier?
+          if (!success) break;
+          var seq = new List(4)..[0] = $$;
+          // => COLON
+          $$ = _parse_COLON();
+          // <= COLON
+          if (!success) break;
+          seq[1] = $$;
+          // => POSITIVE_NUMBER
+          $$ = _parse_POSITIVE_NUMBER();
+          // <= POSITIVE_NUMBER
           if (!success) break;
           seq[2] = $$;
-          // => ArrayDimensions
-          $$ = _parse_ArrayDimensions();
-          // <= ArrayDimensions
-          if (!success) break;
-          seq[3] = $$;
           // => Metadata?
           var testing1 = _testing;
           _testing = _cursor;
@@ -1346,21 +1174,19 @@ class CParser {
           _testing = testing1;
           // <= Metadata?
           if (!success) break;
-          seq[4] = $$;
+          seq[3] = $$;
           $$ = seq;
           if (success) {    
-            // Metadata?
+            // Identifier?
             final $1 = seq[0];
-            // Type
+            // COLON
             final $2 = seq[1];
-            // Identifier
+            // POSITIVE_NUMBER
             final $3 = seq[2];
-            // ArrayDimensions
-            final $4 = seq[3];
             // Metadata?
-            final $5 = seq[4];
+            final $4 = seq[3];
             final $start = startPos0;
-            $$ = new VariableDeclaration(identifier: $3, metadata: $1, type: _createArray($2, $4, $5));
+            $$ = new Declarator(identifier: $1, metadata: $4, width: $3);
           }
           break;
         }
@@ -1369,7 +1195,7 @@ class CParser {
           _cursor = pos0;
         }
         _startPos = startPos0;
-        // <= Metadata? Type Identifier ArrayDimensions Metadata? # Sequence
+        // <= Identifier? COLON POSITIVE_NUMBER Metadata? # Sequence
         break;
       // No matches
       case 1:
@@ -1378,73 +1204,146 @@ class CParser {
         break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: 'struct', 'union', 'enum', IDENTIFIER, 'short', 'long', 'char', 'int', SIGNEDNESS, 'float', 'double', 'void'
-      _failure(_expect8);
+      // Expected: ':'
+      _failure(_expect20);
     }
-    // <= Metadata? Type Identifier ArrayDimensions Metadata? # Choice
+    // <= Identifier? COLON POSITIVE_NUMBER Metadata? # Choice
     return $$;
   }
   
-  dynamic _parse_Attribute() {
+  dynamic _parse_BitFieldDeclaratorNotAbstract() {
     // SENTENCE (NONTERMINAL)
-    // Attribute <- IDENT OPEN_PAREN AttributeParameterList? CLOSE_PAREN / IDENT
-    var $$;          
-    var pos = _cursor;             
-    if(_cachePos[7] >= pos) {
-      $$ = _getFromCache(7);
-      if($$ != null) {
-        return $$[0];       
-      }
-    } else {
-      _cachePos[7] = pos;
-    }  
-    // => IDENT OPEN_PAREN AttributeParameterList? CLOSE_PAREN / IDENT # Choice
-    switch (_getState(_transitions0)) {
+    // BitFieldDeclaratorNotAbstract <- Identifier COLON POSITIVE_NUMBER Metadata?
+    var $$;
+    // => Identifier COLON POSITIVE_NUMBER Metadata? # Choice
+    switch (_getState(_transitions2)) {
       // [A-Z] [_] [a-z]
+      // EOF
+      case 0:
+      case 2:
+        // => Identifier COLON POSITIVE_NUMBER Metadata? # Sequence
+        var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
+        _startPos = _cursor;
+        while (true) {  
+          // => Identifier
+          $$ = _parse_Identifier();
+          // <= Identifier
+          if (!success) break;
+          var seq = new List(4)..[0] = $$;
+          // => COLON
+          $$ = _parse_COLON();
+          // <= COLON
+          if (!success) break;
+          seq[1] = $$;
+          // => POSITIVE_NUMBER
+          $$ = _parse_POSITIVE_NUMBER();
+          // <= POSITIVE_NUMBER
+          if (!success) break;
+          seq[2] = $$;
+          // => Metadata?
+          var testing0 = _testing;
+          _testing = _cursor;
+          // => Metadata
+          $$ = _parse_Metadata();
+          // <= Metadata
+          success = true; 
+          _testing = testing0;
+          // <= Metadata?
+          if (!success) break;
+          seq[3] = $$;
+          $$ = seq;
+          if (success) {    
+            // Identifier
+            final $1 = seq[0];
+            // COLON
+            final $2 = seq[1];
+            // POSITIVE_NUMBER
+            final $3 = seq[2];
+            // Metadata?
+            final $4 = seq[3];
+            final $start = startPos0;
+            $$ = new Declarator(identifier: $1, metadata: $4, width: $3);
+          }
+          break;
+        }
+        if (!success) {
+          _ch = ch0;
+          _cursor = pos0;
+        }
+        _startPos = startPos0;
+        // <= Identifier COLON POSITIVE_NUMBER Metadata? # Sequence
+        break;
+      // No matches
+      case 1:
+        $$ = null;
+        success = false;
+        break;
+    }
+    if (!success && _cursor > _testing) {
+      // Expected: Identifier
+      _failure(_expect9);
+    }
+    // <= Identifier COLON POSITIVE_NUMBER Metadata? # Choice
+    return $$;
+  }
+  
+  dynamic _parse_BitFieldParameterDeclaration() {
+    // SENTENCE (NONTERMINAL)
+    // BitFieldParameterDeclaration <- Metadata? TypeQualifiers? IntegerType BitFieldDeclaratorNotAbstract / Metadata? TypeQualifiers? IntegerType BitFieldDeclaratorAbstract
+    var $$;
+    // => Metadata? TypeQualifiers? IntegerType BitFieldDeclaratorNotAbstract / Metadata? TypeQualifiers? IntegerType BitFieldDeclaratorAbstract # Choice
+    switch (_getState(_transitions17)) {
+      // [_] [c] [i] [l] [s] [u-v]
       case 0:
         while (true) {
-          // => IDENT OPEN_PAREN AttributeParameterList? CLOSE_PAREN # Sequence
+          // => Metadata? TypeQualifiers? IntegerType BitFieldDeclaratorNotAbstract # Sequence
           var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
           _startPos = _cursor;
           while (true) {  
-            // => IDENT
-            $$ = _parse_IDENT();
-            // <= IDENT
-            if (!success) break;
-            var seq = new List(4)..[0] = $$;
-            // => OPEN_PAREN
-            $$ = _parse_OPEN_PAREN();
-            // <= OPEN_PAREN
-            if (!success) break;
-            seq[1] = $$;
-            // => AttributeParameterList?
+            // => Metadata?
             var testing0 = _testing;
             _testing = _cursor;
-            // => AttributeParameterList
-            $$ = _parse_AttributeParameterList();
-            // <= AttributeParameterList
+            // => Metadata
+            $$ = _parse_Metadata();
+            // <= Metadata
             success = true; 
             _testing = testing0;
-            // <= AttributeParameterList?
+            // <= Metadata?
+            if (!success) break;
+            var seq = new List(4)..[0] = $$;
+            // => TypeQualifiers?
+            var testing1 = _testing;
+            _testing = _cursor;
+            // => TypeQualifiers
+            $$ = _parse_TypeQualifiers();
+            // <= TypeQualifiers
+            success = true; 
+            _testing = testing1;
+            // <= TypeQualifiers?
+            if (!success) break;
+            seq[1] = $$;
+            // => IntegerType
+            $$ = _parse_IntegerType();
+            // <= IntegerType
             if (!success) break;
             seq[2] = $$;
-            // => CLOSE_PAREN
-            $$ = _parse_CLOSE_PAREN();
-            // <= CLOSE_PAREN
+            // => BitFieldDeclaratorNotAbstract
+            $$ = _parse_BitFieldDeclaratorNotAbstract();
+            // <= BitFieldDeclaratorNotAbstract
             if (!success) break;
             seq[3] = $$;
             $$ = seq;
             if (success) {    
-              // IDENT
+              // Metadata?
               final $1 = seq[0];
-              // OPEN_PAREN
+              // TypeQualifiers?
               final $2 = seq[1];
-              // AttributeParameterList?
+              // IntegerType
               final $3 = seq[2];
-              // CLOSE_PAREN
+              // BitFieldDeclaratorNotAbstract
               final $4 = seq[3];
               final $start = startPos0;
-              $$ = new Attribute($1, $3);
+              $$ = new ParameterDeclaration(declarator: $4, metadata: $1, qualifiers: $2,  type: $3);
             }
             break;
           }
@@ -1453,20 +1352,65 @@ class CParser {
             _cursor = pos0;
           }
           _startPos = startPos0;
-          // <= IDENT OPEN_PAREN AttributeParameterList? CLOSE_PAREN # Sequence
+          // <= Metadata? TypeQualifiers? IntegerType BitFieldDeclaratorNotAbstract # Sequence
           if (success) break;
-          var startPos1 = _startPos;
+          // => Metadata? TypeQualifiers? IntegerType BitFieldDeclaratorAbstract # Sequence
+          var ch1 = _ch, pos1 = _cursor, startPos1 = _startPos;
           _startPos = _cursor;
-          // => IDENT
-          $$ = _parse_IDENT();
-          // <= IDENT
-          if (success) {    
-            // IDENT
-            final $1 = $$;
-            final $start = startPos1;
-            $$ = new Attribute($1);
+          while (true) {  
+            // => Metadata?
+            var testing2 = _testing;
+            _testing = _cursor;
+            // => Metadata
+            $$ = _parse_Metadata();
+            // <= Metadata
+            success = true; 
+            _testing = testing2;
+            // <= Metadata?
+            if (!success) break;
+            var seq = new List(4)..[0] = $$;
+            // => TypeQualifiers?
+            var testing3 = _testing;
+            _testing = _cursor;
+            // => TypeQualifiers
+            $$ = _parse_TypeQualifiers();
+            // <= TypeQualifiers
+            success = true; 
+            _testing = testing3;
+            // <= TypeQualifiers?
+            if (!success) break;
+            seq[1] = $$;
+            // => IntegerType
+            $$ = _parse_IntegerType();
+            // <= IntegerType
+            if (!success) break;
+            seq[2] = $$;
+            // => BitFieldDeclaratorAbstract
+            $$ = _parse_BitFieldDeclaratorAbstract();
+            // <= BitFieldDeclaratorAbstract
+            if (!success) break;
+            seq[3] = $$;
+            $$ = seq;
+            if (success) {    
+              // Metadata?
+              final $1 = seq[0];
+              // TypeQualifiers?
+              final $2 = seq[1];
+              // IntegerType
+              final $3 = seq[2];
+              // BitFieldDeclaratorAbstract
+              final $4 = seq[3];
+              final $start = startPos1;
+              $$ = new ParameterDeclaration(declarator: $4, metadata: $1, qualifiers: $2, type: $3);
+            }
+            break;
+          }
+          if (!success) {
+            _ch = ch1;
+            _cursor = pos1;
           }
           _startPos = startPos1;
+          // <= Metadata? TypeQualifiers? IntegerType BitFieldDeclaratorAbstract # Sequence
           break;
         }
         break;
@@ -1479,388 +1423,30 @@ class CParser {
         break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: IDENT
-      _failure(_expect5);
+      // Expected: 'short', 'long', 'char', 'int', SIGNEDNESS
+      _failure(_expect12);
     }
-    // <= IDENT OPEN_PAREN AttributeParameterList? CLOSE_PAREN / IDENT # Choice
-    if (_cacheable[7]) {
-      _addToCache($$, pos, 7);
-    }    
+    // <= Metadata? TypeQualifiers? IntegerType BitFieldDeclaratorNotAbstract / Metadata? TypeQualifiers? IntegerType BitFieldDeclaratorAbstract # Choice
     return $$;
   }
   
-  dynamic _parse_AttributeList() {
+  dynamic _parse_BoolType() {
     // SENTENCE (NONTERMINAL)
-    // AttributeList <- Attribute (COMMA Attribute)*
+    // BoolType <- BOOL Metadata? TypeQualifiers?
     var $$;
-    // => Attribute (COMMA Attribute)* # Choice
-    switch (_getState(_transitions0)) {
-      // [A-Z] [_] [a-z]
-      case 0:
-        // => Attribute (COMMA Attribute)* # Sequence
-        var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
-        _startPos = _cursor;
-        while (true) {  
-          // => Attribute
-          $$ = _parse_Attribute();
-          // <= Attribute
-          if (!success) break;
-          var seq = new List(2)..[0] = $$;
-          // => (COMMA Attribute)*
-          var testing0 = _testing; 
-          for (var reps = []; ; ) {
-            _testing = _cursor;
-            // => (COMMA Attribute) # Choice
-            switch (_ch == 44 ? 0 : _ch == -1 ? 2 : 1) {
-              // [,]
-              case 0:
-                // => COMMA Attribute # Sequence
-                var ch1 = _ch, pos1 = _cursor, startPos1 = _startPos;
-                _startPos = _cursor;
-                while (true) {  
-                  // => COMMA
-                  $$ = _parse_COMMA();
-                  // <= COMMA
-                  if (!success) break;
-                  var seq = new List(2)..[0] = $$;
-                  // => Attribute
-                  $$ = _parse_Attribute();
-                  // <= Attribute
-                  if (!success) break;
-                  seq[1] = $$;
-                  $$ = seq;
-                  break;
-                }
-                if (!success) {
-                  _ch = ch1;
-                  _cursor = pos1;
-                }
-                _startPos = startPos1;
-                // <= COMMA Attribute # Sequence
-                break;
-              // No matches
-              // EOF
-              case 1:
-              case 2:
-                $$ = null;
-                success = false;
-                break;
-            }
-            if (!success && _cursor > _testing) {
-              // Expected: ','
-              _failure(_expect6);
-            }
-            // <= (COMMA Attribute) # Choice
-            if (success) {  
-              reps.add($$);
-            } else {
-              success = true;
-              _testing = testing0;
-              $$ = reps;
-              break; 
-            }
-          }
-          // <= (COMMA Attribute)*
-          if (!success) break;
-          seq[1] = $$;
-          $$ = seq;
-          if (success) {    
-            // Attribute
-            final $1 = seq[0];
-            // (COMMA Attribute)*
-            final $2 = seq[1];
-            final $start = startPos0;
-            $$ = _list($1, $2);
-          }
-          break;
-        }
-        if (!success) {
-          _ch = ch0;
-          _cursor = pos0;
-        }
-        _startPos = startPos0;
-        // <= Attribute (COMMA Attribute)* # Sequence
-        break;
-      // No matches
-      // EOF
-      case 1:
-      case 2:
-        $$ = null;
-        success = false;
-        break;
-    }
-    if (!success && _cursor > _testing) {
-      // Expected: IDENT
-      _failure(_expect5);
-    }
-    // <= Attribute (COMMA Attribute)* # Choice
-    return $$;
-  }
-  
-  dynamic _parse_AttributeParameter() {
-    // SENTENCE (NONTERMINAL)
-    // AttributeParameter <- STRING / NUMBER
-    var $$;          
-    var pos = _cursor;             
-    if(_cachePos[9] >= pos) {
-      $$ = _getFromCache(9);
-      if($$ != null) {
-        return $$[0];       
-      }
-    } else {
-      _cachePos[9] = pos;
-    }  
-    // => STRING / NUMBER # Choice
-    switch (_getState(_transitions2)) {
-      // [\"] [L]
-      case 0:
-        var startPos0 = _startPos;
-        _startPos = _cursor;
-        // => STRING
-        $$ = _parse_STRING();
-        // <= STRING
-        _startPos = startPos0;
-        break;
-      // [+] [-] [0-9]
-      case 1:
-        var startPos1 = _startPos;
-        _startPos = _cursor;
-        // => NUMBER
-        $$ = _parse_NUMBER();
-        // <= NUMBER
-        _startPos = startPos1;
-        break;
-      // No matches
-      // EOF
-      case 2:
-      case 3:
-        $$ = null;
-        success = false;
-        break;
-    }
-    if (!success && _cursor > _testing) {
-      // Expected: STRING, NUMBER
-      _failure(_expect7);
-    }
-    // <= STRING / NUMBER # Choice
-    if (_cacheable[9]) {
-      _addToCache($$, pos, 9);
-    }    
-    return $$;
-  }
-  
-  dynamic _parse_AttributeParameterList() {
-    // SENTENCE (NONTERMINAL)
-    // AttributeParameterList <- AttributeParameter (COMMA AttributeParameter)*
-    var $$;
-    // => AttributeParameter (COMMA AttributeParameter)* # Choice
-    switch (_getState(_transitions1)) {
-      // [\"] [+] [-] [0-9] [L]
-      case 0:
-        // => AttributeParameter (COMMA AttributeParameter)* # Sequence
-        var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
-        _startPos = _cursor;
-        while (true) {  
-          // => AttributeParameter
-          $$ = _parse_AttributeParameter();
-          // <= AttributeParameter
-          if (!success) break;
-          var seq = new List(2)..[0] = $$;
-          // => (COMMA AttributeParameter)*
-          var testing0 = _testing; 
-          for (var reps = []; ; ) {
-            _testing = _cursor;
-            // => (COMMA AttributeParameter) # Choice
-            switch (_ch == 44 ? 0 : _ch == -1 ? 2 : 1) {
-              // [,]
-              case 0:
-                // => COMMA AttributeParameter # Sequence
-                var ch1 = _ch, pos1 = _cursor, startPos1 = _startPos;
-                _startPos = _cursor;
-                while (true) {  
-                  // => COMMA
-                  $$ = _parse_COMMA();
-                  // <= COMMA
-                  if (!success) break;
-                  var seq = new List(2)..[0] = $$;
-                  // => AttributeParameter
-                  $$ = _parse_AttributeParameter();
-                  // <= AttributeParameter
-                  if (!success) break;
-                  seq[1] = $$;
-                  $$ = seq;
-                  break;
-                }
-                if (!success) {
-                  _ch = ch1;
-                  _cursor = pos1;
-                }
-                _startPos = startPos1;
-                // <= COMMA AttributeParameter # Sequence
-                break;
-              // No matches
-              // EOF
-              case 1:
-              case 2:
-                $$ = null;
-                success = false;
-                break;
-            }
-            if (!success && _cursor > _testing) {
-              // Expected: ','
-              _failure(_expect6);
-            }
-            // <= (COMMA AttributeParameter) # Choice
-            if (success) {  
-              reps.add($$);
-            } else {
-              success = true;
-              _testing = testing0;
-              $$ = reps;
-              break; 
-            }
-          }
-          // <= (COMMA AttributeParameter)*
-          if (!success) break;
-          seq[1] = $$;
-          $$ = seq;
-          if (success) {    
-            // AttributeParameter
-            final $1 = seq[0];
-            // (COMMA AttributeParameter)*
-            final $2 = seq[1];
-            final $start = startPos0;
-            $$ = _list($1, $2);
-          }
-          break;
-        }
-        if (!success) {
-          _ch = ch0;
-          _cursor = pos0;
-        }
-        _startPos = startPos0;
-        // <= AttributeParameter (COMMA AttributeParameter)* # Sequence
-        break;
-      // No matches
-      // EOF
-      case 1:
-      case 2:
-        $$ = null;
-        success = false;
-        break;
-    }
-    if (!success && _cursor > _testing) {
-      // Expected: STRING, NUMBER
-      _failure(_expect7);
-    }
-    // <= AttributeParameter (COMMA AttributeParameter)* # Choice
-    return $$;
-  }
-  
-  dynamic _parse_AttributeSpecifier() {
-    // SENTENCE (NONTERMINAL)
-    // AttributeSpecifier <- ATTRIBUTE OPEN_PAREN OPEN_PAREN AttributeList? CLOSE_PAREN CLOSE_PAREN
-    var $$;
-    // => ATTRIBUTE OPEN_PAREN OPEN_PAREN AttributeList? CLOSE_PAREN CLOSE_PAREN # Choice
+    // => BOOL Metadata? TypeQualifiers? # Choice
     switch (_ch == 95 ? 0 : _ch == -1 ? 2 : 1) {
       // [_]
       case 0:
-        // => ATTRIBUTE OPEN_PAREN OPEN_PAREN AttributeList? CLOSE_PAREN CLOSE_PAREN # Sequence
+        // => BOOL Metadata? TypeQualifiers? # Sequence
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
         _startPos = _cursor;
         while (true) {  
-          // => ATTRIBUTE
-          $$ = _parse_ATTRIBUTE();
-          // <= ATTRIBUTE
+          // => BOOL
+          $$ = _parse_BOOL();
+          // <= BOOL
           if (!success) break;
-          var seq = new List(6)..[0] = $$;
-          // => OPEN_PAREN
-          $$ = _parse_OPEN_PAREN();
-          // <= OPEN_PAREN
-          if (!success) break;
-          seq[1] = $$;
-          // => OPEN_PAREN
-          $$ = _parse_OPEN_PAREN();
-          // <= OPEN_PAREN
-          if (!success) break;
-          seq[2] = $$;
-          // => AttributeList?
-          var testing0 = _testing;
-          _testing = _cursor;
-          // => AttributeList
-          $$ = _parse_AttributeList();
-          // <= AttributeList
-          success = true; 
-          _testing = testing0;
-          // <= AttributeList?
-          if (!success) break;
-          seq[3] = $$;
-          // => CLOSE_PAREN
-          $$ = _parse_CLOSE_PAREN();
-          // <= CLOSE_PAREN
-          if (!success) break;
-          seq[4] = $$;
-          // => CLOSE_PAREN
-          $$ = _parse_CLOSE_PAREN();
-          // <= CLOSE_PAREN
-          if (!success) break;
-          seq[5] = $$;
-          $$ = seq;
-          if (success) {    
-            // ATTRIBUTE
-            final $1 = seq[0];
-            // OPEN_PAREN
-            final $2 = seq[1];
-            // OPEN_PAREN
-            final $3 = seq[2];
-            // AttributeList?
-            final $4 = seq[3];
-            // CLOSE_PAREN
-            final $5 = seq[4];
-            // CLOSE_PAREN
-            final $6 = seq[5];
-            final $start = startPos0;
-            $$ = new AttributeList($4);
-          }
-          break;
-        }
-        if (!success) {
-          _ch = ch0;
-          _cursor = pos0;
-        }
-        _startPos = startPos0;
-        // <= ATTRIBUTE OPEN_PAREN OPEN_PAREN AttributeList? CLOSE_PAREN CLOSE_PAREN # Sequence
-        break;
-      // No matches
-      // EOF
-      case 1:
-      case 2:
-        $$ = null;
-        success = false;
-        break;
-    }
-    if (!success && _cursor > _testing) {
-      // Expected: '__attribute__'
-      _failure(_expect4);
-    }
-    // <= ATTRIBUTE OPEN_PAREN OPEN_PAREN AttributeList? CLOSE_PAREN CLOSE_PAREN # Choice
-    return $$;
-  }
-  
-  dynamic _parse_BitFieldParameter() {
-    // SENTENCE (NONTERMINAL)
-    // BitFieldParameter <- Metadata? Type Identifier? COLON POSITIVE_NUMBER
-    var $$;
-    // => Metadata? Type Identifier? COLON POSITIVE_NUMBER # Choice
-    switch (_ch >= 0 && _ch <= 1114111 ? 0 : _ch == -1 ? 2 : 1) {
-      // [\u0000-\u0010ffff]
-      // EOF
-      case 0:
-      case 2:
-        // => Metadata? Type Identifier? COLON POSITIVE_NUMBER # Sequence
-        var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
-        _startPos = _cursor;
-        while (true) {  
+          var seq = new List(3)..[0] = $$;
           // => Metadata?
           var testing0 = _testing;
           _testing = _cursor;
@@ -1871,47 +1457,28 @@ class CParser {
           _testing = testing0;
           // <= Metadata?
           if (!success) break;
-          var seq = new List(5)..[0] = $$;
-          // => Type
-          $$ = _parse_Type();
-          // <= Type
-          if (!success) break;
           seq[1] = $$;
-          // => Identifier?
+          // => TypeQualifiers?
           var testing1 = _testing;
           _testing = _cursor;
-          // => Identifier
-          $$ = _parse_Identifier();
-          // <= Identifier
+          // => TypeQualifiers
+          $$ = _parse_TypeQualifiers();
+          // <= TypeQualifiers
           success = true; 
           _testing = testing1;
-          // <= Identifier?
+          // <= TypeQualifiers?
           if (!success) break;
           seq[2] = $$;
-          // => COLON
-          $$ = _parse_COLON();
-          // <= COLON
-          if (!success) break;
-          seq[3] = $$;
-          // => POSITIVE_NUMBER
-          $$ = _parse_POSITIVE_NUMBER();
-          // <= POSITIVE_NUMBER
-          if (!success) break;
-          seq[4] = $$;
           $$ = seq;
           if (success) {    
-            // Metadata?
+            // BOOL
             final $1 = seq[0];
-            // Type
+            // Metadata?
             final $2 = seq[1];
-            // Identifier?
+            // TypeQualifiers?
             final $3 = seq[2];
-            // COLON
-            final $4 = seq[3];
-            // POSITIVE_NUMBER
-            final $5 = seq[4];
             final $start = startPos0;
-            $$ = new ParameterDeclaration(identifier: $3, metadata: $1, type: $2, width: $5);
+            $$ = new BuiltinTypeSpecification(identifier: _ident([$1]), metadata: $2, qualifiers: $3, typeKind: TypeSpecificationKind.BOOL);
           }
           break;
         }
@@ -1920,19 +1487,21 @@ class CParser {
           _cursor = pos0;
         }
         _startPos = startPos0;
-        // <= Metadata? Type Identifier? COLON POSITIVE_NUMBER # Sequence
+        // <= BOOL Metadata? TypeQualifiers? # Sequence
         break;
       // No matches
+      // EOF
       case 1:
+      case 2:
         $$ = null;
         success = false;
         break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: 'struct', 'union', 'enum', IDENTIFIER, 'short', 'long', 'char', 'int', SIGNEDNESS, 'float', 'double', 'void'
-      _failure(_expect8);
+      // Expected: '_Bool'
+      _failure(_expect17);
     }
-    // <= Metadata? Type Identifier? COLON POSITIVE_NUMBER # Choice
+    // <= BOOL Metadata? TypeQualifiers? # Choice
     return $$;
   }
   
@@ -1940,7 +1509,7 @@ class CParser {
     // LEXEME (TOKEN)
     // CHAR <- 'char' !IDENT_PART SPACING
     var $$;
-    _token = 3;  
+    _token = 4;  
     _tokenStart = _cursor;  
     // => 'char' !IDENT_PART SPACING # Choice
     switch (_ch == 99 ? 0 : _ch == -1 ? 2 : 1) {
@@ -1951,7 +1520,7 @@ class CParser {
         _startPos = _cursor;
         while (true) {  
           // => 'char'
-          $$ = _matchString(_strings1, 'char');
+          $$ = _matchString(_strings2, 'char');
           // <= 'char'
           if (!success) break;
           var seq = new List(3)..[0] = $$;
@@ -2004,7 +1573,7 @@ class CParser {
     }
     if (!success && _cursor > _testing) {
       // Expected: 'char'
-      _failure(_expect24);
+      _failure(_expect28);
     }
     // <= 'char' !IDENT_PART SPACING # Choice
     _token = null;
@@ -2017,15 +1586,15 @@ class CParser {
     // CLOSE_BRACE <- '}' SPACING
     var $$;          
     var pos = _cursor;             
-    if(_cachePos[62] >= pos) {
-      $$ = _getFromCache(62);
+    if(_cachePos[61] >= pos) {
+      $$ = _getFromCache(61);
       if($$ != null) {
         return $$[0];       
       }
     } else {
-      _cachePos[62] = pos;
+      _cachePos[61] = pos;
     }  
-    _token = 4;    
+    _token = 5;    
     _tokenStart = _cursor;    
     // => '}' SPACING # Choice
     switch (_ch == 125 ? 0 : _ch == -1 ? 2 : 1) {
@@ -2079,11 +1648,11 @@ class CParser {
     }
     if (!success && _cursor > _testing) {
       // Expected: '}'
-      _failure(_expect25);
+      _failure(_expect29);
     }
     // <= '}' SPACING # Choice
-    if (_cacheable[62]) {
-      _addToCache($$, pos, 62);
+    if (_cacheable[61]) {
+      _addToCache($$, pos, 61);
     }    
     _token = null;
     _tokenStart = null;
@@ -2094,7 +1663,7 @@ class CParser {
     // LEXEME (TOKEN)
     // CLOSE_BRACKET <- ']' SPACING
     var $$;
-    _token = 5;  
+    _token = 6;  
     _tokenStart = _cursor;  
     // => ']' SPACING # Choice
     switch (_ch == 93 ? 0 : _ch == -1 ? 2 : 1) {
@@ -2148,7 +1717,7 @@ class CParser {
     }
     if (!success && _cursor > _testing) {
       // Expected: ']'
-      _failure(_expect26);
+      _failure(_expect30);
     }
     // <= ']' SPACING # Choice
     _token = null;
@@ -2161,15 +1730,15 @@ class CParser {
     // CLOSE_PAREN <- ')' SPACING
     var $$;          
     var pos = _cursor;             
-    if(_cachePos[64] >= pos) {
-      $$ = _getFromCache(64);
+    if(_cachePos[63] >= pos) {
+      $$ = _getFromCache(63);
       if($$ != null) {
         return $$[0];       
       }
     } else {
-      _cachePos[64] = pos;
+      _cachePos[63] = pos;
     }  
-    _token = 6;    
+    _token = 7;    
     _tokenStart = _cursor;    
     // => ')' SPACING # Choice
     switch (_ch == 41 ? 0 : _ch == -1 ? 2 : 1) {
@@ -2223,11 +1792,11 @@ class CParser {
     }
     if (!success && _cursor > _testing) {
       // Expected: ')'
-      _failure(_expect27);
+      _failure(_expect31);
     }
     // <= ')' SPACING # Choice
-    if (_cacheable[64]) {
-      _addToCache($$, pos, 64);
+    if (_cacheable[63]) {
+      _addToCache($$, pos, 63);
     }    
     _token = null;
     _tokenStart = null;
@@ -2237,9 +1806,18 @@ class CParser {
   dynamic _parse_COLON() {
     // LEXEME (TOKEN)
     // COLON <- ':' SPACING
-    var $$;
-    _token = 7;  
-    _tokenStart = _cursor;  
+    var $$;          
+    var pos = _cursor;             
+    if(_cachePos[64] >= pos) {
+      $$ = _getFromCache(64);
+      if($$ != null) {
+        return $$[0];       
+      }
+    } else {
+      _cachePos[64] = pos;
+    }  
+    _token = 8;    
+    _tokenStart = _cursor;    
     // => ':' SPACING # Choice
     switch (_ch == 58 ? 0 : _ch == -1 ? 2 : 1) {
       // [:]
@@ -2292,9 +1870,12 @@ class CParser {
     }
     if (!success && _cursor > _testing) {
       // Expected: ':'
-      _failure(_expect28);
+      _failure(_expect20);
     }
     // <= ':' SPACING # Choice
+    if (_cacheable[64]) {
+      _addToCache($$, pos, 64);
+    }    
     _token = null;
     _tokenStart = null;
     return $$;
@@ -2305,15 +1886,15 @@ class CParser {
     // COMMA <- ',' SPACING
     var $$;          
     var pos = _cursor;             
-    if(_cachePos[66] >= pos) {
-      $$ = _getFromCache(66);
+    if(_cachePos[65] >= pos) {
+      $$ = _getFromCache(65);
       if($$ != null) {
         return $$[0];       
       }
     } else {
-      _cachePos[66] = pos;
+      _cachePos[65] = pos;
     }  
-    _token = 8;    
+    _token = 9;    
     _tokenStart = _cursor;    
     // => ',' SPACING # Choice
     switch (_ch == 44 ? 0 : _ch == -1 ? 2 : 1) {
@@ -2370,8 +1951,8 @@ class CParser {
       _failure(_expect6);
     }
     // <= ',' SPACING # Choice
-    if (_cacheable[66]) {
-      _addToCache($$, pos, 66);
+    if (_cacheable[65]) {
+      _addToCache($$, pos, 65);
     }    
     _token = null;
     _tokenStart = null;
@@ -2391,7 +1972,7 @@ class CParser {
         _startPos = _cursor;
         while (true) {  
           // => '//'
-          $$ = _matchString(_strings12, '//');
+          $$ = _matchString(_strings13, '//');
           // <= '//'
           if (!success) break;
           var seq = new List(3)..[0] = $$;
@@ -2462,7 +2043,7 @@ class CParser {
           if (!success) break;
           seq[1] = $$;
           // => (EOL / !.) # Choice
-          switch (_getState(_transitions16)) {
+          switch (_getState(_transitions29)) {
             // [\u0000-\t] [\u000b-\u000c] [\u000e-\u0010ffff]
             // EOF
             case 0:
@@ -2544,7 +2125,7 @@ class CParser {
     }
     if (!success && _cursor > _testing) {
       // Expected: //
-      _failure(_expect46);
+      _failure(_expect49);
     }
     // <= '//' (!EOL .)* (EOL / !.) # Choice
     return $$;
@@ -2563,7 +2144,7 @@ class CParser {
         _startPos = _cursor;
         while (true) {  
           // => 'const'
-          $$ = _matchString(_strings13, 'const');
+          $$ = _matchString(_strings14, 'const');
           // <= 'const'
           if (!success) break;
           var seq = new List(2)..[0] = $$;
@@ -2600,9 +2181,50 @@ class CParser {
     }
     if (!success && _cursor > _testing) {
       // Expected: const
-      _failure(_expect47);
+      _failure(_expect50);
     }
     // <= 'const' SPACING # Choice
+    return $$;
+  }
+  
+  dynamic _parse_Const() {
+    // LEXEME (TOKEN)
+    // Const <- CONST
+    var $$;
+    _token = 10;  
+    _tokenStart = _cursor;  
+    // => CONST # Choice
+    switch (_ch == 99 ? 0 : _ch == -1 ? 2 : 1) {
+      // [c]
+      case 0:
+        var startPos0 = _startPos;
+        _startPos = _cursor;
+        // => CONST
+        $$ = _parse_CONST();
+        // <= CONST
+        if (success) {    
+          // CONST
+          final $1 = $$;
+          final $start = startPos0;
+          $$ = new Identifier(name: $1);
+        }
+        _startPos = startPos0;
+        break;
+      // No matches
+      // EOF
+      case 1:
+      case 2:
+        $$ = null;
+        success = false;
+        break;
+    }
+    if (!success && _cursor > _testing) {
+      // Expected: 'const'
+      _failure(_expect32);
+    }
+    // <= CONST # Choice
+    _token = null;
+    _tokenStart = null;
     return $$;
   }
   
@@ -2610,7 +2232,7 @@ class CParser {
     // LEXEME (TOKEN)
     // DOUBLE <- 'double' !IDENT_PART SPACING
     var $$;
-    _token = 9;  
+    _token = 11;  
     _tokenStart = _cursor;  
     // => 'double' !IDENT_PART SPACING # Choice
     switch (_ch == 100 ? 0 : _ch == -1 ? 2 : 1) {
@@ -2621,7 +2243,7 @@ class CParser {
         _startPos = _cursor;
         while (true) {  
           // => 'double'
-          $$ = _matchString(_strings2, 'double');
+          $$ = _matchString(_strings3, 'double');
           // <= 'double'
           if (!success) break;
           var seq = new List(3)..[0] = $$;
@@ -2674,7 +2296,7 @@ class CParser {
     }
     if (!success && _cursor > _testing) {
       // Expected: 'double'
-      _failure(_expect29);
+      _failure(_expect33);
     }
     // <= 'double' !IDENT_PART SPACING # Choice
     _token = null;
@@ -2687,125 +2309,112 @@ class CParser {
     // Declaration <- FunctionDeclaration SEMICOLON+ / StructureDeclaration SEMICOLON+ / EnumDeclaration SEMICOLON+ / TypedefDeclaration SEMICOLON+ / VariableDeclaration SEMICOLON+ / SEMICOLON+
     var $$;
     // => FunctionDeclaration SEMICOLON+ / StructureDeclaration SEMICOLON+ / EnumDeclaration SEMICOLON+ / TypedefDeclaration SEMICOLON+ / VariableDeclaration SEMICOLON+ / SEMICOLON+ # Choice
-    switch (_ch >= 0 && _ch <= 1114111 ? 0 : _ch == -1 ? 2 : 1) {
-      // [\u0000-\u0010ffff]
+    switch (_getState(_transitions0)) {
+      // [*]
       case 0:
+        // => FunctionDeclaration SEMICOLON+ # Sequence
+        var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
+        _startPos = _cursor;
+        while (true) {  
+          // => FunctionDeclaration
+          $$ = _parse_FunctionDeclaration();
+          // <= FunctionDeclaration
+          if (!success) break;
+          var seq = new List(2)..[0] = $$;
+          // => SEMICOLON+
+          var testing0;
+          for (var first = true, reps; ;) {  
+            // => SEMICOLON  
+            $$ = _parse_SEMICOLON();  
+            // <= SEMICOLON  
+            if (success) {
+             if (first) {      
+                first = false;
+                reps = [$$];
+                testing0 = _testing;                  
+              } else {
+                reps.add($$);
+              }
+              _testing = _cursor;   
+            } else {
+              success = !first;
+              if (success) {      
+                _testing = testing0;
+                $$ = reps;      
+              } else $$ = null;
+              break;
+            }  
+          }
+          // <= SEMICOLON+
+          if (!success) break;
+          seq[1] = $$;
+          $$ = seq;
+          if (success) {    
+            // FunctionDeclaration
+            final $1 = seq[0];
+            // SEMICOLON+
+            final $2 = seq[1];
+            final $start = startPos0;
+            $$ = $1;
+          }
+          break;
+        }
+        if (!success) {
+          _ch = ch0;
+          _cursor = pos0;
+        }
+        _startPos = startPos0;
+        // <= FunctionDeclaration SEMICOLON+ # Sequence
+        break;
+      // [;]
+      case 1:
+        var startPos1 = _startPos;
+        _startPos = _cursor;
+        // => SEMICOLON+
+        var testing1;
+        for (var first = true, reps; ;) {  
+          // => SEMICOLON  
+          $$ = _parse_SEMICOLON();  
+          // <= SEMICOLON  
+          if (success) {
+           if (first) {      
+              first = false;
+              reps = [$$];
+              testing1 = _testing;                  
+            } else {
+              reps.add($$);
+            }
+            _testing = _cursor;   
+          } else {
+            success = !first;
+            if (success) {      
+              _testing = testing1;
+              $$ = reps;      
+            } else $$ = null;
+            break;
+          }  
+        }
+        // <= SEMICOLON+
+        if (success) {    
+          // SEMICOLON+
+          final $1 = $$;
+          final $start = startPos1;
+          $$ = new EmptyDeclaration();
+        }
+        _startPos = startPos1;
+        break;
+      // [A-Z]
+      // EOF
+      case 2:
+      case 5:
         while (true) {
           // => FunctionDeclaration SEMICOLON+ # Sequence
-          var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
+          var ch1 = _ch, pos1 = _cursor, startPos2 = _startPos;
           _startPos = _cursor;
           while (true) {  
             // => FunctionDeclaration
             $$ = _parse_FunctionDeclaration();
             // <= FunctionDeclaration
-            if (!success) break;
-            var seq = new List(2)..[0] = $$;
-            // => SEMICOLON+
-            var testing0;
-            for (var first = true, reps; ;) {  
-              // => SEMICOLON  
-              $$ = _parse_SEMICOLON();  
-              // <= SEMICOLON  
-              if (success) {
-               if (first) {      
-                  first = false;
-                  reps = [$$];
-                  testing0 = _testing;                  
-                } else {
-                  reps.add($$);
-                }
-                _testing = _cursor;   
-              } else {
-                success = !first;
-                if (success) {      
-                  _testing = testing0;
-                  $$ = reps;      
-                } else $$ = null;
-                break;
-              }  
-            }
-            // <= SEMICOLON+
-            if (!success) break;
-            seq[1] = $$;
-            $$ = seq;
-            if (success) {    
-              // FunctionDeclaration
-              final $1 = seq[0];
-              // SEMICOLON+
-              final $2 = seq[1];
-              final $start = startPos0;
-              $$ = $1;
-            }
-            break;
-          }
-          if (!success) {
-            _ch = ch0;
-            _cursor = pos0;
-          }
-          _startPos = startPos0;
-          // <= FunctionDeclaration SEMICOLON+ # Sequence
-          if (success) break;
-          // => StructureDeclaration SEMICOLON+ # Sequence
-          var ch1 = _ch, pos1 = _cursor, startPos1 = _startPos;
-          _startPos = _cursor;
-          while (true) {  
-            // => StructureDeclaration
-            $$ = _parse_StructureDeclaration();
-            // <= StructureDeclaration
-            if (!success) break;
-            var seq = new List(2)..[0] = $$;
-            // => SEMICOLON+
-            var testing1;
-            for (var first = true, reps; ;) {  
-              // => SEMICOLON  
-              $$ = _parse_SEMICOLON();  
-              // <= SEMICOLON  
-              if (success) {
-               if (first) {      
-                  first = false;
-                  reps = [$$];
-                  testing1 = _testing;                  
-                } else {
-                  reps.add($$);
-                }
-                _testing = _cursor;   
-              } else {
-                success = !first;
-                if (success) {      
-                  _testing = testing1;
-                  $$ = reps;      
-                } else $$ = null;
-                break;
-              }  
-            }
-            // <= SEMICOLON+
-            if (!success) break;
-            seq[1] = $$;
-            $$ = seq;
-            if (success) {    
-              // StructureDeclaration
-              final $1 = seq[0];
-              // SEMICOLON+
-              final $2 = seq[1];
-              final $start = startPos1;
-              $$ = $1;
-            }
-            break;
-          }
-          if (!success) {
-            _ch = ch1;
-            _cursor = pos1;
-          }
-          _startPos = startPos1;
-          // <= StructureDeclaration SEMICOLON+ # Sequence
-          if (success) break;
-          // => EnumDeclaration SEMICOLON+ # Sequence
-          var ch2 = _ch, pos2 = _cursor, startPos2 = _startPos;
-          _startPos = _cursor;
-          while (true) {  
-            // => EnumDeclaration
-            $$ = _parse_EnumDeclaration();
-            // <= EnumDeclaration
             if (!success) break;
             var seq = new List(2)..[0] = $$;
             // => SEMICOLON+
@@ -2837,7 +2446,7 @@ class CParser {
             seq[1] = $$;
             $$ = seq;
             if (success) {    
-              // EnumDeclaration
+              // FunctionDeclaration
               final $1 = seq[0];
               // SEMICOLON+
               final $2 = seq[1];
@@ -2847,19 +2456,19 @@ class CParser {
             break;
           }
           if (!success) {
-            _ch = ch2;
-            _cursor = pos2;
+            _ch = ch1;
+            _cursor = pos1;
           }
           _startPos = startPos2;
-          // <= EnumDeclaration SEMICOLON+ # Sequence
+          // <= FunctionDeclaration SEMICOLON+ # Sequence
           if (success) break;
-          // => TypedefDeclaration SEMICOLON+ # Sequence
-          var ch3 = _ch, pos3 = _cursor, startPos3 = _startPos;
+          // => VariableDeclaration SEMICOLON+ # Sequence
+          var ch2 = _ch, pos2 = _cursor, startPos3 = _startPos;
           _startPos = _cursor;
           while (true) {  
-            // => TypedefDeclaration
-            $$ = _parse_TypedefDeclaration();
-            // <= TypedefDeclaration
+            // => VariableDeclaration
+            $$ = _parse_VariableDeclaration();
+            // <= VariableDeclaration
             if (!success) break;
             var seq = new List(2)..[0] = $$;
             // => SEMICOLON+
@@ -2891,7 +2500,7 @@ class CParser {
             seq[1] = $$;
             $$ = seq;
             if (success) {    
-              // TypedefDeclaration
+              // VariableDeclaration
               final $1 = seq[0];
               // SEMICOLON+
               final $2 = seq[1];
@@ -2901,19 +2510,24 @@ class CParser {
             break;
           }
           if (!success) {
-            _ch = ch3;
-            _cursor = pos3;
+            _ch = ch2;
+            _cursor = pos2;
           }
           _startPos = startPos3;
-          // <= TypedefDeclaration SEMICOLON+ # Sequence
-          if (success) break;
-          // => VariableDeclaration SEMICOLON+ # Sequence
-          var ch4 = _ch, pos4 = _cursor, startPos4 = _startPos;
+          // <= VariableDeclaration SEMICOLON+ # Sequence
+          break;
+        }
+        break;
+      // [_] [a-z]
+      case 3:
+        while (true) {
+          // => FunctionDeclaration SEMICOLON+ # Sequence
+          var ch3 = _ch, pos3 = _cursor, startPos4 = _startPos;
           _startPos = _cursor;
           while (true) {  
-            // => VariableDeclaration
-            $$ = _parse_VariableDeclaration();
-            // <= VariableDeclaration
+            // => FunctionDeclaration
+            $$ = _parse_FunctionDeclaration();
+            // <= FunctionDeclaration
             if (!success) break;
             var seq = new List(2)..[0] = $$;
             // => SEMICOLON+
@@ -2945,7 +2559,7 @@ class CParser {
             seq[1] = $$;
             $$ = seq;
             if (success) {    
-              // VariableDeclaration
+              // FunctionDeclaration
               final $1 = seq[0];
               // SEMICOLON+
               final $2 = seq[1];
@@ -2955,64 +2569,73 @@ class CParser {
             break;
           }
           if (!success) {
+            _ch = ch3;
+            _cursor = pos3;
+          }
+          _startPos = startPos4;
+          // <= FunctionDeclaration SEMICOLON+ # Sequence
+          if (success) break;
+          // => StructureDeclaration SEMICOLON+ # Sequence
+          var ch4 = _ch, pos4 = _cursor, startPos5 = _startPos;
+          _startPos = _cursor;
+          while (true) {  
+            // => StructureDeclaration
+            $$ = _parse_StructureDeclaration();
+            // <= StructureDeclaration
+            if (!success) break;
+            var seq = new List(2)..[0] = $$;
+            // => SEMICOLON+
+            var testing5;
+            for (var first = true, reps; ;) {  
+              // => SEMICOLON  
+              $$ = _parse_SEMICOLON();  
+              // <= SEMICOLON  
+              if (success) {
+               if (first) {      
+                  first = false;
+                  reps = [$$];
+                  testing5 = _testing;                  
+                } else {
+                  reps.add($$);
+                }
+                _testing = _cursor;   
+              } else {
+                success = !first;
+                if (success) {      
+                  _testing = testing5;
+                  $$ = reps;      
+                } else $$ = null;
+                break;
+              }  
+            }
+            // <= SEMICOLON+
+            if (!success) break;
+            seq[1] = $$;
+            $$ = seq;
+            if (success) {    
+              // StructureDeclaration
+              final $1 = seq[0];
+              // SEMICOLON+
+              final $2 = seq[1];
+              final $start = startPos5;
+              $$ = $1;
+            }
+            break;
+          }
+          if (!success) {
             _ch = ch4;
             _cursor = pos4;
           }
-          _startPos = startPos4;
-          // <= VariableDeclaration SEMICOLON+ # Sequence
-          if (success) break;
-          var startPos5 = _startPos;
-          _startPos = _cursor;
-          // => SEMICOLON+
-          var testing5;
-          for (var first = true, reps; ;) {  
-            // => SEMICOLON  
-            $$ = _parse_SEMICOLON();  
-            // <= SEMICOLON  
-            if (success) {
-             if (first) {      
-                first = false;
-                reps = [$$];
-                testing5 = _testing;                  
-              } else {
-                reps.add($$);
-              }
-              _testing = _cursor;   
-            } else {
-              success = !first;
-              if (success) {      
-                _testing = testing5;
-                $$ = reps;      
-              } else $$ = null;
-              break;
-            }  
-          }
-          // <= SEMICOLON+
-          if (success) {    
-            // SEMICOLON+
-            final $1 = $$;
-            final $start = startPos5;
-            $$ = new EmptyDeclaration();
-          }
           _startPos = startPos5;
-          break;
-        }
-        break;
-      // No matches
-      case 1:
-        $$ = null;
-        success = false;
-        break;
-      // EOF
-      case 2:
-        while (true) {
-          // => FunctionDeclaration SEMICOLON+ # Sequence
+          // <= StructureDeclaration SEMICOLON+ # Sequence
+          if (success) break;
+          // => EnumDeclaration SEMICOLON+ # Sequence
           var ch5 = _ch, pos5 = _cursor, startPos6 = _startPos;
           _startPos = _cursor;
           while (true) {  
-            // => FunctionDeclaration
-            $$ = _parse_FunctionDeclaration();
-            // <= FunctionDeclaration
+            // => EnumDeclaration
+            $$ = _parse_EnumDeclaration();
+            // <= EnumDeclaration
             if (!success) break;
             var seq = new List(2)..[0] = $$;
             // => SEMICOLON+
@@ -3044,7 +2667,7 @@ class CParser {
             seq[1] = $$;
             $$ = seq;
             if (success) {    
-              // FunctionDeclaration
+              // EnumDeclaration
               final $1 = seq[0];
               // SEMICOLON+
               final $2 = seq[1];
@@ -3058,15 +2681,15 @@ class CParser {
             _cursor = pos5;
           }
           _startPos = startPos6;
-          // <= FunctionDeclaration SEMICOLON+ # Sequence
+          // <= EnumDeclaration SEMICOLON+ # Sequence
           if (success) break;
-          // => VariableDeclaration SEMICOLON+ # Sequence
+          // => TypedefDeclaration SEMICOLON+ # Sequence
           var ch6 = _ch, pos6 = _cursor, startPos7 = _startPos;
           _startPos = _cursor;
           while (true) {  
-            // => VariableDeclaration
-            $$ = _parse_VariableDeclaration();
-            // <= VariableDeclaration
+            // => TypedefDeclaration
+            $$ = _parse_TypedefDeclaration();
+            // <= TypedefDeclaration
             if (!success) break;
             var seq = new List(2)..[0] = $$;
             // => SEMICOLON+
@@ -3098,7 +2721,7 @@ class CParser {
             seq[1] = $$;
             $$ = seq;
             if (success) {    
-              // VariableDeclaration
+              // TypedefDeclaration
               final $1 = seq[0];
               // SEMICOLON+
               final $2 = seq[1];
@@ -3112,13 +2735,72 @@ class CParser {
             _cursor = pos6;
           }
           _startPos = startPos7;
+          // <= TypedefDeclaration SEMICOLON+ # Sequence
+          if (success) break;
+          // => VariableDeclaration SEMICOLON+ # Sequence
+          var ch7 = _ch, pos7 = _cursor, startPos8 = _startPos;
+          _startPos = _cursor;
+          while (true) {  
+            // => VariableDeclaration
+            $$ = _parse_VariableDeclaration();
+            // <= VariableDeclaration
+            if (!success) break;
+            var seq = new List(2)..[0] = $$;
+            // => SEMICOLON+
+            var testing8;
+            for (var first = true, reps; ;) {  
+              // => SEMICOLON  
+              $$ = _parse_SEMICOLON();  
+              // <= SEMICOLON  
+              if (success) {
+               if (first) {      
+                  first = false;
+                  reps = [$$];
+                  testing8 = _testing;                  
+                } else {
+                  reps.add($$);
+                }
+                _testing = _cursor;   
+              } else {
+                success = !first;
+                if (success) {      
+                  _testing = testing8;
+                  $$ = reps;      
+                } else $$ = null;
+                break;
+              }  
+            }
+            // <= SEMICOLON+
+            if (!success) break;
+            seq[1] = $$;
+            $$ = seq;
+            if (success) {    
+              // VariableDeclaration
+              final $1 = seq[0];
+              // SEMICOLON+
+              final $2 = seq[1];
+              final $start = startPos8;
+              $$ = $1;
+            }
+            break;
+          }
+          if (!success) {
+            _ch = ch7;
+            _cursor = pos7;
+          }
+          _startPos = startPos8;
           // <= VariableDeclaration SEMICOLON+ # Sequence
           break;
         }
         break;
+      // No matches
+      case 4:
+        $$ = null;
+        success = false;
+        break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: IDENTIFIER, 'struct', 'union', 'enum', 'typedef', 'short', 'long', 'char', 'int', SIGNEDNESS, 'float', 'double', 'void', ';'
+      // Expected: Identifier, 'short', 'long', 'char', 'int', SIGNEDNESS, 'float', 'double', 'void', '_Bool', 'struct', 'union', 'enum', 'typedef', ';'
       _failure(_expect2);
     }
     // <= FunctionDeclaration SEMICOLON+ / StructureDeclaration SEMICOLON+ / EnumDeclaration SEMICOLON+ / TypedefDeclaration SEMICOLON+ / VariableDeclaration SEMICOLON+ / SEMICOLON+ # Choice
@@ -3215,6 +2897,870 @@ class CParser {
     return $$;
   }
   
+  dynamic _parse_DeclarationModifier() {
+    // SENTENCE (NONTERMINAL)
+    // DeclarationModifier <- IDENT OPEN_PAREN DeclarationModifierArgumentList? CLOSE_PAREN / IDENT
+    var $$;          
+    var pos = _cursor;             
+    if(_cachePos[7] >= pos) {
+      $$ = _getFromCache(7);
+      if($$ != null) {
+        return $$[0];       
+      }
+    } else {
+      _cachePos[7] = pos;
+    }  
+    // => IDENT OPEN_PAREN DeclarationModifierArgumentList? CLOSE_PAREN / IDENT # Choice
+    switch (_getState(_transitions2)) {
+      // [A-Z] [_] [a-z]
+      case 0:
+        while (true) {
+          // => IDENT OPEN_PAREN DeclarationModifierArgumentList? CLOSE_PAREN # Sequence
+          var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
+          _startPos = _cursor;
+          while (true) {  
+            // => IDENT
+            $$ = _parse_IDENT();
+            // <= IDENT
+            if (!success) break;
+            var seq = new List(4)..[0] = $$;
+            // => OPEN_PAREN
+            $$ = _parse_OPEN_PAREN();
+            // <= OPEN_PAREN
+            if (!success) break;
+            seq[1] = $$;
+            // => DeclarationModifierArgumentList?
+            var testing0 = _testing;
+            _testing = _cursor;
+            // => DeclarationModifierArgumentList
+            $$ = _parse_DeclarationModifierArgumentList();
+            // <= DeclarationModifierArgumentList
+            success = true; 
+            _testing = testing0;
+            // <= DeclarationModifierArgumentList?
+            if (!success) break;
+            seq[2] = $$;
+            // => CLOSE_PAREN
+            $$ = _parse_CLOSE_PAREN();
+            // <= CLOSE_PAREN
+            if (!success) break;
+            seq[3] = $$;
+            $$ = seq;
+            if (success) {    
+              // IDENT
+              final $1 = seq[0];
+              // OPEN_PAREN
+              final $2 = seq[1];
+              // DeclarationModifierArgumentList?
+              final $3 = seq[2];
+              // CLOSE_PAREN
+              final $4 = seq[3];
+              final $start = startPos0;
+              $$ = new DeclarationModifier($1, $3);
+            }
+            break;
+          }
+          if (!success) {
+            _ch = ch0;
+            _cursor = pos0;
+          }
+          _startPos = startPos0;
+          // <= IDENT OPEN_PAREN DeclarationModifierArgumentList? CLOSE_PAREN # Sequence
+          if (success) break;
+          var startPos1 = _startPos;
+          _startPos = _cursor;
+          // => IDENT
+          $$ = _parse_IDENT();
+          // <= IDENT
+          if (success) {    
+            // IDENT
+            final $1 = $$;
+            final $start = startPos1;
+            $$ = new DeclarationModifier($1);
+          }
+          _startPos = startPos1;
+          break;
+        }
+        break;
+      // No matches
+      // EOF
+      case 1:
+      case 2:
+        $$ = null;
+        success = false;
+        break;
+    }
+    if (!success && _cursor > _testing) {
+      // Expected: IDENT
+      _failure(_expect5);
+    }
+    // <= IDENT OPEN_PAREN DeclarationModifierArgumentList? CLOSE_PAREN / IDENT # Choice
+    if (_cacheable[7]) {
+      _addToCache($$, pos, 7);
+    }    
+    return $$;
+  }
+  
+  dynamic _parse_DeclarationModifierArgument() {
+    // SENTENCE (NONTERMINAL)
+    // DeclarationModifierArgument <- STRING / NUMBER
+    var $$;          
+    var pos = _cursor;             
+    if(_cachePos[9] >= pos) {
+      $$ = _getFromCache(9);
+      if($$ != null) {
+        return $$[0];       
+      }
+    } else {
+      _cachePos[9] = pos;
+    }  
+    // => STRING / NUMBER # Choice
+    switch (_getState(_transitions4)) {
+      // [\"] [L]
+      case 0:
+        var startPos0 = _startPos;
+        _startPos = _cursor;
+        // => STRING
+        $$ = _parse_STRING();
+        // <= STRING
+        _startPos = startPos0;
+        break;
+      // [+] [-] [0-9]
+      case 1:
+        var startPos1 = _startPos;
+        _startPos = _cursor;
+        // => NUMBER
+        $$ = _parse_NUMBER();
+        // <= NUMBER
+        _startPos = startPos1;
+        break;
+      // No matches
+      // EOF
+      case 2:
+      case 3:
+        $$ = null;
+        success = false;
+        break;
+    }
+    if (!success && _cursor > _testing) {
+      // Expected: STRING, NUMBER
+      _failure(_expect7);
+    }
+    // <= STRING / NUMBER # Choice
+    if (_cacheable[9]) {
+      _addToCache($$, pos, 9);
+    }    
+    return $$;
+  }
+  
+  dynamic _parse_DeclarationModifierArgumentList() {
+    // SENTENCE (NONTERMINAL)
+    // DeclarationModifierArgumentList <- DeclarationModifierArgument (COMMA DeclarationModifierArgument)*
+    var $$;
+    // => DeclarationModifierArgument (COMMA DeclarationModifierArgument)* # Choice
+    switch (_getState(_transitions3)) {
+      // [\"] [+] [-] [0-9] [L]
+      case 0:
+        // => DeclarationModifierArgument (COMMA DeclarationModifierArgument)* # Sequence
+        var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
+        _startPos = _cursor;
+        while (true) {  
+          // => DeclarationModifierArgument
+          $$ = _parse_DeclarationModifierArgument();
+          // <= DeclarationModifierArgument
+          if (!success) break;
+          var seq = new List(2)..[0] = $$;
+          // => (COMMA DeclarationModifierArgument)*
+          var testing0 = _testing; 
+          for (var reps = []; ; ) {
+            _testing = _cursor;
+            // => (COMMA DeclarationModifierArgument) # Choice
+            switch (_ch == 44 ? 0 : _ch == -1 ? 2 : 1) {
+              // [,]
+              case 0:
+                // => COMMA DeclarationModifierArgument # Sequence
+                var ch1 = _ch, pos1 = _cursor, startPos1 = _startPos;
+                _startPos = _cursor;
+                while (true) {  
+                  // => COMMA
+                  $$ = _parse_COMMA();
+                  // <= COMMA
+                  if (!success) break;
+                  var seq = new List(2)..[0] = $$;
+                  // => DeclarationModifierArgument
+                  $$ = _parse_DeclarationModifierArgument();
+                  // <= DeclarationModifierArgument
+                  if (!success) break;
+                  seq[1] = $$;
+                  $$ = seq;
+                  break;
+                }
+                if (!success) {
+                  _ch = ch1;
+                  _cursor = pos1;
+                }
+                _startPos = startPos1;
+                // <= COMMA DeclarationModifierArgument # Sequence
+                break;
+              // No matches
+              // EOF
+              case 1:
+              case 2:
+                $$ = null;
+                success = false;
+                break;
+            }
+            if (!success && _cursor > _testing) {
+              // Expected: ','
+              _failure(_expect6);
+            }
+            // <= (COMMA DeclarationModifierArgument) # Choice
+            if (success) {  
+              reps.add($$);
+            } else {
+              success = true;
+              _testing = testing0;
+              $$ = reps;
+              break; 
+            }
+          }
+          // <= (COMMA DeclarationModifierArgument)*
+          if (!success) break;
+          seq[1] = $$;
+          $$ = seq;
+          if (success) {    
+            // DeclarationModifierArgument
+            final $1 = seq[0];
+            // (COMMA DeclarationModifierArgument)*
+            final $2 = seq[1];
+            final $start = startPos0;
+            $$ = _list($1, $2);
+          }
+          break;
+        }
+        if (!success) {
+          _ch = ch0;
+          _cursor = pos0;
+        }
+        _startPos = startPos0;
+        // <= DeclarationModifierArgument (COMMA DeclarationModifierArgument)* # Sequence
+        break;
+      // No matches
+      // EOF
+      case 1:
+      case 2:
+        $$ = null;
+        success = false;
+        break;
+    }
+    if (!success && _cursor > _testing) {
+      // Expected: STRING, NUMBER
+      _failure(_expect7);
+    }
+    // <= DeclarationModifierArgument (COMMA DeclarationModifierArgument)* # Choice
+    return $$;
+  }
+  
+  dynamic _parse_DeclarationModifierList() {
+    // SENTENCE (NONTERMINAL)
+    // DeclarationModifierList <- DeclarationModifier (COMMA DeclarationModifier)*
+    var $$;
+    // => DeclarationModifier (COMMA DeclarationModifier)* # Choice
+    switch (_getState(_transitions2)) {
+      // [A-Z] [_] [a-z]
+      case 0:
+        // => DeclarationModifier (COMMA DeclarationModifier)* # Sequence
+        var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
+        _startPos = _cursor;
+        while (true) {  
+          // => DeclarationModifier
+          $$ = _parse_DeclarationModifier();
+          // <= DeclarationModifier
+          if (!success) break;
+          var seq = new List(2)..[0] = $$;
+          // => (COMMA DeclarationModifier)*
+          var testing0 = _testing; 
+          for (var reps = []; ; ) {
+            _testing = _cursor;
+            // => (COMMA DeclarationModifier) # Choice
+            switch (_ch == 44 ? 0 : _ch == -1 ? 2 : 1) {
+              // [,]
+              case 0:
+                // => COMMA DeclarationModifier # Sequence
+                var ch1 = _ch, pos1 = _cursor, startPos1 = _startPos;
+                _startPos = _cursor;
+                while (true) {  
+                  // => COMMA
+                  $$ = _parse_COMMA();
+                  // <= COMMA
+                  if (!success) break;
+                  var seq = new List(2)..[0] = $$;
+                  // => DeclarationModifier
+                  $$ = _parse_DeclarationModifier();
+                  // <= DeclarationModifier
+                  if (!success) break;
+                  seq[1] = $$;
+                  $$ = seq;
+                  break;
+                }
+                if (!success) {
+                  _ch = ch1;
+                  _cursor = pos1;
+                }
+                _startPos = startPos1;
+                // <= COMMA DeclarationModifier # Sequence
+                break;
+              // No matches
+              // EOF
+              case 1:
+              case 2:
+                $$ = null;
+                success = false;
+                break;
+            }
+            if (!success && _cursor > _testing) {
+              // Expected: ','
+              _failure(_expect6);
+            }
+            // <= (COMMA DeclarationModifier) # Choice
+            if (success) {  
+              reps.add($$);
+            } else {
+              success = true;
+              _testing = testing0;
+              $$ = reps;
+              break; 
+            }
+          }
+          // <= (COMMA DeclarationModifier)*
+          if (!success) break;
+          seq[1] = $$;
+          $$ = seq;
+          if (success) {    
+            // DeclarationModifier
+            final $1 = seq[0];
+            // (COMMA DeclarationModifier)*
+            final $2 = seq[1];
+            final $start = startPos0;
+            $$ = new DeclarationModifiers(_list($1, $2));
+          }
+          break;
+        }
+        if (!success) {
+          _ch = ch0;
+          _cursor = pos0;
+        }
+        _startPos = startPos0;
+        // <= DeclarationModifier (COMMA DeclarationModifier)* # Sequence
+        break;
+      // No matches
+      // EOF
+      case 1:
+      case 2:
+        $$ = null;
+        success = false;
+        break;
+    }
+    if (!success && _cursor > _testing) {
+      // Expected: IDENT
+      _failure(_expect5);
+    }
+    // <= DeclarationModifier (COMMA DeclarationModifier)* # Choice
+    return $$;
+  }
+  
+  dynamic _parse_DeclarationSpecifier() {
+    // SENTENCE (NONTERMINAL)
+    // DeclarationSpecifier <- ATTRIBUTE OPEN_PAREN OPEN_PAREN DeclarationModifierList? CLOSE_PAREN CLOSE_PAREN
+    var $$;
+    // => ATTRIBUTE OPEN_PAREN OPEN_PAREN DeclarationModifierList? CLOSE_PAREN CLOSE_PAREN # Choice
+    switch (_ch == 95 ? 0 : _ch == -1 ? 2 : 1) {
+      // [_]
+      case 0:
+        // => ATTRIBUTE OPEN_PAREN OPEN_PAREN DeclarationModifierList? CLOSE_PAREN CLOSE_PAREN # Sequence
+        var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
+        _startPos = _cursor;
+        while (true) {  
+          // => ATTRIBUTE
+          $$ = _parse_ATTRIBUTE();
+          // <= ATTRIBUTE
+          if (!success) break;
+          var seq = new List(6)..[0] = $$;
+          // => OPEN_PAREN
+          $$ = _parse_OPEN_PAREN();
+          // <= OPEN_PAREN
+          if (!success) break;
+          seq[1] = $$;
+          // => OPEN_PAREN
+          $$ = _parse_OPEN_PAREN();
+          // <= OPEN_PAREN
+          if (!success) break;
+          seq[2] = $$;
+          // => DeclarationModifierList?
+          var testing0 = _testing;
+          _testing = _cursor;
+          // => DeclarationModifierList
+          $$ = _parse_DeclarationModifierList();
+          // <= DeclarationModifierList
+          success = true; 
+          _testing = testing0;
+          // <= DeclarationModifierList?
+          if (!success) break;
+          seq[3] = $$;
+          // => CLOSE_PAREN
+          $$ = _parse_CLOSE_PAREN();
+          // <= CLOSE_PAREN
+          if (!success) break;
+          seq[4] = $$;
+          // => CLOSE_PAREN
+          $$ = _parse_CLOSE_PAREN();
+          // <= CLOSE_PAREN
+          if (!success) break;
+          seq[5] = $$;
+          $$ = seq;
+          if (success) {    
+            // ATTRIBUTE
+            final $1 = seq[0];
+            // OPEN_PAREN
+            final $2 = seq[1];
+            // OPEN_PAREN
+            final $3 = seq[2];
+            // DeclarationModifierList?
+            final $4 = seq[3];
+            // CLOSE_PAREN
+            final $5 = seq[4];
+            // CLOSE_PAREN
+            final $6 = seq[5];
+            final $start = startPos0;
+            $$ = new DeclarationSpecifier($4);
+          }
+          break;
+        }
+        if (!success) {
+          _ch = ch0;
+          _cursor = pos0;
+        }
+        _startPos = startPos0;
+        // <= ATTRIBUTE OPEN_PAREN OPEN_PAREN DeclarationModifierList? CLOSE_PAREN CLOSE_PAREN # Sequence
+        break;
+      // No matches
+      // EOF
+      case 1:
+      case 2:
+        $$ = null;
+        success = false;
+        break;
+    }
+    if (!success && _cursor > _testing) {
+      // Expected: '__attribute__'
+      _failure(_expect4);
+    }
+    // <= ATTRIBUTE OPEN_PAREN OPEN_PAREN DeclarationModifierList? CLOSE_PAREN CLOSE_PAREN # Choice
+    return $$;
+  }
+  
+  dynamic _parse_DeclaratorAbstract() {
+    // SENTENCE (NONTERMINAL)
+    // DeclaratorAbstract <- PointerSpecifiers ArrayDimensions Metadata? / PointerSpecifiers? ArrayDimensions Metadata? / PointerSpecifiers ArrayDimensions? Metadata?
+    var $$;
+    // => PointerSpecifiers ArrayDimensions Metadata? / PointerSpecifiers? ArrayDimensions Metadata? / PointerSpecifiers ArrayDimensions? Metadata? # Choice
+    switch (_getState(_transitions19)) {
+      // [*]
+      case 0:
+        while (true) {
+          // => PointerSpecifiers ArrayDimensions Metadata? # Sequence
+          var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
+          _startPos = _cursor;
+          while (true) {  
+            // => PointerSpecifiers
+            $$ = _parse_PointerSpecifiers();
+            // <= PointerSpecifiers
+            if (!success) break;
+            var seq = new List(3)..[0] = $$;
+            // => ArrayDimensions
+            $$ = _parse_ArrayDimensions();
+            // <= ArrayDimensions
+            if (!success) break;
+            seq[1] = $$;
+            // => Metadata?
+            var testing0 = _testing;
+            _testing = _cursor;
+            // => Metadata
+            $$ = _parse_Metadata();
+            // <= Metadata
+            success = true; 
+            _testing = testing0;
+            // <= Metadata?
+            if (!success) break;
+            seq[2] = $$;
+            $$ = seq;
+            if (success) {    
+              // PointerSpecifiers
+              final $1 = seq[0];
+              // ArrayDimensions
+              final $2 = seq[1];
+              // Metadata?
+              final $3 = seq[2];
+              final $start = startPos0;
+              $$ = new Declarator(dimensions: $2, metadata: $3, pointers: $1);
+            }
+            break;
+          }
+          if (!success) {
+            _ch = ch0;
+            _cursor = pos0;
+          }
+          _startPos = startPos0;
+          // <= PointerSpecifiers ArrayDimensions Metadata? # Sequence
+          if (success) break;
+          // => PointerSpecifiers? ArrayDimensions Metadata? # Sequence
+          var ch1 = _ch, pos1 = _cursor, startPos1 = _startPos;
+          _startPos = _cursor;
+          while (true) {  
+            // => PointerSpecifiers?
+            var testing1 = _testing;
+            _testing = _cursor;
+            // => PointerSpecifiers
+            $$ = _parse_PointerSpecifiers();
+            // <= PointerSpecifiers
+            success = true; 
+            _testing = testing1;
+            // <= PointerSpecifiers?
+            if (!success) break;
+            var seq = new List(3)..[0] = $$;
+            // => ArrayDimensions
+            $$ = _parse_ArrayDimensions();
+            // <= ArrayDimensions
+            if (!success) break;
+            seq[1] = $$;
+            // => Metadata?
+            var testing2 = _testing;
+            _testing = _cursor;
+            // => Metadata
+            $$ = _parse_Metadata();
+            // <= Metadata
+            success = true; 
+            _testing = testing2;
+            // <= Metadata?
+            if (!success) break;
+            seq[2] = $$;
+            $$ = seq;
+            if (success) {    
+              // PointerSpecifiers?
+              final $1 = seq[0];
+              // ArrayDimensions
+              final $2 = seq[1];
+              // Metadata?
+              final $3 = seq[2];
+              final $start = startPos1;
+              $$ = new Declarator(dimensions: $2, metadata: $3, pointers: $1);
+            }
+            break;
+          }
+          if (!success) {
+            _ch = ch1;
+            _cursor = pos1;
+          }
+          _startPos = startPos1;
+          // <= PointerSpecifiers? ArrayDimensions Metadata? # Sequence
+          if (success) break;
+          // => PointerSpecifiers ArrayDimensions? Metadata? # Sequence
+          var ch2 = _ch, pos2 = _cursor, startPos2 = _startPos;
+          _startPos = _cursor;
+          while (true) {  
+            // => PointerSpecifiers
+            $$ = _parse_PointerSpecifiers();
+            // <= PointerSpecifiers
+            if (!success) break;
+            var seq = new List(3)..[0] = $$;
+            // => ArrayDimensions?
+            var testing3 = _testing;
+            _testing = _cursor;
+            // => ArrayDimensions
+            $$ = _parse_ArrayDimensions();
+            // <= ArrayDimensions
+            success = true; 
+            _testing = testing3;
+            // <= ArrayDimensions?
+            if (!success) break;
+            seq[1] = $$;
+            // => Metadata?
+            var testing4 = _testing;
+            _testing = _cursor;
+            // => Metadata
+            $$ = _parse_Metadata();
+            // <= Metadata
+            success = true; 
+            _testing = testing4;
+            // <= Metadata?
+            if (!success) break;
+            seq[2] = $$;
+            $$ = seq;
+            if (success) {    
+              // PointerSpecifiers
+              final $1 = seq[0];
+              // ArrayDimensions?
+              final $2 = seq[1];
+              // Metadata?
+              final $3 = seq[2];
+              final $start = startPos2;
+              $$ = new Declarator(dimensions: $2, metadata: $3, pointers: $1);
+            }
+            break;
+          }
+          if (!success) {
+            _ch = ch2;
+            _cursor = pos2;
+          }
+          _startPos = startPos2;
+          // <= PointerSpecifiers ArrayDimensions? Metadata? # Sequence
+          break;
+        }
+        break;
+      // [[]
+      case 1:
+        // => PointerSpecifiers? ArrayDimensions Metadata? # Sequence
+        var ch3 = _ch, pos3 = _cursor, startPos3 = _startPos;
+        _startPos = _cursor;
+        while (true) {  
+          // => PointerSpecifiers?
+          var testing5 = _testing;
+          _testing = _cursor;
+          // => PointerSpecifiers
+          $$ = _parse_PointerSpecifiers();
+          // <= PointerSpecifiers
+          success = true; 
+          _testing = testing5;
+          // <= PointerSpecifiers?
+          if (!success) break;
+          var seq = new List(3)..[0] = $$;
+          // => ArrayDimensions
+          $$ = _parse_ArrayDimensions();
+          // <= ArrayDimensions
+          if (!success) break;
+          seq[1] = $$;
+          // => Metadata?
+          var testing6 = _testing;
+          _testing = _cursor;
+          // => Metadata
+          $$ = _parse_Metadata();
+          // <= Metadata
+          success = true; 
+          _testing = testing6;
+          // <= Metadata?
+          if (!success) break;
+          seq[2] = $$;
+          $$ = seq;
+          if (success) {    
+            // PointerSpecifiers?
+            final $1 = seq[0];
+            // ArrayDimensions
+            final $2 = seq[1];
+            // Metadata?
+            final $3 = seq[2];
+            final $start = startPos3;
+            $$ = new Declarator(dimensions: $2, metadata: $3, pointers: $1);
+          }
+          break;
+        }
+        if (!success) {
+          _ch = ch3;
+          _cursor = pos3;
+        }
+        _startPos = startPos3;
+        // <= PointerSpecifiers? ArrayDimensions Metadata? # Sequence
+        break;
+      // No matches
+      // EOF
+      case 2:
+      case 3:
+        $$ = null;
+        success = false;
+        break;
+    }
+    if (!success && _cursor > _testing) {
+      // Expected: '*', '['
+      _failure(_expect21);
+    }
+    // <= PointerSpecifiers ArrayDimensions Metadata? / PointerSpecifiers? ArrayDimensions Metadata? / PointerSpecifiers ArrayDimensions? Metadata? # Choice
+    return $$;
+  }
+  
+  dynamic _parse_DeclaratorNotAbstract() {
+    // SENTENCE (NONTERMINAL)
+    // DeclaratorNotAbstract <- PointerSpecifiers? Identifier ArrayDimensions? Metadata?
+    var $$;          
+    var pos = _cursor;             
+    if(_cachePos[45] >= pos) {
+      $$ = _getFromCache(45);
+      if($$ != null) {
+        return $$[0];       
+      }
+    } else {
+      _cachePos[45] = pos;
+    }  
+    // => PointerSpecifiers? Identifier ArrayDimensions? Metadata? # Choice
+    switch (_getState(_transitions7)) {
+      // [*] [A-Z] [_] [a-z]
+      // EOF
+      case 0:
+      case 2:
+        // => PointerSpecifiers? Identifier ArrayDimensions? Metadata? # Sequence
+        var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
+        _startPos = _cursor;
+        while (true) {  
+          // => PointerSpecifiers?
+          var testing0 = _testing;
+          _testing = _cursor;
+          // => PointerSpecifiers
+          $$ = _parse_PointerSpecifiers();
+          // <= PointerSpecifiers
+          success = true; 
+          _testing = testing0;
+          // <= PointerSpecifiers?
+          if (!success) break;
+          var seq = new List(4)..[0] = $$;
+          // => Identifier
+          $$ = _parse_Identifier();
+          // <= Identifier
+          if (!success) break;
+          seq[1] = $$;
+          // => ArrayDimensions?
+          var testing1 = _testing;
+          _testing = _cursor;
+          // => ArrayDimensions
+          $$ = _parse_ArrayDimensions();
+          // <= ArrayDimensions
+          success = true; 
+          _testing = testing1;
+          // <= ArrayDimensions?
+          if (!success) break;
+          seq[2] = $$;
+          // => Metadata?
+          var testing2 = _testing;
+          _testing = _cursor;
+          // => Metadata
+          $$ = _parse_Metadata();
+          // <= Metadata
+          success = true; 
+          _testing = testing2;
+          // <= Metadata?
+          if (!success) break;
+          seq[3] = $$;
+          $$ = seq;
+          if (success) {    
+            // PointerSpecifiers?
+            final $1 = seq[0];
+            // Identifier
+            final $2 = seq[1];
+            // ArrayDimensions?
+            final $3 = seq[2];
+            // Metadata?
+            final $4 = seq[3];
+            final $start = startPos0;
+            $$ = new Declarator(dimensions: $3, identifier: $2, metadata: $4, pointers: $1);
+          }
+          break;
+        }
+        if (!success) {
+          _ch = ch0;
+          _cursor = pos0;
+        }
+        _startPos = startPos0;
+        // <= PointerSpecifiers? Identifier ArrayDimensions? Metadata? # Sequence
+        break;
+      // No matches
+      case 1:
+        $$ = null;
+        success = false;
+        break;
+    }
+    if (!success && _cursor > _testing) {
+      // Expected: Identifier
+      _failure(_expect9);
+    }
+    // <= PointerSpecifiers? Identifier ArrayDimensions? Metadata? # Choice
+    if (_cacheable[45]) {
+      _addToCache($$, pos, 45);
+    }    
+    return $$;
+  }
+  
+  dynamic _parse_DefinedType() {
+    // SENTENCE (NONTERMINAL)
+    // DefinedType <- Identifier Metadata? TypeQualifiers?
+    var $$;
+    // => Identifier Metadata? TypeQualifiers? # Choice
+    switch (_getState(_transitions2)) {
+      // [A-Z] [_] [a-z]
+      // EOF
+      case 0:
+      case 2:
+        // => Identifier Metadata? TypeQualifiers? # Sequence
+        var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
+        _startPos = _cursor;
+        while (true) {  
+          // => Identifier
+          $$ = _parse_Identifier();
+          // <= Identifier
+          if (!success) break;
+          var seq = new List(3)..[0] = $$;
+          // => Metadata?
+          var testing0 = _testing;
+          _testing = _cursor;
+          // => Metadata
+          $$ = _parse_Metadata();
+          // <= Metadata
+          success = true; 
+          _testing = testing0;
+          // <= Metadata?
+          if (!success) break;
+          seq[1] = $$;
+          // => TypeQualifiers?
+          var testing1 = _testing;
+          _testing = _cursor;
+          // => TypeQualifiers
+          $$ = _parse_TypeQualifiers();
+          // <= TypeQualifiers
+          success = true; 
+          _testing = testing1;
+          // <= TypeQualifiers?
+          if (!success) break;
+          seq[2] = $$;
+          $$ = seq;
+          if (success) {    
+            // Identifier
+            final $1 = seq[0];
+            // Metadata?
+            final $2 = seq[1];
+            // TypeQualifiers?
+            final $3 = seq[2];
+            final $start = startPos0;
+            $$ = new DefinedTypeSpecification(identifier: $1, metadata: $2, qualifiers: $3);
+          }
+          break;
+        }
+        if (!success) {
+          _ch = ch0;
+          _cursor = pos0;
+        }
+        _startPos = startPos0;
+        // <= Identifier Metadata? TypeQualifiers? # Sequence
+        break;
+      // No matches
+      case 1:
+        $$ = null;
+        success = false;
+        break;
+    }
+    if (!success && _cursor > _testing) {
+      // Expected: Identifier
+      _failure(_expect9);
+    }
+    // <= Identifier Metadata? TypeQualifiers? # Choice
+    return $$;
+  }
+  
   dynamic _parse_Dimension() {
     // SENTENCE (NONTERMINAL)
     // Dimension <- OPEN_BRACKET ArraySize? CLOSE_BRACKET
@@ -3278,7 +3824,7 @@ class CParser {
     }
     if (!success && _cursor > _testing) {
       // Expected: '['
-      _failure(_expect11);
+      _failure(_expect22);
     }
     // <= OPEN_BRACKET ArraySize? CLOSE_BRACKET # Choice
     return $$;
@@ -3297,7 +3843,7 @@ class CParser {
         _startPos = _cursor;
         while (true) {  
           // => '...'
-          $$ = _matchString(_strings14, '...');
+          $$ = _matchString(_strings15, '...');
           // <= '...'
           if (!success) break;
           var seq = new List(2)..[0] = $$;
@@ -3334,7 +3880,7 @@ class CParser {
     }
     if (!success && _cursor > _testing) {
       // Expected: ...
-      _failure(_expect48);
+      _failure(_expect51);
     }
     // <= '...' SPACING # Choice
     return $$;
@@ -3353,7 +3899,7 @@ class CParser {
     } else {
       _cachePos[68] = pos;
     }  
-    _token = 10;    
+    _token = 12;    
     _tokenStart = _cursor;    
     // => 'enum' !IDENT_PART SPACING # Choice
     switch (_ch == 101 ? 0 : _ch == -1 ? 2 : 1) {
@@ -3364,7 +3910,7 @@ class CParser {
         _startPos = _cursor;
         while (true) {  
           // => 'enum'
-          $$ = _matchString(_strings3, 'enum');
+          $$ = _matchString(_strings4, 'enum');
           // <= 'enum'
           if (!success) break;
           var seq = new List(3)..[0] = $$;
@@ -3417,7 +3963,7 @@ class CParser {
     }
     if (!success && _cursor > _testing) {
       // Expected: 'enum'
-      _failure(_expect13);
+      _failure(_expect24);
     }
     // <= 'enum' !IDENT_PART SPACING # Choice
     if (_cacheable[68]) {
@@ -3432,7 +3978,7 @@ class CParser {
     // LEXEME (TOKEN)
     // EOF <- !.
     var $$;
-    _token = 11;  
+    _token = 13;  
     _tokenStart = _cursor;  
     // => !. # Choice
     switch (_ch >= 0 && _ch <= 1114111 ? 0 : _ch == -1 ? 2 : 1) {
@@ -3477,7 +4023,7 @@ class CParser {
     // EOL <- '\r\n' / [\n\r]
     var $$;
     // => '\r\n' / [\n\r] # Choice
-    switch (_getState(_transitions17)) {
+    switch (_getState(_transitions30)) {
       // [\n]
       case 0:
         var startPos0 = _startPos;
@@ -3493,7 +4039,7 @@ class CParser {
           var startPos1 = _startPos;
           _startPos = _cursor;
           // => '\r\n'
-          $$ = _matchString(_strings15, '\r\n');
+          $$ = _matchString(_strings16, '\r\n');
           // <= '\r\n'
           _startPos = startPos1;
           if (success) break;
@@ -3579,13 +4125,13 @@ class CParser {
   
   dynamic _parse_EnumDeclaration() {
     // SENTENCE (NONTERMINAL)
-    // EnumDeclaration <- Metadata? EnumType
+    // EnumDeclaration <- Metadata? TypeQualifiers? EnumType
     var $$;
-    // => Metadata? EnumType # Choice
-    switch (_getState(_transitions11)) {
-      // [_] [e]
+    // => Metadata? TypeQualifiers? EnumType # Choice
+    switch (_getState(_transitions23)) {
+      // [_] [c] [e] [v]
       case 0:
-        // => Metadata? EnumType # Sequence
+        // => Metadata? TypeQualifiers? EnumType # Sequence
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
         _startPos = _cursor;
         while (true) {  
@@ -3599,20 +4145,33 @@ class CParser {
           _testing = testing0;
           // <= Metadata?
           if (!success) break;
-          var seq = new List(2)..[0] = $$;
+          var seq = new List(3)..[0] = $$;
+          // => TypeQualifiers?
+          var testing1 = _testing;
+          _testing = _cursor;
+          // => TypeQualifiers
+          $$ = _parse_TypeQualifiers();
+          // <= TypeQualifiers
+          success = true; 
+          _testing = testing1;
+          // <= TypeQualifiers?
+          if (!success) break;
+          seq[1] = $$;
           // => EnumType
           $$ = _parse_EnumType();
           // <= EnumType
           if (!success) break;
-          seq[1] = $$;
+          seq[2] = $$;
           $$ = seq;
           if (success) {    
             // Metadata?
             final $1 = seq[0];
-            // EnumType
+            // TypeQualifiers?
             final $2 = seq[1];
+            // EnumType
+            final $3 = seq[2];
             final $start = startPos0;
-            $$ = new EnumDeclaration(metadata: $1, type: $2);
+            $$ = new EnumDeclaration(metadata: $1, qualifiers: $2, type: $3);
           }
           break;
         }
@@ -3621,7 +4180,7 @@ class CParser {
           _cursor = pos0;
         }
         _startPos = startPos0;
-        // <= Metadata? EnumType # Sequence
+        // <= Metadata? TypeQualifiers? EnumType # Sequence
         break;
       // No matches
       // EOF
@@ -3633,31 +4192,31 @@ class CParser {
     }
     if (!success && _cursor > _testing) {
       // Expected: 'enum'
-      _failure(_expect13);
+      _failure(_expect24);
     }
-    // <= Metadata? EnumType # Choice
+    // <= Metadata? TypeQualifiers? EnumType # Choice
     return $$;
   }
   
   dynamic _parse_EnumType() {
     // SENTENCE (NONTERMINAL)
-    // EnumType <- EnumTypeSpecifier OPEN_BRACE EnumValueList CLOSE_BRACE Metadata? / EnumTypeSpecifierWithTag Metadata?
+    // EnumType <- EnumTypeSpecifier OPEN_BRACE EnumeratorList CLOSE_BRACE Metadata? TypeQualifiers? / EnumTypeSpecifierWithTag Metadata? TypeQualifiers?
     var $$;          
     var pos = _cursor;             
-    if(_cachePos[27] >= pos) {
-      $$ = _getFromCache(27);
+    if(_cachePos[39] >= pos) {
+      $$ = _getFromCache(39);
       if($$ != null) {
         return $$[0];       
       }
     } else {
-      _cachePos[27] = pos;
+      _cachePos[39] = pos;
     }  
-    // => EnumTypeSpecifier OPEN_BRACE EnumValueList CLOSE_BRACE Metadata? / EnumTypeSpecifierWithTag Metadata? # Choice
+    // => EnumTypeSpecifier OPEN_BRACE EnumeratorList CLOSE_BRACE Metadata? TypeQualifiers? / EnumTypeSpecifierWithTag Metadata? TypeQualifiers? # Choice
     switch (_ch == 101 ? 0 : _ch == -1 ? 2 : 1) {
       // [e]
       case 0:
         while (true) {
-          // => EnumTypeSpecifier OPEN_BRACE EnumValueList CLOSE_BRACE Metadata? # Sequence
+          // => EnumTypeSpecifier OPEN_BRACE EnumeratorList CLOSE_BRACE Metadata? TypeQualifiers? # Sequence
           var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
           _startPos = _cursor;
           while (true) {  
@@ -3665,15 +4224,15 @@ class CParser {
             $$ = _parse_EnumTypeSpecifier();
             // <= EnumTypeSpecifier
             if (!success) break;
-            var seq = new List(5)..[0] = $$;
+            var seq = new List(6)..[0] = $$;
             // => OPEN_BRACE
             $$ = _parse_OPEN_BRACE();
             // <= OPEN_BRACE
             if (!success) break;
             seq[1] = $$;
-            // => EnumValueList
-            $$ = _parse_EnumValueList();
-            // <= EnumValueList
+            // => EnumeratorList
+            $$ = _parse_EnumeratorList();
+            // <= EnumeratorList
             if (!success) break;
             seq[2] = $$;
             // => CLOSE_BRACE
@@ -3692,20 +4251,33 @@ class CParser {
             // <= Metadata?
             if (!success) break;
             seq[4] = $$;
+            // => TypeQualifiers?
+            var testing1 = _testing;
+            _testing = _cursor;
+            // => TypeQualifiers
+            $$ = _parse_TypeQualifiers();
+            // <= TypeQualifiers
+            success = true; 
+            _testing = testing1;
+            // <= TypeQualifiers?
+            if (!success) break;
+            seq[5] = $$;
             $$ = seq;
             if (success) {    
               // EnumTypeSpecifier
               final $1 = seq[0];
               // OPEN_BRACE
               final $2 = seq[1];
-              // EnumValueList
+              // EnumeratorList
               final $3 = seq[2];
               // CLOSE_BRACE
               final $4 = seq[3];
               // Metadata?
               final $5 = seq[4];
+              // TypeQualifiers?
+              final $6 = seq[5];
               final $start = startPos0;
-              $$ = new EnumTypeSpecification(metadata: $5, elaboratedType: $1, values: $3);
+              $$ = new EnumTypeSpecification(metadata: $5, elaboratedType: $1, qualifiers: $6, values: $3);
             }
             break;
           }
@@ -3714,9 +4286,9 @@ class CParser {
             _cursor = pos0;
           }
           _startPos = startPos0;
-          // <= EnumTypeSpecifier OPEN_BRACE EnumValueList CLOSE_BRACE Metadata? # Sequence
+          // <= EnumTypeSpecifier OPEN_BRACE EnumeratorList CLOSE_BRACE Metadata? TypeQualifiers? # Sequence
           if (success) break;
-          // => EnumTypeSpecifierWithTag Metadata? # Sequence
+          // => EnumTypeSpecifierWithTag Metadata? TypeQualifiers? # Sequence
           var ch1 = _ch, pos1 = _cursor, startPos1 = _startPos;
           _startPos = _cursor;
           while (true) {  
@@ -3724,26 +4296,39 @@ class CParser {
             $$ = _parse_EnumTypeSpecifierWithTag();
             // <= EnumTypeSpecifierWithTag
             if (!success) break;
-            var seq = new List(2)..[0] = $$;
+            var seq = new List(3)..[0] = $$;
             // => Metadata?
-            var testing1 = _testing;
+            var testing2 = _testing;
             _testing = _cursor;
             // => Metadata
             $$ = _parse_Metadata();
             // <= Metadata
             success = true; 
-            _testing = testing1;
+            _testing = testing2;
             // <= Metadata?
             if (!success) break;
             seq[1] = $$;
+            // => TypeQualifiers?
+            var testing3 = _testing;
+            _testing = _cursor;
+            // => TypeQualifiers
+            $$ = _parse_TypeQualifiers();
+            // <= TypeQualifiers
+            success = true; 
+            _testing = testing3;
+            // <= TypeQualifiers?
+            if (!success) break;
+            seq[2] = $$;
             $$ = seq;
             if (success) {    
               // EnumTypeSpecifierWithTag
               final $1 = seq[0];
               // Metadata?
               final $2 = seq[1];
+              // TypeQualifiers?
+              final $3 = seq[2];
               final $start = startPos1;
-              $$ = new EnumTypeSpecification(metadata: $2, elaboratedType: $1);
+              $$ = new EnumTypeSpecification(metadata: $2, elaboratedType: $1, qualifiers: $3);
             }
             break;
           }
@@ -3752,7 +4337,7 @@ class CParser {
             _cursor = pos1;
           }
           _startPos = startPos1;
-          // <= EnumTypeSpecifierWithTag Metadata? # Sequence
+          // <= EnumTypeSpecifierWithTag Metadata? TypeQualifiers? # Sequence
           break;
         }
         break;
@@ -3766,11 +4351,11 @@ class CParser {
     }
     if (!success && _cursor > _testing) {
       // Expected: 'enum'
-      _failure(_expect13);
+      _failure(_expect24);
     }
-    // <= EnumTypeSpecifier OPEN_BRACE EnumValueList CLOSE_BRACE Metadata? / EnumTypeSpecifierWithTag Metadata? # Choice
-    if (_cacheable[27]) {
-      _addToCache($$, pos, 27);
+    // <= EnumTypeSpecifier OPEN_BRACE EnumeratorList CLOSE_BRACE Metadata? TypeQualifiers? / EnumTypeSpecifierWithTag Metadata? TypeQualifiers? # Choice
+    if (_cacheable[39]) {
+      _addToCache($$, pos, 39);
     }    
     return $$;
   }
@@ -3844,7 +4429,7 @@ class CParser {
     }
     if (!success && _cursor > _testing) {
       // Expected: 'enum'
-      _failure(_expect13);
+      _failure(_expect24);
     }
     // <= ENUM Metadata? Identifier? # Choice
     return $$;
@@ -3913,39 +4498,39 @@ class CParser {
     }
     if (!success && _cursor > _testing) {
       // Expected: 'enum'
-      _failure(_expect13);
+      _failure(_expect24);
     }
     // <= ENUM Metadata? Identifier # Choice
     return $$;
   }
   
-  dynamic _parse_EnumValue() {
+  dynamic _parse_Enumerator() {
     // SENTENCE (NONTERMINAL)
-    // EnumValue <- IDENTIFIER ASSIGN NUMBER / IDENTIFIER
+    // Enumerator <- Identifier ASSIGN NUMBER / Identifier
     var $$;          
     var pos = _cursor;             
-    if(_cachePos[30] >= pos) {
-      $$ = _getFromCache(30);
+    if(_cachePos[42] >= pos) {
+      $$ = _getFromCache(42);
       if($$ != null) {
         return $$[0];       
       }
     } else {
-      _cachePos[30] = pos;
+      _cachePos[42] = pos;
     }  
-    // => IDENTIFIER ASSIGN NUMBER / IDENTIFIER # Choice
-    switch (_getState(_transitions0)) {
+    // => Identifier ASSIGN NUMBER / Identifier # Choice
+    switch (_getState(_transitions2)) {
       // [A-Z] [_] [a-z]
       // EOF
       case 0:
       case 2:
         while (true) {
-          // => IDENTIFIER ASSIGN NUMBER # Sequence
+          // => Identifier ASSIGN NUMBER # Sequence
           var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
           _startPos = _cursor;
           while (true) {  
-            // => IDENTIFIER
-            $$ = _parse_IDENTIFIER();
-            // <= IDENTIFIER
+            // => Identifier
+            $$ = _parse_Identifier();
+            // <= Identifier
             if (!success) break;
             var seq = new List(3)..[0] = $$;
             // => ASSIGN
@@ -3960,14 +4545,14 @@ class CParser {
             seq[2] = $$;
             $$ = seq;
             if (success) {    
-              // IDENTIFIER
+              // Identifier
               final $1 = seq[0];
               // ASSIGN
               final $2 = seq[1];
               // NUMBER
               final $3 = seq[2];
               final $start = startPos0;
-              $$ = new EnumValueDeclaration(name: $1, value: $3);
+              $$ = new Enumerator(identifier: $1, value: $3);
             }
             break;
           }
@@ -3976,18 +4561,18 @@ class CParser {
             _cursor = pos0;
           }
           _startPos = startPos0;
-          // <= IDENTIFIER ASSIGN NUMBER # Sequence
+          // <= Identifier ASSIGN NUMBER # Sequence
           if (success) break;
           var startPos1 = _startPos;
           _startPos = _cursor;
-          // => IDENTIFIER
-          $$ = _parse_IDENTIFIER();
-          // <= IDENTIFIER
+          // => Identifier
+          $$ = _parse_Identifier();
+          // <= Identifier
           if (success) {    
-            // IDENTIFIER
+            // Identifier
             final $1 = $$;
             final $start = startPos1;
-            $$ = new EnumValueDeclaration(name: $1);
+            $$ = new Enumerator(identifier: $1);
           }
           _startPos = startPos1;
           break;
@@ -4000,44 +4585,44 @@ class CParser {
         break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: IDENTIFIER
-      _failure(_expect3);
+      // Expected: Identifier
+      _failure(_expect9);
     }
-    // <= IDENTIFIER ASSIGN NUMBER / IDENTIFIER # Choice
-    if (_cacheable[30]) {
-      _addToCache($$, pos, 30);
+    // <= Identifier ASSIGN NUMBER / Identifier # Choice
+    if (_cacheable[42]) {
+      _addToCache($$, pos, 42);
     }    
     return $$;
   }
   
-  dynamic _parse_EnumValueList() {
+  dynamic _parse_EnumeratorList() {
     // SENTENCE (NONTERMINAL)
-    // EnumValueList <- EnumValue (COMMA EnumValue)* COMMA?
+    // EnumeratorList <- Enumerator (COMMA Enumerator)* COMMA?
     var $$;
-    // => EnumValue (COMMA EnumValue)* COMMA? # Choice
-    switch (_getState(_transitions0)) {
+    // => Enumerator (COMMA Enumerator)* COMMA? # Choice
+    switch (_getState(_transitions2)) {
       // [A-Z] [_] [a-z]
       // EOF
       case 0:
       case 2:
-        // => EnumValue (COMMA EnumValue)* COMMA? # Sequence
+        // => Enumerator (COMMA Enumerator)* COMMA? # Sequence
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
         _startPos = _cursor;
         while (true) {  
-          // => EnumValue
-          $$ = _parse_EnumValue();
-          // <= EnumValue
+          // => Enumerator
+          $$ = _parse_Enumerator();
+          // <= Enumerator
           if (!success) break;
           var seq = new List(3)..[0] = $$;
-          // => (COMMA EnumValue)*
+          // => (COMMA Enumerator)*
           var testing0 = _testing; 
           for (var reps = []; ; ) {
             _testing = _cursor;
-            // => (COMMA EnumValue) # Choice
+            // => (COMMA Enumerator) # Choice
             switch (_ch == 44 ? 0 : _ch == -1 ? 2 : 1) {
               // [,]
               case 0:
-                // => COMMA EnumValue # Sequence
+                // => COMMA Enumerator # Sequence
                 var ch1 = _ch, pos1 = _cursor, startPos1 = _startPos;
                 _startPos = _cursor;
                 while (true) {  
@@ -4046,9 +4631,9 @@ class CParser {
                   // <= COMMA
                   if (!success) break;
                   var seq = new List(2)..[0] = $$;
-                  // => EnumValue
-                  $$ = _parse_EnumValue();
-                  // <= EnumValue
+                  // => Enumerator
+                  $$ = _parse_Enumerator();
+                  // <= Enumerator
                   if (!success) break;
                   seq[1] = $$;
                   $$ = seq;
@@ -4059,7 +4644,7 @@ class CParser {
                   _cursor = pos1;
                 }
                 _startPos = startPos1;
-                // <= COMMA EnumValue # Sequence
+                // <= COMMA Enumerator # Sequence
                 break;
               // No matches
               // EOF
@@ -4073,7 +4658,7 @@ class CParser {
               // Expected: ','
               _failure(_expect6);
             }
-            // <= (COMMA EnumValue) # Choice
+            // <= (COMMA Enumerator) # Choice
             if (success) {  
               reps.add($$);
             } else {
@@ -4083,7 +4668,7 @@ class CParser {
               break; 
             }
           }
-          // <= (COMMA EnumValue)*
+          // <= (COMMA Enumerator)*
           if (!success) break;
           seq[1] = $$;
           // => COMMA?
@@ -4099,9 +4684,9 @@ class CParser {
           seq[2] = $$;
           $$ = seq;
           if (success) {    
-            // EnumValue
+            // Enumerator
             final $1 = seq[0];
-            // (COMMA EnumValue)*
+            // (COMMA Enumerator)*
             final $2 = seq[1];
             // COMMA?
             final $3 = seq[2];
@@ -4115,7 +4700,7 @@ class CParser {
           _cursor = pos0;
         }
         _startPos = startPos0;
-        // <= EnumValue (COMMA EnumValue)* COMMA? # Sequence
+        // <= Enumerator (COMMA Enumerator)* COMMA? # Sequence
         break;
       // No matches
       case 1:
@@ -4124,10 +4709,10 @@ class CParser {
         break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: IDENTIFIER
-      _failure(_expect3);
+      // Expected: Identifier
+      _failure(_expect9);
     }
-    // <= EnumValue (COMMA EnumValue)* COMMA? # Choice
+    // <= Enumerator (COMMA Enumerator)* COMMA? # Choice
     return $$;
   }
   
@@ -4135,7 +4720,7 @@ class CParser {
     // LEXEME (TOKEN)
     // FLOAT <- 'float' !IDENT_PART SPACING
     var $$;
-    _token = 12;  
+    _token = 14;  
     _tokenStart = _cursor;  
     // => 'float' !IDENT_PART SPACING # Choice
     switch (_ch == 102 ? 0 : _ch == -1 ? 2 : 1) {
@@ -4146,7 +4731,7 @@ class CParser {
         _startPos = _cursor;
         while (true) {  
           // => 'float'
-          $$ = _matchString(_strings4, 'float');
+          $$ = _matchString(_strings5, 'float');
           // <= 'float'
           if (!success) break;
           var seq = new List(3)..[0] = $$;
@@ -4199,7 +4784,7 @@ class CParser {
     }
     if (!success && _cursor > _testing) {
       // Expected: 'float'
-      _failure(_expect30);
+      _failure(_expect34);
     }
     // <= 'float' !IDENT_PART SPACING # Choice
     _token = null;
@@ -4207,17 +4792,120 @@ class CParser {
     return $$;
   }
   
+  dynamic _parse_FloatType() {
+    // SENTENCE (NONTERMINAL)
+    // FloatType <- (FLOAT / DOUBLE) Metadata? TypeQualifiers?
+    var $$;
+    // => (FLOAT / DOUBLE) Metadata? TypeQualifiers? # Choice
+    switch (_getState(_transitions12)) {
+      // [d] [f]
+      case 0:
+        // => (FLOAT / DOUBLE) Metadata? TypeQualifiers? # Sequence
+        var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
+        _startPos = _cursor;
+        while (true) {  
+          // => (FLOAT / DOUBLE) # Choice
+          switch (_getState(_transitions13)) {
+            // [d]
+            case 0:
+              var startPos1 = _startPos;
+              _startPos = _cursor;
+              // => DOUBLE
+              $$ = _parse_DOUBLE();
+              // <= DOUBLE
+              _startPos = startPos1;
+              break;
+            // [f]
+            case 1:
+              var startPos2 = _startPos;
+              _startPos = _cursor;
+              // => FLOAT
+              $$ = _parse_FLOAT();
+              // <= FLOAT
+              _startPos = startPos2;
+              break;
+            // No matches
+            // EOF
+            case 2:
+            case 3:
+              $$ = null;
+              success = false;
+              break;
+          }
+          if (!success && _cursor > _testing) {
+            // Expected: 'float', 'double'
+            _failure(_expect15);
+          }
+          // <= (FLOAT / DOUBLE) # Choice
+          if (!success) break;
+          var seq = new List(3)..[0] = $$;
+          // => Metadata?
+          var testing0 = _testing;
+          _testing = _cursor;
+          // => Metadata
+          $$ = _parse_Metadata();
+          // <= Metadata
+          success = true; 
+          _testing = testing0;
+          // <= Metadata?
+          if (!success) break;
+          seq[1] = $$;
+          // => TypeQualifiers?
+          var testing1 = _testing;
+          _testing = _cursor;
+          // => TypeQualifiers
+          $$ = _parse_TypeQualifiers();
+          // <= TypeQualifiers
+          success = true; 
+          _testing = testing1;
+          // <= TypeQualifiers?
+          if (!success) break;
+          seq[2] = $$;
+          $$ = seq;
+          if (success) {    
+            // (FLOAT / DOUBLE)
+            final $1 = seq[0];
+            // Metadata?
+            final $2 = seq[1];
+            // TypeQualifiers?
+            final $3 = seq[2];
+            final $start = startPos0;
+            $$ = new BuiltinTypeSpecification(identifier: _ident([$1]), metadata: $2, qualifiers: $3, typeKind: TypeSpecificationKind.FLOAT);
+          }
+          break;
+        }
+        if (!success) {
+          _ch = ch0;
+          _cursor = pos0;
+        }
+        _startPos = startPos0;
+        // <= (FLOAT / DOUBLE) Metadata? TypeQualifiers? # Sequence
+        break;
+      // No matches
+      // EOF
+      case 1:
+      case 2:
+        $$ = null;
+        success = false;
+        break;
+    }
+    if (!success && _cursor > _testing) {
+      // Expected: 'float', 'double'
+      _failure(_expect15);
+    }
+    // <= (FLOAT / DOUBLE) Metadata? TypeQualifiers? # Choice
+    return $$;
+  }
+  
   dynamic _parse_FunctionDeclaration() {
     // SENTENCE (NONTERMINAL)
-    // FunctionDeclaration <- Metadata? FunctionType
+    // FunctionDeclaration <- Metadata? TypeQualifiers? FunctionDeclarator / Metadata? TypeQualifiers? Type FunctionDeclarator
     var $$;
-    // => Metadata? FunctionType # Choice
-    switch (_ch >= 0 && _ch <= 1114111 ? 0 : _ch == -1 ? 2 : 1) {
-      // [\u0000-\u0010ffff]
-      // EOF
+    // => Metadata? TypeQualifiers? FunctionDeclarator / Metadata? TypeQualifiers? Type FunctionDeclarator # Choice
+    switch (_getState(_transitions1)) {
+      // [*]
       case 0:
-      case 2:
-        // => Metadata? FunctionType # Sequence
+        // => Metadata? TypeQualifiers? FunctionDeclarator # Sequence
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
         _startPos = _cursor;
         while (true) {  
@@ -4231,20 +4919,33 @@ class CParser {
           _testing = testing0;
           // <= Metadata?
           if (!success) break;
-          var seq = new List(2)..[0] = $$;
-          // => FunctionType
-          $$ = _parse_FunctionType();
-          // <= FunctionType
+          var seq = new List(3)..[0] = $$;
+          // => TypeQualifiers?
+          var testing1 = _testing;
+          _testing = _cursor;
+          // => TypeQualifiers
+          $$ = _parse_TypeQualifiers();
+          // <= TypeQualifiers
+          success = true; 
+          _testing = testing1;
+          // <= TypeQualifiers?
           if (!success) break;
           seq[1] = $$;
+          // => FunctionDeclarator
+          $$ = _parse_FunctionDeclarator();
+          // <= FunctionDeclarator
+          if (!success) break;
+          seq[2] = $$;
           $$ = seq;
           if (success) {    
             // Metadata?
             final $1 = seq[0];
-            // FunctionType
+            // TypeQualifiers?
             final $2 = seq[1];
+            // FunctionDeclarator
+            final $3 = seq[2];
             final $start = startPos0;
-            $$ = new FunctionDeclaration(metadata: $1, type: $2);
+            $$ = new FunctionDeclaration(declarator: $3, metadata: $1, qualifiers: $2);
           }
           break;
         }
@@ -4253,7 +4954,214 @@ class CParser {
           _cursor = pos0;
         }
         _startPos = startPos0;
-        // <= Metadata? FunctionType # Sequence
+        // <= Metadata? TypeQualifiers? FunctionDeclarator # Sequence
+        break;
+      // [A-Z] [_] [a-z]
+      // EOF
+      case 1:
+      case 3:
+        while (true) {
+          // => Metadata? TypeQualifiers? FunctionDeclarator # Sequence
+          var ch1 = _ch, pos1 = _cursor, startPos1 = _startPos;
+          _startPos = _cursor;
+          while (true) {  
+            // => Metadata?
+            var testing2 = _testing;
+            _testing = _cursor;
+            // => Metadata
+            $$ = _parse_Metadata();
+            // <= Metadata
+            success = true; 
+            _testing = testing2;
+            // <= Metadata?
+            if (!success) break;
+            var seq = new List(3)..[0] = $$;
+            // => TypeQualifiers?
+            var testing3 = _testing;
+            _testing = _cursor;
+            // => TypeQualifiers
+            $$ = _parse_TypeQualifiers();
+            // <= TypeQualifiers
+            success = true; 
+            _testing = testing3;
+            // <= TypeQualifiers?
+            if (!success) break;
+            seq[1] = $$;
+            // => FunctionDeclarator
+            $$ = _parse_FunctionDeclarator();
+            // <= FunctionDeclarator
+            if (!success) break;
+            seq[2] = $$;
+            $$ = seq;
+            if (success) {    
+              // Metadata?
+              final $1 = seq[0];
+              // TypeQualifiers?
+              final $2 = seq[1];
+              // FunctionDeclarator
+              final $3 = seq[2];
+              final $start = startPos1;
+              $$ = new FunctionDeclaration(declarator: $3, metadata: $1, qualifiers: $2);
+            }
+            break;
+          }
+          if (!success) {
+            _ch = ch1;
+            _cursor = pos1;
+          }
+          _startPos = startPos1;
+          // <= Metadata? TypeQualifiers? FunctionDeclarator # Sequence
+          if (success) break;
+          // => Metadata? TypeQualifiers? Type FunctionDeclarator # Sequence
+          var ch2 = _ch, pos2 = _cursor, startPos2 = _startPos;
+          _startPos = _cursor;
+          while (true) {  
+            // => Metadata?
+            var testing4 = _testing;
+            _testing = _cursor;
+            // => Metadata
+            $$ = _parse_Metadata();
+            // <= Metadata
+            success = true; 
+            _testing = testing4;
+            // <= Metadata?
+            if (!success) break;
+            var seq = new List(4)..[0] = $$;
+            // => TypeQualifiers?
+            var testing5 = _testing;
+            _testing = _cursor;
+            // => TypeQualifiers
+            $$ = _parse_TypeQualifiers();
+            // <= TypeQualifiers
+            success = true; 
+            _testing = testing5;
+            // <= TypeQualifiers?
+            if (!success) break;
+            seq[1] = $$;
+            // => Type
+            $$ = _parse_Type();
+            // <= Type
+            if (!success) break;
+            seq[2] = $$;
+            // => FunctionDeclarator
+            $$ = _parse_FunctionDeclarator();
+            // <= FunctionDeclarator
+            if (!success) break;
+            seq[3] = $$;
+            $$ = seq;
+            if (success) {    
+              // Metadata?
+              final $1 = seq[0];
+              // TypeQualifiers?
+              final $2 = seq[1];
+              // Type
+              final $3 = seq[2];
+              // FunctionDeclarator
+              final $4 = seq[3];
+              final $start = startPos2;
+              $$ = new FunctionDeclaration(declarator: $4, metadata: $1, qualifiers: $2, type: $3);
+            }
+            break;
+          }
+          if (!success) {
+            _ch = ch2;
+            _cursor = pos2;
+          }
+          _startPos = startPos2;
+          // <= Metadata? TypeQualifiers? Type FunctionDeclarator # Sequence
+          break;
+        }
+        break;
+      // No matches
+      case 2:
+        $$ = null;
+        success = false;
+        break;
+    }
+    if (!success && _cursor > _testing) {
+      // Expected: Identifier, 'short', 'long', 'char', 'int', SIGNEDNESS, 'float', 'double', 'void', '_Bool', 'struct', 'union', 'enum'
+      _failure(_expect3);
+    }
+    // <= Metadata? TypeQualifiers? FunctionDeclarator / Metadata? TypeQualifiers? Type FunctionDeclarator # Choice
+    return $$;
+  }
+  
+  dynamic _parse_FunctionDeclarator() {
+    // SENTENCE (NONTERMINAL)
+    // FunctionDeclarator <- PointerSpecifiers? Identifier FunctionParameters Metadata?
+    var $$;          
+    var pos = _cursor;             
+    if(_cachePos[12] >= pos) {
+      $$ = _getFromCache(12);
+      if($$ != null) {
+        return $$[0];       
+      }
+    } else {
+      _cachePos[12] = pos;
+    }  
+    // => PointerSpecifiers? Identifier FunctionParameters Metadata? # Choice
+    switch (_getState(_transitions7)) {
+      // [*] [A-Z] [_] [a-z]
+      // EOF
+      case 0:
+      case 2:
+        // => PointerSpecifiers? Identifier FunctionParameters Metadata? # Sequence
+        var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
+        _startPos = _cursor;
+        while (true) {  
+          // => PointerSpecifiers?
+          var testing0 = _testing;
+          _testing = _cursor;
+          // => PointerSpecifiers
+          $$ = _parse_PointerSpecifiers();
+          // <= PointerSpecifiers
+          success = true; 
+          _testing = testing0;
+          // <= PointerSpecifiers?
+          if (!success) break;
+          var seq = new List(4)..[0] = $$;
+          // => Identifier
+          $$ = _parse_Identifier();
+          // <= Identifier
+          if (!success) break;
+          seq[1] = $$;
+          // => FunctionParameters
+          $$ = _parse_FunctionParameters();
+          // <= FunctionParameters
+          if (!success) break;
+          seq[2] = $$;
+          // => Metadata?
+          var testing1 = _testing;
+          _testing = _cursor;
+          // => Metadata
+          $$ = _parse_Metadata();
+          // <= Metadata
+          success = true; 
+          _testing = testing1;
+          // <= Metadata?
+          if (!success) break;
+          seq[3] = $$;
+          $$ = seq;
+          if (success) {    
+            // PointerSpecifiers?
+            final $1 = seq[0];
+            // Identifier
+            final $2 = seq[1];
+            // FunctionParameters
+            final $3 = seq[2];
+            // Metadata?
+            final $4 = seq[3];
+            final $start = startPos0;
+            $$ = new Declarator(identifier: $2, metadata: $4, parameters: $3, pointers: $1);
+          }
+          break;
+        }
+        if (!success) {
+          _ch = ch0;
+          _cursor = pos0;
+        }
+        _startPos = startPos0;
+        // <= PointerSpecifiers? Identifier FunctionParameters Metadata? # Sequence
         break;
       // No matches
       case 1:
@@ -4262,53 +5170,49 @@ class CParser {
         break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: IDENTIFIER
-      _failure(_expect3);
+      // Expected: Identifier
+      _failure(_expect9);
     }
-    // <= Metadata? FunctionType # Choice
+    // <= PointerSpecifiers? Identifier FunctionParameters Metadata? # Choice
+    if (_cacheable[12]) {
+      _addToCache($$, pos, 12);
+    }    
     return $$;
   }
   
-  dynamic _parse_FunctionParameter() {
+  dynamic _parse_FunctionParameterDeclaration() {
     // SENTENCE (NONTERMINAL)
-    // FunctionParameter <- ArrayParameter / PointerParameter / TypeParameter
+    // FunctionParameterDeclaration <- ParameterDeclarationNotAbstract / ParameterDeclarationAbstract
     var $$;          
     var pos = _cursor;             
-    if(_cachePos[36] >= pos) {
-      $$ = _getFromCache(36);
+    if(_cachePos[18] >= pos) {
+      $$ = _getFromCache(18);
       if($$ != null) {
         return $$[0];       
       }
     } else {
-      _cachePos[36] = pos;
+      _cachePos[18] = pos;
     }  
-    // => ArrayParameter / PointerParameter / TypeParameter # Choice
-    switch (_ch >= 0 && _ch <= 1114111 ? 0 : _ch == -1 ? 2 : 1) {
-      // [\u0000-\u0010ffff]
+    // => ParameterDeclarationNotAbstract / ParameterDeclarationAbstract # Choice
+    switch (_getState(_transitions2)) {
+      // [A-Z] [_] [a-z]
       // EOF
       case 0:
       case 2:
         while (true) {
           var startPos0 = _startPos;
           _startPos = _cursor;
-          // => ArrayParameter
-          $$ = _parse_ArrayParameter();
-          // <= ArrayParameter
+          // => ParameterDeclarationNotAbstract
+          $$ = _parse_ParameterDeclarationNotAbstract();
+          // <= ParameterDeclarationNotAbstract
           _startPos = startPos0;
           if (success) break;
           var startPos1 = _startPos;
           _startPos = _cursor;
-          // => PointerParameter
-          $$ = _parse_PointerParameter();
-          // <= PointerParameter
+          // => ParameterDeclarationAbstract
+          $$ = _parse_ParameterDeclarationAbstract();
+          // <= ParameterDeclarationAbstract
           _startPos = startPos1;
-          if (success) break;
-          var startPos2 = _startPos;
-          _startPos = _cursor;
-          // => TypeParameter
-          $$ = _parse_TypeParameter();
-          // <= TypeParameter
-          _startPos = startPos2;
           break;
         }
         break;
@@ -4319,12 +5223,12 @@ class CParser {
         break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: 'struct', 'union', 'enum', IDENTIFIER, 'short', 'long', 'char', 'int', SIGNEDNESS, 'float', 'double', 'void'
-      _failure(_expect8);
+      // Expected: Identifier, 'short', 'long', 'char', 'int', SIGNEDNESS, 'float', 'double', 'void', '_Bool', 'struct', 'union', 'enum'
+      _failure(_expect3);
     }
-    // <= ArrayParameter / PointerParameter / TypeParameter # Choice
-    if (_cacheable[36]) {
-      _addToCache($$, pos, 36);
+    // <= ParameterDeclarationNotAbstract / ParameterDeclarationAbstract # Choice
+    if (_cacheable[18]) {
+      _addToCache($$, pos, 18);
     }    
     return $$;
   }
@@ -4334,8 +5238,8 @@ class CParser {
     // FunctionParameterList <- FunctionParameterListNoVaList (COMMA VA_LIST_PARAMETER)?
     var $$;
     // => FunctionParameterListNoVaList (COMMA VA_LIST_PARAMETER)? # Choice
-    switch (_ch >= 0 && _ch <= 1114111 ? 0 : _ch == -1 ? 2 : 1) {
-      // [\u0000-\u0010ffff]
+    switch (_getState(_transitions2)) {
+      // [A-Z] [_] [a-z]
       // EOF
       case 0:
       case 2:
@@ -4430,8 +5334,8 @@ class CParser {
         break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: 'struct', 'union', 'enum', IDENTIFIER, 'short', 'long', 'char', 'int', SIGNEDNESS, 'float', 'double', 'void'
-      _failure(_expect8);
+      // Expected: Identifier, 'short', 'long', 'char', 'int', SIGNEDNESS, 'float', 'double', 'void', '_Bool', 'struct', 'union', 'enum'
+      _failure(_expect3);
     }
     // <= FunctionParameterListNoVaList (COMMA VA_LIST_PARAMETER)? # Choice
     return $$;
@@ -4439,32 +5343,32 @@ class CParser {
   
   dynamic _parse_FunctionParameterListNoVaList() {
     // SENTENCE (NONTERMINAL)
-    // FunctionParameterListNoVaList <- FunctionParameter (COMMA FunctionParameter)*
+    // FunctionParameterListNoVaList <- FunctionParameterDeclaration (COMMA FunctionParameterDeclaration)*
     var $$;
-    // => FunctionParameter (COMMA FunctionParameter)* # Choice
-    switch (_ch >= 0 && _ch <= 1114111 ? 0 : _ch == -1 ? 2 : 1) {
-      // [\u0000-\u0010ffff]
+    // => FunctionParameterDeclaration (COMMA FunctionParameterDeclaration)* # Choice
+    switch (_getState(_transitions2)) {
+      // [A-Z] [_] [a-z]
       // EOF
       case 0:
       case 2:
-        // => FunctionParameter (COMMA FunctionParameter)* # Sequence
+        // => FunctionParameterDeclaration (COMMA FunctionParameterDeclaration)* # Sequence
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
         _startPos = _cursor;
         while (true) {  
-          // => FunctionParameter
-          $$ = _parse_FunctionParameter();
-          // <= FunctionParameter
+          // => FunctionParameterDeclaration
+          $$ = _parse_FunctionParameterDeclaration();
+          // <= FunctionParameterDeclaration
           if (!success) break;
           var seq = new List(2)..[0] = $$;
-          // => (COMMA FunctionParameter)*
+          // => (COMMA FunctionParameterDeclaration)*
           var testing0 = _testing; 
           for (var reps = []; ; ) {
             _testing = _cursor;
-            // => (COMMA FunctionParameter) # Choice
+            // => (COMMA FunctionParameterDeclaration) # Choice
             switch (_ch == 44 ? 0 : _ch == -1 ? 2 : 1) {
               // [,]
               case 0:
-                // => COMMA FunctionParameter # Sequence
+                // => COMMA FunctionParameterDeclaration # Sequence
                 var ch1 = _ch, pos1 = _cursor, startPos1 = _startPos;
                 _startPos = _cursor;
                 while (true) {  
@@ -4473,9 +5377,9 @@ class CParser {
                   // <= COMMA
                   if (!success) break;
                   var seq = new List(2)..[0] = $$;
-                  // => FunctionParameter
-                  $$ = _parse_FunctionParameter();
-                  // <= FunctionParameter
+                  // => FunctionParameterDeclaration
+                  $$ = _parse_FunctionParameterDeclaration();
+                  // <= FunctionParameterDeclaration
                   if (!success) break;
                   seq[1] = $$;
                   $$ = seq;
@@ -4486,7 +5390,7 @@ class CParser {
                   _cursor = pos1;
                 }
                 _startPos = startPos1;
-                // <= COMMA FunctionParameter # Sequence
+                // <= COMMA FunctionParameterDeclaration # Sequence
                 break;
               // No matches
               // EOF
@@ -4500,7 +5404,7 @@ class CParser {
               // Expected: ','
               _failure(_expect6);
             }
-            // <= (COMMA FunctionParameter) # Choice
+            // <= (COMMA FunctionParameterDeclaration) # Choice
             if (success) {  
               reps.add($$);
             } else {
@@ -4510,14 +5414,14 @@ class CParser {
               break; 
             }
           }
-          // <= (COMMA FunctionParameter)*
+          // <= (COMMA FunctionParameterDeclaration)*
           if (!success) break;
           seq[1] = $$;
           $$ = seq;
           if (success) {    
-            // FunctionParameter
+            // FunctionParameterDeclaration
             final $1 = seq[0];
-            // (COMMA FunctionParameter)*
+            // (COMMA FunctionParameterDeclaration)*
             final $2 = seq[1];
             final $start = startPos0;
             $$ = _list($1, $2);
@@ -4529,7 +5433,7 @@ class CParser {
           _cursor = pos0;
         }
         _startPos = startPos0;
-        // <= FunctionParameter (COMMA FunctionParameter)* # Sequence
+        // <= FunctionParameterDeclaration (COMMA FunctionParameterDeclaration)* # Sequence
         break;
       // No matches
       case 1:
@@ -4538,31 +5442,31 @@ class CParser {
         break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: 'struct', 'union', 'enum', IDENTIFIER, 'short', 'long', 'char', 'int', SIGNEDNESS, 'float', 'double', 'void'
-      _failure(_expect8);
+      // Expected: Identifier, 'short', 'long', 'char', 'int', SIGNEDNESS, 'float', 'double', 'void', '_Bool', 'struct', 'union', 'enum'
+      _failure(_expect3);
     }
-    // <= FunctionParameter (COMMA FunctionParameter)* # Choice
+    // <= FunctionParameterDeclaration (COMMA FunctionParameterDeclaration)* # Choice
     return $$;
   }
   
   dynamic _parse_FunctionParameters() {
     // SENTENCE (NONTERMINAL)
-    // FunctionParameters <- OPEN_PAREN FunctionParameterList? CLOSE_PAREN Metadata?
+    // FunctionParameters <- OPEN_PAREN FunctionParameterList? CLOSE_PAREN
     var $$;          
     var pos = _cursor;             
-    if(_cachePos[33] >= pos) {
-      $$ = _getFromCache(33);
+    if(_cachePos[15] >= pos) {
+      $$ = _getFromCache(15);
       if($$ != null) {
         return $$[0];       
       }
     } else {
-      _cachePos[33] = pos;
+      _cachePos[15] = pos;
     }  
-    // => OPEN_PAREN FunctionParameterList? CLOSE_PAREN Metadata? # Choice
+    // => OPEN_PAREN FunctionParameterList? CLOSE_PAREN # Choice
     switch (_ch == 40 ? 0 : _ch == -1 ? 2 : 1) {
       // [(]
       case 0:
-        // => OPEN_PAREN FunctionParameterList? CLOSE_PAREN Metadata? # Sequence
+        // => OPEN_PAREN FunctionParameterList? CLOSE_PAREN # Sequence
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
         _startPos = _cursor;
         while (true) {  
@@ -4570,7 +5474,7 @@ class CParser {
           $$ = _parse_OPEN_PAREN();
           // <= OPEN_PAREN
           if (!success) break;
-          var seq = new List(4)..[0] = $$;
+          var seq = new List(3)..[0] = $$;
           // => FunctionParameterList?
           var testing0 = _testing;
           _testing = _cursor;
@@ -4587,17 +5491,6 @@ class CParser {
           // <= CLOSE_PAREN
           if (!success) break;
           seq[2] = $$;
-          // => Metadata?
-          var testing1 = _testing;
-          _testing = _cursor;
-          // => Metadata
-          $$ = _parse_Metadata();
-          // <= Metadata
-          success = true; 
-          _testing = testing1;
-          // <= Metadata?
-          if (!success) break;
-          seq[3] = $$;
           $$ = seq;
           if (success) {    
             // OPEN_PAREN
@@ -4606,10 +5499,8 @@ class CParser {
             final $2 = seq[1];
             // CLOSE_PAREN
             final $3 = seq[2];
-            // Metadata?
-            final $4 = seq[3];
             final $start = startPos0;
-            $$ = new FunctionParameters(metadata: $4, parameters: $2);
+            $$ = new FunctionParameters($2);
           }
           break;
         }
@@ -4618,7 +5509,7 @@ class CParser {
           _cursor = pos0;
         }
         _startPos = startPos0;
-        // <= OPEN_PAREN FunctionParameterList? CLOSE_PAREN Metadata? # Sequence
+        // <= OPEN_PAREN FunctionParameterList? CLOSE_PAREN # Sequence
         break;
       // No matches
       // EOF
@@ -4630,36 +5521,45 @@ class CParser {
     }
     if (!success && _cursor > _testing) {
       // Expected: '('
-      _failure(_expect18);
+      _failure(_expect11);
     }
-    // <= OPEN_PAREN FunctionParameterList? CLOSE_PAREN Metadata? # Choice
-    if (_cacheable[33]) {
-      _addToCache($$, pos, 33);
+    // <= OPEN_PAREN FunctionParameterList? CLOSE_PAREN # Choice
+    if (_cacheable[15]) {
+      _addToCache($$, pos, 15);
     }    
     return $$;
   }
   
-  dynamic _parse_FunctionPointerTypeSynonym() {
+  dynamic _parse_FunctionPointerDeclarator() {
     // SENTENCE (NONTERMINAL)
-    // FunctionPointerTypeSynonym <- TYPE_QUALIFIERS? OPEN_PAREN ASTERISK+ Metadata? Identifier CLOSE_PAREN FunctionParameters Metadata?
-    var $$;
-    // => TYPE_QUALIFIERS? OPEN_PAREN ASTERISK+ Metadata? Identifier CLOSE_PAREN FunctionParameters Metadata? # Choice
-    switch (_ch >= 0 && _ch <= 1114111 ? 0 : _ch == -1 ? 2 : 1) {
-      // [\u0000-\u0010ffff]
+    // FunctionPointerDeclarator <- PointerSpecifiers? OPEN_PAREN PointerSpecifiers Identifier CLOSE_PAREN FunctionParameters ArrayDimensions? Metadata?
+    var $$;          
+    var pos = _cursor;             
+    if(_cachePos[44] >= pos) {
+      $$ = _getFromCache(44);
+      if($$ != null) {
+        return $$[0];       
+      }
+    } else {
+      _cachePos[44] = pos;
+    }  
+    // => PointerSpecifiers? OPEN_PAREN PointerSpecifiers Identifier CLOSE_PAREN FunctionParameters ArrayDimensions? Metadata? # Choice
+    switch (_getState(_transitions21)) {
+      // [(] [*]
       case 0:
-        // => TYPE_QUALIFIERS? OPEN_PAREN ASTERISK+ Metadata? Identifier CLOSE_PAREN FunctionParameters Metadata? # Sequence
+        // => PointerSpecifiers? OPEN_PAREN PointerSpecifiers Identifier CLOSE_PAREN FunctionParameters ArrayDimensions? Metadata? # Sequence
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
         _startPos = _cursor;
         while (true) {  
-          // => TYPE_QUALIFIERS?
+          // => PointerSpecifiers?
           var testing0 = _testing;
           _testing = _cursor;
-          // => TYPE_QUALIFIERS
-          $$ = _parse_TYPE_QUALIFIERS();
-          // <= TYPE_QUALIFIERS
+          // => PointerSpecifiers
+          $$ = _parse_PointerSpecifiers();
+          // <= PointerSpecifiers
           success = true; 
           _testing = testing0;
-          // <= TYPE_QUALIFIERS?
+          // <= PointerSpecifiers?
           if (!success) break;
           var seq = new List(8)..[0] = $$;
           // => OPEN_PAREN
@@ -4667,33 +5567,37 @@ class CParser {
           // <= OPEN_PAREN
           if (!success) break;
           seq[1] = $$;
-          // => ASTERISK+
-          var testing1;
-          for (var first = true, reps; ;) {  
-            // => ASTERISK  
-            $$ = _parse_ASTERISK();  
-            // <= ASTERISK  
-            if (success) {
-             if (first) {      
-                first = false;
-                reps = [$$];
-                testing1 = _testing;                  
-              } else {
-                reps.add($$);
-              }
-              _testing = _cursor;   
-            } else {
-              success = !first;
-              if (success) {      
-                _testing = testing1;
-                $$ = reps;      
-              } else $$ = null;
-              break;
-            }  
-          }
-          // <= ASTERISK+
+          // => PointerSpecifiers
+          $$ = _parse_PointerSpecifiers();
+          // <= PointerSpecifiers
           if (!success) break;
           seq[2] = $$;
+          // => Identifier
+          $$ = _parse_Identifier();
+          // <= Identifier
+          if (!success) break;
+          seq[3] = $$;
+          // => CLOSE_PAREN
+          $$ = _parse_CLOSE_PAREN();
+          // <= CLOSE_PAREN
+          if (!success) break;
+          seq[4] = $$;
+          // => FunctionParameters
+          $$ = _parse_FunctionParameters();
+          // <= FunctionParameters
+          if (!success) break;
+          seq[5] = $$;
+          // => ArrayDimensions?
+          var testing1 = _testing;
+          _testing = _cursor;
+          // => ArrayDimensions
+          $$ = _parse_ArrayDimensions();
+          // <= ArrayDimensions
+          success = true; 
+          _testing = testing1;
+          // <= ArrayDimensions?
+          if (!success) break;
+          seq[6] = $$;
           // => Metadata?
           var testing2 = _testing;
           _testing = _cursor;
@@ -4704,53 +5608,27 @@ class CParser {
           _testing = testing2;
           // <= Metadata?
           if (!success) break;
-          seq[3] = $$;
-          // => Identifier
-          $$ = _parse_Identifier();
-          // <= Identifier
-          if (!success) break;
-          seq[4] = $$;
-          // => CLOSE_PAREN
-          $$ = _parse_CLOSE_PAREN();
-          // <= CLOSE_PAREN
-          if (!success) break;
-          seq[5] = $$;
-          // => FunctionParameters
-          $$ = _parse_FunctionParameters();
-          // <= FunctionParameters
-          if (!success) break;
-          seq[6] = $$;
-          // => Metadata?
-          var testing3 = _testing;
-          _testing = _cursor;
-          // => Metadata
-          $$ = _parse_Metadata();
-          // <= Metadata
-          success = true; 
-          _testing = testing3;
-          // <= Metadata?
-          if (!success) break;
           seq[7] = $$;
           $$ = seq;
           if (success) {    
-            // TYPE_QUALIFIERS?
+            // PointerSpecifiers?
             final $1 = seq[0];
             // OPEN_PAREN
             final $2 = seq[1];
-            // ASTERISK+
+            // PointerSpecifiers
             final $3 = seq[2];
-            // Metadata?
-            final $4 = seq[3];
             // Identifier
-            final $5 = seq[4];
+            final $4 = seq[3];
             // CLOSE_PAREN
-            final $6 = seq[5];
+            final $5 = seq[4];
             // FunctionParameters
+            final $6 = seq[5];
+            // ArrayDimensions?
             final $7 = seq[6];
             // Metadata?
             final $8 = seq[7];
             final $start = startPos0;
-            $$ = _createPointerType(new FunctionTypeSpecification(metadata: $8, identifier: $5, parameters: $7), $3, $4);
+            $$ = new Declarator(dimensions: $7, functionPointers: $3, identifier: $4, metadata: $8, parameters: $6, pointers: $1);
           }
           break;
         }
@@ -4759,7 +5637,7 @@ class CParser {
           _cursor = pos0;
         }
         _startPos = startPos0;
-        // <= TYPE_QUALIFIERS? OPEN_PAREN ASTERISK+ Metadata? Identifier CLOSE_PAREN FunctionParameters Metadata? # Sequence
+        // <= PointerSpecifiers? OPEN_PAREN PointerSpecifiers Identifier CLOSE_PAREN FunctionParameters ArrayDimensions? Metadata? # Sequence
         break;
       // No matches
       // EOF
@@ -4771,287 +5649,12 @@ class CParser {
     }
     if (!success && _cursor > _testing) {
       // Expected: '('
-      _failure(_expect18);
+      _failure(_expect11);
     }
-    // <= TYPE_QUALIFIERS? OPEN_PAREN ASTERISK+ Metadata? Identifier CLOSE_PAREN FunctionParameters Metadata? # Choice
-    return $$;
-  }
-  
-  dynamic _parse_FunctionType() {
-    // SENTENCE (NONTERMINAL)
-    // FunctionType <- (PointerType / Type)? Identifier FunctionParameters Metadata?
-    var $$;
-    // => (PointerType / Type)? Identifier FunctionParameters Metadata? # Choice
-    switch (_ch >= 0 && _ch <= 1114111 ? 0 : _ch == -1 ? 2 : 1) {
-      // [\u0000-\u0010ffff]
-      // EOF
-      case 0:
-      case 2:
-        // => (PointerType / Type)? Identifier FunctionParameters Metadata? # Sequence
-        var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
-        _startPos = _cursor;
-        while (true) {  
-          // => (PointerType / Type)?
-          var testing0 = _testing;
-          _testing = _cursor;
-          // => (PointerType / Type) # Choice
-          switch (_ch >= 0 && _ch <= 1114111 ? 0 : _ch == -1 ? 2 : 1) {
-            // [\u0000-\u0010ffff]
-            // EOF
-            case 0:
-            case 2:
-              while (true) {
-                var startPos1 = _startPos;
-                _startPos = _cursor;
-                // => PointerType
-                $$ = _parse_PointerType();
-                // <= PointerType
-                _startPos = startPos1;
-                if (success) break;
-                var startPos2 = _startPos;
-                _startPos = _cursor;
-                // => Type
-                $$ = _parse_Type();
-                // <= Type
-                _startPos = startPos2;
-                break;
-              }
-              break;
-            // No matches
-            case 1:
-              $$ = null;
-              success = false;
-              break;
-          }
-          if (!success && _cursor > _testing) {
-            // Expected: 'struct', 'union', 'enum', IDENTIFIER, 'short', 'long', 'char', 'int', SIGNEDNESS, 'float', 'double', 'void'
-            _failure(_expect8);
-          }
-          // <= (PointerType / Type) # Choice
-          success = true; 
-          _testing = testing0;
-          // <= (PointerType / Type)?
-          if (!success) break;
-          var seq = new List(4)..[0] = $$;
-          // => Identifier
-          $$ = _parse_Identifier();
-          // <= Identifier
-          if (!success) break;
-          seq[1] = $$;
-          // => FunctionParameters
-          $$ = _parse_FunctionParameters();
-          // <= FunctionParameters
-          if (!success) break;
-          seq[2] = $$;
-          // => Metadata?
-          var testing1 = _testing;
-          _testing = _cursor;
-          // => Metadata
-          $$ = _parse_Metadata();
-          // <= Metadata
-          success = true; 
-          _testing = testing1;
-          // <= Metadata?
-          if (!success) break;
-          seq[3] = $$;
-          $$ = seq;
-          if (success) {    
-            // (PointerType / Type)?
-            final $1 = seq[0];
-            // Identifier
-            final $2 = seq[1];
-            // FunctionParameters
-            final $3 = seq[2];
-            // Metadata?
-            final $4 = seq[3];
-            final $start = startPos0;
-            $$ = new FunctionTypeSpecification(metadata: $4, identifier: $2, parameters: $3, returnType: $1);
-          }
-          break;
-        }
-        if (!success) {
-          _ch = ch0;
-          _cursor = pos0;
-        }
-        _startPos = startPos0;
-        // <= (PointerType / Type)? Identifier FunctionParameters Metadata? # Sequence
-        break;
-      // No matches
-      case 1:
-        $$ = null;
-        success = false;
-        break;
-    }
-    if (!success && _cursor > _testing) {
-      // Expected: IDENTIFIER
-      _failure(_expect3);
-    }
-    // <= (PointerType / Type)? Identifier FunctionParameters Metadata? # Choice
-    return $$;
-  }
-  
-  dynamic _parse_FunctionTypeNoReturn() {
-    // SENTENCE (NONTERMINAL)
-    // FunctionTypeNoReturn <- Identifier FunctionParameters Metadata?
-    var $$;
-    // => Identifier FunctionParameters Metadata? # Choice
-    switch (_getState(_transitions0)) {
-      // [A-Z] [_] [a-z]
-      // EOF
-      case 0:
-      case 2:
-        // => Identifier FunctionParameters Metadata? # Sequence
-        var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
-        _startPos = _cursor;
-        while (true) {  
-          // => Identifier
-          $$ = _parse_Identifier();
-          // <= Identifier
-          if (!success) break;
-          var seq = new List(3)..[0] = $$;
-          // => FunctionParameters
-          $$ = _parse_FunctionParameters();
-          // <= FunctionParameters
-          if (!success) break;
-          seq[1] = $$;
-          // => Metadata?
-          var testing0 = _testing;
-          _testing = _cursor;
-          // => Metadata
-          $$ = _parse_Metadata();
-          // <= Metadata
-          success = true; 
-          _testing = testing0;
-          // <= Metadata?
-          if (!success) break;
-          seq[2] = $$;
-          $$ = seq;
-          if (success) {    
-            // Identifier
-            final $1 = seq[0];
-            // FunctionParameters
-            final $2 = seq[1];
-            // Metadata?
-            final $3 = seq[2];
-            final $start = startPos0;
-            $$ = new FunctionTypeSpecification(metadata: $3, identifier: $1, parameters: $2);
-          }
-          break;
-        }
-        if (!success) {
-          _ch = ch0;
-          _cursor = pos0;
-        }
-        _startPos = startPos0;
-        // <= Identifier FunctionParameters Metadata? # Sequence
-        break;
-      // No matches
-      case 1:
-        $$ = null;
-        success = false;
-        break;
-    }
-    if (!success && _cursor > _testing) {
-      // Expected: IDENTIFIER
-      _failure(_expect3);
-    }
-    // <= Identifier FunctionParameters Metadata? # Choice
-    return $$;
-  }
-  
-  dynamic _parse_FunctionTypeSynonym() {
-    // SENTENCE (NONTERMINAL)
-    // FunctionTypeSynonym <- TYPE_QUALIFIERS? OPEN_PAREN Identifier CLOSE_PAREN FunctionParameters Metadata?
-    var $$;
-    // => TYPE_QUALIFIERS? OPEN_PAREN Identifier CLOSE_PAREN FunctionParameters Metadata? # Choice
-    switch (_ch >= 0 && _ch <= 1114111 ? 0 : _ch == -1 ? 2 : 1) {
-      // [\u0000-\u0010ffff]
-      case 0:
-        // => TYPE_QUALIFIERS? OPEN_PAREN Identifier CLOSE_PAREN FunctionParameters Metadata? # Sequence
-        var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
-        _startPos = _cursor;
-        while (true) {  
-          // => TYPE_QUALIFIERS?
-          var testing0 = _testing;
-          _testing = _cursor;
-          // => TYPE_QUALIFIERS
-          $$ = _parse_TYPE_QUALIFIERS();
-          // <= TYPE_QUALIFIERS
-          success = true; 
-          _testing = testing0;
-          // <= TYPE_QUALIFIERS?
-          if (!success) break;
-          var seq = new List(6)..[0] = $$;
-          // => OPEN_PAREN
-          $$ = _parse_OPEN_PAREN();
-          // <= OPEN_PAREN
-          if (!success) break;
-          seq[1] = $$;
-          // => Identifier
-          $$ = _parse_Identifier();
-          // <= Identifier
-          if (!success) break;
-          seq[2] = $$;
-          // => CLOSE_PAREN
-          $$ = _parse_CLOSE_PAREN();
-          // <= CLOSE_PAREN
-          if (!success) break;
-          seq[3] = $$;
-          // => FunctionParameters
-          $$ = _parse_FunctionParameters();
-          // <= FunctionParameters
-          if (!success) break;
-          seq[4] = $$;
-          // => Metadata?
-          var testing1 = _testing;
-          _testing = _cursor;
-          // => Metadata
-          $$ = _parse_Metadata();
-          // <= Metadata
-          success = true; 
-          _testing = testing1;
-          // <= Metadata?
-          if (!success) break;
-          seq[5] = $$;
-          $$ = seq;
-          if (success) {    
-            // TYPE_QUALIFIERS?
-            final $1 = seq[0];
-            // OPEN_PAREN
-            final $2 = seq[1];
-            // Identifier
-            final $3 = seq[2];
-            // CLOSE_PAREN
-            final $4 = seq[3];
-            // FunctionParameters
-            final $5 = seq[4];
-            // Metadata?
-            final $6 = seq[5];
-            final $start = startPos0;
-            $$ = new FunctionTypeSpecification(metadata: $6, identifier: $3, parameters: $5);
-          }
-          break;
-        }
-        if (!success) {
-          _ch = ch0;
-          _cursor = pos0;
-        }
-        _startPos = startPos0;
-        // <= TYPE_QUALIFIERS? OPEN_PAREN Identifier CLOSE_PAREN FunctionParameters Metadata? # Sequence
-        break;
-      // No matches
-      // EOF
-      case 1:
-      case 2:
-        $$ = null;
-        success = false;
-        break;
-    }
-    if (!success && _cursor > _testing) {
-      // Expected: '('
-      _failure(_expect18);
-    }
-    // <= TYPE_QUALIFIERS? OPEN_PAREN Identifier CLOSE_PAREN FunctionParameters Metadata? # Choice
+    // <= PointerSpecifiers? OPEN_PAREN PointerSpecifiers Identifier CLOSE_PAREN FunctionParameters ArrayDimensions? Metadata? # Choice
+    if (_cacheable[44]) {
+      _addToCache($$, pos, 44);
+    }    
     return $$;
   }
   
@@ -5060,7 +5663,7 @@ class CParser {
     // HEXADECIMAL_DIGIT <- [0-af]
     var $$;
     // => [0-af] # Choice
-    switch (_getState(_transitions18)) {
+    switch (_getState(_transitions31)) {
       // [0-a] [f]
       case 0:
         var startPos0 = _startPos;
@@ -5099,7 +5702,7 @@ class CParser {
         _startPos = _cursor;
         while (true) {  
           // => '\\x'
-          $$ = _matchString(_strings16, '\\x');
+          $$ = _matchString(_strings17, '\\x');
           // <= '\\x'
           if (!success) break;
           var seq = new List(3)..[0] = $$;
@@ -5143,7 +5746,7 @@ class CParser {
     }
     if (!success && _cursor > _testing) {
       // Expected: \x
-      _failure(_expect49);
+      _failure(_expect52);
     }
     // <= '\\x' HEXADECIMAL_DIGIT HEXADECIMAL_ESCAPE_SEQUENCE1 # Choice
     return $$;
@@ -5154,7 +5757,7 @@ class CParser {
     // HEXADECIMAL_ESCAPE_SEQUENCE1 <- HEXADECIMAL_DIGIT HEXADECIMAL_ESCAPE_SEQUENCE1 / ''
     var $$;
     // => HEXADECIMAL_DIGIT HEXADECIMAL_ESCAPE_SEQUENCE1 / '' # Choice
-    switch (_getState(_transitions19)) {
+    switch (_getState(_transitions32)) {
       // [\u0000-/] [b-e] [g-\u0010ffff]
       // EOF
       case 0:
@@ -5231,7 +5834,7 @@ class CParser {
     // HEX_QUAD <- HEXADECIMAL_DIGIT HEXADECIMAL_DIGIT HEXADECIMAL_DIGIT HEXADECIMAL_DIGIT
     var $$;
     // => HEXADECIMAL_DIGIT HEXADECIMAL_DIGIT HEXADECIMAL_DIGIT HEXADECIMAL_DIGIT # Choice
-    switch (_getState(_transitions18)) {
+    switch (_getState(_transitions31)) {
       // [0-a] [f]
       case 0:
         // => HEXADECIMAL_DIGIT HEXADECIMAL_DIGIT HEXADECIMAL_DIGIT HEXADECIMAL_DIGIT # Sequence
@@ -5309,10 +5912,10 @@ class CParser {
     } else {
       _cachePos[71] = pos;
     }  
-    _token = 13;    
+    _token = 15;    
     _tokenStart = _cursor;    
     // => IDENT_START IDENT_CONT* SPACING # Choice
-    switch (_getState(_transitions0)) {
+    switch (_getState(_transitions2)) {
       // [A-Z] [_] [a-z]
       case 0:
         // => IDENT_START IDENT_CONT* SPACING # Sequence
@@ -5390,22 +5993,11 @@ class CParser {
   }
   
   dynamic _parse_IDENTIFIER() {
-    // LEXEME (TOKEN)
+    // MORHEME
     // IDENTIFIER <- !RESERVED_WORD IDENT_START IDENT_CONT* SPACING
-    var $$;          
-    var pos = _cursor;             
-    if(_cachePos[72] >= pos) {
-      $$ = _getFromCache(72);
-      if($$ != null) {
-        return $$[0];       
-      }
-    } else {
-      _cachePos[72] = pos;
-    }  
-    _token = 14;    
-    _tokenStart = _cursor;    
+    var $$;
     // => !RESERVED_WORD IDENT_START IDENT_CONT* SPACING # Choice
-    switch (_getState(_transitions0)) {
+    switch (_getState(_transitions2)) {
       // [A-Z] [_] [a-z]
       // EOF
       case 0:
@@ -5486,15 +6078,10 @@ class CParser {
         break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: IDENTIFIER
-      _failure(_expect3);
+      // Expected: 
+      _failure(const [null]);
     }
     // <= !RESERVED_WORD IDENT_START IDENT_CONT* SPACING # Choice
-    if (_cacheable[72]) {
-      _addToCache($$, pos, 72);
-    }    
-    _token = null;
-    _tokenStart = null;
     return $$;
   }
   
@@ -5503,7 +6090,7 @@ class CParser {
     // IDENT_CONT <- IDENT_START / [0-9]
     var $$;
     // => IDENT_START / [0-9] # Choice
-    switch (_getState(_transitions20)) {
+    switch (_getState(_transitions33)) {
       // [0-9]
       case 0:
         var startPos0 = _startPos;
@@ -5543,7 +6130,7 @@ class CParser {
     // IDENT_PART <- IDENT_START / IDENT_CONT
     var $$;
     // => IDENT_START / IDENT_CONT # Choice
-    switch (_getState(_transitions20)) {
+    switch (_getState(_transitions33)) {
       // [0-9]
       case 0:
         var startPos0 = _startPos;
@@ -5593,7 +6180,7 @@ class CParser {
     // IDENT_START <- [A-Z_a-z]
     var $$;
     // => [A-Z_a-z] # Choice
-    switch (_getState(_transitions0)) {
+    switch (_getState(_transitions2)) {
       // [A-Z] [_] [a-z]
       case 0:
         var startPos0 = _startPos;
@@ -5624,15 +6211,15 @@ class CParser {
     // INT <- 'int' !IDENT_PART SPACING
     var $$;          
     var pos = _cursor;             
-    if(_cachePos[73] >= pos) {
-      $$ = _getFromCache(73);
+    if(_cachePos[72] >= pos) {
+      $$ = _getFromCache(72);
       if($$ != null) {
         return $$[0];       
       }
     } else {
-      _cachePos[73] = pos;
+      _cachePos[72] = pos;
     }  
-    _token = 15;    
+    _token = 16;    
     _tokenStart = _cursor;    
     // => 'int' !IDENT_PART SPACING # Choice
     switch (_ch == 105 ? 0 : _ch == -1 ? 2 : 1) {
@@ -5643,7 +6230,7 @@ class CParser {
         _startPos = _cursor;
         while (true) {  
           // => 'int'
-          $$ = _matchString(_strings5, 'int');
+          $$ = _matchString(_strings6, 'int');
           // <= 'int'
           if (!success) break;
           var seq = new List(3)..[0] = $$;
@@ -5696,11 +6283,11 @@ class CParser {
     }
     if (!success && _cursor > _testing) {
       // Expected: 'int'
-      _failure(_expect31);
+      _failure(_expect35);
     }
     // <= 'int' !IDENT_PART SPACING # Choice
-    if (_cacheable[73]) {
-      _addToCache($$, pos, 73);
+    if (_cacheable[72]) {
+      _addToCache($$, pos, 72);
     }    
     _token = null;
     _tokenStart = null;
@@ -5712,7 +6299,7 @@ class CParser {
     // INTEGER <- SIGN? [0-9]+ SPACING
     var $$;
     // => SIGN? [0-9]+ SPACING # Choice
-    switch (_getState(_transitions6)) {
+    switch (_getState(_transitions20)) {
       // [+] [-] [0-9]
       case 0:
         // => SIGN? [0-9]+ SPACING # Sequence
@@ -5799,20 +6386,22 @@ class CParser {
   }
   
   dynamic _parse_Identifier() {
-    // SENTENCE (NONTERMINAL)
+    // LEXEME (TOKEN)
     // Identifier <- IDENTIFIER
     var $$;          
     var pos = _cursor;             
-    if(_cachePos[14] >= pos) {
-      $$ = _getFromCache(14);
+    if(_cachePos[73] >= pos) {
+      $$ = _getFromCache(73);
       if($$ != null) {
         return $$[0];       
       }
     } else {
-      _cachePos[14] = pos;
+      _cachePos[73] = pos;
     }  
+    _token = 17;    
+    _tokenStart = _cursor;    
     // => IDENTIFIER # Choice
-    switch (_getState(_transitions0)) {
+    switch (_getState(_transitions2)) {
       // [A-Z] [_] [a-z]
       // EOF
       case 0:
@@ -5837,63 +6426,137 @@ class CParser {
         break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: IDENTIFIER
-      _failure(_expect3);
+      // Expected: Identifier
+      _failure(_expect9);
     }
     // <= IDENTIFIER # Choice
-    if (_cacheable[14]) {
-      _addToCache($$, pos, 14);
+    if (_cacheable[73]) {
+      _addToCache($$, pos, 73);
     }    
+    _token = null;
+    _tokenStart = null;
     return $$;
   }
   
-  dynamic _parse_IdentifierMD() {
+  dynamic _parse_IntegerType() {
     // SENTENCE (NONTERMINAL)
-    // IdentifierMD <- IDENTIFIER Metadata?
+    // IntegerType <- SIGNEDNESS? (SHORT / LONG_TYPE) INT? Metadata? TypeQualifiers? / SIGNEDNESS? (CHAR / INT / SHORT / LONG_TYPE) Metadata? TypeQualifiers? / SIGNEDNESS Metadata? TypeQualifiers?
     var $$;          
     var pos = _cursor;             
-    if(_cachePos[24] >= pos) {
-      $$ = _getFromCache(24);
+    if(_cachePos[22] >= pos) {
+      $$ = _getFromCache(22);
       if($$ != null) {
         return $$[0];       
       }
     } else {
-      _cachePos[24] = pos;
+      _cachePos[22] = pos;
     }  
-    // => IDENTIFIER Metadata? # Choice
-    switch (_getState(_transitions0)) {
-      // [A-Z] [_] [a-z]
-      // EOF
+    // => SIGNEDNESS? (SHORT / LONG_TYPE) INT? Metadata? TypeQualifiers? / SIGNEDNESS? (CHAR / INT / SHORT / LONG_TYPE) Metadata? TypeQualifiers? / SIGNEDNESS Metadata? TypeQualifiers? # Choice
+    switch (_getState(_transitions9)) {
+      // [c] [i]
       case 0:
-      case 2:
-        // => IDENTIFIER Metadata? # Sequence
+        // => SIGNEDNESS? (CHAR / INT / SHORT / LONG_TYPE) Metadata? TypeQualifiers? # Sequence
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
         _startPos = _cursor;
         while (true) {  
-          // => IDENTIFIER
-          $$ = _parse_IDENTIFIER();
-          // <= IDENTIFIER
-          if (!success) break;
-          var seq = new List(2)..[0] = $$;
-          // => Metadata?
+          // => SIGNEDNESS?
           var testing0 = _testing;
+          _testing = _cursor;
+          // => SIGNEDNESS
+          $$ = _parse_SIGNEDNESS();
+          // <= SIGNEDNESS
+          success = true; 
+          _testing = testing0;
+          // <= SIGNEDNESS?
+          if (!success) break;
+          var seq = new List(4)..[0] = $$;
+          // => (CHAR / INT / SHORT / LONG_TYPE) # Choice
+          switch (_getState(_transitions10)) {
+            // [c]
+            case 0:
+              var startPos1 = _startPos;
+              _startPos = _cursor;
+              // => CHAR
+              $$ = _parse_CHAR();
+              // <= CHAR
+              _startPos = startPos1;
+              break;
+            // [i]
+            case 1:
+              var startPos2 = _startPos;
+              _startPos = _cursor;
+              // => INT
+              $$ = _parse_INT();
+              // <= INT
+              _startPos = startPos2;
+              break;
+            // [l]
+            case 2:
+              var startPos3 = _startPos;
+              _startPos = _cursor;
+              // => LONG_TYPE
+              $$ = _parse_LONG_TYPE();
+              // <= LONG_TYPE
+              _startPos = startPos3;
+              break;
+            // [s]
+            case 3:
+              var startPos4 = _startPos;
+              _startPos = _cursor;
+              // => SHORT
+              $$ = _parse_SHORT();
+              // <= SHORT
+              _startPos = startPos4;
+              break;
+            // No matches
+            // EOF
+            case 4:
+            case 5:
+              $$ = null;
+              success = false;
+              break;
+          }
+          if (!success && _cursor > _testing) {
+            // Expected: 'char', 'int', 'short', 'long'
+            _failure(_expect13);
+          }
+          // <= (CHAR / INT / SHORT / LONG_TYPE) # Choice
+          if (!success) break;
+          seq[1] = $$;
+          // => Metadata?
+          var testing1 = _testing;
           _testing = _cursor;
           // => Metadata
           $$ = _parse_Metadata();
           // <= Metadata
           success = true; 
-          _testing = testing0;
+          _testing = testing1;
           // <= Metadata?
           if (!success) break;
-          seq[1] = $$;
+          seq[2] = $$;
+          // => TypeQualifiers?
+          var testing2 = _testing;
+          _testing = _cursor;
+          // => TypeQualifiers
+          $$ = _parse_TypeQualifiers();
+          // <= TypeQualifiers
+          success = true; 
+          _testing = testing2;
+          // <= TypeQualifiers?
+          if (!success) break;
+          seq[3] = $$;
           $$ = seq;
           if (success) {    
-            // IDENTIFIER
+            // SIGNEDNESS?
             final $1 = seq[0];
-            // Metadata?
+            // (CHAR / INT / SHORT / LONG_TYPE)
             final $2 = seq[1];
+            // Metadata?
+            final $3 = seq[2];
+            // TypeQualifiers?
+            final $4 = seq[3];
             final $start = startPos0;
-            $$ = new Identifier(metadata: $2, name: $1);
+            $$ = new BuiltinTypeSpecification(identifier: _ident([$1, $2]), metadata: $3, qualifiers: $4, typeKind: TypeSpecificationKind.INTEGER);
           }
           break;
         }
@@ -5902,21 +6565,522 @@ class CParser {
           _cursor = pos0;
         }
         _startPos = startPos0;
-        // <= IDENTIFIER Metadata? # Sequence
+        // <= SIGNEDNESS? (CHAR / INT / SHORT / LONG_TYPE) Metadata? TypeQualifiers? # Sequence
+        break;
+      // [l]
+      case 1:
+        while (true) {
+          // => SIGNEDNESS? (SHORT / LONG_TYPE) INT? Metadata? TypeQualifiers? # Sequence
+          var ch1 = _ch, pos1 = _cursor, startPos5 = _startPos;
+          _startPos = _cursor;
+          while (true) {  
+            // => SIGNEDNESS?
+            var testing3 = _testing;
+            _testing = _cursor;
+            // => SIGNEDNESS
+            $$ = _parse_SIGNEDNESS();
+            // <= SIGNEDNESS
+            success = true; 
+            _testing = testing3;
+            // <= SIGNEDNESS?
+            if (!success) break;
+            var seq = new List(5)..[0] = $$;
+            // => (SHORT / LONG_TYPE) # Choice
+            switch (_getState(_transitions11)) {
+              // [l]
+              case 0:
+                var startPos6 = _startPos;
+                _startPos = _cursor;
+                // => LONG_TYPE
+                $$ = _parse_LONG_TYPE();
+                // <= LONG_TYPE
+                _startPos = startPos6;
+                break;
+              // [s]
+              case 1:
+                var startPos7 = _startPos;
+                _startPos = _cursor;
+                // => SHORT
+                $$ = _parse_SHORT();
+                // <= SHORT
+                _startPos = startPos7;
+                break;
+              // No matches
+              // EOF
+              case 2:
+              case 3:
+                $$ = null;
+                success = false;
+                break;
+            }
+            if (!success && _cursor > _testing) {
+              // Expected: 'short', 'long'
+              _failure(_expect14);
+            }
+            // <= (SHORT / LONG_TYPE) # Choice
+            if (!success) break;
+            seq[1] = $$;
+            // => INT?
+            var testing4 = _testing;
+            _testing = _cursor;
+            // => INT
+            $$ = _parse_INT();
+            // <= INT
+            success = true; 
+            _testing = testing4;
+            // <= INT?
+            if (!success) break;
+            seq[2] = $$;
+            // => Metadata?
+            var testing5 = _testing;
+            _testing = _cursor;
+            // => Metadata
+            $$ = _parse_Metadata();
+            // <= Metadata
+            success = true; 
+            _testing = testing5;
+            // <= Metadata?
+            if (!success) break;
+            seq[3] = $$;
+            // => TypeQualifiers?
+            var testing6 = _testing;
+            _testing = _cursor;
+            // => TypeQualifiers
+            $$ = _parse_TypeQualifiers();
+            // <= TypeQualifiers
+            success = true; 
+            _testing = testing6;
+            // <= TypeQualifiers?
+            if (!success) break;
+            seq[4] = $$;
+            $$ = seq;
+            if (success) {    
+              // SIGNEDNESS?
+              final $1 = seq[0];
+              // (SHORT / LONG_TYPE)
+              final $2 = seq[1];
+              // INT?
+              final $3 = seq[2];
+              // Metadata?
+              final $4 = seq[3];
+              // TypeQualifiers?
+              final $5 = seq[4];
+              final $start = startPos5;
+              $$ = new BuiltinTypeSpecification(identifier: _ident([$1, $2, $3]), metadata: $4, qualifiers: $5, typeKind: TypeSpecificationKind.INTEGER);
+            }
+            break;
+          }
+          if (!success) {
+            _ch = ch1;
+            _cursor = pos1;
+          }
+          _startPos = startPos5;
+          // <= SIGNEDNESS? (SHORT / LONG_TYPE) INT? Metadata? TypeQualifiers? # Sequence
+          if (success) break;
+          // => SIGNEDNESS? (CHAR / INT / SHORT / LONG_TYPE) Metadata? TypeQualifiers? # Sequence
+          var ch2 = _ch, pos2 = _cursor, startPos8 = _startPos;
+          _startPos = _cursor;
+          while (true) {  
+            // => SIGNEDNESS?
+            var testing7 = _testing;
+            _testing = _cursor;
+            // => SIGNEDNESS
+            $$ = _parse_SIGNEDNESS();
+            // <= SIGNEDNESS
+            success = true; 
+            _testing = testing7;
+            // <= SIGNEDNESS?
+            if (!success) break;
+            var seq = new List(4)..[0] = $$;
+            // => (CHAR / INT / SHORT / LONG_TYPE) # Choice
+            switch (_getState(_transitions10)) {
+              // [c]
+              case 0:
+                var startPos9 = _startPos;
+                _startPos = _cursor;
+                // => CHAR
+                $$ = _parse_CHAR();
+                // <= CHAR
+                _startPos = startPos9;
+                break;
+              // [i]
+              case 1:
+                var startPos10 = _startPos;
+                _startPos = _cursor;
+                // => INT
+                $$ = _parse_INT();
+                // <= INT
+                _startPos = startPos10;
+                break;
+              // [l]
+              case 2:
+                var startPos11 = _startPos;
+                _startPos = _cursor;
+                // => LONG_TYPE
+                $$ = _parse_LONG_TYPE();
+                // <= LONG_TYPE
+                _startPos = startPos11;
+                break;
+              // [s]
+              case 3:
+                var startPos12 = _startPos;
+                _startPos = _cursor;
+                // => SHORT
+                $$ = _parse_SHORT();
+                // <= SHORT
+                _startPos = startPos12;
+                break;
+              // No matches
+              // EOF
+              case 4:
+              case 5:
+                $$ = null;
+                success = false;
+                break;
+            }
+            if (!success && _cursor > _testing) {
+              // Expected: 'char', 'int', 'short', 'long'
+              _failure(_expect13);
+            }
+            // <= (CHAR / INT / SHORT / LONG_TYPE) # Choice
+            if (!success) break;
+            seq[1] = $$;
+            // => Metadata?
+            var testing8 = _testing;
+            _testing = _cursor;
+            // => Metadata
+            $$ = _parse_Metadata();
+            // <= Metadata
+            success = true; 
+            _testing = testing8;
+            // <= Metadata?
+            if (!success) break;
+            seq[2] = $$;
+            // => TypeQualifiers?
+            var testing9 = _testing;
+            _testing = _cursor;
+            // => TypeQualifiers
+            $$ = _parse_TypeQualifiers();
+            // <= TypeQualifiers
+            success = true; 
+            _testing = testing9;
+            // <= TypeQualifiers?
+            if (!success) break;
+            seq[3] = $$;
+            $$ = seq;
+            if (success) {    
+              // SIGNEDNESS?
+              final $1 = seq[0];
+              // (CHAR / INT / SHORT / LONG_TYPE)
+              final $2 = seq[1];
+              // Metadata?
+              final $3 = seq[2];
+              // TypeQualifiers?
+              final $4 = seq[3];
+              final $start = startPos8;
+              $$ = new BuiltinTypeSpecification(identifier: _ident([$1, $2]), metadata: $3, qualifiers: $4, typeKind: TypeSpecificationKind.INTEGER);
+            }
+            break;
+          }
+          if (!success) {
+            _ch = ch2;
+            _cursor = pos2;
+          }
+          _startPos = startPos8;
+          // <= SIGNEDNESS? (CHAR / INT / SHORT / LONG_TYPE) Metadata? TypeQualifiers? # Sequence
+          break;
+        }
+        break;
+      // [s] [u]
+      case 2:
+        while (true) {
+          // => SIGNEDNESS? (SHORT / LONG_TYPE) INT? Metadata? TypeQualifiers? # Sequence
+          var ch3 = _ch, pos3 = _cursor, startPos13 = _startPos;
+          _startPos = _cursor;
+          while (true) {  
+            // => SIGNEDNESS?
+            var testing10 = _testing;
+            _testing = _cursor;
+            // => SIGNEDNESS
+            $$ = _parse_SIGNEDNESS();
+            // <= SIGNEDNESS
+            success = true; 
+            _testing = testing10;
+            // <= SIGNEDNESS?
+            if (!success) break;
+            var seq = new List(5)..[0] = $$;
+            // => (SHORT / LONG_TYPE) # Choice
+            switch (_getState(_transitions11)) {
+              // [l]
+              case 0:
+                var startPos14 = _startPos;
+                _startPos = _cursor;
+                // => LONG_TYPE
+                $$ = _parse_LONG_TYPE();
+                // <= LONG_TYPE
+                _startPos = startPos14;
+                break;
+              // [s]
+              case 1:
+                var startPos15 = _startPos;
+                _startPos = _cursor;
+                // => SHORT
+                $$ = _parse_SHORT();
+                // <= SHORT
+                _startPos = startPos15;
+                break;
+              // No matches
+              // EOF
+              case 2:
+              case 3:
+                $$ = null;
+                success = false;
+                break;
+            }
+            if (!success && _cursor > _testing) {
+              // Expected: 'short', 'long'
+              _failure(_expect14);
+            }
+            // <= (SHORT / LONG_TYPE) # Choice
+            if (!success) break;
+            seq[1] = $$;
+            // => INT?
+            var testing11 = _testing;
+            _testing = _cursor;
+            // => INT
+            $$ = _parse_INT();
+            // <= INT
+            success = true; 
+            _testing = testing11;
+            // <= INT?
+            if (!success) break;
+            seq[2] = $$;
+            // => Metadata?
+            var testing12 = _testing;
+            _testing = _cursor;
+            // => Metadata
+            $$ = _parse_Metadata();
+            // <= Metadata
+            success = true; 
+            _testing = testing12;
+            // <= Metadata?
+            if (!success) break;
+            seq[3] = $$;
+            // => TypeQualifiers?
+            var testing13 = _testing;
+            _testing = _cursor;
+            // => TypeQualifiers
+            $$ = _parse_TypeQualifiers();
+            // <= TypeQualifiers
+            success = true; 
+            _testing = testing13;
+            // <= TypeQualifiers?
+            if (!success) break;
+            seq[4] = $$;
+            $$ = seq;
+            if (success) {    
+              // SIGNEDNESS?
+              final $1 = seq[0];
+              // (SHORT / LONG_TYPE)
+              final $2 = seq[1];
+              // INT?
+              final $3 = seq[2];
+              // Metadata?
+              final $4 = seq[3];
+              // TypeQualifiers?
+              final $5 = seq[4];
+              final $start = startPos13;
+              $$ = new BuiltinTypeSpecification(identifier: _ident([$1, $2, $3]), metadata: $4, qualifiers: $5, typeKind: TypeSpecificationKind.INTEGER);
+            }
+            break;
+          }
+          if (!success) {
+            _ch = ch3;
+            _cursor = pos3;
+          }
+          _startPos = startPos13;
+          // <= SIGNEDNESS? (SHORT / LONG_TYPE) INT? Metadata? TypeQualifiers? # Sequence
+          if (success) break;
+          // => SIGNEDNESS? (CHAR / INT / SHORT / LONG_TYPE) Metadata? TypeQualifiers? # Sequence
+          var ch4 = _ch, pos4 = _cursor, startPos16 = _startPos;
+          _startPos = _cursor;
+          while (true) {  
+            // => SIGNEDNESS?
+            var testing14 = _testing;
+            _testing = _cursor;
+            // => SIGNEDNESS
+            $$ = _parse_SIGNEDNESS();
+            // <= SIGNEDNESS
+            success = true; 
+            _testing = testing14;
+            // <= SIGNEDNESS?
+            if (!success) break;
+            var seq = new List(4)..[0] = $$;
+            // => (CHAR / INT / SHORT / LONG_TYPE) # Choice
+            switch (_getState(_transitions10)) {
+              // [c]
+              case 0:
+                var startPos17 = _startPos;
+                _startPos = _cursor;
+                // => CHAR
+                $$ = _parse_CHAR();
+                // <= CHAR
+                _startPos = startPos17;
+                break;
+              // [i]
+              case 1:
+                var startPos18 = _startPos;
+                _startPos = _cursor;
+                // => INT
+                $$ = _parse_INT();
+                // <= INT
+                _startPos = startPos18;
+                break;
+              // [l]
+              case 2:
+                var startPos19 = _startPos;
+                _startPos = _cursor;
+                // => LONG_TYPE
+                $$ = _parse_LONG_TYPE();
+                // <= LONG_TYPE
+                _startPos = startPos19;
+                break;
+              // [s]
+              case 3:
+                var startPos20 = _startPos;
+                _startPos = _cursor;
+                // => SHORT
+                $$ = _parse_SHORT();
+                // <= SHORT
+                _startPos = startPos20;
+                break;
+              // No matches
+              // EOF
+              case 4:
+              case 5:
+                $$ = null;
+                success = false;
+                break;
+            }
+            if (!success && _cursor > _testing) {
+              // Expected: 'char', 'int', 'short', 'long'
+              _failure(_expect13);
+            }
+            // <= (CHAR / INT / SHORT / LONG_TYPE) # Choice
+            if (!success) break;
+            seq[1] = $$;
+            // => Metadata?
+            var testing15 = _testing;
+            _testing = _cursor;
+            // => Metadata
+            $$ = _parse_Metadata();
+            // <= Metadata
+            success = true; 
+            _testing = testing15;
+            // <= Metadata?
+            if (!success) break;
+            seq[2] = $$;
+            // => TypeQualifiers?
+            var testing16 = _testing;
+            _testing = _cursor;
+            // => TypeQualifiers
+            $$ = _parse_TypeQualifiers();
+            // <= TypeQualifiers
+            success = true; 
+            _testing = testing16;
+            // <= TypeQualifiers?
+            if (!success) break;
+            seq[3] = $$;
+            $$ = seq;
+            if (success) {    
+              // SIGNEDNESS?
+              final $1 = seq[0];
+              // (CHAR / INT / SHORT / LONG_TYPE)
+              final $2 = seq[1];
+              // Metadata?
+              final $3 = seq[2];
+              // TypeQualifiers?
+              final $4 = seq[3];
+              final $start = startPos16;
+              $$ = new BuiltinTypeSpecification(identifier: _ident([$1, $2]), metadata: $3, qualifiers: $4, typeKind: TypeSpecificationKind.INTEGER);
+            }
+            break;
+          }
+          if (!success) {
+            _ch = ch4;
+            _cursor = pos4;
+          }
+          _startPos = startPos16;
+          // <= SIGNEDNESS? (CHAR / INT / SHORT / LONG_TYPE) Metadata? TypeQualifiers? # Sequence
+          if (success) break;
+          // => SIGNEDNESS Metadata? TypeQualifiers? # Sequence
+          var ch5 = _ch, pos5 = _cursor, startPos21 = _startPos;
+          _startPos = _cursor;
+          while (true) {  
+            // => SIGNEDNESS
+            $$ = _parse_SIGNEDNESS();
+            // <= SIGNEDNESS
+            if (!success) break;
+            var seq = new List(3)..[0] = $$;
+            // => Metadata?
+            var testing17 = _testing;
+            _testing = _cursor;
+            // => Metadata
+            $$ = _parse_Metadata();
+            // <= Metadata
+            success = true; 
+            _testing = testing17;
+            // <= Metadata?
+            if (!success) break;
+            seq[1] = $$;
+            // => TypeQualifiers?
+            var testing18 = _testing;
+            _testing = _cursor;
+            // => TypeQualifiers
+            $$ = _parse_TypeQualifiers();
+            // <= TypeQualifiers
+            success = true; 
+            _testing = testing18;
+            // <= TypeQualifiers?
+            if (!success) break;
+            seq[2] = $$;
+            $$ = seq;
+            if (success) {    
+              // SIGNEDNESS
+              final $1 = seq[0];
+              // Metadata?
+              final $2 = seq[1];
+              // TypeQualifiers?
+              final $3 = seq[2];
+              final $start = startPos21;
+              $$ = new BuiltinTypeSpecification(identifier: _ident([$1]), metadata: $2, qualifiers: $3, typeKind: TypeSpecificationKind.INTEGER);
+            }
+            break;
+          }
+          if (!success) {
+            _ch = ch5;
+            _cursor = pos5;
+          }
+          _startPos = startPos21;
+          // <= SIGNEDNESS Metadata? TypeQualifiers? # Sequence
+          break;
+        }
         break;
       // No matches
-      case 1:
+      // EOF
+      case 3:
+      case 4:
         $$ = null;
         success = false;
         break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: IDENTIFIER
-      _failure(_expect3);
+      // Expected: 'short', 'long', 'char', 'int', SIGNEDNESS
+      _failure(_expect12);
     }
-    // <= IDENTIFIER Metadata? # Choice
-    if (_cacheable[24]) {
-      _addToCache($$, pos, 24);
+    // <= SIGNEDNESS? (SHORT / LONG_TYPE) INT? Metadata? TypeQualifiers? / SIGNEDNESS? (CHAR / INT / SHORT / LONG_TYPE) Metadata? TypeQualifiers? / SIGNEDNESS Metadata? TypeQualifiers? # Choice
+    if (_cacheable[22]) {
+      _addToCache($$, pos, 22);
     }    
     return $$;
   }
@@ -5925,7 +7089,7 @@ class CParser {
     // LEXEME (TOKEN)
     // LEADING_SPACES <- SPACING
     var $$;
-    _token = 16;  
+    _token = 18;  
     _tokenStart = _cursor;  
     // => SPACING # Choice
     switch (_ch >= 0 && _ch <= 1114111 ? 0 : _ch == -1 ? 2 : 1) {
@@ -5948,7 +7112,7 @@ class CParser {
     }
     if (!success && _cursor > _testing) {
       // Expected: LEADING_SPACES
-      _failure(_expect32);
+      _failure(_expect36);
     }
     // <= SPACING # Choice
     _token = null;
@@ -5969,7 +7133,7 @@ class CParser {
         _startPos = _cursor;
         while (true) {  
           // => 'long'
-          $$ = _matchString(_strings17, 'long');
+          $$ = _matchString(_strings18, 'long');
           // <= 'long'
           if (!success) break;
           var seq = new List(3)..[0] = $$;
@@ -6022,7 +7186,7 @@ class CParser {
     }
     if (!success && _cursor > _testing) {
       // Expected: long
-      _failure(_expect50);
+      _failure(_expect53);
     }
     // <= 'long' !IDENT_PART SPACING # Choice
     return $$;
@@ -6041,7 +7205,7 @@ class CParser {
     } else {
       _cachePos[75] = pos;
     }  
-    _token = 17;    
+    _token = 19;    
     _tokenStart = _cursor;    
     // => LONG LONG / LONG # Choice
     switch (_ch == 108 ? 0 : _ch == -1 ? 2 : 1) {
@@ -6069,7 +7233,7 @@ class CParser {
               // LONG
               final $2 = seq[1];
               final $start = startPos0;
-              $$ = _createInt([$1, $2]);
+              $$ = "long long";
             }
             break;
           }
@@ -6099,7 +7263,7 @@ class CParser {
     }
     if (!success && _cursor > _testing) {
       // Expected: 'long'
-      _failure(_expect33);
+      _failure(_expect37);
     }
     // <= LONG LONG / LONG # Choice
     if (_cacheable[75]) {
@@ -6166,7 +7330,7 @@ class CParser {
     }
     if (!success && _cursor > _testing) {
       // Expected: -
-      _failure(_expect35);
+      _failure(_expect39);
     }
     // <= '-' SPACING # Choice
     return $$;
@@ -6174,7 +7338,7 @@ class CParser {
   
   dynamic _parse_Metadata() {
     // SENTENCE (NONTERMINAL)
-    // Metadata <- AttributeSpecifier+
+    // Metadata <- DeclarationSpecifier+
     var $$;          
     var pos = _cursor;             
     if(_cachePos[4] >= pos) {
@@ -6185,18 +7349,18 @@ class CParser {
     } else {
       _cachePos[4] = pos;
     }  
-    // => AttributeSpecifier+ # Choice
+    // => DeclarationSpecifier+ # Choice
     switch (_ch == 95 ? 0 : _ch == -1 ? 2 : 1) {
       // [_]
       case 0:
         var startPos0 = _startPos;
         _startPos = _cursor;
-        // => AttributeSpecifier+
+        // => DeclarationSpecifier+
         var testing0;
         for (var first = true, reps; ;) {  
-          // => AttributeSpecifier  
-          $$ = _parse_AttributeSpecifier();  
-          // <= AttributeSpecifier  
+          // => DeclarationSpecifier  
+          $$ = _parse_DeclarationSpecifier();  
+          // <= DeclarationSpecifier  
           if (success) {
            if (first) {      
               first = false;
@@ -6215,12 +7379,12 @@ class CParser {
             break;
           }  
         }
-        // <= AttributeSpecifier+
+        // <= DeclarationSpecifier+
         if (success) {    
-          // AttributeSpecifier+
+          // DeclarationSpecifier+
           final $1 = $$;
           final $start = startPos0;
-          $$ = new Metadata($1);
+          $$ = new DeclarationSpecifiers($1);
         }
         _startPos = startPos0;
         break;
@@ -6236,7 +7400,7 @@ class CParser {
       // Expected: '__attribute__'
       _failure(_expect4);
     }
-    // <= AttributeSpecifier+ # Choice
+    // <= DeclarationSpecifier+ # Choice
     if (_cacheable[4]) {
       _addToCache($$, pos, 4);
     }    
@@ -6256,10 +7420,10 @@ class CParser {
     } else {
       _cachePos[76] = pos;
     }  
-    _token = 18;    
+    _token = 20;    
     _tokenStart = _cursor;    
     // => OCTAL_NUMBER / INTEGER # Choice
-    switch (_getState(_transitions14)) {
+    switch (_getState(_transitions27)) {
       // [+] [-] [0]
       case 0:
         while (true) {
@@ -6298,7 +7462,7 @@ class CParser {
     }
     if (!success && _cursor > _testing) {
       // Expected: NUMBER
-      _failure(_expect34);
+      _failure(_expect38);
     }
     // <= OCTAL_NUMBER / INTEGER # Choice
     if (_cacheable[76]) {
@@ -6496,7 +7660,7 @@ class CParser {
     }
     if (!success && _cursor > _testing) {
       // Expected: \
-      _failure(_expect51);
+      _failure(_expect54);
     }
     // <= '\\' OCTAL_DIGIT OCTAL_DIGIT OCTAL_DIGIT / '\\' OCTAL_DIGIT OCTAL_DIGIT / '\\' OCTAL_DIGIT # Choice
     return $$;
@@ -6507,7 +7671,7 @@ class CParser {
     // OCTAL_NUMBER <- SIGN? [0] [0-9]+
     var $$;
     // => SIGN? [0] [0-9]+ # Choice
-    switch (_getState(_transitions21)) {
+    switch (_getState(_transitions34)) {
       // [+] [-] [0]
       case 0:
         // => SIGN? [0] [0-9]+ # Sequence
@@ -6606,7 +7770,7 @@ class CParser {
     } else {
       _cachePos[77] = pos;
     }  
-    _token = 19;    
+    _token = 21;    
     _tokenStart = _cursor;    
     // => '{' SPACING # Choice
     switch (_ch == 123 ? 0 : _ch == -1 ? 2 : 1) {
@@ -6660,7 +7824,7 @@ class CParser {
     }
     if (!success && _cursor > _testing) {
       // Expected: '{'
-      _failure(_expect10);
+      _failure(_expect19);
     }
     // <= '{' SPACING # Choice
     if (_cacheable[77]) {
@@ -6675,7 +7839,7 @@ class CParser {
     // LEXEME (TOKEN)
     // OPEN_BRACKET <- '[' SPACING
     var $$;
-    _token = 20;  
+    _token = 22;  
     _tokenStart = _cursor;  
     // => '[' SPACING # Choice
     switch (_ch == 91 ? 0 : _ch == -1 ? 2 : 1) {
@@ -6729,7 +7893,7 @@ class CParser {
     }
     if (!success && _cursor > _testing) {
       // Expected: '['
-      _failure(_expect11);
+      _failure(_expect22);
     }
     // <= '[' SPACING # Choice
     _token = null;
@@ -6750,7 +7914,7 @@ class CParser {
     } else {
       _cachePos[79] = pos;
     }  
-    _token = 21;    
+    _token = 23;    
     _tokenStart = _cursor;    
     // => '(' SPACING # Choice
     switch (_ch == 40 ? 0 : _ch == -1 ? 2 : 1) {
@@ -6804,7 +7968,7 @@ class CParser {
     }
     if (!success && _cursor > _testing) {
       // Expected: '('
-      _failure(_expect18);
+      _failure(_expect11);
     }
     // <= '(' SPACING # Choice
     if (_cacheable[79]) {
@@ -6871,7 +8035,7 @@ class CParser {
     }
     if (!success && _cursor > _testing) {
       // Expected: +
-      _failure(_expect52);
+      _failure(_expect55);
     }
     // <= '+' SPACING # Choice
     return $$;
@@ -6890,10 +8054,10 @@ class CParser {
     } else {
       _cachePos[80] = pos;
     }  
-    _token = 22;    
+    _token = 24;    
     _tokenStart = _cursor;    
     // => !('-' SPACING) (OCTAL_NUMBER / INTEGER) # Choice
-    switch (_getState(_transitions6)) {
+    switch (_getState(_transitions20)) {
       // [+] [-] [0-9]
       // EOF
       case 0:
@@ -6949,7 +8113,7 @@ class CParser {
           }
           if (!success && _cursor > _testing) {
             // Expected: -
-            _failure(_expect35);
+            _failure(_expect39);
           }
           // <= ('-' SPACING) # Choice
           _ch = ch1;
@@ -6961,7 +8125,7 @@ class CParser {
           if (!success) break;
           var seq = new List(2)..[0] = $$;
           // => (OCTAL_NUMBER / INTEGER) # Choice
-          switch (_getState(_transitions14)) {
+          switch (_getState(_transitions27)) {
             // [+] [-] [0]
             case 0:
               while (true) {
@@ -7031,7 +8195,7 @@ class CParser {
     }
     if (!success && _cursor > _testing) {
       // Expected: POSITIVE_NUMBER
-      _failure(_expect12);
+      _failure(_expect23);
     }
     // <= !('-' SPACING) (OCTAL_NUMBER / INTEGER) # Choice
     if (_cacheable[80]) {
@@ -7042,500 +8206,74 @@ class CParser {
     return $$;
   }
   
-  dynamic _parse_PointerParameter() {
+  dynamic _parse_ParameterDeclarationAbstract() {
     // SENTENCE (NONTERMINAL)
-    // PointerParameter <- Metadata? PointerType IdentifierMD?
+    // ParameterDeclarationAbstract <- Metadata? TypeQualifiers? Type DeclaratorAbstract / Metadata? TypeQualifiers? Type
     var $$;          
     var pos = _cursor;             
-    if(_cachePos[22] >= pos) {
-      $$ = _getFromCache(22);
+    if(_cachePos[33] >= pos) {
+      $$ = _getFromCache(33);
       if($$ != null) {
         return $$[0];       
       }
     } else {
-      _cachePos[22] = pos;
+      _cachePos[33] = pos;
     }  
-    // => Metadata? PointerType IdentifierMD? # Choice
-    switch (_ch >= 0 && _ch <= 1114111 ? 0 : _ch == -1 ? 2 : 1) {
-      // [\u0000-\u0010ffff]
+    // => Metadata? TypeQualifiers? Type DeclaratorAbstract / Metadata? TypeQualifiers? Type # Choice
+    switch (_getState(_transitions2)) {
+      // [A-Z] [_] [a-z]
       // EOF
       case 0:
       case 2:
-        // => Metadata? PointerType IdentifierMD? # Sequence
-        var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
-        _startPos = _cursor;
-        while (true) {  
-          // => Metadata?
-          var testing0 = _testing;
-          _testing = _cursor;
-          // => Metadata
-          $$ = _parse_Metadata();
-          // <= Metadata
-          success = true; 
-          _testing = testing0;
-          // <= Metadata?
-          if (!success) break;
-          var seq = new List(3)..[0] = $$;
-          // => PointerType
-          $$ = _parse_PointerType();
-          // <= PointerType
-          if (!success) break;
-          seq[1] = $$;
-          // => IdentifierMD?
-          var testing1 = _testing;
-          _testing = _cursor;
-          // => IdentifierMD
-          $$ = _parse_IdentifierMD();
-          // <= IdentifierMD
-          success = true; 
-          _testing = testing1;
-          // <= IdentifierMD?
-          if (!success) break;
-          seq[2] = $$;
-          $$ = seq;
-          if (success) {    
-            // Metadata?
-            final $1 = seq[0];
-            // PointerType
-            final $2 = seq[1];
-            // IdentifierMD?
-            final $3 = seq[2];
-            final $start = startPos0;
-            $$ = new ParameterDeclaration(identifier: $3, metadata: $1, type: $2);
-          }
-          break;
-        }
-        if (!success) {
-          _ch = ch0;
-          _cursor = pos0;
-        }
-        _startPos = startPos0;
-        // <= Metadata? PointerType IdentifierMD? # Sequence
-        break;
-      // No matches
-      case 1:
-        $$ = null;
-        success = false;
-        break;
-    }
-    if (!success && _cursor > _testing) {
-      // Expected: 'struct', 'union', 'enum', IDENTIFIER, 'short', 'long', 'char', 'int', SIGNEDNESS, 'float', 'double', 'void'
-      _failure(_expect8);
-    }
-    // <= Metadata? PointerType IdentifierMD? # Choice
-    if (_cacheable[22]) {
-      _addToCache($$, pos, 22);
-    }    
-    return $$;
-  }
-  
-  dynamic _parse_PointerType() {
-    // SENTENCE (NONTERMINAL)
-    // PointerType <- Type ASTERISK+ Metadata?
-    var $$;          
-    var pos = _cursor;             
-    if(_cachePos[23] >= pos) {
-      $$ = _getFromCache(23);
-      if($$ != null) {
-        return $$[0];       
-      }
-    } else {
-      _cachePos[23] = pos;
-    }  
-    // => Type ASTERISK+ Metadata? # Choice
-    switch (_ch >= 0 && _ch <= 1114111 ? 0 : _ch == -1 ? 2 : 1) {
-      // [\u0000-\u0010ffff]
-      // EOF
-      case 0:
-      case 2:
-        // => Type ASTERISK+ Metadata? # Sequence
-        var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
-        _startPos = _cursor;
-        while (true) {  
-          // => Type
-          $$ = _parse_Type();
-          // <= Type
-          if (!success) break;
-          var seq = new List(3)..[0] = $$;
-          // => ASTERISK+
-          var testing0;
-          for (var first = true, reps; ;) {  
-            // => ASTERISK  
-            $$ = _parse_ASTERISK();  
-            // <= ASTERISK  
-            if (success) {
-             if (first) {      
-                first = false;
-                reps = [$$];
-                testing0 = _testing;                  
-              } else {
-                reps.add($$);
-              }
-              _testing = _cursor;   
-            } else {
-              success = !first;
-              if (success) {      
-                _testing = testing0;
-                $$ = reps;      
-              } else $$ = null;
-              break;
-            }  
-          }
-          // <= ASTERISK+
-          if (!success) break;
-          seq[1] = $$;
-          // => Metadata?
-          var testing1 = _testing;
-          _testing = _cursor;
-          // => Metadata
-          $$ = _parse_Metadata();
-          // <= Metadata
-          success = true; 
-          _testing = testing1;
-          // <= Metadata?
-          if (!success) break;
-          seq[2] = $$;
-          $$ = seq;
-          if (success) {    
-            // Type
-            final $1 = seq[0];
-            // ASTERISK+
-            final $2 = seq[1];
-            // Metadata?
-            final $3 = seq[2];
-            final $start = startPos0;
-            $$ = _createPointerType($1, $2, $3);
-          }
-          break;
-        }
-        if (!success) {
-          _ch = ch0;
-          _cursor = pos0;
-        }
-        _startPos = startPos0;
-        // <= Type ASTERISK+ Metadata? # Sequence
-        break;
-      // No matches
-      case 1:
-        $$ = null;
-        success = false;
-        break;
-    }
-    if (!success && _cursor > _testing) {
-      // Expected: 'struct', 'union', 'enum', IDENTIFIER, 'short', 'long', 'char', 'int', SIGNEDNESS, 'float', 'double', 'void'
-      _failure(_expect8);
-    }
-    // <= Type ASTERISK+ Metadata? # Choice
-    if (_cacheable[23]) {
-      _addToCache($$, pos, 23);
-    }    
-    return $$;
-  }
-  
-  dynamic _parse_PointerTypeSynonym() {
-    // SENTENCE (NONTERMINAL)
-    // PointerTypeSynonym <- TYPE_QUALIFIERS? ASTERISK Metadata? TypeSynonym
-    var $$;
-    // => TYPE_QUALIFIERS? ASTERISK Metadata? TypeSynonym # Choice
-    switch (_ch >= 0 && _ch <= 1114111 ? 0 : _ch == -1 ? 2 : 1) {
-      // [\u0000-\u0010ffff]
-      case 0:
-        // => TYPE_QUALIFIERS? ASTERISK Metadata? TypeSynonym # Sequence
-        var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
-        _startPos = _cursor;
-        while (true) {  
-          // => TYPE_QUALIFIERS?
-          var testing0 = _testing;
-          _testing = _cursor;
-          // => TYPE_QUALIFIERS
-          $$ = _parse_TYPE_QUALIFIERS();
-          // <= TYPE_QUALIFIERS
-          success = true; 
-          _testing = testing0;
-          // <= TYPE_QUALIFIERS?
-          if (!success) break;
-          var seq = new List(4)..[0] = $$;
-          // => ASTERISK
-          $$ = _parse_ASTERISK();
-          // <= ASTERISK
-          if (!success) break;
-          seq[1] = $$;
-          // => Metadata?
-          var testing1 = _testing;
-          _testing = _cursor;
-          // => Metadata
-          $$ = _parse_Metadata();
-          // <= Metadata
-          success = true; 
-          _testing = testing1;
-          // <= Metadata?
-          if (!success) break;
-          seq[2] = $$;
-          // => TypeSynonym
-          $$ = _parse_TypeSynonym();
-          // <= TypeSynonym
-          if (!success) break;
-          seq[3] = $$;
-          $$ = seq;
-          if (success) {    
-            // TYPE_QUALIFIERS?
-            final $1 = seq[0];
-            // ASTERISK
-            final $2 = seq[1];
-            // Metadata?
-            final $3 = seq[2];
-            // TypeSynonym
-            final $4 = seq[3];
-            final $start = startPos0;
-            $$ = new PointerTypeSpecification(metadata: $3, qualifiers: $1, type: $4);
-          }
-          break;
-        }
-        if (!success) {
-          _ch = ch0;
-          _cursor = pos0;
-        }
-        _startPos = startPos0;
-        // <= TYPE_QUALIFIERS? ASTERISK Metadata? TypeSynonym # Sequence
-        break;
-      // No matches
-      // EOF
-      case 1:
-      case 2:
-        $$ = null;
-        success = false;
-        break;
-    }
-    if (!success && _cursor > _testing) {
-      // Expected: '*'
-      _failure(_expect22);
-    }
-    // <= TYPE_QUALIFIERS? ASTERISK Metadata? TypeSynonym # Choice
-    return $$;
-  }
-  
-  dynamic _parse_PointerTypeSynonymNoMetadata() {
-    // SENTENCE (NONTERMINAL)
-    // PointerTypeSynonymNoMetadata <- TYPE_QUALIFIERS? ASTERISK Metadata? TypeSynonymNoMetadata
-    var $$;          
-    var pos = _cursor;             
-    if(_cachePos[49] >= pos) {
-      $$ = _getFromCache(49);
-      if($$ != null) {
-        return $$[0];       
-      }
-    } else {
-      _cachePos[49] = pos;
-    }  
-    // => TYPE_QUALIFIERS? ASTERISK Metadata? TypeSynonymNoMetadata # Choice
-    switch (_ch >= 0 && _ch <= 1114111 ? 0 : _ch == -1 ? 2 : 1) {
-      // [\u0000-\u0010ffff]
-      case 0:
-        // => TYPE_QUALIFIERS? ASTERISK Metadata? TypeSynonymNoMetadata # Sequence
-        var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
-        _startPos = _cursor;
-        while (true) {  
-          // => TYPE_QUALIFIERS?
-          var testing0 = _testing;
-          _testing = _cursor;
-          // => TYPE_QUALIFIERS
-          $$ = _parse_TYPE_QUALIFIERS();
-          // <= TYPE_QUALIFIERS
-          success = true; 
-          _testing = testing0;
-          // <= TYPE_QUALIFIERS?
-          if (!success) break;
-          var seq = new List(4)..[0] = $$;
-          // => ASTERISK
-          $$ = _parse_ASTERISK();
-          // <= ASTERISK
-          if (!success) break;
-          seq[1] = $$;
-          // => Metadata?
-          var testing1 = _testing;
-          _testing = _cursor;
-          // => Metadata
-          $$ = _parse_Metadata();
-          // <= Metadata
-          success = true; 
-          _testing = testing1;
-          // <= Metadata?
-          if (!success) break;
-          seq[2] = $$;
-          // => TypeSynonymNoMetadata
-          $$ = _parse_TypeSynonymNoMetadata();
-          // <= TypeSynonymNoMetadata
-          if (!success) break;
-          seq[3] = $$;
-          $$ = seq;
-          if (success) {    
-            // TYPE_QUALIFIERS?
-            final $1 = seq[0];
-            // ASTERISK
-            final $2 = seq[1];
-            // Metadata?
-            final $3 = seq[2];
-            // TypeSynonymNoMetadata
-            final $4 = seq[3];
-            final $start = startPos0;
-            $$ = new PointerTypeSpecification(metadata: $3, qualifiers: $1, type: $4);
-          }
-          break;
-        }
-        if (!success) {
-          _ch = ch0;
-          _cursor = pos0;
-        }
-        _startPos = startPos0;
-        // <= TYPE_QUALIFIERS? ASTERISK Metadata? TypeSynonymNoMetadata # Sequence
-        break;
-      // No matches
-      // EOF
-      case 1:
-      case 2:
-        $$ = null;
-        success = false;
-        break;
-    }
-    if (!success && _cursor > _testing) {
-      // Expected: '*'
-      _failure(_expect22);
-    }
-    // <= TYPE_QUALIFIERS? ASTERISK Metadata? TypeSynonymNoMetadata # Choice
-    if (_cacheable[49]) {
-      _addToCache($$, pos, 49);
-    }    
-    return $$;
-  }
-  
-  dynamic _parse_PointerVariableDeclaration() {
-    // SENTENCE (NONTERMINAL)
-    // PointerVariableDeclaration <- Metadata? PointerType IdentifierMD
-    var $$;
-    // => Metadata? PointerType IdentifierMD # Choice
-    switch (_ch >= 0 && _ch <= 1114111 ? 0 : _ch == -1 ? 2 : 1) {
-      // [\u0000-\u0010ffff]
-      // EOF
-      case 0:
-      case 2:
-        // => Metadata? PointerType IdentifierMD # Sequence
-        var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
-        _startPos = _cursor;
-        while (true) {  
-          // => Metadata?
-          var testing0 = _testing;
-          _testing = _cursor;
-          // => Metadata
-          $$ = _parse_Metadata();
-          // <= Metadata
-          success = true; 
-          _testing = testing0;
-          // <= Metadata?
-          if (!success) break;
-          var seq = new List(3)..[0] = $$;
-          // => PointerType
-          $$ = _parse_PointerType();
-          // <= PointerType
-          if (!success) break;
-          seq[1] = $$;
-          // => IdentifierMD
-          $$ = _parse_IdentifierMD();
-          // <= IdentifierMD
-          if (!success) break;
-          seq[2] = $$;
-          $$ = seq;
-          if (success) {    
-            // Metadata?
-            final $1 = seq[0];
-            // PointerType
-            final $2 = seq[1];
-            // IdentifierMD
-            final $3 = seq[2];
-            final $start = startPos0;
-            $$ = new VariableDeclaration(identifier: $3, metadata: $1, type: $2);
-          }
-          break;
-        }
-        if (!success) {
-          _ch = ch0;
-          _cursor = pos0;
-        }
-        _startPos = startPos0;
-        // <= Metadata? PointerType IdentifierMD # Sequence
-        break;
-      // No matches
-      case 1:
-        $$ = null;
-        success = false;
-        break;
-    }
-    if (!success && _cursor > _testing) {
-      // Expected: 'struct', 'union', 'enum', IDENTIFIER, 'short', 'long', 'char', 'int', SIGNEDNESS, 'float', 'double', 'void'
-      _failure(_expect8);
-    }
-    // <= Metadata? PointerType IdentifierMD # Choice
-    return $$;
-  }
-  
-  dynamic _parse_PrimitiveType() {
-    // SENTENCE (NONTERMINAL)
-    // PrimitiveType <- TYPE_QUALIFIERS? IDENTIFIER Metadata? / TYPE_QUALIFIERS? SIGNEDNESS? (SHORT / LONG_TYPE) INT? Metadata? / TYPE_QUALIFIERS? SIGNEDNESS? (CHAR / INT / SHORT / LONG_TYPE) Metadata? / TYPE_QUALIFIERS? SIGNEDNESS Metadata? / TYPE_QUALIFIERS? (FLOAT / DOUBLE) Metadata? / TYPE_QUALIFIERS? VOID Metadata?
-    var $$;          
-    var pos = _cursor;             
-    if(_cachePos[32] >= pos) {
-      $$ = _getFromCache(32);
-      if($$ != null) {
-        return $$[0];       
-      }
-    } else {
-      _cachePos[32] = pos;
-    }  
-    // => TYPE_QUALIFIERS? IDENTIFIER Metadata? / TYPE_QUALIFIERS? SIGNEDNESS? (SHORT / LONG_TYPE) INT? Metadata? / TYPE_QUALIFIERS? SIGNEDNESS? (CHAR / INT / SHORT / LONG_TYPE) Metadata? / TYPE_QUALIFIERS? SIGNEDNESS Metadata? / TYPE_QUALIFIERS? (FLOAT / DOUBLE) Metadata? / TYPE_QUALIFIERS? VOID Metadata? # Choice
-    switch (_ch >= 0 && _ch <= 1114111 ? 0 : _ch == -1 ? 2 : 1) {
-      // [\u0000-\u0010ffff]
-      case 0:
         while (true) {
-          // => TYPE_QUALIFIERS? IDENTIFIER Metadata? # Sequence
+          // => Metadata? TypeQualifiers? Type DeclaratorAbstract # Sequence
           var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
           _startPos = _cursor;
           while (true) {  
-            // => TYPE_QUALIFIERS?
-            var testing0 = _testing;
-            _testing = _cursor;
-            // => TYPE_QUALIFIERS
-            $$ = _parse_TYPE_QUALIFIERS();
-            // <= TYPE_QUALIFIERS
-            success = true; 
-            _testing = testing0;
-            // <= TYPE_QUALIFIERS?
-            if (!success) break;
-            var seq = new List(3)..[0] = $$;
-            // => IDENTIFIER
-            $$ = _parse_IDENTIFIER();
-            // <= IDENTIFIER
-            if (!success) break;
-            seq[1] = $$;
             // => Metadata?
-            var testing1 = _testing;
+            var testing0 = _testing;
             _testing = _cursor;
             // => Metadata
             $$ = _parse_Metadata();
             // <= Metadata
             success = true; 
-            _testing = testing1;
+            _testing = testing0;
             // <= Metadata?
             if (!success) break;
+            var seq = new List(4)..[0] = $$;
+            // => TypeQualifiers?
+            var testing1 = _testing;
+            _testing = _cursor;
+            // => TypeQualifiers
+            $$ = _parse_TypeQualifiers();
+            // <= TypeQualifiers
+            success = true; 
+            _testing = testing1;
+            // <= TypeQualifiers?
+            if (!success) break;
+            seq[1] = $$;
+            // => Type
+            $$ = _parse_Type();
+            // <= Type
+            if (!success) break;
             seq[2] = $$;
+            // => DeclaratorAbstract
+            $$ = _parse_DeclaratorAbstract();
+            // <= DeclaratorAbstract
+            if (!success) break;
+            seq[3] = $$;
             $$ = seq;
             if (success) {    
-              // TYPE_QUALIFIERS?
-              final $1 = seq[0];
-              // IDENTIFIER
-              final $2 = seq[1];
               // Metadata?
+              final $1 = seq[0];
+              // TypeQualifiers?
+              final $2 = seq[1];
+              // Type
               final $3 = seq[2];
+              // DeclaratorAbstract
+              final $4 = seq[3];
               final $start = startPos0;
-              $$ = new DefinedTypeSpecification(metadata: $3, name: $2, qualifiers: $1);
+              $$ = new ParameterDeclaration(declarator: $4, metadata: $1, qualifiers: $2, type: $3);
             }
             break;
           }
@@ -7544,105 +8282,49 @@ class CParser {
             _cursor = pos0;
           }
           _startPos = startPos0;
-          // <= TYPE_QUALIFIERS? IDENTIFIER Metadata? # Sequence
+          // <= Metadata? TypeQualifiers? Type DeclaratorAbstract # Sequence
           if (success) break;
-          // => TYPE_QUALIFIERS? SIGNEDNESS? (SHORT / LONG_TYPE) INT? Metadata? # Sequence
+          // => Metadata? TypeQualifiers? Type # Sequence
           var ch1 = _ch, pos1 = _cursor, startPos1 = _startPos;
           _startPos = _cursor;
           while (true) {  
-            // => TYPE_QUALIFIERS?
-            var testing2 = _testing;
-            _testing = _cursor;
-            // => TYPE_QUALIFIERS
-            $$ = _parse_TYPE_QUALIFIERS();
-            // <= TYPE_QUALIFIERS
-            success = true; 
-            _testing = testing2;
-            // <= TYPE_QUALIFIERS?
-            if (!success) break;
-            var seq = new List(5)..[0] = $$;
-            // => SIGNEDNESS?
-            var testing3 = _testing;
-            _testing = _cursor;
-            // => SIGNEDNESS
-            $$ = _parse_SIGNEDNESS();
-            // <= SIGNEDNESS
-            success = true; 
-            _testing = testing3;
-            // <= SIGNEDNESS?
-            if (!success) break;
-            seq[1] = $$;
-            // => (SHORT / LONG_TYPE) # Choice
-            switch (_getState(_transitions7)) {
-              // [l]
-              case 0:
-                var startPos2 = _startPos;
-                _startPos = _cursor;
-                // => LONG_TYPE
-                $$ = _parse_LONG_TYPE();
-                // <= LONG_TYPE
-                _startPos = startPos2;
-                break;
-              // [s]
-              case 1:
-                var startPos3 = _startPos;
-                _startPos = _cursor;
-                // => SHORT
-                $$ = _parse_SHORT();
-                // <= SHORT
-                _startPos = startPos3;
-                break;
-              // No matches
-              // EOF
-              case 2:
-              case 3:
-                $$ = null;
-                success = false;
-                break;
-            }
-            if (!success && _cursor > _testing) {
-              // Expected: 'short', 'long'
-              _failure(_expect15);
-            }
-            // <= (SHORT / LONG_TYPE) # Choice
-            if (!success) break;
-            seq[2] = $$;
-            // => INT?
-            var testing4 = _testing;
-            _testing = _cursor;
-            // => INT
-            $$ = _parse_INT();
-            // <= INT
-            success = true; 
-            _testing = testing4;
-            // <= INT?
-            if (!success) break;
-            seq[3] = $$;
             // => Metadata?
-            var testing5 = _testing;
+            var testing2 = _testing;
             _testing = _cursor;
             // => Metadata
             $$ = _parse_Metadata();
             // <= Metadata
             success = true; 
-            _testing = testing5;
+            _testing = testing2;
             // <= Metadata?
             if (!success) break;
-            seq[4] = $$;
+            var seq = new List(3)..[0] = $$;
+            // => TypeQualifiers?
+            var testing3 = _testing;
+            _testing = _cursor;
+            // => TypeQualifiers
+            $$ = _parse_TypeQualifiers();
+            // <= TypeQualifiers
+            success = true; 
+            _testing = testing3;
+            // <= TypeQualifiers?
+            if (!success) break;
+            seq[1] = $$;
+            // => Type
+            $$ = _parse_Type();
+            // <= Type
+            if (!success) break;
+            seq[2] = $$;
             $$ = seq;
             if (success) {    
-              // TYPE_QUALIFIERS?
-              final $1 = seq[0];
-              // SIGNEDNESS?
-              final $2 = seq[1];
-              // (SHORT / LONG_TYPE)
-              final $3 = seq[2];
-              // INT?
-              final $4 = seq[3];
               // Metadata?
-              final $5 = seq[4];
+              final $1 = seq[0];
+              // TypeQualifiers?
+              final $2 = seq[1];
+              // Type
+              final $3 = seq[2];
               final $start = startPos1;
-              $$ = new IntegerTypeSpecification(metadata: $5, name: _createInt([$2, $3, $4]), qualifiers: $1);
+              $$ = new ParameterDeclaration(metadata: $1, qualifiers: $2, type: $3);
             }
             break;
           }
@@ -7651,302 +8333,7 @@ class CParser {
             _cursor = pos1;
           }
           _startPos = startPos1;
-          // <= TYPE_QUALIFIERS? SIGNEDNESS? (SHORT / LONG_TYPE) INT? Metadata? # Sequence
-          if (success) break;
-          // => TYPE_QUALIFIERS? SIGNEDNESS? (CHAR / INT / SHORT / LONG_TYPE) Metadata? # Sequence
-          var ch2 = _ch, pos2 = _cursor, startPos4 = _startPos;
-          _startPos = _cursor;
-          while (true) {  
-            // => TYPE_QUALIFIERS?
-            var testing6 = _testing;
-            _testing = _cursor;
-            // => TYPE_QUALIFIERS
-            $$ = _parse_TYPE_QUALIFIERS();
-            // <= TYPE_QUALIFIERS
-            success = true; 
-            _testing = testing6;
-            // <= TYPE_QUALIFIERS?
-            if (!success) break;
-            var seq = new List(4)..[0] = $$;
-            // => SIGNEDNESS?
-            var testing7 = _testing;
-            _testing = _cursor;
-            // => SIGNEDNESS
-            $$ = _parse_SIGNEDNESS();
-            // <= SIGNEDNESS
-            success = true; 
-            _testing = testing7;
-            // <= SIGNEDNESS?
-            if (!success) break;
-            seq[1] = $$;
-            // => (CHAR / INT / SHORT / LONG_TYPE) # Choice
-            switch (_getState(_transitions8)) {
-              // [c]
-              case 0:
-                var startPos5 = _startPos;
-                _startPos = _cursor;
-                // => CHAR
-                $$ = _parse_CHAR();
-                // <= CHAR
-                _startPos = startPos5;
-                break;
-              // [i]
-              case 1:
-                var startPos6 = _startPos;
-                _startPos = _cursor;
-                // => INT
-                $$ = _parse_INT();
-                // <= INT
-                _startPos = startPos6;
-                break;
-              // [l]
-              case 2:
-                var startPos7 = _startPos;
-                _startPos = _cursor;
-                // => LONG_TYPE
-                $$ = _parse_LONG_TYPE();
-                // <= LONG_TYPE
-                _startPos = startPos7;
-                break;
-              // [s]
-              case 3:
-                var startPos8 = _startPos;
-                _startPos = _cursor;
-                // => SHORT
-                $$ = _parse_SHORT();
-                // <= SHORT
-                _startPos = startPos8;
-                break;
-              // No matches
-              // EOF
-              case 4:
-              case 5:
-                $$ = null;
-                success = false;
-                break;
-            }
-            if (!success && _cursor > _testing) {
-              // Expected: 'char', 'int', 'short', 'long'
-              _failure(_expect16);
-            }
-            // <= (CHAR / INT / SHORT / LONG_TYPE) # Choice
-            if (!success) break;
-            seq[2] = $$;
-            // => Metadata?
-            var testing8 = _testing;
-            _testing = _cursor;
-            // => Metadata
-            $$ = _parse_Metadata();
-            // <= Metadata
-            success = true; 
-            _testing = testing8;
-            // <= Metadata?
-            if (!success) break;
-            seq[3] = $$;
-            $$ = seq;
-            if (success) {    
-              // TYPE_QUALIFIERS?
-              final $1 = seq[0];
-              // SIGNEDNESS?
-              final $2 = seq[1];
-              // (CHAR / INT / SHORT / LONG_TYPE)
-              final $3 = seq[2];
-              // Metadata?
-              final $4 = seq[3];
-              final $start = startPos4;
-              $$ = new IntegerTypeSpecification(metadata: $4, name: _createInt([$2, $3]), qualifiers: $1);
-            }
-            break;
-          }
-          if (!success) {
-            _ch = ch2;
-            _cursor = pos2;
-          }
-          _startPos = startPos4;
-          // <= TYPE_QUALIFIERS? SIGNEDNESS? (CHAR / INT / SHORT / LONG_TYPE) Metadata? # Sequence
-          if (success) break;
-          // => TYPE_QUALIFIERS? SIGNEDNESS Metadata? # Sequence
-          var ch3 = _ch, pos3 = _cursor, startPos9 = _startPos;
-          _startPos = _cursor;
-          while (true) {  
-            // => TYPE_QUALIFIERS?
-            var testing9 = _testing;
-            _testing = _cursor;
-            // => TYPE_QUALIFIERS
-            $$ = _parse_TYPE_QUALIFIERS();
-            // <= TYPE_QUALIFIERS
-            success = true; 
-            _testing = testing9;
-            // <= TYPE_QUALIFIERS?
-            if (!success) break;
-            var seq = new List(3)..[0] = $$;
-            // => SIGNEDNESS
-            $$ = _parse_SIGNEDNESS();
-            // <= SIGNEDNESS
-            if (!success) break;
-            seq[1] = $$;
-            // => Metadata?
-            var testing10 = _testing;
-            _testing = _cursor;
-            // => Metadata
-            $$ = _parse_Metadata();
-            // <= Metadata
-            success = true; 
-            _testing = testing10;
-            // <= Metadata?
-            if (!success) break;
-            seq[2] = $$;
-            $$ = seq;
-            if (success) {    
-              // TYPE_QUALIFIERS?
-              final $1 = seq[0];
-              // SIGNEDNESS
-              final $2 = seq[1];
-              // Metadata?
-              final $3 = seq[2];
-              final $start = startPos9;
-              $$ = new IntegerTypeSpecification(metadata: $3, name: $2, qualifiers: $1);
-            }
-            break;
-          }
-          if (!success) {
-            _ch = ch3;
-            _cursor = pos3;
-          }
-          _startPos = startPos9;
-          // <= TYPE_QUALIFIERS? SIGNEDNESS Metadata? # Sequence
-          if (success) break;
-          // => TYPE_QUALIFIERS? (FLOAT / DOUBLE) Metadata? # Sequence
-          var ch4 = _ch, pos4 = _cursor, startPos10 = _startPos;
-          _startPos = _cursor;
-          while (true) {  
-            // => TYPE_QUALIFIERS?
-            var testing11 = _testing;
-            _testing = _cursor;
-            // => TYPE_QUALIFIERS
-            $$ = _parse_TYPE_QUALIFIERS();
-            // <= TYPE_QUALIFIERS
-            success = true; 
-            _testing = testing11;
-            // <= TYPE_QUALIFIERS?
-            if (!success) break;
-            var seq = new List(3)..[0] = $$;
-            // => (FLOAT / DOUBLE) # Choice
-            switch (_getState(_transitions9)) {
-              // [d]
-              case 0:
-                var startPos11 = _startPos;
-                _startPos = _cursor;
-                // => DOUBLE
-                $$ = _parse_DOUBLE();
-                // <= DOUBLE
-                _startPos = startPos11;
-                break;
-              // [f]
-              case 1:
-                var startPos12 = _startPos;
-                _startPos = _cursor;
-                // => FLOAT
-                $$ = _parse_FLOAT();
-                // <= FLOAT
-                _startPos = startPos12;
-                break;
-              // No matches
-              // EOF
-              case 2:
-              case 3:
-                $$ = null;
-                success = false;
-                break;
-            }
-            if (!success && _cursor > _testing) {
-              // Expected: 'float', 'double'
-              _failure(_expect17);
-            }
-            // <= (FLOAT / DOUBLE) # Choice
-            if (!success) break;
-            seq[1] = $$;
-            // => Metadata?
-            var testing12 = _testing;
-            _testing = _cursor;
-            // => Metadata
-            $$ = _parse_Metadata();
-            // <= Metadata
-            success = true; 
-            _testing = testing12;
-            // <= Metadata?
-            if (!success) break;
-            seq[2] = $$;
-            $$ = seq;
-            if (success) {    
-              // TYPE_QUALIFIERS?
-              final $1 = seq[0];
-              // (FLOAT / DOUBLE)
-              final $2 = seq[1];
-              // Metadata?
-              final $3 = seq[2];
-              final $start = startPos10;
-              $$ = new FloatTypeSpecification(metadata: $3, name: $2, qualifiers: $1);
-            }
-            break;
-          }
-          if (!success) {
-            _ch = ch4;
-            _cursor = pos4;
-          }
-          _startPos = startPos10;
-          // <= TYPE_QUALIFIERS? (FLOAT / DOUBLE) Metadata? # Sequence
-          if (success) break;
-          // => TYPE_QUALIFIERS? VOID Metadata? # Sequence
-          var ch5 = _ch, pos5 = _cursor, startPos13 = _startPos;
-          _startPos = _cursor;
-          while (true) {  
-            // => TYPE_QUALIFIERS?
-            var testing13 = _testing;
-            _testing = _cursor;
-            // => TYPE_QUALIFIERS
-            $$ = _parse_TYPE_QUALIFIERS();
-            // <= TYPE_QUALIFIERS
-            success = true; 
-            _testing = testing13;
-            // <= TYPE_QUALIFIERS?
-            if (!success) break;
-            var seq = new List(3)..[0] = $$;
-            // => VOID
-            $$ = _parse_VOID();
-            // <= VOID
-            if (!success) break;
-            seq[1] = $$;
-            // => Metadata?
-            var testing14 = _testing;
-            _testing = _cursor;
-            // => Metadata
-            $$ = _parse_Metadata();
-            // <= Metadata
-            success = true; 
-            _testing = testing14;
-            // <= Metadata?
-            if (!success) break;
-            seq[2] = $$;
-            $$ = seq;
-            if (success) {    
-              // TYPE_QUALIFIERS?
-              final $1 = seq[0];
-              // VOID
-              final $2 = seq[1];
-              // Metadata?
-              final $3 = seq[2];
-              final $start = startPos13;
-              $$ = new VoidTypeSpecification(metadata: $3, qualifiers: $1);
-            }
-            break;
-          }
-          if (!success) {
-            _ch = ch5;
-            _cursor = pos5;
-          }
-          _startPos = startPos13;
-          // <= TYPE_QUALIFIERS? VOID Metadata? # Sequence
+          // <= Metadata? TypeQualifiers? Type # Sequence
           break;
         }
         break;
@@ -7955,67 +8342,373 @@ class CParser {
         $$ = null;
         success = false;
         break;
+    }
+    if (!success && _cursor > _testing) {
+      // Expected: Identifier, 'short', 'long', 'char', 'int', SIGNEDNESS, 'float', 'double', 'void', '_Bool', 'struct', 'union', 'enum'
+      _failure(_expect3);
+    }
+    // <= Metadata? TypeQualifiers? Type DeclaratorAbstract / Metadata? TypeQualifiers? Type # Choice
+    if (_cacheable[33]) {
+      _addToCache($$, pos, 33);
+    }    
+    return $$;
+  }
+  
+  dynamic _parse_ParameterDeclarationNotAbstract() {
+    // SENTENCE (NONTERMINAL)
+    // ParameterDeclarationNotAbstract <- Metadata? TypeQualifiers? Type FunctionDeclarator / Metadata? TypeQualifiers? Type FunctionPointerDeclarator / Metadata? TypeQualifiers? Type DeclaratorNotAbstract
+    var $$;          
+    var pos = _cursor;             
+    if(_cachePos[19] >= pos) {
+      $$ = _getFromCache(19);
+      if($$ != null) {
+        return $$[0];       
+      }
+    } else {
+      _cachePos[19] = pos;
+    }  
+    // => Metadata? TypeQualifiers? Type FunctionDeclarator / Metadata? TypeQualifiers? Type FunctionPointerDeclarator / Metadata? TypeQualifiers? Type DeclaratorNotAbstract # Choice
+    switch (_getState(_transitions2)) {
+      // [A-Z] [_] [a-z]
       // EOF
+      case 0:
       case 2:
-        // => TYPE_QUALIFIERS? IDENTIFIER Metadata? # Sequence
-        var ch6 = _ch, pos6 = _cursor, startPos14 = _startPos;
+        while (true) {
+          // => Metadata? TypeQualifiers? Type FunctionDeclarator # Sequence
+          var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
+          _startPos = _cursor;
+          while (true) {  
+            // => Metadata?
+            var testing0 = _testing;
+            _testing = _cursor;
+            // => Metadata
+            $$ = _parse_Metadata();
+            // <= Metadata
+            success = true; 
+            _testing = testing0;
+            // <= Metadata?
+            if (!success) break;
+            var seq = new List(4)..[0] = $$;
+            // => TypeQualifiers?
+            var testing1 = _testing;
+            _testing = _cursor;
+            // => TypeQualifiers
+            $$ = _parse_TypeQualifiers();
+            // <= TypeQualifiers
+            success = true; 
+            _testing = testing1;
+            // <= TypeQualifiers?
+            if (!success) break;
+            seq[1] = $$;
+            // => Type
+            $$ = _parse_Type();
+            // <= Type
+            if (!success) break;
+            seq[2] = $$;
+            // => FunctionDeclarator
+            $$ = _parse_FunctionDeclarator();
+            // <= FunctionDeclarator
+            if (!success) break;
+            seq[3] = $$;
+            $$ = seq;
+            if (success) {    
+              // Metadata?
+              final $1 = seq[0];
+              // TypeQualifiers?
+              final $2 = seq[1];
+              // Type
+              final $3 = seq[2];
+              // FunctionDeclarator
+              final $4 = seq[3];
+              final $start = startPos0;
+              $$ = new ParameterDeclaration(declarator: $4, metadata: $1, qualifiers: $2,  type: $3);
+            }
+            break;
+          }
+          if (!success) {
+            _ch = ch0;
+            _cursor = pos0;
+          }
+          _startPos = startPos0;
+          // <= Metadata? TypeQualifiers? Type FunctionDeclarator # Sequence
+          if (success) break;
+          // => Metadata? TypeQualifiers? Type FunctionPointerDeclarator # Sequence
+          var ch1 = _ch, pos1 = _cursor, startPos1 = _startPos;
+          _startPos = _cursor;
+          while (true) {  
+            // => Metadata?
+            var testing2 = _testing;
+            _testing = _cursor;
+            // => Metadata
+            $$ = _parse_Metadata();
+            // <= Metadata
+            success = true; 
+            _testing = testing2;
+            // <= Metadata?
+            if (!success) break;
+            var seq = new List(4)..[0] = $$;
+            // => TypeQualifiers?
+            var testing3 = _testing;
+            _testing = _cursor;
+            // => TypeQualifiers
+            $$ = _parse_TypeQualifiers();
+            // <= TypeQualifiers
+            success = true; 
+            _testing = testing3;
+            // <= TypeQualifiers?
+            if (!success) break;
+            seq[1] = $$;
+            // => Type
+            $$ = _parse_Type();
+            // <= Type
+            if (!success) break;
+            seq[2] = $$;
+            // => FunctionPointerDeclarator
+            $$ = _parse_FunctionPointerDeclarator();
+            // <= FunctionPointerDeclarator
+            if (!success) break;
+            seq[3] = $$;
+            $$ = seq;
+            if (success) {    
+              // Metadata?
+              final $1 = seq[0];
+              // TypeQualifiers?
+              final $2 = seq[1];
+              // Type
+              final $3 = seq[2];
+              // FunctionPointerDeclarator
+              final $4 = seq[3];
+              final $start = startPos1;
+              $$ = new ParameterDeclaration(declarator: $4, metadata: $1, qualifiers: $2,  type: $3);
+            }
+            break;
+          }
+          if (!success) {
+            _ch = ch1;
+            _cursor = pos1;
+          }
+          _startPos = startPos1;
+          // <= Metadata? TypeQualifiers? Type FunctionPointerDeclarator # Sequence
+          if (success) break;
+          // => Metadata? TypeQualifiers? Type DeclaratorNotAbstract # Sequence
+          var ch2 = _ch, pos2 = _cursor, startPos2 = _startPos;
+          _startPos = _cursor;
+          while (true) {  
+            // => Metadata?
+            var testing4 = _testing;
+            _testing = _cursor;
+            // => Metadata
+            $$ = _parse_Metadata();
+            // <= Metadata
+            success = true; 
+            _testing = testing4;
+            // <= Metadata?
+            if (!success) break;
+            var seq = new List(4)..[0] = $$;
+            // => TypeQualifiers?
+            var testing5 = _testing;
+            _testing = _cursor;
+            // => TypeQualifiers
+            $$ = _parse_TypeQualifiers();
+            // <= TypeQualifiers
+            success = true; 
+            _testing = testing5;
+            // <= TypeQualifiers?
+            if (!success) break;
+            seq[1] = $$;
+            // => Type
+            $$ = _parse_Type();
+            // <= Type
+            if (!success) break;
+            seq[2] = $$;
+            // => DeclaratorNotAbstract
+            $$ = _parse_DeclaratorNotAbstract();
+            // <= DeclaratorNotAbstract
+            if (!success) break;
+            seq[3] = $$;
+            $$ = seq;
+            if (success) {    
+              // Metadata?
+              final $1 = seq[0];
+              // TypeQualifiers?
+              final $2 = seq[1];
+              // Type
+              final $3 = seq[2];
+              // DeclaratorNotAbstract
+              final $4 = seq[3];
+              final $start = startPos2;
+              $$ = new ParameterDeclaration(declarator: $4, metadata: $1, qualifiers: $2,  type: $3);
+            }
+            break;
+          }
+          if (!success) {
+            _ch = ch2;
+            _cursor = pos2;
+          }
+          _startPos = startPos2;
+          // <= Metadata? TypeQualifiers? Type DeclaratorNotAbstract # Sequence
+          break;
+        }
+        break;
+      // No matches
+      case 1:
+        $$ = null;
+        success = false;
+        break;
+    }
+    if (!success && _cursor > _testing) {
+      // Expected: Identifier, 'short', 'long', 'char', 'int', SIGNEDNESS, 'float', 'double', 'void', '_Bool', 'struct', 'union', 'enum'
+      _failure(_expect3);
+    }
+    // <= Metadata? TypeQualifiers? Type FunctionDeclarator / Metadata? TypeQualifiers? Type FunctionPointerDeclarator / Metadata? TypeQualifiers? Type DeclaratorNotAbstract # Choice
+    if (_cacheable[19]) {
+      _addToCache($$, pos, 19);
+    }    
+    return $$;
+  }
+  
+  dynamic _parse_PointerSpecifier() {
+    // SENTENCE (NONTERMINAL)
+    // PointerSpecifier <- ASTERISK Metadata? TypeQualifiers?
+    var $$;
+    // => ASTERISK Metadata? TypeQualifiers? # Choice
+    switch (_ch == 42 ? 0 : _ch == -1 ? 2 : 1) {
+      // [*]
+      case 0:
+        // => ASTERISK Metadata? TypeQualifiers? # Sequence
+        var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
         _startPos = _cursor;
         while (true) {  
-          // => TYPE_QUALIFIERS?
-          var testing15 = _testing;
-          _testing = _cursor;
-          // => TYPE_QUALIFIERS
-          $$ = _parse_TYPE_QUALIFIERS();
-          // <= TYPE_QUALIFIERS
-          success = true; 
-          _testing = testing15;
-          // <= TYPE_QUALIFIERS?
+          // => ASTERISK
+          $$ = _parse_ASTERISK();
+          // <= ASTERISK
           if (!success) break;
           var seq = new List(3)..[0] = $$;
-          // => IDENTIFIER
-          $$ = _parse_IDENTIFIER();
-          // <= IDENTIFIER
-          if (!success) break;
-          seq[1] = $$;
           // => Metadata?
-          var testing16 = _testing;
+          var testing0 = _testing;
           _testing = _cursor;
           // => Metadata
           $$ = _parse_Metadata();
           // <= Metadata
           success = true; 
-          _testing = testing16;
+          _testing = testing0;
           // <= Metadata?
+          if (!success) break;
+          seq[1] = $$;
+          // => TypeQualifiers?
+          var testing1 = _testing;
+          _testing = _cursor;
+          // => TypeQualifiers
+          $$ = _parse_TypeQualifiers();
+          // <= TypeQualifiers
+          success = true; 
+          _testing = testing1;
+          // <= TypeQualifiers?
           if (!success) break;
           seq[2] = $$;
           $$ = seq;
           if (success) {    
-            // TYPE_QUALIFIERS?
+            // ASTERISK
             final $1 = seq[0];
-            // IDENTIFIER
-            final $2 = seq[1];
             // Metadata?
+            final $2 = seq[1];
+            // TypeQualifiers?
             final $3 = seq[2];
-            final $start = startPos14;
-            $$ = new DefinedTypeSpecification(metadata: $3, name: $2, qualifiers: $1);
+            final $start = startPos0;
+            $$ = new PointerSpecifier(metadata: $2, qualifiers: $3);
           }
           break;
         }
         if (!success) {
-          _ch = ch6;
-          _cursor = pos6;
+          _ch = ch0;
+          _cursor = pos0;
         }
-        _startPos = startPos14;
-        // <= TYPE_QUALIFIERS? IDENTIFIER Metadata? # Sequence
+        _startPos = startPos0;
+        // <= ASTERISK Metadata? TypeQualifiers? # Sequence
+        break;
+      // No matches
+      // EOF
+      case 1:
+      case 2:
+        $$ = null;
+        success = false;
         break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: IDENTIFIER, 'short', 'long', 'char', 'int', SIGNEDNESS, 'float', 'double', 'void'
-      _failure(_expect14);
+      // Expected: '*'
+      _failure(_expect10);
     }
-    // <= TYPE_QUALIFIERS? IDENTIFIER Metadata? / TYPE_QUALIFIERS? SIGNEDNESS? (SHORT / LONG_TYPE) INT? Metadata? / TYPE_QUALIFIERS? SIGNEDNESS? (CHAR / INT / SHORT / LONG_TYPE) Metadata? / TYPE_QUALIFIERS? SIGNEDNESS Metadata? / TYPE_QUALIFIERS? (FLOAT / DOUBLE) Metadata? / TYPE_QUALIFIERS? VOID Metadata? # Choice
-    if (_cacheable[32]) {
-      _addToCache($$, pos, 32);
+    // <= ASTERISK Metadata? TypeQualifiers? # Choice
+    return $$;
+  }
+  
+  dynamic _parse_PointerSpecifiers() {
+    // SENTENCE (NONTERMINAL)
+    // PointerSpecifiers <- PointerSpecifier+
+    var $$;          
+    var pos = _cursor;             
+    if(_cachePos[13] >= pos) {
+      $$ = _getFromCache(13);
+      if($$ != null) {
+        return $$[0];       
+      }
+    } else {
+      _cachePos[13] = pos;
+    }  
+    // => PointerSpecifier+ # Choice
+    switch (_ch == 42 ? 0 : _ch == -1 ? 2 : 1) {
+      // [*]
+      case 0:
+        var startPos0 = _startPos;
+        _startPos = _cursor;
+        // => PointerSpecifier+
+        var testing0;
+        for (var first = true, reps; ;) {  
+          // => PointerSpecifier  
+          $$ = _parse_PointerSpecifier();  
+          // <= PointerSpecifier  
+          if (success) {
+           if (first) {      
+              first = false;
+              reps = [$$];
+              testing0 = _testing;                  
+            } else {
+              reps.add($$);
+            }
+            _testing = _cursor;   
+          } else {
+            success = !first;
+            if (success) {      
+              _testing = testing0;
+              $$ = reps;      
+            } else $$ = null;
+            break;
+          }  
+        }
+        // <= PointerSpecifier+
+        if (success) {    
+          // PointerSpecifier+
+          final $1 = $$;
+          final $start = startPos0;
+          $$ = new PointerSpecifiers($1);
+        }
+        _startPos = startPos0;
+        break;
+      // No matches
+      // EOF
+      case 1:
+      case 2:
+        $$ = null;
+        success = false;
+        break;
+    }
+    if (!success && _cursor > _testing) {
+      // Expected: '*'
+      _failure(_expect10);
+    }
+    // <= PointerSpecifier+ # Choice
+    if (_cacheable[13]) {
+      _addToCache($$, pos, 13);
     }    
     return $$;
   }
@@ -8025,7 +8718,7 @@ class CParser {
     // RESERVED_WORD <- ('auto' / 'break' / 'case' / 'char' / 'const' / 'continue' / 'default' / 'do' / 'double' / 'else' / 'enum' / 'extern' / 'float' / 'for' / 'goto' / 'if' / 'inline' / 'int' / 'long' / 'register' / 'restrict' / 'return' / 'short' / 'signed' / 'sizeof' / 'static' / 'struct' / 'switch' / 'typedef' / 'union' / 'unsigned' / 'void' / 'volatile' / 'while' / '_Bool' / '_Complex' / '_Imaginary') !(IDENT_START / IDENT_CONT)
     var $$;
     // => ('auto' / 'break' / 'case' / 'char' / 'const' / 'continue' / 'default' / 'do' / 'double' / 'else' / 'enum' / 'extern' / 'float' / 'for' / 'goto' / 'if' / 'inline' / 'int' / 'long' / 'register' / 'restrict' / 'return' / 'short' / 'signed' / 'sizeof' / 'static' / 'struct' / 'switch' / 'typedef' / 'union' / 'unsigned' / 'void' / 'volatile' / 'while' / '_Bool' / '_Complex' / '_Imaginary') !(IDENT_START / IDENT_CONT) # Choice
-    switch (_getState(_transitions22)) {
+    switch (_getState(_transitions35)) {
       // [_] [a-g] [i] [l] [r-w]
       case 0:
         // => ('auto' / 'break' / 'case' / 'char' / 'const' / 'continue' / 'default' / 'do' / 'double' / 'else' / 'enum' / 'extern' / 'float' / 'for' / 'goto' / 'if' / 'inline' / 'int' / 'long' / 'register' / 'restrict' / 'return' / 'short' / 'signed' / 'sizeof' / 'static' / 'struct' / 'switch' / 'typedef' / 'union' / 'unsigned' / 'void' / 'volatile' / 'while' / '_Bool' / '_Complex' / '_Imaginary') !(IDENT_START / IDENT_CONT) # Sequence
@@ -8033,14 +8726,14 @@ class CParser {
         _startPos = _cursor;
         while (true) {  
           // => ('auto' / 'break' / 'case' / 'char' / 'const' / 'continue' / 'default' / 'do' / 'double' / 'else' / 'enum' / 'extern' / 'float' / 'for' / 'goto' / 'if' / 'inline' / 'int' / 'long' / 'register' / 'restrict' / 'return' / 'short' / 'signed' / 'sizeof' / 'static' / 'struct' / 'switch' / 'typedef' / 'union' / 'unsigned' / 'void' / 'volatile' / 'while' / '_Bool' / '_Complex' / '_Imaginary') # Choice
-          switch (_getState(_transitions23)) {
+          switch (_getState(_transitions36)) {
             // [_]
             case 0:
               while (true) {
                 var startPos1 = _startPos;
                 _startPos = _cursor;
                 // => '_Bool'
-                $$ = _matchString(_strings18, '_Bool');
+                $$ = _matchString(_strings1, '_Bool');
                 // <= '_Bool'
                 _startPos = startPos1;
                 if (success) break;
@@ -8091,14 +8784,14 @@ class CParser {
                 var startPos7 = _startPos;
                 _startPos = _cursor;
                 // => 'char'
-                $$ = _matchString(_strings1, 'char');
+                $$ = _matchString(_strings2, 'char');
                 // <= 'char'
                 _startPos = startPos7;
                 if (success) break;
                 var startPos8 = _startPos;
                 _startPos = _cursor;
                 // => 'const'
-                $$ = _matchString(_strings13, 'const');
+                $$ = _matchString(_strings14, 'const');
                 // <= 'const'
                 _startPos = startPos8;
                 if (success) break;
@@ -8131,7 +8824,7 @@ class CParser {
                 var startPos12 = _startPos;
                 _startPos = _cursor;
                 // => 'double'
-                $$ = _matchString(_strings2, 'double');
+                $$ = _matchString(_strings3, 'double');
                 // <= 'double'
                 _startPos = startPos12;
                 break;
@@ -8150,7 +8843,7 @@ class CParser {
                 var startPos14 = _startPos;
                 _startPos = _cursor;
                 // => 'enum'
-                $$ = _matchString(_strings3, 'enum');
+                $$ = _matchString(_strings4, 'enum');
                 // <= 'enum'
                 _startPos = startPos14;
                 if (success) break;
@@ -8169,7 +8862,7 @@ class CParser {
                 var startPos16 = _startPos;
                 _startPos = _cursor;
                 // => 'float'
-                $$ = _matchString(_strings4, 'float');
+                $$ = _matchString(_strings5, 'float');
                 // <= 'float'
                 _startPos = startPos16;
                 if (success) break;
@@ -8211,7 +8904,7 @@ class CParser {
                 var startPos21 = _startPos;
                 _startPos = _cursor;
                 // => 'int'
-                $$ = _matchString(_strings5, 'int');
+                $$ = _matchString(_strings6, 'int');
                 // <= 'int'
                 _startPos = startPos21;
                 break;
@@ -8222,7 +8915,7 @@ class CParser {
               var startPos22 = _startPos;
               _startPos = _cursor;
               // => 'long'
-              $$ = _matchString(_strings17, 'long');
+              $$ = _matchString(_strings18, 'long');
               // <= 'long'
               _startPos = startPos22;
               break;
@@ -8258,7 +8951,7 @@ class CParser {
                 var startPos26 = _startPos;
                 _startPos = _cursor;
                 // => 'short'
-                $$ = _matchString(_strings6, 'short');
+                $$ = _matchString(_strings7, 'short');
                 // <= 'short'
                 _startPos = startPos26;
                 if (success) break;
@@ -8286,7 +8979,7 @@ class CParser {
                 var startPos30 = _startPos;
                 _startPos = _cursor;
                 // => 'struct'
-                $$ = _matchString(_strings8, 'struct');
+                $$ = _matchString(_strings9, 'struct');
                 // <= 'struct'
                 _startPos = startPos30;
                 if (success) break;
@@ -8304,7 +8997,7 @@ class CParser {
               var startPos32 = _startPos;
               _startPos = _cursor;
               // => 'typedef'
-              $$ = _matchString(_strings9, 'typedef');
+              $$ = _matchString(_strings10, 'typedef');
               // <= 'typedef'
               _startPos = startPos32;
               break;
@@ -8314,7 +9007,7 @@ class CParser {
                 var startPos33 = _startPos;
                 _startPos = _cursor;
                 // => 'union'
-                $$ = _matchString(_strings10, 'union');
+                $$ = _matchString(_strings11, 'union');
                 // <= 'union'
                 _startPos = startPos33;
                 if (success) break;
@@ -8333,7 +9026,7 @@ class CParser {
                 var startPos35 = _startPos;
                 _startPos = _cursor;
                 // => 'void'
-                $$ = _matchString(_strings11, 'void');
+                $$ = _matchString(_strings12, 'void');
                 // <= 'void'
                 _startPos = startPos35;
                 if (success) break;
@@ -8365,7 +9058,7 @@ class CParser {
           }
           if (!success && _cursor > _testing) {
             // Expected: auto, break, case, char, const, continue, default, do, double, else, enum, extern, float, for, goto, if, inline, int, long, register, restrict, return, short, signed, sizeof, static, struct, switch, typedef, union, unsigned, void, volatile, while, _Bool, _Complex, _Imaginary
-            _failure(_expect53);
+            _failure(_expect56);
           }
           // <= ('auto' / 'break' / 'case' / 'char' / 'const' / 'continue' / 'default' / 'do' / 'double' / 'else' / 'enum' / 'extern' / 'float' / 'for' / 'goto' / 'if' / 'inline' / 'int' / 'long' / 'register' / 'restrict' / 'return' / 'short' / 'signed' / 'sizeof' / 'static' / 'struct' / 'switch' / 'typedef' / 'union' / 'unsigned' / 'void' / 'volatile' / 'while' / '_Bool' / '_Complex' / '_Imaginary') # Choice
           if (!success) break;
@@ -8374,7 +9067,7 @@ class CParser {
           var ch1 = _ch, pos1 = _cursor, testing0 = _testing; 
           _testing = _inputLen + 1;
           // => (IDENT_START / IDENT_CONT) # Choice
-          switch (_getState(_transitions20)) {
+          switch (_getState(_transitions33)) {
             // [0-9]
             case 0:
               var startPos38 = _startPos;
@@ -8452,7 +9145,7 @@ class CParser {
     }
     if (!success && _cursor > _testing) {
       // Expected: auto, break, case, char, const, continue, default, do, double, else, enum, extern, float, for, goto, if, inline, int, long, register, restrict, return, short, signed, sizeof, static, struct, switch, typedef, union, unsigned, void, volatile, while, _Bool, _Complex, _Imaginary
-      _failure(_expect53);
+      _failure(_expect56);
     }
     // <= ('auto' / 'break' / 'case' / 'char' / 'const' / 'continue' / 'default' / 'do' / 'double' / 'else' / 'enum' / 'extern' / 'float' / 'for' / 'goto' / 'if' / 'inline' / 'int' / 'long' / 'register' / 'restrict' / 'return' / 'short' / 'signed' / 'sizeof' / 'static' / 'struct' / 'switch' / 'typedef' / 'union' / 'unsigned' / 'void' / 'volatile' / 'while' / '_Bool' / '_Complex' / '_Imaginary') !(IDENT_START / IDENT_CONT) # Choice
     return $$;
@@ -8471,7 +9164,7 @@ class CParser {
     } else {
       _cachePos[81] = pos;
     }  
-    _token = 23;    
+    _token = 25;    
     _tokenStart = _cursor;    
     // => ';' SPACING # Choice
     switch (_ch == 59 ? 0 : _ch == -1 ? 2 : 1) {
@@ -8525,7 +9218,7 @@ class CParser {
     }
     if (!success && _cursor > _testing) {
       // Expected: ';'
-      _failure(_expect36);
+      _failure(_expect40);
     }
     // <= ';' SPACING # Choice
     if (_cacheable[81]) {
@@ -8549,7 +9242,7 @@ class CParser {
     } else {
       _cachePos[82] = pos;
     }  
-    _token = 24;    
+    _token = 26;    
     _tokenStart = _cursor;    
     // => 'short' !IDENT_PART SPACING # Choice
     switch (_ch == 115 ? 0 : _ch == -1 ? 2 : 1) {
@@ -8560,7 +9253,7 @@ class CParser {
         _startPos = _cursor;
         while (true) {  
           // => 'short'
-          $$ = _matchString(_strings6, 'short');
+          $$ = _matchString(_strings7, 'short');
           // <= 'short'
           if (!success) break;
           var seq = new List(3)..[0] = $$;
@@ -8613,7 +9306,7 @@ class CParser {
     }
     if (!success && _cursor > _testing) {
       // Expected: 'short'
-      _failure(_expect37);
+      _failure(_expect41);
     }
     // <= 'short' !IDENT_PART SPACING # Choice
     if (_cacheable[82]) {
@@ -8629,7 +9322,7 @@ class CParser {
     // SIGN <- PLUS / MINUS
     var $$;
     // => PLUS / MINUS # Choice
-    switch (_getState(_transitions24)) {
+    switch (_getState(_transitions37)) {
       // [+]
       case 0:
         var startPos0 = _startPos;
@@ -8658,7 +9351,7 @@ class CParser {
     }
     if (!success && _cursor > _testing) {
       // Expected: +, -
-      _failure(_expect54);
+      _failure(_expect57);
     }
     // <= PLUS / MINUS # Choice
     return $$;
@@ -8730,7 +9423,7 @@ class CParser {
     }
     if (!success && _cursor > _testing) {
       // Expected: signed
-      _failure(_expect55);
+      _failure(_expect58);
     }
     // <= 'signed' !IDENT_PART SPACING # Choice
     return $$;
@@ -8749,10 +9442,10 @@ class CParser {
     } else {
       _cachePos[83] = pos;
     }  
-    _token = 25;    
+    _token = 27;    
     _tokenStart = _cursor;    
     // => SIGNED / UNSIGNED # Choice
-    switch (_getState(_transitions5)) {
+    switch (_getState(_transitions15)) {
       // [s]
       case 0:
         var startPos0 = _startPos;
@@ -8781,7 +9474,7 @@ class CParser {
     }
     if (!success && _cursor > _testing) {
       // Expected: SIGNEDNESS
-      _failure(_expect38);
+      _failure(_expect42);
     }
     // <= SIGNED / UNSIGNED # Choice
     if (_cacheable[83]) {
@@ -8859,7 +9552,7 @@ class CParser {
     // SPACE <- [\t-\n\r ]
     var $$;
     // => [\t-\n\r ] # Choice
-    switch (_getState(_transitions25)) {
+    switch (_getState(_transitions38)) {
       // [\t-\n] [\r] [ ]
       case 0:
         var startPos0 = _startPos;
@@ -8902,7 +9595,7 @@ class CParser {
         for (var reps = []; ; ) {
           _testing = _cursor;
           // => (SPACE / COMMENT) # Choice
-          switch (_getState(_transitions26)) {
+          switch (_getState(_transitions39)) {
             // [\t-\n] [\r] [ ]
             case 0:
               var startPos1 = _startPos;
@@ -8964,10 +9657,10 @@ class CParser {
     // LEXEME (TOKEN)
     // STRING <- '"' STRING_CHAR_SEQUENCE? '"' / 'L"' STRING_CHAR_SEQUENCE? '"'
     var $$;
-    _token = 26;  
+    _token = 28;  
     _tokenStart = _cursor;  
     // => '"' STRING_CHAR_SEQUENCE? '"' / 'L"' STRING_CHAR_SEQUENCE? '"' # Choice
-    switch (_getState(_transitions15)) {
+    switch (_getState(_transitions28)) {
       // [\"]
       case 0:
         // => '"' STRING_CHAR_SEQUENCE? '"' # Sequence
@@ -9028,7 +9721,7 @@ class CParser {
         _startPos = _cursor;
         while (true) {  
           // => 'L"'
-          $$ = _matchString(_strings7, 'L\"');
+          $$ = _matchString(_strings8, 'L\"');
           // <= 'L"'
           if (!success) break;
           var seq = new List(3)..[0] = $$;
@@ -9078,7 +9771,7 @@ class CParser {
     }
     if (!success && _cursor > _testing) {
       // Expected: STRING
-      _failure(_expect39);
+      _failure(_expect43);
     }
     // <= '"' STRING_CHAR_SEQUENCE? '"' / 'L"' STRING_CHAR_SEQUENCE? '"' # Choice
     _token = null;
@@ -9268,7 +9961,7 @@ class CParser {
     } else {
       _cachePos[85] = pos;
     }  
-    _token = 27;    
+    _token = 29;    
     _tokenStart = _cursor;    
     // => 'struct' !IDENT_PART SPACING # Choice
     switch (_ch == 115 ? 0 : _ch == -1 ? 2 : 1) {
@@ -9279,7 +9972,7 @@ class CParser {
         _startPos = _cursor;
         while (true) {  
           // => 'struct'
-          $$ = _matchString(_strings8, 'struct');
+          $$ = _matchString(_strings9, 'struct');
           // <= 'struct'
           if (!success) break;
           var seq = new List(3)..[0] = $$;
@@ -9332,7 +10025,7 @@ class CParser {
     }
     if (!success && _cursor > _testing) {
       // Expected: 'struct'
-      _failure(_expect40);
+      _failure(_expect44);
     }
     // <= 'struct' !IDENT_PART SPACING # Choice
     if (_cacheable[85]) {
@@ -9343,164 +10036,15 @@ class CParser {
     return $$;
   }
   
-  dynamic _parse_SimpleTypeSynonym() {
-    // SENTENCE (NONTERMINAL)
-    // SimpleTypeSynonym <- TYPE_QUALIFIERS? IDENTIFIER Metadata?
-    var $$;
-    // => TYPE_QUALIFIERS? IDENTIFIER Metadata? # Choice
-    switch (_ch >= 0 && _ch <= 1114111 ? 0 : _ch == -1 ? 2 : 1) {
-      // [\u0000-\u0010ffff]
-      // EOF
-      case 0:
-      case 2:
-        // => TYPE_QUALIFIERS? IDENTIFIER Metadata? # Sequence
-        var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
-        _startPos = _cursor;
-        while (true) {  
-          // => TYPE_QUALIFIERS?
-          var testing0 = _testing;
-          _testing = _cursor;
-          // => TYPE_QUALIFIERS
-          $$ = _parse_TYPE_QUALIFIERS();
-          // <= TYPE_QUALIFIERS
-          success = true; 
-          _testing = testing0;
-          // <= TYPE_QUALIFIERS?
-          if (!success) break;
-          var seq = new List(3)..[0] = $$;
-          // => IDENTIFIER
-          $$ = _parse_IDENTIFIER();
-          // <= IDENTIFIER
-          if (!success) break;
-          seq[1] = $$;
-          // => Metadata?
-          var testing1 = _testing;
-          _testing = _cursor;
-          // => Metadata
-          $$ = _parse_Metadata();
-          // <= Metadata
-          success = true; 
-          _testing = testing1;
-          // <= Metadata?
-          if (!success) break;
-          seq[2] = $$;
-          $$ = seq;
-          if (success) {    
-            // TYPE_QUALIFIERS?
-            final $1 = seq[0];
-            // IDENTIFIER
-            final $2 = seq[1];
-            // Metadata?
-            final $3 = seq[2];
-            final $start = startPos0;
-            $$ = new DefinedTypeSpecification(metadata: $3, qualifiers: $1, name: $2);
-          }
-          break;
-        }
-        if (!success) {
-          _ch = ch0;
-          _cursor = pos0;
-        }
-        _startPos = startPos0;
-        // <= TYPE_QUALIFIERS? IDENTIFIER Metadata? # Sequence
-        break;
-      // No matches
-      case 1:
-        $$ = null;
-        success = false;
-        break;
-    }
-    if (!success && _cursor > _testing) {
-      // Expected: IDENTIFIER
-      _failure(_expect3);
-    }
-    // <= TYPE_QUALIFIERS? IDENTIFIER Metadata? # Choice
-    return $$;
-  }
-  
-  dynamic _parse_SimpleTypeSynonymNoMetadata() {
-    // SENTENCE (NONTERMINAL)
-    // SimpleTypeSynonymNoMetadata <- TYPE_QUALIFIERS? IDENTIFIER
-    var $$;          
-    var pos = _cursor;             
-    if(_cachePos[51] >= pos) {
-      $$ = _getFromCache(51);
-      if($$ != null) {
-        return $$[0];       
-      }
-    } else {
-      _cachePos[51] = pos;
-    }  
-    // => TYPE_QUALIFIERS? IDENTIFIER # Choice
-    switch (_ch >= 0 && _ch <= 1114111 ? 0 : _ch == -1 ? 2 : 1) {
-      // [\u0000-\u0010ffff]
-      // EOF
-      case 0:
-      case 2:
-        // => TYPE_QUALIFIERS? IDENTIFIER # Sequence
-        var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
-        _startPos = _cursor;
-        while (true) {  
-          // => TYPE_QUALIFIERS?
-          var testing0 = _testing;
-          _testing = _cursor;
-          // => TYPE_QUALIFIERS
-          $$ = _parse_TYPE_QUALIFIERS();
-          // <= TYPE_QUALIFIERS
-          success = true; 
-          _testing = testing0;
-          // <= TYPE_QUALIFIERS?
-          if (!success) break;
-          var seq = new List(2)..[0] = $$;
-          // => IDENTIFIER
-          $$ = _parse_IDENTIFIER();
-          // <= IDENTIFIER
-          if (!success) break;
-          seq[1] = $$;
-          $$ = seq;
-          if (success) {    
-            // TYPE_QUALIFIERS?
-            final $1 = seq[0];
-            // IDENTIFIER
-            final $2 = seq[1];
-            final $start = startPos0;
-            $$ = new DefinedTypeSpecification(qualifiers: $1, name: $2);
-          }
-          break;
-        }
-        if (!success) {
-          _ch = ch0;
-          _cursor = pos0;
-        }
-        _startPos = startPos0;
-        // <= TYPE_QUALIFIERS? IDENTIFIER # Sequence
-        break;
-      // No matches
-      case 1:
-        $$ = null;
-        success = false;
-        break;
-    }
-    if (!success && _cursor > _testing) {
-      // Expected: IDENTIFIER
-      _failure(_expect3);
-    }
-    // <= TYPE_QUALIFIERS? IDENTIFIER # Choice
-    if (_cacheable[51]) {
-      _addToCache($$, pos, 51);
-    }    
-    return $$;
-  }
-  
   dynamic _parse_StructureDeclaration() {
     // SENTENCE (NONTERMINAL)
-    // StructureDeclaration <- Metadata? StructureType
+    // StructureDeclaration <- Metadata? TypeQualifiers? StructureType
     var $$;
-    // => Metadata? StructureType # Choice
-    switch (_getState(_transitions10)) {
-      // [_] [s] [u]
+    // => Metadata? TypeQualifiers? StructureType # Choice
+    switch (_getState(_transitions22)) {
+      // [_] [c] [s] [u-v]
       case 0:
-        // => Metadata? StructureType # Sequence
+        // => Metadata? TypeQualifiers? StructureType # Sequence
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
         _startPos = _cursor;
         while (true) {  
@@ -9514,20 +10058,33 @@ class CParser {
           _testing = testing0;
           // <= Metadata?
           if (!success) break;
-          var seq = new List(2)..[0] = $$;
+          var seq = new List(3)..[0] = $$;
+          // => TypeQualifiers?
+          var testing1 = _testing;
+          _testing = _cursor;
+          // => TypeQualifiers
+          $$ = _parse_TypeQualifiers();
+          // <= TypeQualifiers
+          success = true; 
+          _testing = testing1;
+          // <= TypeQualifiers?
+          if (!success) break;
+          seq[1] = $$;
           // => StructureType
           $$ = _parse_StructureType();
           // <= StructureType
           if (!success) break;
-          seq[1] = $$;
+          seq[2] = $$;
           $$ = seq;
           if (success) {    
             // Metadata?
             final $1 = seq[0];
-            // StructureType
+            // TypeQualifiers?
             final $2 = seq[1];
+            // StructureType
+            final $3 = seq[2];
             final $start = startPos0;
-            $$ = new StructureDeclaration(metadata: $1, type: $2);
+            $$ = new StructureDeclaration(metadata: $1, qualifiers: $2, type: $3);
           }
           break;
         }
@@ -9536,7 +10093,7 @@ class CParser {
           _cursor = pos0;
         }
         _startPos = startPos0;
-        // <= Metadata? StructureType # Sequence
+        // <= Metadata? TypeQualifiers? StructureType # Sequence
         break;
       // No matches
       // EOF
@@ -9548,30 +10105,30 @@ class CParser {
     }
     if (!success && _cursor > _testing) {
       // Expected: 'struct', 'union'
-      _failure(_expect9);
+      _failure(_expect18);
     }
-    // <= Metadata? StructureType # Choice
+    // <= Metadata? TypeQualifiers? StructureType # Choice
     return $$;
   }
   
   dynamic _parse_StructureMember() {
     // SENTENCE (NONTERMINAL)
-    // StructureMember <- BitFieldParameter SEMICOLON / ArrayParameter SEMICOLON / PointerParameter SEMICOLON / TypeParameter SEMICOLON
+    // StructureMember <- BitFieldParameterDeclaration SEMICOLON / ParameterDeclarationNotAbstract SEMICOLON / ParameterDeclarationAbstract SEMICOLON
     var $$;
-    // => BitFieldParameter SEMICOLON / ArrayParameter SEMICOLON / PointerParameter SEMICOLON / TypeParameter SEMICOLON # Choice
-    switch (_ch >= 0 && _ch <= 1114111 ? 0 : _ch == -1 ? 2 : 1) {
-      // [\u0000-\u0010ffff]
+    // => BitFieldParameterDeclaration SEMICOLON / ParameterDeclarationNotAbstract SEMICOLON / ParameterDeclarationAbstract SEMICOLON # Choice
+    switch (_getState(_transitions16)) {
+      // [A-Z] [a-b] [d-h] [j-k] [m-r] [t] [w-z]
       // EOF
       case 0:
-      case 2:
+      case 3:
         while (true) {
-          // => BitFieldParameter SEMICOLON # Sequence
+          // => ParameterDeclarationNotAbstract SEMICOLON # Sequence
           var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
           _startPos = _cursor;
           while (true) {  
-            // => BitFieldParameter
-            $$ = _parse_BitFieldParameter();
-            // <= BitFieldParameter
+            // => ParameterDeclarationNotAbstract
+            $$ = _parse_ParameterDeclarationNotAbstract();
+            // <= ParameterDeclarationNotAbstract
             if (!success) break;
             var seq = new List(2)..[0] = $$;
             // => SEMICOLON
@@ -9581,7 +10138,7 @@ class CParser {
             seq[1] = $$;
             $$ = seq;
             if (success) {    
-              // BitFieldParameter
+              // ParameterDeclarationNotAbstract
               final $1 = seq[0];
               // SEMICOLON
               final $2 = seq[1];
@@ -9595,15 +10152,15 @@ class CParser {
             _cursor = pos0;
           }
           _startPos = startPos0;
-          // <= BitFieldParameter SEMICOLON # Sequence
+          // <= ParameterDeclarationNotAbstract SEMICOLON # Sequence
           if (success) break;
-          // => ArrayParameter SEMICOLON # Sequence
+          // => ParameterDeclarationAbstract SEMICOLON # Sequence
           var ch1 = _ch, pos1 = _cursor, startPos1 = _startPos;
           _startPos = _cursor;
           while (true) {  
-            // => ArrayParameter
-            $$ = _parse_ArrayParameter();
-            // <= ArrayParameter
+            // => ParameterDeclarationAbstract
+            $$ = _parse_ParameterDeclarationAbstract();
+            // <= ParameterDeclarationAbstract
             if (!success) break;
             var seq = new List(2)..[0] = $$;
             // => SEMICOLON
@@ -9613,7 +10170,7 @@ class CParser {
             seq[1] = $$;
             $$ = seq;
             if (success) {    
-              // ArrayParameter
+              // ParameterDeclarationAbstract
               final $1 = seq[0];
               // SEMICOLON
               final $2 = seq[1];
@@ -9627,15 +10184,20 @@ class CParser {
             _cursor = pos1;
           }
           _startPos = startPos1;
-          // <= ArrayParameter SEMICOLON # Sequence
-          if (success) break;
-          // => PointerParameter SEMICOLON # Sequence
+          // <= ParameterDeclarationAbstract SEMICOLON # Sequence
+          break;
+        }
+        break;
+      // [_] [c] [i] [l] [s] [u-v]
+      case 1:
+        while (true) {
+          // => BitFieldParameterDeclaration SEMICOLON # Sequence
           var ch2 = _ch, pos2 = _cursor, startPos2 = _startPos;
           _startPos = _cursor;
           while (true) {  
-            // => PointerParameter
-            $$ = _parse_PointerParameter();
-            // <= PointerParameter
+            // => BitFieldParameterDeclaration
+            $$ = _parse_BitFieldParameterDeclaration();
+            // <= BitFieldParameterDeclaration
             if (!success) break;
             var seq = new List(2)..[0] = $$;
             // => SEMICOLON
@@ -9645,7 +10207,7 @@ class CParser {
             seq[1] = $$;
             $$ = seq;
             if (success) {    
-              // PointerParameter
+              // BitFieldParameterDeclaration
               final $1 = seq[0];
               // SEMICOLON
               final $2 = seq[1];
@@ -9659,15 +10221,15 @@ class CParser {
             _cursor = pos2;
           }
           _startPos = startPos2;
-          // <= PointerParameter SEMICOLON # Sequence
+          // <= BitFieldParameterDeclaration SEMICOLON # Sequence
           if (success) break;
-          // => TypeParameter SEMICOLON # Sequence
+          // => ParameterDeclarationNotAbstract SEMICOLON # Sequence
           var ch3 = _ch, pos3 = _cursor, startPos3 = _startPos;
           _startPos = _cursor;
           while (true) {  
-            // => TypeParameter
-            $$ = _parse_TypeParameter();
-            // <= TypeParameter
+            // => ParameterDeclarationNotAbstract
+            $$ = _parse_ParameterDeclarationNotAbstract();
+            // <= ParameterDeclarationNotAbstract
             if (!success) break;
             var seq = new List(2)..[0] = $$;
             // => SEMICOLON
@@ -9677,7 +10239,7 @@ class CParser {
             seq[1] = $$;
             $$ = seq;
             if (success) {    
-              // TypeParameter
+              // ParameterDeclarationNotAbstract
               final $1 = seq[0];
               // SEMICOLON
               final $2 = seq[1];
@@ -9691,21 +10253,53 @@ class CParser {
             _cursor = pos3;
           }
           _startPos = startPos3;
-          // <= TypeParameter SEMICOLON # Sequence
+          // <= ParameterDeclarationNotAbstract SEMICOLON # Sequence
+          if (success) break;
+          // => ParameterDeclarationAbstract SEMICOLON # Sequence
+          var ch4 = _ch, pos4 = _cursor, startPos4 = _startPos;
+          _startPos = _cursor;
+          while (true) {  
+            // => ParameterDeclarationAbstract
+            $$ = _parse_ParameterDeclarationAbstract();
+            // <= ParameterDeclarationAbstract
+            if (!success) break;
+            var seq = new List(2)..[0] = $$;
+            // => SEMICOLON
+            $$ = _parse_SEMICOLON();
+            // <= SEMICOLON
+            if (!success) break;
+            seq[1] = $$;
+            $$ = seq;
+            if (success) {    
+              // ParameterDeclarationAbstract
+              final $1 = seq[0];
+              // SEMICOLON
+              final $2 = seq[1];
+              final $start = startPos4;
+              $$ = $1;
+            }
+            break;
+          }
+          if (!success) {
+            _ch = ch4;
+            _cursor = pos4;
+          }
+          _startPos = startPos4;
+          // <= ParameterDeclarationAbstract SEMICOLON # Sequence
           break;
         }
         break;
       // No matches
-      case 1:
+      case 2:
         $$ = null;
         success = false;
         break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: 'struct', 'union', 'enum', IDENTIFIER, 'short', 'long', 'char', 'int', SIGNEDNESS, 'float', 'double', 'void'
-      _failure(_expect8);
+      // Expected: 'short', 'long', 'char', 'int', SIGNEDNESS, Identifier, 'float', 'double', 'void', '_Bool', 'struct', 'union', 'enum'
+      _failure(_expect3);
     }
-    // <= BitFieldParameter SEMICOLON / ArrayParameter SEMICOLON / PointerParameter SEMICOLON / TypeParameter SEMICOLON # Choice
+    // <= BitFieldParameterDeclaration SEMICOLON / ParameterDeclarationNotAbstract SEMICOLON / ParameterDeclarationAbstract SEMICOLON # Choice
     return $$;
   }
   
@@ -9788,7 +10382,7 @@ class CParser {
     }
     if (!success && _cursor > _testing) {
       // Expected: '{'
-      _failure(_expect10);
+      _failure(_expect19);
     }
     // <= OPEN_BRACE StructureMember+ CLOSE_BRACE # Choice
     return $$;
@@ -9796,23 +10390,23 @@ class CParser {
   
   dynamic _parse_StructureType() {
     // SENTENCE (NONTERMINAL)
-    // StructureType <- StructureTypeSpecifier StructureMemberList Metadata? / StructureTypeSpecifierWithTag Metadata?
+    // StructureType <- StructureTypeSpecifier StructureMemberList Metadata? TypeQualifiers? / StructureTypeSpecifierWithTag Metadata? TypeQualifiers?
     var $$;          
     var pos = _cursor;             
-    if(_cachePos[12] >= pos) {
-      $$ = _getFromCache(12);
+    if(_cachePos[26] >= pos) {
+      $$ = _getFromCache(26);
       if($$ != null) {
         return $$[0];       
       }
     } else {
-      _cachePos[12] = pos;
+      _cachePos[26] = pos;
     }  
-    // => StructureTypeSpecifier StructureMemberList Metadata? / StructureTypeSpecifierWithTag Metadata? # Choice
-    switch (_getState(_transitions4)) {
+    // => StructureTypeSpecifier StructureMemberList Metadata? TypeQualifiers? / StructureTypeSpecifierWithTag Metadata? TypeQualifiers? # Choice
+    switch (_getState(_transitions14)) {
       // [s] [u]
       case 0:
         while (true) {
-          // => StructureTypeSpecifier StructureMemberList Metadata? # Sequence
+          // => StructureTypeSpecifier StructureMemberList Metadata? TypeQualifiers? # Sequence
           var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
           _startPos = _cursor;
           while (true) {  
@@ -9820,7 +10414,7 @@ class CParser {
             $$ = _parse_StructureTypeSpecifier();
             // <= StructureTypeSpecifier
             if (!success) break;
-            var seq = new List(3)..[0] = $$;
+            var seq = new List(4)..[0] = $$;
             // => StructureMemberList
             $$ = _parse_StructureMemberList();
             // <= StructureMemberList
@@ -9837,6 +10431,17 @@ class CParser {
             // <= Metadata?
             if (!success) break;
             seq[2] = $$;
+            // => TypeQualifiers?
+            var testing1 = _testing;
+            _testing = _cursor;
+            // => TypeQualifiers
+            $$ = _parse_TypeQualifiers();
+            // <= TypeQualifiers
+            success = true; 
+            _testing = testing1;
+            // <= TypeQualifiers?
+            if (!success) break;
+            seq[3] = $$;
             $$ = seq;
             if (success) {    
               // StructureTypeSpecifier
@@ -9845,8 +10450,10 @@ class CParser {
               final $2 = seq[1];
               // Metadata?
               final $3 = seq[2];
+              // TypeQualifiers?
+              final $4 = seq[3];
               final $start = startPos0;
-              $$ = new StructureTypeSpecification(metadata: $3, elaboratedType: $1, members: $2);
+              $$ = new StructureTypeSpecification(metadata: $3, elaboratedType: $1, members: $2, qualifiers: $4);
             }
             break;
           }
@@ -9855,9 +10462,9 @@ class CParser {
             _cursor = pos0;
           }
           _startPos = startPos0;
-          // <= StructureTypeSpecifier StructureMemberList Metadata? # Sequence
+          // <= StructureTypeSpecifier StructureMemberList Metadata? TypeQualifiers? # Sequence
           if (success) break;
-          // => StructureTypeSpecifierWithTag Metadata? # Sequence
+          // => StructureTypeSpecifierWithTag Metadata? TypeQualifiers? # Sequence
           var ch1 = _ch, pos1 = _cursor, startPos1 = _startPos;
           _startPos = _cursor;
           while (true) {  
@@ -9865,26 +10472,39 @@ class CParser {
             $$ = _parse_StructureTypeSpecifierWithTag();
             // <= StructureTypeSpecifierWithTag
             if (!success) break;
-            var seq = new List(2)..[0] = $$;
+            var seq = new List(3)..[0] = $$;
             // => Metadata?
-            var testing1 = _testing;
+            var testing2 = _testing;
             _testing = _cursor;
             // => Metadata
             $$ = _parse_Metadata();
             // <= Metadata
             success = true; 
-            _testing = testing1;
+            _testing = testing2;
             // <= Metadata?
             if (!success) break;
             seq[1] = $$;
+            // => TypeQualifiers?
+            var testing3 = _testing;
+            _testing = _cursor;
+            // => TypeQualifiers
+            $$ = _parse_TypeQualifiers();
+            // <= TypeQualifiers
+            success = true; 
+            _testing = testing3;
+            // <= TypeQualifiers?
+            if (!success) break;
+            seq[2] = $$;
             $$ = seq;
             if (success) {    
               // StructureTypeSpecifierWithTag
               final $1 = seq[0];
               // Metadata?
               final $2 = seq[1];
+              // TypeQualifiers?
+              final $3 = seq[2];
               final $start = startPos1;
-              $$ = new StructureTypeSpecification(metadata: $2, elaboratedType: $1);
+              $$ = new StructureTypeSpecification(metadata: $2, elaboratedType: $1, qualifiers: $3);
             }
             break;
           }
@@ -9893,7 +10513,7 @@ class CParser {
             _cursor = pos1;
           }
           _startPos = startPos1;
-          // <= StructureTypeSpecifierWithTag Metadata? # Sequence
+          // <= StructureTypeSpecifierWithTag Metadata? TypeQualifiers? # Sequence
           break;
         }
         break;
@@ -9907,11 +10527,11 @@ class CParser {
     }
     if (!success && _cursor > _testing) {
       // Expected: 'struct', 'union'
-      _failure(_expect9);
+      _failure(_expect18);
     }
-    // <= StructureTypeSpecifier StructureMemberList Metadata? / StructureTypeSpecifierWithTag Metadata? # Choice
-    if (_cacheable[12]) {
-      _addToCache($$, pos, 12);
+    // <= StructureTypeSpecifier StructureMemberList Metadata? TypeQualifiers? / StructureTypeSpecifierWithTag Metadata? TypeQualifiers? # Choice
+    if (_cacheable[26]) {
+      _addToCache($$, pos, 26);
     }    
     return $$;
   }
@@ -9921,7 +10541,7 @@ class CParser {
     // StructureTypeSpecifier <- (STRUCT / UNION) Metadata? Identifier?
     var $$;
     // => (STRUCT / UNION) Metadata? Identifier? # Choice
-    switch (_getState(_transitions4)) {
+    switch (_getState(_transitions14)) {
       // [s] [u]
       case 0:
         // => (STRUCT / UNION) Metadata? Identifier? # Sequence
@@ -9929,7 +10549,7 @@ class CParser {
         _startPos = _cursor;
         while (true) {  
           // => (STRUCT / UNION) # Choice
-          switch (_getState(_transitions5)) {
+          switch (_getState(_transitions15)) {
             // [s]
             case 0:
               var startPos1 = _startPos;
@@ -9958,7 +10578,7 @@ class CParser {
           }
           if (!success && _cursor > _testing) {
             // Expected: 'struct', 'union'
-            _failure(_expect9);
+            _failure(_expect18);
           }
           // <= (STRUCT / UNION) # Choice
           if (!success) break;
@@ -10015,7 +10635,7 @@ class CParser {
     }
     if (!success && _cursor > _testing) {
       // Expected: 'struct', 'union'
-      _failure(_expect9);
+      _failure(_expect18);
     }
     // <= (STRUCT / UNION) Metadata? Identifier? # Choice
     return $$;
@@ -10026,7 +10646,7 @@ class CParser {
     // StructureTypeSpecifierWithTag <- (STRUCT / UNION) Metadata? Identifier
     var $$;
     // => (STRUCT / UNION) Metadata? Identifier # Choice
-    switch (_getState(_transitions4)) {
+    switch (_getState(_transitions14)) {
       // [s] [u]
       case 0:
         // => (STRUCT / UNION) Metadata? Identifier # Sequence
@@ -10034,7 +10654,7 @@ class CParser {
         _startPos = _cursor;
         while (true) {  
           // => (STRUCT / UNION) # Choice
-          switch (_getState(_transitions5)) {
+          switch (_getState(_transitions15)) {
             // [s]
             case 0:
               var startPos1 = _startPos;
@@ -10063,7 +10683,7 @@ class CParser {
           }
           if (!success && _cursor > _testing) {
             // Expected: 'struct', 'union'
-            _failure(_expect9);
+            _failure(_expect18);
           }
           // <= (STRUCT / UNION) # Choice
           if (!success) break;
@@ -10114,7 +10734,7 @@ class CParser {
     }
     if (!success && _cursor > _testing) {
       // Expected: 'struct', 'union'
-      _failure(_expect9);
+      _failure(_expect18);
     }
     // <= (STRUCT / UNION) Metadata? Identifier # Choice
     return $$;
@@ -10124,7 +10744,7 @@ class CParser {
     // LEXEME (TOKEN)
     // TYPEDEF <- 'typedef' SPACING
     var $$;
-    _token = 28;  
+    _token = 30;  
     _tokenStart = _cursor;  
     // => 'typedef' SPACING # Choice
     switch (_ch == 116 ? 0 : _ch == -1 ? 2 : 1) {
@@ -10135,7 +10755,7 @@ class CParser {
         _startPos = _cursor;
         while (true) {  
           // => 'typedef'
-          $$ = _matchString(_strings9, 'typedef');
+          $$ = _matchString(_strings10, 'typedef');
           // <= 'typedef'
           if (!success) break;
           var seq = new List(2)..[0] = $$;
@@ -10172,7 +10792,7 @@ class CParser {
     }
     if (!success && _cursor > _testing) {
       // Expected: 'typedef'
-      _failure(_expect19);
+      _failure(_expect25);
     }
     // <= 'typedef' SPACING # Choice
     _token = null;
@@ -10180,433 +10800,248 @@ class CParser {
     return $$;
   }
   
-  dynamic _parse_TYPE_QUALIFIER() {
-    // MORHEME
-    // TYPE_QUALIFIER <- CONST
-    var $$;
-    // => CONST # Choice
-    switch (_ch == 99 ? 0 : _ch == -1 ? 2 : 1) {
-      // [c]
-      case 0:
-        var startPos0 = _startPos;
-        _startPos = _cursor;
-        // => CONST
-        $$ = _parse_CONST();
-        // <= CONST
-        _startPos = startPos0;
-        break;
-      // No matches
-      // EOF
-      case 1:
-      case 2:
-        $$ = null;
-        success = false;
-        break;
-    }
-    if (!success && _cursor > _testing) {
-      // Expected: const
-      _failure(_expect47);
-    }
-    // <= CONST # Choice
-    return $$;
-  }
-  
-  dynamic _parse_TYPE_QUALIFIERS() {
-    // LEXEME (TOKEN)
-    // TYPE_QUALIFIERS <- TYPE_QUALIFIER*
-    var $$;
-    _token = 29;  
-    _tokenStart = _cursor;  
-    // => TYPE_QUALIFIER* # Choice
-    switch (_ch >= 0 && _ch <= 1114111 ? 0 : _ch == -1 ? 2 : 1) {
-      // [\u0000-\u0010ffff]
-      // EOF
-      case 0:
-      case 2:
-        var startPos0 = _startPos;
-        _startPos = _cursor;
-        // => TYPE_QUALIFIER*
-        var testing0 = _testing; 
-        for (var reps = []; ; ) {
-          _testing = _cursor;
-          // => TYPE_QUALIFIER
-          $$ = _parse_TYPE_QUALIFIER();
-          // <= TYPE_QUALIFIER
-          if (success) {  
-            reps.add($$);
-          } else {
-            success = true;
-            _testing = testing0;
-            $$ = reps;
-            break; 
-          }
-        }
-        // <= TYPE_QUALIFIER*
-        if (success) {    
-          // TYPE_QUALIFIER*
-          final $1 = $$;
-          final $start = startPos0;
-          $$ = new TypeQualifierList($1);
-        }
-        _startPos = startPos0;
-        break;
-      // No matches
-      case 1:
-        $$ = null;
-        success = true;
-        break;
-    }
-    if (!success && _cursor > _testing) {
-      // Expected: TYPE_QUALIFIERS
-      _failure(_expect41);
-    }
-    // <= TYPE_QUALIFIER* # Choice
-    _token = null;
-    _tokenStart = null;
-    return $$;
-  }
-  
   dynamic _parse_Type() {
     // SENTENCE (NONTERMINAL)
-    // Type <- StructureType / EnumType / PrimitiveType
+    // Type <- DefinedType / IntegerType / FloatType / VoidType / BoolType / StructureType / EnumType
     var $$;          
     var pos = _cursor;             
-    if(_cachePos[11] >= pos) {
-      $$ = _getFromCache(11);
+    if(_cachePos[20] >= pos) {
+      $$ = _getFromCache(20);
       if($$ != null) {
         return $$[0];       
       }
     } else {
-      _cachePos[11] = pos;
+      _cachePos[20] = pos;
     }  
-    // => StructureType / EnumType / PrimitiveType # Choice
-    switch (_getState(_transitions3)) {
-      // [\u0000-d] [f-r] [t] [v-\u0010ffff]
+    // => DefinedType / IntegerType / FloatType / VoidType / BoolType / StructureType / EnumType # Choice
+    switch (_getState(_transitions8)) {
+      // [A-Z]
       // EOF
       case 0:
       case 4:
         var startPos0 = _startPos;
         _startPos = _cursor;
-        // => PrimitiveType
-        $$ = _parse_PrimitiveType();
-        // <= PrimitiveType
+        // => DefinedType
+        $$ = _parse_DefinedType();
+        // <= DefinedType
         _startPos = startPos0;
         break;
-      // [e]
+      // [_]
       case 1:
         while (true) {
           var startPos1 = _startPos;
           _startPos = _cursor;
-          // => EnumType
-          $$ = _parse_EnumType();
-          // <= EnumType
+          // => DefinedType
+          $$ = _parse_DefinedType();
+          // <= DefinedType
           _startPos = startPos1;
           if (success) break;
           var startPos2 = _startPos;
           _startPos = _cursor;
-          // => PrimitiveType
-          $$ = _parse_PrimitiveType();
-          // <= PrimitiveType
+          // => BoolType
+          $$ = _parse_BoolType();
+          // <= BoolType
           _startPos = startPos2;
           break;
         }
         break;
-      // [s] [u]
+      // [a-z]
       case 2:
         while (true) {
           var startPos3 = _startPos;
           _startPos = _cursor;
-          // => StructureType
-          $$ = _parse_StructureType();
-          // <= StructureType
+          // => DefinedType
+          $$ = _parse_DefinedType();
+          // <= DefinedType
           _startPos = startPos3;
           if (success) break;
           var startPos4 = _startPos;
           _startPos = _cursor;
-          // => PrimitiveType
-          $$ = _parse_PrimitiveType();
-          // <= PrimitiveType
+          // => IntegerType
+          $$ = _parse_IntegerType();
+          // <= IntegerType
           _startPos = startPos4;
-          break;
-        }
-        break;
-      // No matches
-      case 3:
-        $$ = null;
-        success = false;
-        break;
-    }
-    if (!success && _cursor > _testing) {
-      // Expected: 'struct', 'union', 'enum', IDENTIFIER, 'short', 'long', 'char', 'int', SIGNEDNESS, 'float', 'double', 'void'
-      _failure(_expect8);
-    }
-    // <= StructureType / EnumType / PrimitiveType # Choice
-    if (_cacheable[11]) {
-      _addToCache($$, pos, 11);
-    }    
-    return $$;
-  }
-  
-  dynamic _parse_TypeParameter() {
-    // SENTENCE (NONTERMINAL)
-    // TypeParameter <- Metadata? Type IdentifierMD?
-    var $$;          
-    var pos = _cursor;             
-    if(_cachePos[25] >= pos) {
-      $$ = _getFromCache(25);
-      if($$ != null) {
-        return $$[0];       
-      }
-    } else {
-      _cachePos[25] = pos;
-    }  
-    // => Metadata? Type IdentifierMD? # Choice
-    switch (_ch >= 0 && _ch <= 1114111 ? 0 : _ch == -1 ? 2 : 1) {
-      // [\u0000-\u0010ffff]
-      // EOF
-      case 0:
-      case 2:
-        // => Metadata? Type IdentifierMD? # Sequence
-        var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
-        _startPos = _cursor;
-        while (true) {  
-          // => Metadata?
-          var testing0 = _testing;
-          _testing = _cursor;
-          // => Metadata
-          $$ = _parse_Metadata();
-          // <= Metadata
-          success = true; 
-          _testing = testing0;
-          // <= Metadata?
-          if (!success) break;
-          var seq = new List(3)..[0] = $$;
-          // => Type
-          $$ = _parse_Type();
-          // <= Type
-          if (!success) break;
-          seq[1] = $$;
-          // => IdentifierMD?
-          var testing1 = _testing;
-          _testing = _cursor;
-          // => IdentifierMD
-          $$ = _parse_IdentifierMD();
-          // <= IdentifierMD
-          success = true; 
-          _testing = testing1;
-          // <= IdentifierMD?
-          if (!success) break;
-          seq[2] = $$;
-          $$ = seq;
-          if (success) {    
-            // Metadata?
-            final $1 = seq[0];
-            // Type
-            final $2 = seq[1];
-            // IdentifierMD?
-            final $3 = seq[2];
-            final $start = startPos0;
-            $$ = new ParameterDeclaration(identifier: $3, metadata: $1, type: $2);
-          }
-          break;
-        }
-        if (!success) {
-          _ch = ch0;
-          _cursor = pos0;
-        }
-        _startPos = startPos0;
-        // <= Metadata? Type IdentifierMD? # Sequence
-        break;
-      // No matches
-      case 1:
-        $$ = null;
-        success = false;
-        break;
-    }
-    if (!success && _cursor > _testing) {
-      // Expected: 'struct', 'union', 'enum', IDENTIFIER, 'short', 'long', 'char', 'int', SIGNEDNESS, 'float', 'double', 'void'
-      _failure(_expect8);
-    }
-    // <= Metadata? Type IdentifierMD? # Choice
-    if (_cacheable[25]) {
-      _addToCache($$, pos, 25);
-    }    
-    return $$;
-  }
-  
-  dynamic _parse_TypeSynonym() {
-    // SENTENCE (NONTERMINAL)
-    // TypeSynonym <- FunctionTypeNoReturn / FunctionTypeSynonym / FunctionPointerTypeSynonym / ArrayTypeSynonym / PointerTypeSynonym / SimpleTypeSynonym
-    var $$;          
-    var pos = _cursor;             
-    if(_cachePos[43] >= pos) {
-      $$ = _getFromCache(43);
-      if($$ != null) {
-        return $$[0];       
-      }
-    } else {
-      _cachePos[43] = pos;
-    }  
-    // => FunctionTypeNoReturn / FunctionTypeSynonym / FunctionPointerTypeSynonym / ArrayTypeSynonym / PointerTypeSynonym / SimpleTypeSynonym # Choice
-    switch (_getState(_transitions13)) {
-      // [\u0000-@] [[-^] [`] [{-\u0010ffff]
-      case 0:
-        while (true) {
-          var startPos0 = _startPos;
-          _startPos = _cursor;
-          // => FunctionTypeSynonym
-          $$ = _parse_FunctionTypeSynonym();
-          // <= FunctionTypeSynonym
-          _startPos = startPos0;
           if (success) break;
-          var startPos1 = _startPos;
-          _startPos = _cursor;
-          // => FunctionPointerTypeSynonym
-          $$ = _parse_FunctionPointerTypeSynonym();
-          // <= FunctionPointerTypeSynonym
-          _startPos = startPos1;
-          if (success) break;
-          var startPos2 = _startPos;
-          _startPos = _cursor;
-          // => ArrayTypeSynonym
-          $$ = _parse_ArrayTypeSynonym();
-          // <= ArrayTypeSynonym
-          _startPos = startPos2;
-          if (success) break;
-          var startPos3 = _startPos;
-          _startPos = _cursor;
-          // => PointerTypeSynonym
-          $$ = _parse_PointerTypeSynonym();
-          // <= PointerTypeSynonym
-          _startPos = startPos3;
-          if (success) break;
-          var startPos4 = _startPos;
-          _startPos = _cursor;
-          // => SimpleTypeSynonym
-          $$ = _parse_SimpleTypeSynonym();
-          // <= SimpleTypeSynonym
-          _startPos = startPos4;
-          break;
-        }
-        break;
-      // [A-Z] [_] [a-z]
-      case 1:
-        while (true) {
           var startPos5 = _startPos;
           _startPos = _cursor;
-          // => FunctionTypeNoReturn
-          $$ = _parse_FunctionTypeNoReturn();
-          // <= FunctionTypeNoReturn
+          // => FloatType
+          $$ = _parse_FloatType();
+          // <= FloatType
           _startPos = startPos5;
           if (success) break;
           var startPos6 = _startPos;
           _startPos = _cursor;
-          // => FunctionTypeSynonym
-          $$ = _parse_FunctionTypeSynonym();
-          // <= FunctionTypeSynonym
+          // => VoidType
+          $$ = _parse_VoidType();
+          // <= VoidType
           _startPos = startPos6;
           if (success) break;
           var startPos7 = _startPos;
           _startPos = _cursor;
-          // => FunctionPointerTypeSynonym
-          $$ = _parse_FunctionPointerTypeSynonym();
-          // <= FunctionPointerTypeSynonym
+          // => StructureType
+          $$ = _parse_StructureType();
+          // <= StructureType
           _startPos = startPos7;
           if (success) break;
           var startPos8 = _startPos;
           _startPos = _cursor;
-          // => ArrayTypeSynonym
-          $$ = _parse_ArrayTypeSynonym();
-          // <= ArrayTypeSynonym
+          // => EnumType
+          $$ = _parse_EnumType();
+          // <= EnumType
           _startPos = startPos8;
-          if (success) break;
-          var startPos9 = _startPos;
-          _startPos = _cursor;
-          // => PointerTypeSynonym
-          $$ = _parse_PointerTypeSynonym();
-          // <= PointerTypeSynonym
-          _startPos = startPos9;
-          if (success) break;
-          var startPos10 = _startPos;
-          _startPos = _cursor;
-          // => SimpleTypeSynonym
-          $$ = _parse_SimpleTypeSynonym();
-          // <= SimpleTypeSynonym
-          _startPos = startPos10;
           break;
         }
         break;
       // No matches
-      case 2:
+      case 3:
         $$ = null;
         success = false;
         break;
-      // EOF
-      case 3:
-        while (true) {
-          var startPos11 = _startPos;
-          _startPos = _cursor;
-          // => FunctionTypeNoReturn
-          $$ = _parse_FunctionTypeNoReturn();
-          // <= FunctionTypeNoReturn
-          _startPos = startPos11;
-          if (success) break;
-          var startPos12 = _startPos;
-          _startPos = _cursor;
-          // => ArrayTypeSynonym
-          $$ = _parse_ArrayTypeSynonym();
-          // <= ArrayTypeSynonym
-          _startPos = startPos12;
-          if (success) break;
-          var startPos13 = _startPos;
-          _startPos = _cursor;
-          // => SimpleTypeSynonym
-          $$ = _parse_SimpleTypeSynonym();
-          // <= SimpleTypeSynonym
-          _startPos = startPos13;
-          break;
-        }
-        break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: IDENTIFIER, '(', '*'
-      _failure(_expect20);
+      // Expected: Identifier, 'short', 'long', 'char', 'int', SIGNEDNESS, 'float', 'double', 'void', '_Bool', 'struct', 'union', 'enum'
+      _failure(_expect3);
     }
-    // <= FunctionTypeNoReturn / FunctionTypeSynonym / FunctionPointerTypeSynonym / ArrayTypeSynonym / PointerTypeSynonym / SimpleTypeSynonym # Choice
-    if (_cacheable[43]) {
-      _addToCache($$, pos, 43);
+    // <= DefinedType / IntegerType / FloatType / VoidType / BoolType / StructureType / EnumType # Choice
+    if (_cacheable[20]) {
+      _addToCache($$, pos, 20);
     }    
     return $$;
   }
   
-  dynamic _parse_TypeSynonymList() {
+  dynamic _parse_TypeDeclarator() {
     // SENTENCE (NONTERMINAL)
-    // TypeSynonymList <- TypeSynonym (COMMA TypeSynonym)*
+    // TypeDeclarator <- FunctionDeclarator / FunctionPointerDeclarator / DeclaratorNotAbstract / TypedefFunctionDeclarator
+    var $$;          
+    var pos = _cursor;             
+    if(_cachePos[51] >= pos) {
+      $$ = _getFromCache(51);
+      if($$ != null) {
+        return $$[0];       
+      }
+    } else {
+      _cachePos[51] = pos;
+    }  
+    // => FunctionDeclarator / FunctionPointerDeclarator / DeclaratorNotAbstract / TypedefFunctionDeclarator # Choice
+    switch (_getState(_transitions26)) {
+      // [(]
+      case 0:
+        while (true) {
+          var startPos0 = _startPos;
+          _startPos = _cursor;
+          // => FunctionPointerDeclarator
+          $$ = _parse_FunctionPointerDeclarator();
+          // <= FunctionPointerDeclarator
+          _startPos = startPos0;
+          if (success) break;
+          var startPos1 = _startPos;
+          _startPos = _cursor;
+          // => TypedefFunctionDeclarator
+          $$ = _parse_TypedefFunctionDeclarator();
+          // <= TypedefFunctionDeclarator
+          _startPos = startPos1;
+          break;
+        }
+        break;
+      // [*]
+      case 1:
+        while (true) {
+          var startPos2 = _startPos;
+          _startPos = _cursor;
+          // => FunctionDeclarator
+          $$ = _parse_FunctionDeclarator();
+          // <= FunctionDeclarator
+          _startPos = startPos2;
+          if (success) break;
+          var startPos3 = _startPos;
+          _startPos = _cursor;
+          // => FunctionPointerDeclarator
+          $$ = _parse_FunctionPointerDeclarator();
+          // <= FunctionPointerDeclarator
+          _startPos = startPos3;
+          if (success) break;
+          var startPos4 = _startPos;
+          _startPos = _cursor;
+          // => DeclaratorNotAbstract
+          $$ = _parse_DeclaratorNotAbstract();
+          // <= DeclaratorNotAbstract
+          _startPos = startPos4;
+          if (success) break;
+          var startPos5 = _startPos;
+          _startPos = _cursor;
+          // => TypedefFunctionDeclarator
+          $$ = _parse_TypedefFunctionDeclarator();
+          // <= TypedefFunctionDeclarator
+          _startPos = startPos5;
+          break;
+        }
+        break;
+      // [A-Z] [_] [a-z]
+      // EOF
+      case 2:
+      case 4:
+        while (true) {
+          var startPos6 = _startPos;
+          _startPos = _cursor;
+          // => FunctionDeclarator
+          $$ = _parse_FunctionDeclarator();
+          // <= FunctionDeclarator
+          _startPos = startPos6;
+          if (success) break;
+          var startPos7 = _startPos;
+          _startPos = _cursor;
+          // => DeclaratorNotAbstract
+          $$ = _parse_DeclaratorNotAbstract();
+          // <= DeclaratorNotAbstract
+          _startPos = startPos7;
+          break;
+        }
+        break;
+      // No matches
+      case 3:
+        $$ = null;
+        success = false;
+        break;
+    }
+    if (!success && _cursor > _testing) {
+      // Expected: Identifier, '('
+      _failure(_expect26);
+    }
+    // <= FunctionDeclarator / FunctionPointerDeclarator / DeclaratorNotAbstract / TypedefFunctionDeclarator # Choice
+    if (_cacheable[51]) {
+      _addToCache($$, pos, 51);
+    }    
+    return $$;
+  }
+  
+  dynamic _parse_TypeDeclaratorList() {
+    // SENTENCE (NONTERMINAL)
+    // TypeDeclaratorList <- TypeDeclarator (COMMA TypeDeclarator)*
     var $$;
-    // => TypeSynonym (COMMA TypeSynonym)* # Choice
-    switch (_ch >= 0 && _ch <= 1114111 ? 0 : _ch == -1 ? 2 : 1) {
-      // [\u0000-\u0010ffff]
+    // => TypeDeclarator (COMMA TypeDeclarator)* # Choice
+    switch (_getState(_transitions25)) {
+      // [(] [*] [A-Z] [_] [a-z]
       // EOF
       case 0:
       case 2:
-        // => TypeSynonym (COMMA TypeSynonym)* # Sequence
+        // => TypeDeclarator (COMMA TypeDeclarator)* # Sequence
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
         _startPos = _cursor;
         while (true) {  
-          // => TypeSynonym
-          $$ = _parse_TypeSynonym();
-          // <= TypeSynonym
+          // => TypeDeclarator
+          $$ = _parse_TypeDeclarator();
+          // <= TypeDeclarator
           if (!success) break;
           var seq = new List(2)..[0] = $$;
-          // => (COMMA TypeSynonym)*
+          // => (COMMA TypeDeclarator)*
           var testing0 = _testing; 
           for (var reps = []; ; ) {
             _testing = _cursor;
-            // => (COMMA TypeSynonym) # Choice
+            // => (COMMA TypeDeclarator) # Choice
             switch (_ch == 44 ? 0 : _ch == -1 ? 2 : 1) {
               // [,]
               case 0:
-                // => COMMA TypeSynonym # Sequence
+                // => COMMA TypeDeclarator # Sequence
                 var ch1 = _ch, pos1 = _cursor, startPos1 = _startPos;
                 _startPos = _cursor;
                 while (true) {  
@@ -10615,9 +11050,9 @@ class CParser {
                   // <= COMMA
                   if (!success) break;
                   var seq = new List(2)..[0] = $$;
-                  // => TypeSynonym
-                  $$ = _parse_TypeSynonym();
-                  // <= TypeSynonym
+                  // => TypeDeclarator
+                  $$ = _parse_TypeDeclarator();
+                  // <= TypeDeclarator
                   if (!success) break;
                   seq[1] = $$;
                   $$ = seq;
@@ -10628,7 +11063,7 @@ class CParser {
                   _cursor = pos1;
                 }
                 _startPos = startPos1;
-                // <= COMMA TypeSynonym # Sequence
+                // <= COMMA TypeDeclarator # Sequence
                 break;
               // No matches
               // EOF
@@ -10642,7 +11077,7 @@ class CParser {
               // Expected: ','
               _failure(_expect6);
             }
-            // <= (COMMA TypeSynonym) # Choice
+            // <= (COMMA TypeDeclarator) # Choice
             if (success) {  
               reps.add($$);
             } else {
@@ -10652,14 +11087,14 @@ class CParser {
               break; 
             }
           }
-          // <= (COMMA TypeSynonym)*
+          // <= (COMMA TypeDeclarator)*
           if (!success) break;
           seq[1] = $$;
           $$ = seq;
           if (success) {    
-            // TypeSynonym
+            // TypeDeclarator
             final $1 = seq[0];
-            // (COMMA TypeSynonym)*
+            // (COMMA TypeDeclarator)*
             final $2 = seq[1];
             final $start = startPos0;
             $$ = _list($1, $2);
@@ -10671,7 +11106,7 @@ class CParser {
           _cursor = pos0;
         }
         _startPos = startPos0;
-        // <= TypeSynonym (COMMA TypeSynonym)* # Sequence
+        // <= TypeDeclarator (COMMA TypeDeclarator)* # Sequence
         break;
       // No matches
       case 1:
@@ -10680,238 +11115,58 @@ class CParser {
         break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: IDENTIFIER, '(', '*'
-      _failure(_expect20);
+      // Expected: Identifier, '('
+      _failure(_expect26);
     }
-    // <= TypeSynonym (COMMA TypeSynonym)* # Choice
+    // <= TypeDeclarator (COMMA TypeDeclarator)* # Choice
     return $$;
   }
   
-  dynamic _parse_TypeSynonymNoMetadata() {
+  dynamic _parse_TypeQualifier() {
     // SENTENCE (NONTERMINAL)
-    // TypeSynonymNoMetadata <- ArrayTypeSynonym / PointerTypeSynonymNoMetadata / SimpleTypeSynonymNoMetadata
+    // TypeQualifier <- (Const / Volatile) Metadata?
     var $$;
-    // => ArrayTypeSynonym / PointerTypeSynonymNoMetadata / SimpleTypeSynonymNoMetadata # Choice
-    switch (_ch >= 0 && _ch <= 1114111 ? 0 : _ch == -1 ? 2 : 1) {
-      // [\u0000-\u0010ffff]
+    // => (Const / Volatile) Metadata? # Choice
+    switch (_getState(_transitions5)) {
+      // [c] [v]
       case 0:
-        while (true) {
-          var startPos0 = _startPos;
-          _startPos = _cursor;
-          // => ArrayTypeSynonym
-          $$ = _parse_ArrayTypeSynonym();
-          // <= ArrayTypeSynonym
-          _startPos = startPos0;
-          if (success) break;
-          var startPos1 = _startPos;
-          _startPos = _cursor;
-          // => PointerTypeSynonymNoMetadata
-          $$ = _parse_PointerTypeSynonymNoMetadata();
-          // <= PointerTypeSynonymNoMetadata
-          _startPos = startPos1;
-          if (success) break;
-          var startPos2 = _startPos;
-          _startPos = _cursor;
-          // => SimpleTypeSynonymNoMetadata
-          $$ = _parse_SimpleTypeSynonymNoMetadata();
-          // <= SimpleTypeSynonymNoMetadata
-          _startPos = startPos2;
-          break;
-        }
-        break;
-      // No matches
-      case 1:
-        $$ = null;
-        success = false;
-        break;
-      // EOF
-      case 2:
-        while (true) {
-          var startPos3 = _startPos;
-          _startPos = _cursor;
-          // => ArrayTypeSynonym
-          $$ = _parse_ArrayTypeSynonym();
-          // <= ArrayTypeSynonym
-          _startPos = startPos3;
-          if (success) break;
-          var startPos4 = _startPos;
-          _startPos = _cursor;
-          // => SimpleTypeSynonymNoMetadata
-          $$ = _parse_SimpleTypeSynonymNoMetadata();
-          // <= SimpleTypeSynonymNoMetadata
-          _startPos = startPos4;
-          break;
-        }
-        break;
-    }
-    if (!success && _cursor > _testing) {
-      // Expected: IDENTIFIER, '*'
-      _failure(_expect21);
-    }
-    // <= ArrayTypeSynonym / PointerTypeSynonymNoMetadata / SimpleTypeSynonymNoMetadata # Choice
-    return $$;
-  }
-  
-  dynamic _parse_TypeVariableDeclaration() {
-    // SENTENCE (NONTERMINAL)
-    // TypeVariableDeclaration <- Metadata? Type IdentifierMD
-    var $$;
-    // => Metadata? Type IdentifierMD # Choice
-    switch (_ch >= 0 && _ch <= 1114111 ? 0 : _ch == -1 ? 2 : 1) {
-      // [\u0000-\u0010ffff]
-      // EOF
-      case 0:
-      case 2:
-        // => Metadata? Type IdentifierMD # Sequence
+        // => (Const / Volatile) Metadata? # Sequence
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
         _startPos = _cursor;
         while (true) {  
-          // => Metadata?
-          var testing0 = _testing;
-          _testing = _cursor;
-          // => Metadata
-          $$ = _parse_Metadata();
-          // <= Metadata
-          success = true; 
-          _testing = testing0;
-          // <= Metadata?
-          if (!success) break;
-          var seq = new List(3)..[0] = $$;
-          // => Type
-          $$ = _parse_Type();
-          // <= Type
-          if (!success) break;
-          seq[1] = $$;
-          // => IdentifierMD
-          $$ = _parse_IdentifierMD();
-          // <= IdentifierMD
-          if (!success) break;
-          seq[2] = $$;
-          $$ = seq;
-          if (success) {    
-            // Metadata?
-            final $1 = seq[0];
-            // Type
-            final $2 = seq[1];
-            // IdentifierMD
-            final $3 = seq[2];
-            final $start = startPos0;
-            $$ = new VariableDeclaration(identifier: $3, metadata: $1, type: $2);
+          // => (Const / Volatile) # Choice
+          switch (_getState(_transitions6)) {
+            // [c]
+            case 0:
+              var startPos1 = _startPos;
+              _startPos = _cursor;
+              // => Const
+              $$ = _parse_Const();
+              // <= Const
+              _startPos = startPos1;
+              break;
+            // [v]
+            case 1:
+              var startPos2 = _startPos;
+              _startPos = _cursor;
+              // => Volatile
+              $$ = _parse_Volatile();
+              // <= Volatile
+              _startPos = startPos2;
+              break;
+            // No matches
+            // EOF
+            case 2:
+            case 3:
+              $$ = null;
+              success = false;
+              break;
           }
-          break;
-        }
-        if (!success) {
-          _ch = ch0;
-          _cursor = pos0;
-        }
-        _startPos = startPos0;
-        // <= Metadata? Type IdentifierMD # Sequence
-        break;
-      // No matches
-      case 1:
-        $$ = null;
-        success = false;
-        break;
-    }
-    if (!success && _cursor > _testing) {
-      // Expected: 'struct', 'union', 'enum', IDENTIFIER, 'short', 'long', 'char', 'int', SIGNEDNESS, 'float', 'double', 'void'
-      _failure(_expect8);
-    }
-    // <= Metadata? Type IdentifierMD # Choice
-    return $$;
-  }
-  
-  dynamic _parse_TypedefDeclaration() {
-    // SENTENCE (NONTERMINAL)
-    // TypedefDeclaration <- Metadata? TypedefSpecifier TypedefType TypeSynonymList
-    var $$;
-    // => Metadata? TypedefSpecifier TypedefType TypeSynonymList # Choice
-    switch (_getState(_transitions12)) {
-      // [_] [t]
-      case 0:
-        // => Metadata? TypedefSpecifier TypedefType TypeSynonymList # Sequence
-        var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
-        _startPos = _cursor;
-        while (true) {  
-          // => Metadata?
-          var testing0 = _testing;
-          _testing = _cursor;
-          // => Metadata
-          $$ = _parse_Metadata();
-          // <= Metadata
-          success = true; 
-          _testing = testing0;
-          // <= Metadata?
-          if (!success) break;
-          var seq = new List(4)..[0] = $$;
-          // => TypedefSpecifier
-          $$ = _parse_TypedefSpecifier();
-          // <= TypedefSpecifier
-          if (!success) break;
-          seq[1] = $$;
-          // => TypedefType
-          $$ = _parse_TypedefType();
-          // <= TypedefType
-          if (!success) break;
-          seq[2] = $$;
-          // => TypeSynonymList
-          $$ = _parse_TypeSynonymList();
-          // <= TypeSynonymList
-          if (!success) break;
-          seq[3] = $$;
-          $$ = seq;
-          if (success) {    
-            // Metadata?
-            final $1 = seq[0];
-            // TypedefSpecifier
-            final $2 = seq[1];
-            // TypedefType
-            final $3 = seq[2];
-            // TypeSynonymList
-            final $4 = seq[3];
-            final $start = startPos0;
-            $$ = new TypedefDeclaration(metadata: $1, synonyms: $4, type: $3, typedef: $2);
+          if (!success && _cursor > _testing) {
+            // Expected: 'const', 'volatile'
+            _failure(_expect8);
           }
-          break;
-        }
-        if (!success) {
-          _ch = ch0;
-          _cursor = pos0;
-        }
-        _startPos = startPos0;
-        // <= Metadata? TypedefSpecifier TypedefType TypeSynonymList # Sequence
-        break;
-      // No matches
-      // EOF
-      case 1:
-      case 2:
-        $$ = null;
-        success = false;
-        break;
-    }
-    if (!success && _cursor > _testing) {
-      // Expected: 'typedef'
-      _failure(_expect19);
-    }
-    // <= Metadata? TypedefSpecifier TypedefType TypeSynonymList # Choice
-    return $$;
-  }
-  
-  dynamic _parse_TypedefSpecifier() {
-    // SENTENCE (NONTERMINAL)
-    // TypedefSpecifier <- TYPEDEF Metadata?
-    var $$;
-    // => TYPEDEF Metadata? # Choice
-    switch (_ch == 116 ? 0 : _ch == -1 ? 2 : 1) {
-      // [t]
-      case 0:
-        // => TYPEDEF Metadata? # Sequence
-        var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
-        _startPos = _cursor;
-        while (true) {  
-          // => TYPEDEF
-          $$ = _parse_TYPEDEF();
-          // <= TYPEDEF
+          // <= (Const / Volatile) # Choice
           if (!success) break;
           var seq = new List(2)..[0] = $$;
           // => Metadata?
@@ -10927,12 +11182,12 @@ class CParser {
           seq[1] = $$;
           $$ = seq;
           if (success) {    
-            // TYPEDEF
+            // (Const / Volatile)
             final $1 = seq[0];
             // Metadata?
             final $2 = seq[1];
             final $start = startPos0;
-            $$ = new TypedefSpecifier(metadata: $2);
+            $$ = new TypeQualifier(identifier: $1, metadata: $2);
           }
           break;
         }
@@ -10941,7 +11196,167 @@ class CParser {
           _cursor = pos0;
         }
         _startPos = startPos0;
-        // <= TYPEDEF Metadata? # Sequence
+        // <= (Const / Volatile) Metadata? # Sequence
+        break;
+      // No matches
+      // EOF
+      case 1:
+      case 2:
+        $$ = null;
+        success = false;
+        break;
+    }
+    if (!success && _cursor > _testing) {
+      // Expected: 'const', 'volatile'
+      _failure(_expect8);
+    }
+    // <= (Const / Volatile) Metadata? # Choice
+    return $$;
+  }
+  
+  dynamic _parse_TypeQualifiers() {
+    // SENTENCE (NONTERMINAL)
+    // TypeQualifiers <- TypeQualifier+
+    var $$;          
+    var pos = _cursor;             
+    if(_cachePos[10] >= pos) {
+      $$ = _getFromCache(10);
+      if($$ != null) {
+        return $$[0];       
+      }
+    } else {
+      _cachePos[10] = pos;
+    }  
+    // => TypeQualifier+ # Choice
+    switch (_getState(_transitions5)) {
+      // [c] [v]
+      case 0:
+        var startPos0 = _startPos;
+        _startPos = _cursor;
+        // => TypeQualifier+
+        var testing0;
+        for (var first = true, reps; ;) {  
+          // => TypeQualifier  
+          $$ = _parse_TypeQualifier();  
+          // <= TypeQualifier  
+          if (success) {
+           if (first) {      
+              first = false;
+              reps = [$$];
+              testing0 = _testing;                  
+            } else {
+              reps.add($$);
+            }
+            _testing = _cursor;   
+          } else {
+            success = !first;
+            if (success) {      
+              _testing = testing0;
+              $$ = reps;      
+            } else $$ = null;
+            break;
+          }  
+        }
+        // <= TypeQualifier+
+        if (success) {    
+          // TypeQualifier+
+          final $1 = $$;
+          final $start = startPos0;
+          $$ = new TypeQualifiers($1);
+        }
+        _startPos = startPos0;
+        break;
+      // No matches
+      // EOF
+      case 1:
+      case 2:
+        $$ = null;
+        success = false;
+        break;
+    }
+    if (!success && _cursor > _testing) {
+      // Expected: 'const', 'volatile'
+      _failure(_expect8);
+    }
+    // <= TypeQualifier+ # Choice
+    if (_cacheable[10]) {
+      _addToCache($$, pos, 10);
+    }    
+    return $$;
+  }
+  
+  dynamic _parse_TypedefDeclaration() {
+    // SENTENCE (NONTERMINAL)
+    // TypedefDeclaration <- Metadata? TypeQualifiers? TypedefSpecifier Type TypeDeclaratorList
+    var $$;
+    // => Metadata? TypeQualifiers? TypedefSpecifier Type TypeDeclaratorList # Choice
+    switch (_getState(_transitions24)) {
+      // [_] [c] [t] [v]
+      case 0:
+        // => Metadata? TypeQualifiers? TypedefSpecifier Type TypeDeclaratorList # Sequence
+        var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
+        _startPos = _cursor;
+        while (true) {  
+          // => Metadata?
+          var testing0 = _testing;
+          _testing = _cursor;
+          // => Metadata
+          $$ = _parse_Metadata();
+          // <= Metadata
+          success = true; 
+          _testing = testing0;
+          // <= Metadata?
+          if (!success) break;
+          var seq = new List(5)..[0] = $$;
+          // => TypeQualifiers?
+          var testing1 = _testing;
+          _testing = _cursor;
+          // => TypeQualifiers
+          $$ = _parse_TypeQualifiers();
+          // <= TypeQualifiers
+          success = true; 
+          _testing = testing1;
+          // <= TypeQualifiers?
+          if (!success) break;
+          seq[1] = $$;
+          // => TypedefSpecifier
+          $$ = _parse_TypedefSpecifier();
+          // <= TypedefSpecifier
+          if (!success) break;
+          seq[2] = $$;
+          // => Type
+          $$ = _parse_Type();
+          // <= Type
+          if (!success) break;
+          seq[3] = $$;
+          // => TypeDeclaratorList
+          $$ = _parse_TypeDeclaratorList();
+          // <= TypeDeclaratorList
+          if (!success) break;
+          seq[4] = $$;
+          $$ = seq;
+          if (success) {    
+            // Metadata?
+            final $1 = seq[0];
+            // TypeQualifiers?
+            final $2 = seq[1];
+            // TypedefSpecifier
+            final $3 = seq[2];
+            // Type
+            final $4 = seq[3];
+            // TypeDeclaratorList
+            final $5 = seq[4];
+            final $start = startPos0;
+            $$ = new TypedefDeclaration(declarators: $5, metadata: $1, qualifiers: $2, type: $4, typedef: $3);
+          }
+          break;
+        }
+        if (!success) {
+          _ch = ch0;
+          _cursor = pos0;
+        }
+        _startPos = startPos0;
+        // <= Metadata? TypeQualifiers? TypedefSpecifier Type TypeDeclaratorList # Sequence
         break;
       // No matches
       // EOF
@@ -10953,78 +11368,180 @@ class CParser {
     }
     if (!success && _cursor > _testing) {
       // Expected: 'typedef'
-      _failure(_expect19);
+      _failure(_expect25);
     }
-    // <= TYPEDEF Metadata? # Choice
+    // <= Metadata? TypeQualifiers? TypedefSpecifier Type TypeDeclaratorList # Choice
     return $$;
   }
   
-  dynamic _parse_TypedefType() {
+  dynamic _parse_TypedefFunctionDeclarator() {
     // SENTENCE (NONTERMINAL)
-    // TypedefType <- StructureType / EnumType / PrimitiveType
+    // TypedefFunctionDeclarator <- PointerSpecifiers? OPEN_PAREN Identifier CLOSE_PAREN FunctionParameters Metadata?
     var $$;
-    // => StructureType / EnumType / PrimitiveType # Choice
-    switch (_getState(_transitions3)) {
-      // [\u0000-d] [f-r] [t] [v-\u0010ffff]
-      // EOF
+    // => PointerSpecifiers? OPEN_PAREN Identifier CLOSE_PAREN FunctionParameters Metadata? # Choice
+    switch (_getState(_transitions21)) {
+      // [(] [*]
       case 0:
-      case 4:
-        var startPos0 = _startPos;
+        // => PointerSpecifiers? OPEN_PAREN Identifier CLOSE_PAREN FunctionParameters Metadata? # Sequence
+        var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
         _startPos = _cursor;
-        // => PrimitiveType
-        $$ = _parse_PrimitiveType();
-        // <= PrimitiveType
+        while (true) {  
+          // => PointerSpecifiers?
+          var testing0 = _testing;
+          _testing = _cursor;
+          // => PointerSpecifiers
+          $$ = _parse_PointerSpecifiers();
+          // <= PointerSpecifiers
+          success = true; 
+          _testing = testing0;
+          // <= PointerSpecifiers?
+          if (!success) break;
+          var seq = new List(6)..[0] = $$;
+          // => OPEN_PAREN
+          $$ = _parse_OPEN_PAREN();
+          // <= OPEN_PAREN
+          if (!success) break;
+          seq[1] = $$;
+          // => Identifier
+          $$ = _parse_Identifier();
+          // <= Identifier
+          if (!success) break;
+          seq[2] = $$;
+          // => CLOSE_PAREN
+          $$ = _parse_CLOSE_PAREN();
+          // <= CLOSE_PAREN
+          if (!success) break;
+          seq[3] = $$;
+          // => FunctionParameters
+          $$ = _parse_FunctionParameters();
+          // <= FunctionParameters
+          if (!success) break;
+          seq[4] = $$;
+          // => Metadata?
+          var testing1 = _testing;
+          _testing = _cursor;
+          // => Metadata
+          $$ = _parse_Metadata();
+          // <= Metadata
+          success = true; 
+          _testing = testing1;
+          // <= Metadata?
+          if (!success) break;
+          seq[5] = $$;
+          $$ = seq;
+          if (success) {    
+            // PointerSpecifiers?
+            final $1 = seq[0];
+            // OPEN_PAREN
+            final $2 = seq[1];
+            // Identifier
+            final $3 = seq[2];
+            // CLOSE_PAREN
+            final $4 = seq[3];
+            // FunctionParameters
+            final $5 = seq[4];
+            // Metadata?
+            final $6 = seq[5];
+            final $start = startPos0;
+            $$ = new Declarator(identifier: $3, metadata: $6, parameters: $5, pointers: $1);
+          }
+          break;
+        }
+        if (!success) {
+          _ch = ch0;
+          _cursor = pos0;
+        }
         _startPos = startPos0;
-        break;
-      // [e]
-      case 1:
-        while (true) {
-          var startPos1 = _startPos;
-          _startPos = _cursor;
-          // => EnumType
-          $$ = _parse_EnumType();
-          // <= EnumType
-          _startPos = startPos1;
-          if (success) break;
-          var startPos2 = _startPos;
-          _startPos = _cursor;
-          // => PrimitiveType
-          $$ = _parse_PrimitiveType();
-          // <= PrimitiveType
-          _startPos = startPos2;
-          break;
-        }
-        break;
-      // [s] [u]
-      case 2:
-        while (true) {
-          var startPos3 = _startPos;
-          _startPos = _cursor;
-          // => StructureType
-          $$ = _parse_StructureType();
-          // <= StructureType
-          _startPos = startPos3;
-          if (success) break;
-          var startPos4 = _startPos;
-          _startPos = _cursor;
-          // => PrimitiveType
-          $$ = _parse_PrimitiveType();
-          // <= PrimitiveType
-          _startPos = startPos4;
-          break;
-        }
+        // <= PointerSpecifiers? OPEN_PAREN Identifier CLOSE_PAREN FunctionParameters Metadata? # Sequence
         break;
       // No matches
-      case 3:
+      // EOF
+      case 1:
+      case 2:
         $$ = null;
         success = false;
         break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: 'struct', 'union', 'enum', IDENTIFIER, 'short', 'long', 'char', 'int', SIGNEDNESS, 'float', 'double', 'void'
-      _failure(_expect8);
+      // Expected: '('
+      _failure(_expect11);
     }
-    // <= StructureType / EnumType / PrimitiveType # Choice
+    // <= PointerSpecifiers? OPEN_PAREN Identifier CLOSE_PAREN FunctionParameters Metadata? # Choice
+    return $$;
+  }
+  
+  dynamic _parse_TypedefSpecifier() {
+    // SENTENCE (NONTERMINAL)
+    // TypedefSpecifier <- TYPEDEF Metadata? TypeQualifiers?
+    var $$;
+    // => TYPEDEF Metadata? TypeQualifiers? # Choice
+    switch (_ch == 116 ? 0 : _ch == -1 ? 2 : 1) {
+      // [t]
+      case 0:
+        // => TYPEDEF Metadata? TypeQualifiers? # Sequence
+        var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
+        _startPos = _cursor;
+        while (true) {  
+          // => TYPEDEF
+          $$ = _parse_TYPEDEF();
+          // <= TYPEDEF
+          if (!success) break;
+          var seq = new List(3)..[0] = $$;
+          // => Metadata?
+          var testing0 = _testing;
+          _testing = _cursor;
+          // => Metadata
+          $$ = _parse_Metadata();
+          // <= Metadata
+          success = true; 
+          _testing = testing0;
+          // <= Metadata?
+          if (!success) break;
+          seq[1] = $$;
+          // => TypeQualifiers?
+          var testing1 = _testing;
+          _testing = _cursor;
+          // => TypeQualifiers
+          $$ = _parse_TypeQualifiers();
+          // <= TypeQualifiers
+          success = true; 
+          _testing = testing1;
+          // <= TypeQualifiers?
+          if (!success) break;
+          seq[2] = $$;
+          $$ = seq;
+          if (success) {    
+            // TYPEDEF
+            final $1 = seq[0];
+            // Metadata?
+            final $2 = seq[1];
+            // TypeQualifiers?
+            final $3 = seq[2];
+            final $start = startPos0;
+            $$ = new TypedefSpecifier(metadata: $2, qualifiers: $3);
+          }
+          break;
+        }
+        if (!success) {
+          _ch = ch0;
+          _cursor = pos0;
+        }
+        _startPos = startPos0;
+        // <= TYPEDEF Metadata? TypeQualifiers? # Sequence
+        break;
+      // No matches
+      // EOF
+      case 1:
+      case 2:
+        $$ = null;
+        success = false;
+        break;
+    }
+    if (!success && _cursor > _testing) {
+      // Expected: 'typedef'
+      _failure(_expect25);
+    }
+    // <= TYPEDEF Metadata? TypeQualifiers? # Choice
     return $$;
   }
   
@@ -11033,15 +11550,15 @@ class CParser {
     // UNION <- 'union' !IDENT_PART SPACING
     var $$;          
     var pos = _cursor;             
-    if(_cachePos[88] >= pos) {
-      $$ = _getFromCache(88);
+    if(_cachePos[87] >= pos) {
+      $$ = _getFromCache(87);
       if($$ != null) {
         return $$[0];       
       }
     } else {
-      _cachePos[88] = pos;
+      _cachePos[87] = pos;
     }  
-    _token = 30;    
+    _token = 31;    
     _tokenStart = _cursor;    
     // => 'union' !IDENT_PART SPACING # Choice
     switch (_ch == 117 ? 0 : _ch == -1 ? 2 : 1) {
@@ -11052,7 +11569,7 @@ class CParser {
         _startPos = _cursor;
         while (true) {  
           // => 'union'
-          $$ = _matchString(_strings10, 'union');
+          $$ = _matchString(_strings11, 'union');
           // <= 'union'
           if (!success) break;
           var seq = new List(3)..[0] = $$;
@@ -11105,11 +11622,11 @@ class CParser {
     }
     if (!success && _cursor > _testing) {
       // Expected: 'union'
-      _failure(_expect42);
+      _failure(_expect45);
     }
     // <= 'union' !IDENT_PART SPACING # Choice
-    if (_cacheable[88]) {
-      _addToCache($$, pos, 88);
+    if (_cacheable[87]) {
+      _addToCache($$, pos, 87);
     }    
     _token = null;
     _tokenStart = null;
@@ -11208,7 +11725,7 @@ class CParser {
     }
     if (!success && _cursor > _testing) {
       // Expected: \U, \u
-      _failure(_expect56);
+      _failure(_expect59);
     }
     // <= '\\U' HEX_QUAD HEX_QUAD / '\\u' HEX_QUAD # Choice
     return $$;
@@ -11280,7 +11797,7 @@ class CParser {
     }
     if (!success && _cursor > _testing) {
       // Expected: unsigned
-      _failure(_expect57);
+      _failure(_expect60);
     }
     // <= 'unsigned' !IDENT_PART SPACING # Choice
     return $$;
@@ -11288,24 +11805,24 @@ class CParser {
   
   dynamic _parse_VA_LIST_PARAMETER() {
     // LEXEME (TOKEN)
-    // VA_LIST_PARAMETER <- ELLIPSIS
+    // VA_LIST_PARAMETER <- VA_LIST_TYPE
     var $$;
-    _token = 31;  
+    _token = 32;  
     _tokenStart = _cursor;  
-    // => ELLIPSIS # Choice
+    // => VA_LIST_TYPE # Choice
     switch (_ch == 46 ? 0 : _ch == -1 ? 2 : 1) {
       // [.]
       case 0:
         var startPos0 = _startPos;
         _startPos = _cursor;
-        // => ELLIPSIS
-        $$ = _parse_ELLIPSIS();
-        // <= ELLIPSIS
+        // => VA_LIST_TYPE
+        $$ = _parse_VA_LIST_TYPE();
+        // <= VA_LIST_TYPE
         if (success) {    
-          // ELLIPSIS
+          // VA_LIST_TYPE
           final $1 = $$;
           final $start = startPos0;
-          $$ = new ParameterDeclaration(type: new VaListTypeSpecification());
+          $$ = new ParameterDeclaration(type: $1);
         }
         _startPos = startPos0;
         break;
@@ -11319,11 +11836,48 @@ class CParser {
     }
     if (!success && _cursor > _testing) {
       // Expected: '...'
-      _failure(_expect43);
+      _failure(_expect46);
     }
-    // <= ELLIPSIS # Choice
+    // <= VA_LIST_TYPE # Choice
     _token = null;
     _tokenStart = null;
+    return $$;
+  }
+  
+  dynamic _parse_VA_LIST_TYPE() {
+    // MORHEME
+    // VA_LIST_TYPE <- ELLIPSIS
+    var $$;
+    // => ELLIPSIS # Choice
+    switch (_ch == 46 ? 0 : _ch == -1 ? 2 : 1) {
+      // [.]
+      case 0:
+        var startPos0 = _startPos;
+        _startPos = _cursor;
+        // => ELLIPSIS
+        $$ = _parse_ELLIPSIS();
+        // <= ELLIPSIS
+        if (success) {    
+          // ELLIPSIS
+          final $1 = $$;
+          final $start = startPos0;
+          $$ = new VaListTypeSpecification();
+        }
+        _startPos = startPos0;
+        break;
+      // No matches
+      // EOF
+      case 1:
+      case 2:
+        $$ = null;
+        success = false;
+        break;
+    }
+    if (!success && _cursor > _testing) {
+      // Expected: ...
+      _failure(_expect51);
+    }
+    // <= ELLIPSIS # Choice
     return $$;
   }
   
@@ -11331,7 +11885,7 @@ class CParser {
     // LEXEME (TOKEN)
     // VOID <- 'void' !IDENT_PART SPACING
     var $$;
-    _token = 32;  
+    _token = 33;  
     _tokenStart = _cursor;  
     // => 'void' !IDENT_PART SPACING # Choice
     switch (_ch == 118 ? 0 : _ch == -1 ? 2 : 1) {
@@ -11342,7 +11896,7 @@ class CParser {
         _startPos = _cursor;
         while (true) {  
           // => 'void'
-          $$ = _matchString(_strings11, 'void');
+          $$ = _matchString(_strings12, 'void');
           // <= 'void'
           if (!success) break;
           var seq = new List(3)..[0] = $$;
@@ -11395,7 +11949,7 @@ class CParser {
     }
     if (!success && _cursor > _testing) {
       // Expected: 'void'
-      _failure(_expect44);
+      _failure(_expect16);
     }
     // <= 'void' !IDENT_PART SPACING # Choice
     _token = null;
@@ -11403,39 +11957,129 @@ class CParser {
     return $$;
   }
   
+  dynamic _parse_VOLATILE() {
+    // MORHEME
+    // VOLATILE <- 'volatile' SPACING
+    var $$;
+    // => 'volatile' SPACING # Choice
+    switch (_ch == 118 ? 0 : _ch == -1 ? 2 : 1) {
+      // [v]
+      case 0:
+        // => 'volatile' SPACING # Sequence
+        var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
+        _startPos = _cursor;
+        while (true) {  
+          // => 'volatile'
+          $$ = _matchString(_strings41, 'volatile');
+          // <= 'volatile'
+          if (!success) break;
+          var seq = new List(2)..[0] = $$;
+          // => SPACING
+          $$ = _parse_SPACING();
+          // <= SPACING
+          if (!success) break;
+          seq[1] = $$;
+          $$ = seq;
+          if (success) {    
+            // 'volatile'
+            final $1 = seq[0];
+            // SPACING
+            final $2 = seq[1];
+            final $start = startPos0;
+            $$ = $1;
+          }
+          break;
+        }
+        if (!success) {
+          _ch = ch0;
+          _cursor = pos0;
+        }
+        _startPos = startPos0;
+        // <= 'volatile' SPACING # Sequence
+        break;
+      // No matches
+      // EOF
+      case 1:
+      case 2:
+        $$ = null;
+        success = false;
+        break;
+    }
+    if (!success && _cursor > _testing) {
+      // Expected: volatile
+      _failure(_expect61);
+    }
+    // <= 'volatile' SPACING # Choice
+    return $$;
+  }
+  
   dynamic _parse_VariableDeclaration() {
     // SENTENCE (NONTERMINAL)
-    // VariableDeclaration <- ArrayVariableDeclaration / PointerVariableDeclaration / TypeVariableDeclaration
+    // VariableDeclaration <- Metadata? TypeQualifiers? Type VariableDeclaratorList
     var $$;
-    // => ArrayVariableDeclaration / PointerVariableDeclaration / TypeVariableDeclaration # Choice
-    switch (_ch >= 0 && _ch <= 1114111 ? 0 : _ch == -1 ? 2 : 1) {
-      // [\u0000-\u0010ffff]
+    // => Metadata? TypeQualifiers? Type VariableDeclaratorList # Choice
+    switch (_getState(_transitions2)) {
+      // [A-Z] [_] [a-z]
       // EOF
       case 0:
       case 2:
-        while (true) {
-          var startPos0 = _startPos;
-          _startPos = _cursor;
-          // => ArrayVariableDeclaration
-          $$ = _parse_ArrayVariableDeclaration();
-          // <= ArrayVariableDeclaration
-          _startPos = startPos0;
-          if (success) break;
-          var startPos1 = _startPos;
-          _startPos = _cursor;
-          // => PointerVariableDeclaration
-          $$ = _parse_PointerVariableDeclaration();
-          // <= PointerVariableDeclaration
-          _startPos = startPos1;
-          if (success) break;
-          var startPos2 = _startPos;
-          _startPos = _cursor;
-          // => TypeVariableDeclaration
-          $$ = _parse_TypeVariableDeclaration();
-          // <= TypeVariableDeclaration
-          _startPos = startPos2;
+        // => Metadata? TypeQualifiers? Type VariableDeclaratorList # Sequence
+        var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
+        _startPos = _cursor;
+        while (true) {  
+          // => Metadata?
+          var testing0 = _testing;
+          _testing = _cursor;
+          // => Metadata
+          $$ = _parse_Metadata();
+          // <= Metadata
+          success = true; 
+          _testing = testing0;
+          // <= Metadata?
+          if (!success) break;
+          var seq = new List(4)..[0] = $$;
+          // => TypeQualifiers?
+          var testing1 = _testing;
+          _testing = _cursor;
+          // => TypeQualifiers
+          $$ = _parse_TypeQualifiers();
+          // <= TypeQualifiers
+          success = true; 
+          _testing = testing1;
+          // <= TypeQualifiers?
+          if (!success) break;
+          seq[1] = $$;
+          // => Type
+          $$ = _parse_Type();
+          // <= Type
+          if (!success) break;
+          seq[2] = $$;
+          // => VariableDeclaratorList
+          $$ = _parse_VariableDeclaratorList();
+          // <= VariableDeclaratorList
+          if (!success) break;
+          seq[3] = $$;
+          $$ = seq;
+          if (success) {    
+            // Metadata?
+            final $1 = seq[0];
+            // TypeQualifiers?
+            final $2 = seq[1];
+            // Type
+            final $3 = seq[2];
+            // VariableDeclaratorList
+            final $4 = seq[3];
+            final $start = startPos0;
+            $$ = new VariableDeclaration(declarators: $4, metadata: $1, qualifiers: $2, type: $3);
+          }
           break;
         }
+        if (!success) {
+          _ch = ch0;
+          _cursor = pos0;
+        }
+        _startPos = startPos0;
+        // <= Metadata? TypeQualifiers? Type VariableDeclaratorList # Sequence
         break;
       // No matches
       case 1:
@@ -11444,10 +12088,277 @@ class CParser {
         break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: 'struct', 'union', 'enum', IDENTIFIER, 'short', 'long', 'char', 'int', SIGNEDNESS, 'float', 'double', 'void'
-      _failure(_expect8);
+      // Expected: Identifier, 'short', 'long', 'char', 'int', SIGNEDNESS, 'float', 'double', 'void', '_Bool', 'struct', 'union', 'enum'
+      _failure(_expect3);
     }
-    // <= ArrayVariableDeclaration / PointerVariableDeclaration / TypeVariableDeclaration # Choice
+    // <= Metadata? TypeQualifiers? Type VariableDeclaratorList # Choice
+    return $$;
+  }
+  
+  dynamic _parse_VariableDeclarator() {
+    // SENTENCE (NONTERMINAL)
+    // VariableDeclarator <- DeclaratorNotAbstract
+    var $$;          
+    var pos = _cursor;             
+    if(_cachePos[55] >= pos) {
+      $$ = _getFromCache(55);
+      if($$ != null) {
+        return $$[0];       
+      }
+    } else {
+      _cachePos[55] = pos;
+    }  
+    // => DeclaratorNotAbstract # Choice
+    switch (_getState(_transitions7)) {
+      // [*] [A-Z] [_] [a-z]
+      // EOF
+      case 0:
+      case 2:
+        var startPos0 = _startPos;
+        _startPos = _cursor;
+        // => DeclaratorNotAbstract
+        $$ = _parse_DeclaratorNotAbstract();
+        // <= DeclaratorNotAbstract
+        _startPos = startPos0;
+        break;
+      // No matches
+      case 1:
+        $$ = null;
+        success = false;
+        break;
+    }
+    if (!success && _cursor > _testing) {
+      // Expected: Identifier
+      _failure(_expect9);
+    }
+    // <= DeclaratorNotAbstract # Choice
+    if (_cacheable[55]) {
+      _addToCache($$, pos, 55);
+    }    
+    return $$;
+  }
+  
+  dynamic _parse_VariableDeclaratorList() {
+    // SENTENCE (NONTERMINAL)
+    // VariableDeclaratorList <- VariableDeclarator (COMMA VariableDeclarator)*
+    var $$;
+    // => VariableDeclarator (COMMA VariableDeclarator)* # Choice
+    switch (_getState(_transitions7)) {
+      // [*] [A-Z] [_] [a-z]
+      // EOF
+      case 0:
+      case 2:
+        // => VariableDeclarator (COMMA VariableDeclarator)* # Sequence
+        var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
+        _startPos = _cursor;
+        while (true) {  
+          // => VariableDeclarator
+          $$ = _parse_VariableDeclarator();
+          // <= VariableDeclarator
+          if (!success) break;
+          var seq = new List(2)..[0] = $$;
+          // => (COMMA VariableDeclarator)*
+          var testing0 = _testing; 
+          for (var reps = []; ; ) {
+            _testing = _cursor;
+            // => (COMMA VariableDeclarator) # Choice
+            switch (_ch == 44 ? 0 : _ch == -1 ? 2 : 1) {
+              // [,]
+              case 0:
+                // => COMMA VariableDeclarator # Sequence
+                var ch1 = _ch, pos1 = _cursor, startPos1 = _startPos;
+                _startPos = _cursor;
+                while (true) {  
+                  // => COMMA
+                  $$ = _parse_COMMA();
+                  // <= COMMA
+                  if (!success) break;
+                  var seq = new List(2)..[0] = $$;
+                  // => VariableDeclarator
+                  $$ = _parse_VariableDeclarator();
+                  // <= VariableDeclarator
+                  if (!success) break;
+                  seq[1] = $$;
+                  $$ = seq;
+                  break;
+                }
+                if (!success) {
+                  _ch = ch1;
+                  _cursor = pos1;
+                }
+                _startPos = startPos1;
+                // <= COMMA VariableDeclarator # Sequence
+                break;
+              // No matches
+              // EOF
+              case 1:
+              case 2:
+                $$ = null;
+                success = false;
+                break;
+            }
+            if (!success && _cursor > _testing) {
+              // Expected: ','
+              _failure(_expect6);
+            }
+            // <= (COMMA VariableDeclarator) # Choice
+            if (success) {  
+              reps.add($$);
+            } else {
+              success = true;
+              _testing = testing0;
+              $$ = reps;
+              break; 
+            }
+          }
+          // <= (COMMA VariableDeclarator)*
+          if (!success) break;
+          seq[1] = $$;
+          $$ = seq;
+          if (success) {    
+            // VariableDeclarator
+            final $1 = seq[0];
+            // (COMMA VariableDeclarator)*
+            final $2 = seq[1];
+            final $start = startPos0;
+            $$ = _list($1, $2);
+          }
+          break;
+        }
+        if (!success) {
+          _ch = ch0;
+          _cursor = pos0;
+        }
+        _startPos = startPos0;
+        // <= VariableDeclarator (COMMA VariableDeclarator)* # Sequence
+        break;
+      // No matches
+      case 1:
+        $$ = null;
+        success = false;
+        break;
+    }
+    if (!success && _cursor > _testing) {
+      // Expected: Identifier
+      _failure(_expect9);
+    }
+    // <= VariableDeclarator (COMMA VariableDeclarator)* # Choice
+    return $$;
+  }
+  
+  dynamic _parse_VoidType() {
+    // SENTENCE (NONTERMINAL)
+    // VoidType <- VOID Metadata? TypeQualifiers?
+    var $$;
+    // => VOID Metadata? TypeQualifiers? # Choice
+    switch (_ch == 118 ? 0 : _ch == -1 ? 2 : 1) {
+      // [v]
+      case 0:
+        // => VOID Metadata? TypeQualifiers? # Sequence
+        var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
+        _startPos = _cursor;
+        while (true) {  
+          // => VOID
+          $$ = _parse_VOID();
+          // <= VOID
+          if (!success) break;
+          var seq = new List(3)..[0] = $$;
+          // => Metadata?
+          var testing0 = _testing;
+          _testing = _cursor;
+          // => Metadata
+          $$ = _parse_Metadata();
+          // <= Metadata
+          success = true; 
+          _testing = testing0;
+          // <= Metadata?
+          if (!success) break;
+          seq[1] = $$;
+          // => TypeQualifiers?
+          var testing1 = _testing;
+          _testing = _cursor;
+          // => TypeQualifiers
+          $$ = _parse_TypeQualifiers();
+          // <= TypeQualifiers
+          success = true; 
+          _testing = testing1;
+          // <= TypeQualifiers?
+          if (!success) break;
+          seq[2] = $$;
+          $$ = seq;
+          if (success) {    
+            // VOID
+            final $1 = seq[0];
+            // Metadata?
+            final $2 = seq[1];
+            // TypeQualifiers?
+            final $3 = seq[2];
+            final $start = startPos0;
+            $$ = new BuiltinTypeSpecification(identifier: _ident([$1]), metadata: $2, qualifiers: $3, typeKind: TypeSpecificationKind.VOID);
+          }
+          break;
+        }
+        if (!success) {
+          _ch = ch0;
+          _cursor = pos0;
+        }
+        _startPos = startPos0;
+        // <= VOID Metadata? TypeQualifiers? # Sequence
+        break;
+      // No matches
+      // EOF
+      case 1:
+      case 2:
+        $$ = null;
+        success = false;
+        break;
+    }
+    if (!success && _cursor > _testing) {
+      // Expected: 'void'
+      _failure(_expect16);
+    }
+    // <= VOID Metadata? TypeQualifiers? # Choice
+    return $$;
+  }
+  
+  dynamic _parse_Volatile() {
+    // LEXEME (TOKEN)
+    // Volatile <- VOLATILE
+    var $$;
+    _token = 34;  
+    _tokenStart = _cursor;  
+    // => VOLATILE # Choice
+    switch (_ch == 118 ? 0 : _ch == -1 ? 2 : 1) {
+      // [v]
+      case 0:
+        var startPos0 = _startPos;
+        _startPos = _cursor;
+        // => VOLATILE
+        $$ = _parse_VOLATILE();
+        // <= VOLATILE
+        if (success) {    
+          // VOLATILE
+          final $1 = $$;
+          final $start = startPos0;
+          $$ = new Identifier(name: $1);
+        }
+        _startPos = startPos0;
+        break;
+      // No matches
+      // EOF
+      case 1:
+      case 2:
+        $$ = null;
+        success = false;
+        break;
+    }
+    if (!success && _cursor > _testing) {
+      // Expected: 'volatile'
+      _failure(_expect47);
+    }
+    // <= VOLATILE # Choice
+    _token = null;
+    _tokenStart = null;
     return $$;
   }
   
@@ -11564,7 +12475,7 @@ class CParser {
     // LEXEME (TOKEN)
     // ZERO_NUMBER <- ZERO SPACING
     var $$;
-    _token = 33;  
+    _token = 35;  
     _tokenStart = _cursor;  
     // => ZERO SPACING # Choice
     switch (_ch == 48 ? 0 : _ch == -1 ? 2 : 1) {
@@ -11612,7 +12523,7 @@ class CParser {
     }
     if (!success && _cursor > _testing) {
       // Expected: ZERO_NUMBER
-      _failure(_expect45);
+      _failure(_expect48);
     }
     // <= ZERO SPACING # Choice
     _token = null;
@@ -11834,9 +12745,9 @@ class CParser {
       throw new RangeError('pos');
     }      
     _cursor = pos;
-    _cache = new List<Map<int, List>>(124);
-    _cachePos = new List<int>.filled(124, -1);  
-    _cacheable = new List<bool>.filled(124, false);
+    _cache = new List<Map<int, List>>(126);
+    _cachePos = new List<int>.filled(126, -1);  
+    _cacheable = new List<bool>.filled(126, false);
     _ch = -1;
     _errors = <CParserError>[];   
     _expected = <String>[];

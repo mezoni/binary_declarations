@@ -2,6 +2,11 @@ import "package:binary_declarations/binary_declarations.dart";
 import "package:unittest/unittest.dart";
 
 void main() {
+  var text = "";
+  text = "typedef int * __attribute__((A3)) *INT __attribute__((A4));";
+  new Declarations(text).first.toString();
+
+
   group("Declarations.", () {
     group("Functions.", () {
       test("Function declarations.", () {
@@ -10,20 +15,20 @@ void main() {
         list.add("unsigned foo();");
         list.add("void foo();");
         list.add("short foo(int);");
-        list.add("struct Foo foo(int, int*);");
-        list.add("struct { int i : 8; } foo(enum e { A } e, int*);");
-        list.add("void** foo(int, int*);");
-        list.add("enum Color* foo(int, int*, int[]);");
-        list.add("unsigned long long int foo(int, int*, int[], struct s);");
-        list.add("char foo(int, int*, int[], enum e);");
+        list.add("struct Foo foo(int, int *);");
+        list.add("struct { int i : 8; } foo(enum e { A } e, int *);");
+        list.add("void **foo(int, int *);");
+        list.add("enum Color *foo(int, int *, int []);");
+        list.add("unsigned long long int foo(int, int *, int [], struct s);");
+        list.add("char foo(int, int *, int [], enum e);");
         list.add("int foo(int);");
         list.add("signed int foo(int);");
-        list.add("signed int* foo(int);");
+        list.add("signed int *foo(int);");
         list.add("struct S foo(int);");
         list.add("enum E foo(int);");
         list.add("void foo(int, ...);");
         list.add("int foo(int i);");
-        list.add("short int* foo(int i, int* ip);");
+        list.add("short int *foo(int i, int *ip);");
         var text = list.join("\n");
         var declarations = new Declarations(text);
         for (var declaration in declarations) {
@@ -41,15 +46,18 @@ void main() {
         baseList.add("$kind s");
         baseList.add("$kind s { struct ss { int i; }; }");
         baseList.add("$kind s { int i; }");
-        baseList.add("$kind s { int i; int* ip; }");
-        baseList.add("$kind s { int i; int* ip; int ia[]; }");
-        baseList.add("$kind s { int i; int* ip; int ia[10]; }");
-        baseList.add("$kind s { int i; int* ip; int ia[10]; }");
+        baseList.add("$kind s { int i; int *ip; }");
+        baseList.add("$kind s { int i; int *ip; int ia[]; }");
+        baseList.add("$kind s { int i; int *ip; int ia[10]; }");
+        baseList.add("$kind s { int i; int *ip; int ia[10]; }");
         baseList.add("$kind s { int i; $kind s; }");
         baseList.add("$kind s { int i; $kind s s; }");
         baseList.add("$kind s { int i; $kind s { int i; } s; }");
         baseList.add("$kind s { int i; int a : 1; }");
         baseList.add("$kind s { int i; int : 0; }");
+        baseList.add("$kind s { int foo(int); }");
+        baseList.add("$kind s { int *foo(char); }");
+        baseList.add("$kind s { int (*foo)(long); }");
       }
 
       test("Structure declarations.", () {
@@ -160,9 +168,9 @@ void main() {
         _checkPresentation(text, declarations);
         for (var declaration in declarations) {
           var type = (declaration as VariableDeclaration).type;
-          if (type is! IntegerTypeSpecification) {
-            expect(type is IntegerTypeSpecification, true, reason: "Not an $IntegerTypeSpecification");
-          }
+          expect(type is BuiltinTypeSpecification, true, reason: "Not an $BuiltinTypeSpecification");
+          var builtinType = type as BuiltinTypeSpecification;
+          expect(builtinType.typeKind == TypeSpecificationKind.INTEGER, true, reason: "typeKind != TypeSpecificationKind.INTEGER");
         }
       });
 
@@ -186,7 +194,7 @@ void main() {
         var list = <String>[];
         for (var type in types) {
           var ident = type.replaceAll(" ", "");
-          list.add("$type* ${ident}0;");
+          list.add("$type *${ident}0;");
         }
 
         var text = list.join("\n");
@@ -252,18 +260,15 @@ void main() {
     test("Typedefs.", () {
       var list = <String>[];
       list.add("typedef int INT, *PINT, **PPINT, AINTZ[], AINT10[10], *PAINT10_20[10][20];");
-      list.add("typedef int FOO(int, char*), BAZ();");
+      list.add("typedef int FOO(int, char *), BAZ();");
+      list.add("typedef int (**FOO)(int, char *);");
       var text = list.join("\n");
       var declarations = new Declarations(text);
       _checkPresentation(text, declarations);
 
-      text = "typedef int (FOO)(int, char*);";
+      text = "typedef int (FOO)(int, char *);";
       declarations = new Declarations(text);
-      _checkPresentation("typedef int FOO(int, char*);", declarations);
-
-      text = "typedef int (**FOO)(int, char*);";
-      declarations = new Declarations(text);
-      _checkPresentation("typedef int **FOO(int, char*);", declarations);
+      _checkPresentation("typedef int FOO(int, char *);", declarations);
     });
 
     test("Type qualifiers.", () {
@@ -285,7 +290,7 @@ void main() {
 
     test("Attributes.", () {
       var list = <String>[];
-      list.add("__attribute__((A0)) typedef __attribute__((A1)) signed int __attribute__((A2)) INT __attribute__((A3));");
+      list.add("const __attribute__((A0)) typedef __attribute__((A1)) signed int __attribute__((A2)) INT __attribute__((A3));");
       list.add("__attribute__((A0)) typedef __attribute__((A1)) FOO __attribute__((A2)) BAZ __attribute__((A3));");
       list.add("__attribute__((A0)) float __attribute__((A1)) f __attribute__((A2));");
       list.add("__attribute__((A0)) enum __attribute__((A1)) ee e __attribute__((A2));");
@@ -300,7 +305,7 @@ void main() {
       list.add("__attribute__((A0)) int __attribute__((aligned(8), packed)) i __attribute__((foo(\"baz\", 2)));");
       list.add("__attribute__((A0)) typedef __attribute__((A1)) int __attribute__((A2)) * __attribute__((A3)) *INT __attribute__((A4));");
       list.add("__attribute__((A0)) typedef __attribute__((A1)) const int __attribute__((A3)) * __attribute__((A4)) *INT __attribute__((A5));");
-      list.add("char* strncpy(char* destination, const char* source, size_t num) __attribute__((alias(\"_sprintf_p\")));");
+      list.add("const char *strncpy(char *destination, const char *source, size_t num) __attribute__((alias(\"_sprintf_p\")));");
       var text = list.join("\n");
       var declarations = new Declarations(text);
       _checkPresentation(text, declarations);
