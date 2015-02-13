@@ -56,7 +56,7 @@ class AttributeReader {
     return arguments[index];
   }
 
-  List<dynamic> getArguments(String name, {bool fromEnd: true}) {
+  List getArguments(String name, {bool fromEnd: true}) {
     if (name == null) {
       throw new ArgumentError.notNull("name");
     }
@@ -71,14 +71,14 @@ class AttributeReader {
     }
 
     if (fromEnd) {
-      return arguments.last;
+      return new UnmodifiableListView(arguments.last);
     } else {
-      return arguments.first;
+      return new UnmodifiableListView(arguments.first);
     }
   }
 
-  String getIntegerArgument(String name, int index, String value, {bool fromEnd: true, int maxLength, int minLength}) {
-    var argument = getArgument(name, index, value, fromEnd: fromEnd, maxLength: maxLength, minLength: minLength);
+  int getIntegerArgument(String name, int index, int value, {bool fromEnd: true, int maxLength, int minLength}) {
+    Object argument = getArgument(name, index, value, fromEnd: fromEnd, maxLength: maxLength, minLength: minLength);
     if (argument != null && argument is! int) {
       _wrongArgumentType(name, "integer");
     }
@@ -87,7 +87,7 @@ class AttributeReader {
   }
 
   String getStringArgument(String name, int index, String value, {bool fromEnd: true, int maxLength, int minLength}) {
-    var argument = getArgument(name, index, value, fromEnd: fromEnd, maxLength: maxLength, minLength: minLength);
+    Object argument = getArgument(name, index, value, fromEnd: fromEnd, maxLength: maxLength, minLength: minLength);
     if (argument != null && argument is! String) {
       _wrongArgumentType(name, "string");
     }
