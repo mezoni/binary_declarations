@@ -17,7 +17,7 @@ class AttributeReader {
       return false;
     }
 
-    _checkNumberOfArguments(name, arguments.length, maxLength, minLength);
+    _checkNumberOfArguments(name, arguments.length, minLength, maxLength);
     return true;
   }
 
@@ -44,13 +44,13 @@ class AttributeReader {
     }
 
     var length = arguments.length;
-    _checkNumberOfArguments(name, length, maxLength, minLength);
+    _checkNumberOfArguments(name, length, minLength, maxLength);
     if (length == null) {
       return value;
     }
 
-    if (index > length - 1) {
-      _wrongNumberOfArguments(name);
+    if (index >= length) {
+      return value;
     }
 
     return arguments[index];
@@ -95,7 +95,7 @@ class AttributeReader {
     return argument;
   }
 
-  void _checkNumberOfArguments(String name, int length, int maxLength, int minLength) {
+  void _checkNumberOfArguments(String name, int length, int minLength, int maxLength) {
     if (minLength != null && length < minLength) {
       _wrongNumberOfArguments(name);
     }
