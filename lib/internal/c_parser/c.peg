@@ -1,4 +1,6 @@
 %{
+library binary_declarations.internal.c_parser;
+
 import "package:binary_declarations/binary_declarations.dart";
 
 Identifier _ident(List parts) {
@@ -204,7 +206,7 @@ StructureTypeSpecifierWithTag <-
   (STRUCT / UNION) Metadata? Identifier { $$ = new ElaboratedTypeSpecifier(kind: $1, metadata: $2, tag: $3); }
 
 EnumType <-
-  EnumTypeSpecifier OPEN_BRACE EnumeratorList CLOSE_BRACE Metadata? TypeQualifiers? { $$ = new EnumTypeSpecification(metadata: $5, elaboratedType: $1, qualifiers: $6, values: $3); }
+  EnumTypeSpecifier OPEN_BRACE EnumeratorList CLOSE_BRACE Metadata? TypeQualifiers? { $$ = new EnumTypeSpecification(metadata: $5, elaboratedType: $1, qualifiers: $6, enumerators: $3); }
   / EnumTypeSpecifierWithTag Metadata? TypeQualifiers? { $$ = new EnumTypeSpecification(metadata: $2, elaboratedType: $1, qualifiers: $3); }
 
 EnumTypeSpecifier <-

@@ -1,3 +1,7 @@
+## 0.0.43
+
+- Changes in `c.peg` grammar
+
 ## 0.0.37
 
 - Breaking changes. Significant changes of several classes
