@@ -213,7 +213,7 @@ EnumeratorList <-
   Enumerator (COMMA Enumerator)* COMMA? { $$ = _list($1, $2); }
 
 Enumerator <-
-  Identifier ASSIGN IntegerLiteral { $$ = new Enumerator(identifier: $1, value: $3); }
+  Identifier ASSIGN (IntegerLiteral / Identifier) { $$ = new Enumerator(identifier: $1, value: $3); }
   / Identifier { $$ = new Enumerator(identifier: $1); }
 
 EnumTypeSpecifierWithTag <-

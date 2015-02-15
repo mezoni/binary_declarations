@@ -108,6 +108,7 @@ void main() {
       baseList.add("enum e { A = 0, B }");
       baseList.add("enum e { A = 0, B, C = 0 }");
       baseList.add("enum e { A = 0, B, C = -1 }");
+      baseList.add("enum e { A = 0, B = A }");
       test("Enum declarations.", () {
         var lines = baseList.toList();
         lines = _addBeforeAndAfter(lines, "", ";");

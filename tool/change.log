@@ -54,4 +54,4 @@
 0.0.45 Changes in `c.peg` grammar
 0.0.45 Breaking changes: All the direct values replaced on the literals
 0.0.46 Added support of string concatenation
-0.0.49 Changes in `c.peg` grammar
+0.0.50 Changes in `c.peg` grammar
