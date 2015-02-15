@@ -1,3 +1,8 @@
+## 0.0.45
+
+- Breaking changes: All the direct values replaced on the literals
+- Changes in `c.peg` grammar
+
 ## 0.0.44
 
 - Changes in `c.peg` grammar

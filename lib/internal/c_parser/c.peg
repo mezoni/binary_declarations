@@ -55,7 +55,7 @@ int _parseInt(String sign, String digits, int radix) {
   if (sign == null) {
     sign = "";
   }
-  return int.parse("$sign$digits", radix: radix);
+  return int.parse("$sign$digits", radix: radix);   
 }
 
 }%
@@ -81,27 +81,30 @@ FunctionDeclaration <-
   / Metadata? TypeQualifiers? Type FunctionDeclarator { $$ = new FunctionDeclaration(declarator: $4, metadata: $1, qualifiers: $2, type: $3); }
 
 Metadata <-
-  DeclarationSpecifier+ { $$ = new DeclarationSpecifiers($1); }
+  DeclarationSpecifier+ { $$ = new DeclarationSpecifiers(specifiers: $1); }
 
 DeclarationSpecifier <-
-  ATTRIBUTE OPEN_PAREN OPEN_PAREN DeclarationModifierList? CLOSE_PAREN CLOSE_PAREN { $$ = new DeclarationSpecifier($4); }
+  ATTRIBUTE OPEN_PAREN OPEN_PAREN DeclarationModifierList? CLOSE_PAREN CLOSE_PAREN { $$ = new DeclarationSpecifier(modifiers: $4); }
 
 DeclarationModifierList <-
-  DeclarationModifier (COMMA DeclarationModifier)* { $$ = new DeclarationModifiers(_list($1, $2)); }
+  DeclarationModifier (COMMA DeclarationModifier)* { $$ = new DeclarationModifiers(modifiers: _list($1, $2)); }
 
 DeclarationModifier <-
-  IDENT OPEN_PAREN DeclarationModifierArgumentList? CLOSE_PAREN { $$ = new DeclarationModifier($1, $3); }
-  / IDENT { $$ = new DeclarationModifier($1); }
+  Identifier OPEN_PAREN DeclarationModifierArgumentList? CLOSE_PAREN { $$ = new DeclarationModifier(arguments: $3, identifier: $1); }
+  / Identifier { $$ = new DeclarationModifier(identifier: $1); }
 
 DeclarationModifierArgumentList <-
   DeclarationModifierArgument (COMMA DeclarationModifierArgument)* { $$ = _list($1, $2); }
 
 DeclarationModifierArgument <-
-  STRING
-  / NUMBER
+  STRING_LITERAL
+  / IntegerLiteral
+
+IntegerLiteral <-
+  NUMBER { $$ = new IntegerLiteral(text: _text(), value: $1); }
 
 TypeQualifiers <-
-  TypeQualifier+ { $$ = new TypeQualifiers($1); }
+  TypeQualifier+ { $$ = new TypeQualifiers(qualifiers: $1); }
 
 TypeQualifier <-
   (Const / Volatile) Metadata? { $$ = new TypeQualifier(identifier: $1, metadata: $2); }
@@ -110,13 +113,13 @@ FunctionDeclarator <-
   PointerSpecifiers? Identifier FunctionParameters Metadata? { $$ = new Declarator(identifier: $2, metadata: $4, parameters: $3, pointers: $1); }
 
 PointerSpecifiers <-
-  PointerSpecifier+ { $$ = new PointerSpecifiers($1); }
+  PointerSpecifier+ { $$ = new PointerSpecifiers(specifiers: $1); }
 
 PointerSpecifier <-
   ASTERISK Metadata? TypeQualifiers? { $$ = new PointerSpecifier(metadata: $2, qualifiers: $3); }
 
 FunctionParameters <-
-  OPEN_PAREN FunctionParameterList? CLOSE_PAREN { $$ = new FunctionParameters($2); }
+  OPEN_PAREN FunctionParameterList? CLOSE_PAREN { $$ = new FunctionParameters(declarations: $2); }
 
 FunctionParameterList <-
   FunctionParameterListNoVaList (COMMA VA_LIST_PARAMETER { $$ = $2; })? { $$ = _createParameters($1, $2); }
@@ -179,10 +182,10 @@ BitFieldParameterDeclaration <-
   / Metadata? TypeQualifiers? IntegerType BitFieldDeclaratorAbstract { $$ = new ParameterDeclaration(declarator: $4, metadata: $1, qualifiers: $2, type: $3); }
 
 BitFieldDeclaratorNotAbstract <-
-  Identifier COLON POSITIVE_NUMBER Metadata? { $$ = new Declarator(identifier: $1, metadata: $4, width: $3); }
+  Identifier COLON IntegerLiteral Metadata? { $$ = new Declarator(identifier: $1, metadata: $4, width: $3); }
 
 BitFieldDeclaratorAbstract <-
-  Identifier? COLON POSITIVE_NUMBER Metadata? { $$ = new Declarator(identifier: $1, metadata: $4, width: $3); }
+  Identifier? COLON IntegerLiteral Metadata? { $$ = new Declarator(identifier: $1, metadata: $4, width: $3); }
 
 ParameterDeclarationAbstract <-
   Metadata? TypeQualifiers? Type DeclaratorAbstract { $$ = new ParameterDeclaration(declarator: $4, metadata: $1, qualifiers: $2, type: $3); }
@@ -197,10 +200,7 @@ ArrayDimensions <-
   Dimension+ { $$ = new ArrayDimensions(dimensions: $1); }
 
 Dimension <-
-  OPEN_BRACKET ArraySize? CLOSE_BRACKET { $$ = $2; }
-
-ArraySize <-
-  !ZERO_NUMBER POSITIVE_NUMBER { $$ = $2; }
+  OPEN_BRACKET IntegerLiteral? CLOSE_BRACKET { $$ = $2; }
 
 StructureTypeSpecifierWithTag <-
   (STRUCT / UNION) Metadata? Identifier { $$ = new ElaboratedTypeSpecifier(kind: $1, metadata: $2, tag: $3); }
@@ -308,14 +308,11 @@ EOF <-
 FLOAT <-
   'float' !IDENT_PART SPACING { $$ = $1; }
 
-IDENT <-
-  IDENT_START IDENT_CONT* SPACING { $$ = _flatten([$1, $2]).join(); }
-
 INT <-
   'int' !IDENT_PART SPACING { $$ = $1; }
 
 Identifier <-
-  IDENTIFIER { $$ = new Identifier(name: $1); }
+  IDENT { $$ = new Identifier(name: $1); }
 
 LEADING_SPACES <-
   SPACING
@@ -326,7 +323,7 @@ LONG_TYPE <-
 
 NUMBER <-
   OCTAL_NUMBER
-  / INTEGER
+  / INTEGER_NUMBER
 
 OPEN_BRACE <-
   '{' SPACING { $$ = $1; }
@@ -336,9 +333,6 @@ OPEN_BRACKET <-
 
 OPEN_PAREN <-
   '(' SPACING { $$ = $1; }
-
-POSITIVE_NUMBER <-
-  !('-' SPACING) (OCTAL_NUMBER / INTEGER) { $$ = $2; }
 
 SEMICOLON <-
   ';' SPACING { $$ = $1; }
@@ -350,9 +344,8 @@ SIGNEDNESS <-
   SIGNED
   / UNSIGNED
 
-STRING <-
-  '"' STRING_CHAR_SEQUENCE? '"' { $$ = $2 == null ? "" : new String.fromCharCodes($2); }
-  / 'L"' STRING_CHAR_SEQUENCE? '"' { $$ = $2 == null ? "" : new String.fromCharCodes($2); }
+STRING_LITERAL <-
+  STRING { $$ = new StringLiteral(text: _text(), value: $1); }
 
 STRUCT <-
   'struct' !IDENT_PART SPACING { $$ = $1; }
@@ -371,9 +364,6 @@ VOID <-
 
 Volatile <-
   VOLATILE { $$ = new Identifier(name: $1); }
-
-ZERO_NUMBER <-
-  ZERO SPACING { $$ = $1; }
 
 ### Morphemes ###
 
@@ -409,7 +399,7 @@ HEXADECIMAL_ESCAPE_SEQUENCE1 <-
 HEX_QUAD <-
   HEXADECIMAL_DIGIT HEXADECIMAL_DIGIT HEXADECIMAL_DIGIT HEXADECIMAL_DIGIT { $$ = _text(); }
 
-IDENTIFIER <-
+IDENT <-
   !RESERVED_WORD IDENT_START IDENT_CONT* SPACING { $$ = _flatten([$2, $3]).join(); }
 
 IDENT_CONT <-
@@ -423,7 +413,7 @@ IDENT_PART <-
 IDENT_START <-
   [A-Z_a-z]
 
-INTEGER <-
+INTEGER_NUMBER <-
   SIGN? [0-9]+ SPACING { $$ = _parseInt($1, $2.join(), 10); }
 
 LONG <-
@@ -466,6 +456,10 @@ SPACE <-
 SPACING <-
   (SPACE / COMMENT)*
 
+STRING <-
+  '"' STRING_CHAR_SEQUENCE? '"' { $$ = $2 == null ? "" : new String.fromCharCodes($2); }
+  / 'L"' STRING_CHAR_SEQUENCE? '"' { $$ = $2 == null ? "" : new String.fromCharCodes($2); }
+
 STRING_CHAR <-
   ![\n\r"\\] . { $$ = $2.codeUnitAt(0); }
   / ESCAPE_SEQUENCE
@@ -485,7 +479,4 @@ VA_LIST_TYPE <-
 
 VOLATILE <-
   'volatile' !IDENT_PART SPACING { $$ = $1; }
-
-ZERO <-
-  [0]+ ![0-9]+ { $$ = 0; }
 

@@ -1,22 +1,22 @@
 part of binary_declarations;
 
 class ArrayDimensions {
-  List<int> _dimensions;
+  List<IntegerLiteral> _dimensions;
 
-  ArrayDimensions({List<int> dimensions}) {
-    var list = <int>[];
+  ArrayDimensions({List<IntegerLiteral> dimensions}) {
+    var list = <IntegerLiteral>[];
     for (var dimension in dimensions) {
-      if (dimension == null || (dimension is int && dimension > 0)) {
+      if (dimension == null || dimension is IntegerLiteral) {
         list.add(dimension);
       } else {
         throw new ArgumentError("List of dimensions contains illegal elements.");
       }
     }
 
-    _dimensions = new UnmodifiableListView<int>(list);
+    _dimensions = new UnmodifiableListView<IntegerLiteral>(list);
   }
 
-  List<int> get dimensions => _dimensions;
+  List<IntegerLiteral> get dimensions => _dimensions;
 
   String toString() {
     var sb = new StringBuffer();
@@ -89,13 +89,13 @@ abstract class Declaration {
 }
 
 class DeclarationModifier {
-  final String name;
+  final Identifier identifier;
 
-  List<dynamic> _arguments;
+  List<Expression> _arguments;
 
-  DeclarationModifier(this.name, [List<dynamic> arguments]) {
-    if (name == null || name.isEmpty) {
-      throw new ArgumentError.value(name, "name");
+  DeclarationModifier({List<Expression> arguments, this.identifier}) {
+    if (identifier == null) {
+      throw new ArgumentError.notNull("identifier");
     }
 
     var list = [];
@@ -109,14 +109,14 @@ class DeclarationModifier {
       }
     }
 
-    _arguments = new UnmodifiableListView<dynamic>(list);
+    _arguments = new UnmodifiableListView<Expression>(list);
   }
 
-  List<dynamic> get arguments => _arguments;
+  List<Expression> get arguments => _arguments;
 
   String toString() {
     var sb = new StringBuffer();
-    sb.write(name);
+    sb.write(identifier);
     if (!arguments.isEmpty) {
       sb.write("(");
       var list = arguments.map((e) {
@@ -138,7 +138,7 @@ class DeclarationModifier {
 class DeclarationModifiers {
   List<DeclarationModifier> _modifiers;
 
-  DeclarationModifiers(List<DeclarationModifier> modifiers) {
+  DeclarationModifiers({List<DeclarationModifier> modifiers}) {
     if (modifiers == null) {
       throw new ArgumentError.notNull("modifiers");
     }
@@ -158,7 +158,7 @@ class DeclarationModifiers {
 class DeclarationSpecifier {
   final DeclarationModifiers modifiers;
 
-  DeclarationSpecifier(this.modifiers) {
+  DeclarationSpecifier({this.modifiers}) {
     if (modifiers == null) {
       throw new ArgumentError.notNull("modifiers");
     }
@@ -176,7 +176,7 @@ class DeclarationSpecifier {
 class DeclarationSpecifiers {
   List<DeclarationSpecifier> _specifiers;
 
-  DeclarationSpecifiers(List<DeclarationSpecifier> specifiers) {
+  DeclarationSpecifiers({List<DeclarationSpecifier> specifiers}) {
     if (specifiers == null) {
       throw new ArgumentError.notNull("specifiers");
     }
@@ -246,7 +246,7 @@ class Declarator {
 
   final PointerSpecifiers pointers;
 
-  final int width;
+  final IntegerLiteral width;
 
   Declarator({this.dimensions, this.functionPointers, this.identifier, this.metadata, this.parameters, this.pointers, this.width}) {
     if (isBitField && (isArray || isFunction || isPointers)) {
@@ -507,6 +507,9 @@ class Enumerator {
   }
 }
 
+abstract class Expression {
+}
+
 class FunctionDeclaration extends Declaration {
   final Declarator declarator;
 
@@ -563,7 +566,7 @@ class FunctionDeclaration extends Declaration {
 class FunctionParameters {
   List<ParameterDeclaration> _declarations;
 
-  FunctionParameters(List<ParameterDeclaration> declarations) {
+  FunctionParameters({List<ParameterDeclaration> declarations}) {
     var list = <ParameterDeclaration>[];
     if (declarations != null) {
       var length = declarations.length;
@@ -605,7 +608,7 @@ class FunctionParameters {
   }
 }
 
-class Identifier {
+class Identifier extends Expression {
   final String name;
 
   Identifier({this.name}) {
@@ -618,6 +621,32 @@ class Identifier {
     var sb = new StringBuffer();
     sb.write(name);
     return sb.toString();
+  }
+}
+
+class IntegerLiteral extends Literal {
+  final int value;
+
+  IntegerLiteral({String text, this.value}) : super(text: text) {
+    if (value == null) {
+      throw new ArgumentError.notNull("value");
+    }
+  }
+}
+
+abstract class Literal extends Expression {
+  final String text;
+
+  Literal({this.text}) {
+    if (text == null) {
+      throw new ArgumentError.notNull("text");
+    }
+  }
+
+  dynamic get value;
+
+  String toString() {
+    return text;
   }
 }
 
@@ -681,7 +710,7 @@ class PointerSpecifier {
 class PointerSpecifiers {
   List<PointerSpecifier> _specifiers;
 
-  PointerSpecifiers(List<PointerSpecifier> specifiers) {
+  PointerSpecifiers({List<PointerSpecifier> specifiers}) {
     if (specifiers == null) {
       throw new ArgumentError.notNull("specifiers");
     }
@@ -708,6 +737,16 @@ class PointerSpecifiers {
     }
 
     return sb.toString();
+  }
+}
+
+class StringLiteral extends Literal {
+  final String value;
+
+  StringLiteral({String text, this.value}) : super(text: text) {
+    if (value == null) {
+      throw new ArgumentError.notNull("value");
+    }
   }
 }
 
@@ -817,7 +856,7 @@ class TypeQualifier {
 class TypeQualifiers {
   List<TypeQualifier> _qualifiers;
 
-  TypeQualifiers(List<TypeQualifier> qualifiers) {
+  TypeQualifiers({List<TypeQualifier> qualifiers}) {
     _qualifiers = new _ListCloner<TypeQualifier>(qualifiers, "qualifiers").list;
   }
 

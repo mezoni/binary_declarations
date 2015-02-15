@@ -1,7 +1,7 @@
 part of binary_declarations.attribute_reader;
 
 class AttributeReader {
-  Map<String, List<List<dynamic>>> _arguments;
+  Map<String, List<List<Expression>>> _arguments;
 
   AttributeReader(List<DeclarationSpecifiers> specifiers) {
     if (specifiers == null) {
@@ -21,7 +21,7 @@ class AttributeReader {
     return true;
   }
 
-  dynamic getArgument(String name, int index, dynamic value, {bool fromEnd: true, int maxLength, int minLength}) {
+  Expression getArgument(String name, int index, Expression value, {bool fromEnd: true, int maxLength, int minLength}) {
     if (name == null) {
       throw new ArgumentError.notNull("name");
     }
@@ -77,7 +77,7 @@ class AttributeReader {
     }
   }
 
-  int getIntegerArgument(String name, int index, int value, {bool fromEnd: true, int maxLength, int minLength}) {
+  IntegerLiteral getIntegerArgument(String name, int index, IntegerLiteral value, {bool fromEnd: true, int maxLength, int minLength}) {
     Object argument = getArgument(name, index, value, fromEnd: fromEnd, maxLength: maxLength, minLength: minLength);
     if (argument != null && argument is! int) {
       _wrongArgumentType(name, "integer");
@@ -86,7 +86,7 @@ class AttributeReader {
     return argument;
   }
 
-  String getStringArgument(String name, int index, String value, {bool fromEnd: true, int maxLength, int minLength}) {
+  StringLiteral getStringArgument(String name, int index, StringLiteral value, {bool fromEnd: true, int maxLength, int minLength}) {
     Object argument = getArgument(name, index, value, fromEnd: fromEnd, maxLength: maxLength, minLength: minLength);
     if (argument != null && argument is! String) {
       _wrongArgumentType(name, "string");
@@ -105,9 +105,9 @@ class AttributeReader {
     }
   }
 
-  Map<String, List<List<dynamic>>> _getArguments(DeclarationSpecifiers specifier, Map<String, List<List<String>>> arguments) {
+  Map<String, List<List<Expression>>> _getArguments(DeclarationSpecifiers specifier, Map<String, List<List<Expression>>> arguments) {
     if (arguments == null) {
-      arguments = <String, List<List<dynamic>>>{};
+      arguments = <String, List<List<Expression>>>{};
     }
 
     if (specifier == null) {
@@ -116,10 +116,10 @@ class AttributeReader {
 
     for (var specifier in specifier.specifiers) {
       for (var modifier in specifier.modifiers.modifiers) {
-        var name = modifier.name;
+        var name = modifier.identifier.name;
         var list = arguments[name];
         if (list == null) {
-          list = <List<dynamic>>[];
+          list = <List<Expression>>[];
           arguments[name] = list;
         }
 
@@ -130,8 +130,8 @@ class AttributeReader {
     return arguments;
   }
 
-  Map<String, List<List<dynamic>>> _joinArguments(List<DeclarationSpecifiers> specifiers) {
-    Map<String, List<List<dynamic>>> arguments;
+  Map<String, List<List<Expression>>> _joinArguments(List<DeclarationSpecifiers> specifiers) {
+    Map<String, List<List<Expression>>> arguments;
     for (var specifier in specifiers) {
       arguments = _getArguments(specifier, arguments);
     }

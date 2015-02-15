@@ -286,7 +286,7 @@ void main() {
       list.add("int i[011];");
       var text = list.join("\n");
       var declarations = new Declarations(text);
-      _checkPresentation("int i[9];", declarations);
+      _checkPresentation("int i[011];", declarations);
     });
 
     test("Attributes.", () {
