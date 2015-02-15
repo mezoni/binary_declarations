@@ -487,7 +487,7 @@ class EnumTypeSpecification extends TypeSpecification {
 class Enumerator {
   final Identifier identifier;
 
-  final int value;
+  final IntegerLiteral value;
 
   Enumerator({this.identifier, this.value}) {
     if (identifier == null) {

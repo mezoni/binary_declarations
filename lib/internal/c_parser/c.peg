@@ -100,9 +100,6 @@ DeclarationModifierArgument <-
   STRING_LITERAL
   / IntegerLiteral
 
-IntegerLiteral <-
-  NUMBER { $$ = new IntegerLiteral(text: _text(), value: $1); }
-
 TypeQualifiers <-
   TypeQualifier+ { $$ = new TypeQualifiers(qualifiers: $1); }
 
@@ -216,7 +213,7 @@ EnumeratorList <-
   Enumerator (COMMA Enumerator)* COMMA? { $$ = _list($1, $2); }
 
 Enumerator <-
-  Identifier ASSIGN NUMBER { $$ = new Enumerator(identifier: $1, value: $3); }
+  Identifier ASSIGN IntegerLiteral { $$ = new Enumerator(identifier: $1, value: $3); }
   / Identifier { $$ = new Enumerator(identifier: $1); }
 
 EnumTypeSpecifierWithTag <-
@@ -295,7 +292,7 @@ COMMA <-
 
 CONST <-
   'const' !IDENT_PART SPACING { $$ = new Identifier(name: $1); }
-  
+
 DOUBLE <-
   'double' !IDENT_PART SPACING { $$ = $1; }
 
@@ -314,17 +311,17 @@ INT <-
 Identifier <-
   IDENT { $$ = new Identifier(name: $1); }
 
+IntegerLiteral <-
+  HEXADECIMAL_LITERAL
+  / OCTAL_LITERAL
+  / INTEGER_LITERAL
+
 LEADING_SPACES <-
   SPACING
 
 LONG_TYPE <-
   LONG LONG { $$ = "long long"; }
   / LONG
-
-NUMBER <-
-  HEXADECIMAL_NUMBER
-  / OCTAL_NUMBER
-  / INTEGER_NUMBER  
 
 OPEN_BRACE <-
   '{' SPACING { $$ = $1; }
@@ -384,12 +381,25 @@ ESCAPE_SEQUENCE <-
   / HEXADECIMAL_ESCAPE_SEQUENCE
   / UNIVERSAL_CHARCTER_NAME
 
+HEXADECIMAL_DIGIT <-
+  [0-9A-Fa-f]
+
 HEXADECIMAL_ESCAPE_SEQUENCE <-
   '\\x' HEXADECIMAL_DIGIT HEXADECIMAL_ESCAPE_SEQUENCE1 { $$ = int.parse(_text(2), radix: 16); }
 
 HEXADECIMAL_ESCAPE_SEQUENCE1 <-
   HEXADECIMAL_DIGIT HEXADECIMAL_ESCAPE_SEQUENCE1 { $$ = _text(); }
   / ''
+
+HEXADECIMAL_LITERAL <-
+  HEXADECIMAL_NUMBER SPACING { $$ = $1; }
+
+HEXADECIMAL_NUMBER <-
+  HEXADECIMAL_PREFIX HEXADECIMAL_DIGIT+ { $$ = new IntegerLiteral(text: _text() ,value: int.parse(_text(2), radix: 16)); }
+
+HEXADECIMAL_PREFIX <-
+  '0x'
+  / '0X'
 
 HEX_QUAD <-
   HEXADECIMAL_DIGIT HEXADECIMAL_DIGIT HEXADECIMAL_DIGIT HEXADECIMAL_DIGIT { $$ = _text(); }
@@ -408,8 +418,11 @@ IDENT_PART <-
 IDENT_START <-
   [A-Z_a-z]
 
+INTEGER_LITERAL <-
+  INTEGER_NUMBER SPACING { $$ = $1; }
+
 INTEGER_NUMBER <-
-  SIGN? [0-9]+ SPACING { $$ = _parseInt($1, $2.join(), 10); }
+  SIGN? [0-9]+ { $$ = new IntegerLiteral(text: _text(), value: int.parse(_text(), radix: 10)); }
 
 LONG <-
   'long' !IDENT_PART SPACING { $$ = $1; }
@@ -425,8 +438,11 @@ OCTAL_ESCAPE_SEQUENCE <-
   / '\\' OCTAL_DIGIT OCTAL_DIGIT { $$ = int.parse(_text(1), radix: 8); }
   / '\\' OCTAL_DIGIT { $$ = int.parse($2, radix: 8); }
 
+OCTAL_LITERAL <-
+  OCTAL_NUMBER SPACING { $$ = $1; }
+
 OCTAL_NUMBER <-
-  SIGN? [0] [0-9]+ { $$ = _parseInt($1, _flatten([$2, $3]).join(), 8); }
+  SIGN? [0] [0-9]+ { $$ = new IntegerLiteral(text: _text(), value: int.parse(_text(), radix: 8)); }
 
 PLUS <-
   '+' SPACING { $$ = $1; }
@@ -475,12 +491,3 @@ UNSIGNED <-
 VA_LIST_TYPE <-
   ELLIPSIS { $$ = new VaListTypeSpecification(); }
 
-HEXADECIMAL_NUMBER <-
-  HEXADECIMAL_PREFIX HEXADECIMAL_DIGIT+ { $$ = int.parse(_text(2), radix: 16); }
-
-HEXADECIMAL_DIGIT <-
-  [0-9a-fA-F]
-
-HEXADECIMAL_PREFIX <-
-  '0x'
-  / '0X'

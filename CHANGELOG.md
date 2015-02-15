@@ -1,8 +1,4 @@
-## 0.0.48
-
-- Changes in `c.peg` grammar
-
-## 0.0.47
+## 0.0.49
 
 - Changes in `c.peg` grammar
 

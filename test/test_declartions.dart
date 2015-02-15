@@ -283,7 +283,7 @@ void main() {
 
     test("Octal numbers.", () {
       var list = <String>[];
-      list.add("int i[011];");
+      list.add("int i[ 011 ];");
       var text = list.join("\n");
       var declarations = new Declarations(text);
       _checkPresentation("int i[011];", declarations);
@@ -291,7 +291,7 @@ void main() {
 
     test("Hexadecimal numbers.", () {
       var list = <String>[];
-      list.add("int i[0x11];");
+      list.add("int i[ 0x11 ];");
       var text = list.join("\n");
       var declarations = new Declarations(text);
       _checkPresentation("int i[0x11];", declarations);
