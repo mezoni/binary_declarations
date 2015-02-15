@@ -79,7 +79,7 @@ class AttributeReader {
 
   IntegerLiteral getIntegerArgument(String name, int index, IntegerLiteral value, {bool fromEnd: true, int maxLength, int minLength}) {
     Object argument = getArgument(name, index, value, fromEnd: fromEnd, maxLength: maxLength, minLength: minLength);
-    if (argument != null && argument is! int) {
+    if (argument != null && argument is! IntegerLiteral) {
       _wrongArgumentType(name, "integer");
     }
 
@@ -88,7 +88,7 @@ class AttributeReader {
 
   StringLiteral getStringArgument(String name, int index, StringLiteral value, {bool fromEnd: true, int maxLength, int minLength}) {
     Object argument = getArgument(name, index, value, fromEnd: fromEnd, maxLength: maxLength, minLength: minLength);
-    if (argument != null && argument is! String) {
+    if (argument != null && argument is! StringLiteral) {
       _wrongArgumentType(name, "string");
     }
 
