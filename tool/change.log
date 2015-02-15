@@ -53,3 +53,4 @@
 0.0.44 Minor bug fixes in the constructor `FunctionParameters.FunctionParameters()`
 0.0.45 Changes in `c.peg` grammar
 0.0.45 Breaking changes: All the direct values replaced on the literals
+0.0.46 Added support of string concatenation

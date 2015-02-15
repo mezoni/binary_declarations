@@ -107,7 +107,7 @@ TypeQualifiers <-
   TypeQualifier+ { $$ = new TypeQualifiers(qualifiers: $1); }
 
 TypeQualifier <-
-  (Const / Volatile) Metadata? { $$ = new TypeQualifier(identifier: $1, metadata: $2); }
+  (CONST / VOLATILE) Metadata? { $$ = new TypeQualifier(identifier: $1, metadata: $2); }
 
 FunctionDeclarator <-
   PointerSpecifiers? Identifier FunctionParameters Metadata? { $$ = new Declarator(identifier: $2, metadata: $4, parameters: $3, pointers: $1); }
@@ -293,9 +293,9 @@ COLON <-
 COMMA <-
   ',' SPACING { $$ = $1; }
 
-Const <-
-  CONST { $$ = new Identifier(name: $1); }
-
+CONST <-
+  'const' !IDENT_PART SPACING { $$ = new Identifier(name: $1); }
+  
 DOUBLE <-
   'double' !IDENT_PART SPACING { $$ = $1; }
 
@@ -345,7 +345,7 @@ SIGNEDNESS <-
   / UNSIGNED
 
 STRING_LITERAL <-
-  STRING { $$ = new StringLiteral(text: _text(), value: $1); }
+  STRING_LITERAL_PART+ { $$ = new StringLiteral(text: _text(), value: $1.join()); }
 
 STRUCT <-
   'struct' !IDENT_PART SPACING { $$ = $1; }
@@ -362,16 +362,13 @@ VA_LIST_PARAMETER <-
 VOID <-
   'void' !IDENT_PART SPACING { $$ = $1; }
 
-Volatile <-
-  VOLATILE { $$ = new Identifier(name: $1); }
+VOLATILE <-
+  'volatile' !IDENT_PART SPACING { $$ = new Identifier(name: $1); }
 
 ### Morphemes ###
 
 COMMENT <-
   '//' (!EOL .)* (EOL / !.)
-
-CONST <-
-  'const' !IDENT_PART SPACING { $$ = $1; }
 
 ELLIPSIS <-
   '...' SPACING { $$ = $1; }
@@ -467,6 +464,9 @@ STRING_CHAR <-
 STRING_CHAR_SEQUENCE <-
   STRING_CHAR+
 
+STRING_LITERAL_PART <-
+  STRING SPACING { $$ = $1; }
+
 UNIVERSAL_CHARCTER_NAME <-
   '\\U' HEX_QUAD HEX_QUAD { $$ = int.parse(_text(2), radix: 16); }
   / '\\u' HEX_QUAD { $$ = int.parse(_text(2), radix: 16); }
@@ -476,7 +476,3 @@ UNSIGNED <-
 
 VA_LIST_TYPE <-
   ELLIPSIS { $$ = new VaListTypeSpecification(); }
-
-VOLATILE <-
-  'volatile' !IDENT_PART SPACING { $$ = $1; }
-

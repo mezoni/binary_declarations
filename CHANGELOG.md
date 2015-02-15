@@ -1,3 +1,7 @@
+## 0.0.46
+
+- Added support of string concatenation
+
 ## 0.0.45
 
 - Breaking changes: All the direct values replaced on the literals

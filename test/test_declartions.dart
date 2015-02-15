@@ -317,17 +317,16 @@ void main() {
       _checkPresentation(";;", declarations);
     });
 
-    test("Directives.", () {
+    test("String literal concatenation.", () {
       var list = <String>[];
-      list.add("#define FOO");
-      list.add("#if defined(FOO)");
-      list.add("typedef int INT;");
-      list.add("#else");
-      list.add("typedef int LONG;");
-      list.add("#endif");
+      list.add('__attribute__((deprected("This" "is" "deprected"))) int foo;');
       var text = list.join("\n");
       var declarations = new Declarations(text);
-      _checkPresentation("typedef int INT;", declarations);
+      _checkPresentation(text, declarations);
+    });
+
+    test("Directives.", () {
+
     });
   });
 }
