@@ -270,10 +270,10 @@ ASTERISK <-
   '*' SPACING { $$ = $1; }
 
 ATTRIBUTE <-
-  '__attribute__' SPACING { $$ = $1; }
+  '__attribute__' !IDENT_PART SPACING { $$ = $1; }
 
 BOOL <-
-  '_Bool' SPACING { $$ = $1; }
+  '_Bool' !IDENT_PART SPACING { $$ = $1; }
 
 CHAR <-
   'char' !IDENT_PART SPACING { $$ = $1; }
@@ -358,7 +358,7 @@ STRUCT <-
   'struct' !IDENT_PART SPACING { $$ = $1; }
 
 TYPEDEF <-
-  'typedef' SPACING { $$ = $1; }
+  'typedef' !IDENT_PART SPACING { $$ = $1; }
 
 UNION <-
   'union' !IDENT_PART SPACING { $$ = $1; }
@@ -381,7 +381,7 @@ COMMENT <-
   '//' (!EOL .)* (EOL / !.)
 
 CONST <-
-  'const' SPACING { $$ = $1; }
+  'const' !IDENT_PART SPACING { $$ = $1; }
 
 ELLIPSIS <-
   '...' SPACING { $$ = $1; }
@@ -447,7 +447,8 @@ PLUS <-
   '+' SPACING { $$ = $1; }
 
 RESERVED_WORD <-
-  ('auto' / 'break' / 'case' / 'char' / 'const' / 'continue' / 'default' / 'do' / 'double' / 'else' / 'enum' / 'extern' / 'float' / 'for' / 'goto' / 'if' / 'inline' / 'int' / 'long' / 'register' / 'restrict' / 'return' / 'short' / 'signed' / 'sizeof' / 'static' / 'struct' / 'switch' / 'typedef' / 'union' / 'unsigned' / 'void' / 'volatile' / 'while' / '_Bool' / '_Complex' / '_Imaginary') !(IDENT_START / IDENT_CONT) { $$ = $1; }
+  ('auto' / 'break' / 'case' / 'char' / 'const' / 'continue' / 'default' / 'do' / 'double' / 'else' / 'enum' / 'extern' / 'float' / 'for' / 'goto' / 'if' / 'inline' / 'int' / 'long' / 'register' / 'restrict' / 'return' / 'short' / 'signed' / 'sizeof' / 'static' / 'struct' / 'switch' / 'typedef' / 'union' / 'unsigned' / 'void' / 'volatile' / 'while' / '_Bool' / '_Complex' / '_Imaginary') !(IDENT_START / IDENT_CONT)
+  / '__attribute__'
 
 SIGN <-
   PLUS
@@ -483,7 +484,7 @@ VA_LIST_TYPE <-
   ELLIPSIS { $$ = new VaListTypeSpecification(); }
 
 VOLATILE <-
-  'volatile' SPACING { $$ = $1; }
+  'volatile' !IDENT_PART SPACING { $$ = $1; }
 
 ZERO <-
   [0]+ ![0-9]+ { $$ = 0; }

@@ -167,19 +167,21 @@ class CParser {
   
   static final List<String> _expect55 = <String>["+"];
   
-  static final List<String> _expect56 = <String>["_Bool", "_Complex", "_Imaginary", "auto", "break", "case", "char", "const", "continue", "default", "do", "double", "else", "enum", "extern", "float", "for", "goto", "if", "inline", "int", "long", "register", "restrict", "return", "short", "signed", "sizeof", "static", "struct", "switch", "typedef", "union", "unsigned", "void", "volatile", "while"];
+  static final List<String> _expect56 = <String>["_Bool", "_Complex", "_Imaginary", "__attribute__", "auto", "break", "case", "char", "const", "continue", "default", "do", "double", "else", "enum", "extern", "float", "for", "goto", "if", "inline", "int", "long", "register", "restrict", "return", "short", "signed", "sizeof", "static", "struct", "switch", "typedef", "union", "unsigned", "void", "volatile", "while"];
   
-  static final List<String> _expect57 = <String>["+", "-"];
+  static final List<String> _expect57 = <String>["_Bool", "_Complex", "_Imaginary", "auto", "break", "case", "char", "const", "continue", "default", "do", "double", "else", "enum", "extern", "float", "for", "goto", "if", "inline", "int", "long", "register", "restrict", "return", "short", "signed", "sizeof", "static", "struct", "switch", "typedef", "union", "unsigned", "void", "volatile", "while"];
   
-  static final List<String> _expect58 = <String>["signed"];
+  static final List<String> _expect58 = <String>["+", "-"];
   
-  static final List<String> _expect59 = <String>["\\U", "\\u"];
+  static final List<String> _expect59 = <String>["signed"];
   
   static final List<String> _expect6 = <String>["\',\'"];
   
-  static final List<String> _expect60 = <String>["unsigned"];
+  static final List<String> _expect60 = <String>["\\U", "\\u"];
   
-  static final List<String> _expect61 = <String>["volatile"];
+  static final List<String> _expect61 = <String>["unsigned"];
+  
+  static final List<String> _expect62 = <String>["volatile"];
   
   static final List<String> _expect7 = <String>["NUMBER", "STRING"];
   
@@ -406,7 +408,7 @@ class CParser {
   
   static final List<List<int>> _transitions34 = [[43, 43, 45, 45, 48, 48]];
   
-  static final List<List<int>> _transitions35 = [[95, 95, 97, 103, 105, 105, 108, 108, 114, 119]];
+  static final List<List<int>> _transitions35 = [[95, 95], [97, 103, 105, 105, 108, 108, 114, 119]];
   
   static final List<List<int>> _transitions36 = [[95, 95], [97, 97], [98, 98], [99, 99], [100, 100], [101, 101], [102, 102], [103, 103], [105, 105], [108, 108], [114, 114], [115, 115], [116, 116], [117, 117], [118, 118], [119, 119]];
   
@@ -877,15 +879,15 @@ class CParser {
   
   dynamic _parse_ATTRIBUTE() {
     // LEXEME (TOKEN)
-    // ATTRIBUTE <- '__attribute__' SPACING
+    // ATTRIBUTE <- '__attribute__' !IDENT_PART SPACING
     var $$;
     _token = 2;  
     _tokenStart = _cursor;  
-    // => '__attribute__' SPACING # Choice
+    // => '__attribute__' !IDENT_PART SPACING # Choice
     switch (_ch == 95 ? 0 : _ch == -1 ? 2 : 1) {
       // [_]
       case 0:
-        // => '__attribute__' SPACING # Sequence
+        // => '__attribute__' !IDENT_PART SPACING # Sequence
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
         _startPos = _cursor;
         while (true) {  
@@ -893,18 +895,34 @@ class CParser {
           $$ = _matchString(_strings0, '__attribute__');
           // <= '__attribute__'
           if (!success) break;
-          var seq = new List(2)..[0] = $$;
+          var seq = new List(3)..[0] = $$;
+          // => !IDENT_PART
+          var ch1 = _ch, pos1 = _cursor, testing0 = _testing; 
+          _testing = _inputLen + 1;
+          // => IDENT_PART
+          $$ = _parse_IDENT_PART();
+          // <= IDENT_PART
+          _ch = ch1;
+          _cursor = pos1; 
+          _testing = testing0;
+          $$ = null;
+          success = !success;
+          // <= !IDENT_PART
+          if (!success) break;
+          seq[1] = $$;
           // => SPACING
           $$ = _parse_SPACING();
           // <= SPACING
           if (!success) break;
-          seq[1] = $$;
+          seq[2] = $$;
           $$ = seq;
           if (success) {    
             // '__attribute__'
             final $1 = seq[0];
-            // SPACING
+            // !IDENT_PART
             final $2 = seq[1];
+            // SPACING
+            final $3 = seq[2];
             final $start = startPos0;
             $$ = $1;
           }
@@ -915,7 +933,7 @@ class CParser {
           _cursor = pos0;
         }
         _startPos = startPos0;
-        // <= '__attribute__' SPACING # Sequence
+        // <= '__attribute__' !IDENT_PART SPACING # Sequence
         break;
       // No matches
       // EOF
@@ -929,7 +947,7 @@ class CParser {
       // Expected: '__attribute__'
       _failure(_expect4);
     }
-    // <= '__attribute__' SPACING # Choice
+    // <= '__attribute__' !IDENT_PART SPACING # Choice
     _token = null;
     _tokenStart = null;
     return $$;
@@ -1073,15 +1091,15 @@ class CParser {
   
   dynamic _parse_BOOL() {
     // LEXEME (TOKEN)
-    // BOOL <- '_Bool' SPACING
+    // BOOL <- '_Bool' !IDENT_PART SPACING
     var $$;
     _token = 3;  
     _tokenStart = _cursor;  
-    // => '_Bool' SPACING # Choice
+    // => '_Bool' !IDENT_PART SPACING # Choice
     switch (_ch == 95 ? 0 : _ch == -1 ? 2 : 1) {
       // [_]
       case 0:
-        // => '_Bool' SPACING # Sequence
+        // => '_Bool' !IDENT_PART SPACING # Sequence
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
         _startPos = _cursor;
         while (true) {  
@@ -1089,18 +1107,34 @@ class CParser {
           $$ = _matchString(_strings1, '_Bool');
           // <= '_Bool'
           if (!success) break;
-          var seq = new List(2)..[0] = $$;
+          var seq = new List(3)..[0] = $$;
+          // => !IDENT_PART
+          var ch1 = _ch, pos1 = _cursor, testing0 = _testing; 
+          _testing = _inputLen + 1;
+          // => IDENT_PART
+          $$ = _parse_IDENT_PART();
+          // <= IDENT_PART
+          _ch = ch1;
+          _cursor = pos1; 
+          _testing = testing0;
+          $$ = null;
+          success = !success;
+          // <= !IDENT_PART
+          if (!success) break;
+          seq[1] = $$;
           // => SPACING
           $$ = _parse_SPACING();
           // <= SPACING
           if (!success) break;
-          seq[1] = $$;
+          seq[2] = $$;
           $$ = seq;
           if (success) {    
             // '_Bool'
             final $1 = seq[0];
-            // SPACING
+            // !IDENT_PART
             final $2 = seq[1];
+            // SPACING
+            final $3 = seq[2];
             final $start = startPos0;
             $$ = $1;
           }
@@ -1111,7 +1145,7 @@ class CParser {
           _cursor = pos0;
         }
         _startPos = startPos0;
-        // <= '_Bool' SPACING # Sequence
+        // <= '_Bool' !IDENT_PART SPACING # Sequence
         break;
       // No matches
       // EOF
@@ -1125,7 +1159,7 @@ class CParser {
       // Expected: '_Bool'
       _failure(_expect17);
     }
-    // <= '_Bool' SPACING # Choice
+    // <= '_Bool' !IDENT_PART SPACING # Choice
     _token = null;
     _tokenStart = null;
     return $$;
@@ -2135,13 +2169,13 @@ class CParser {
   
   dynamic _parse_CONST() {
     // MORHEME
-    // CONST <- 'const' SPACING
+    // CONST <- 'const' !IDENT_PART SPACING
     var $$;
-    // => 'const' SPACING # Choice
+    // => 'const' !IDENT_PART SPACING # Choice
     switch (_ch == 99 ? 0 : _ch == -1 ? 2 : 1) {
       // [c]
       case 0:
-        // => 'const' SPACING # Sequence
+        // => 'const' !IDENT_PART SPACING # Sequence
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
         _startPos = _cursor;
         while (true) {  
@@ -2149,18 +2183,34 @@ class CParser {
           $$ = _matchString(_strings14, 'const');
           // <= 'const'
           if (!success) break;
-          var seq = new List(2)..[0] = $$;
+          var seq = new List(3)..[0] = $$;
+          // => !IDENT_PART
+          var ch1 = _ch, pos1 = _cursor, testing0 = _testing; 
+          _testing = _inputLen + 1;
+          // => IDENT_PART
+          $$ = _parse_IDENT_PART();
+          // <= IDENT_PART
+          _ch = ch1;
+          _cursor = pos1; 
+          _testing = testing0;
+          $$ = null;
+          success = !success;
+          // <= !IDENT_PART
+          if (!success) break;
+          seq[1] = $$;
           // => SPACING
           $$ = _parse_SPACING();
           // <= SPACING
           if (!success) break;
-          seq[1] = $$;
+          seq[2] = $$;
           $$ = seq;
           if (success) {    
             // 'const'
             final $1 = seq[0];
-            // SPACING
+            // !IDENT_PART
             final $2 = seq[1];
+            // SPACING
+            final $3 = seq[2];
             final $start = startPos0;
             $$ = $1;
           }
@@ -2171,7 +2221,7 @@ class CParser {
           _cursor = pos0;
         }
         _startPos = startPos0;
-        // <= 'const' SPACING # Sequence
+        // <= 'const' !IDENT_PART SPACING # Sequence
         break;
       // No matches
       // EOF
@@ -2185,7 +2235,7 @@ class CParser {
       // Expected: const
       _failure(_expect50);
     }
-    // <= 'const' SPACING # Choice
+    // <= 'const' !IDENT_PART SPACING # Choice
     return $$;
   }
   
@@ -8717,14 +8767,432 @@ class CParser {
   
   dynamic _parse_RESERVED_WORD() {
     // MORHEME
-    // RESERVED_WORD <- ('auto' / 'break' / 'case' / 'char' / 'const' / 'continue' / 'default' / 'do' / 'double' / 'else' / 'enum' / 'extern' / 'float' / 'for' / 'goto' / 'if' / 'inline' / 'int' / 'long' / 'register' / 'restrict' / 'return' / 'short' / 'signed' / 'sizeof' / 'static' / 'struct' / 'switch' / 'typedef' / 'union' / 'unsigned' / 'void' / 'volatile' / 'while' / '_Bool' / '_Complex' / '_Imaginary') !(IDENT_START / IDENT_CONT)
+    // RESERVED_WORD <- ('auto' / 'break' / 'case' / 'char' / 'const' / 'continue' / 'default' / 'do' / 'double' / 'else' / 'enum' / 'extern' / 'float' / 'for' / 'goto' / 'if' / 'inline' / 'int' / 'long' / 'register' / 'restrict' / 'return' / 'short' / 'signed' / 'sizeof' / 'static' / 'struct' / 'switch' / 'typedef' / 'union' / 'unsigned' / 'void' / 'volatile' / 'while' / '_Bool' / '_Complex' / '_Imaginary') !(IDENT_START / IDENT_CONT) / '__attribute__'
     var $$;
-    // => ('auto' / 'break' / 'case' / 'char' / 'const' / 'continue' / 'default' / 'do' / 'double' / 'else' / 'enum' / 'extern' / 'float' / 'for' / 'goto' / 'if' / 'inline' / 'int' / 'long' / 'register' / 'restrict' / 'return' / 'short' / 'signed' / 'sizeof' / 'static' / 'struct' / 'switch' / 'typedef' / 'union' / 'unsigned' / 'void' / 'volatile' / 'while' / '_Bool' / '_Complex' / '_Imaginary') !(IDENT_START / IDENT_CONT) # Choice
+    // => ('auto' / 'break' / 'case' / 'char' / 'const' / 'continue' / 'default' / 'do' / 'double' / 'else' / 'enum' / 'extern' / 'float' / 'for' / 'goto' / 'if' / 'inline' / 'int' / 'long' / 'register' / 'restrict' / 'return' / 'short' / 'signed' / 'sizeof' / 'static' / 'struct' / 'switch' / 'typedef' / 'union' / 'unsigned' / 'void' / 'volatile' / 'while' / '_Bool' / '_Complex' / '_Imaginary') !(IDENT_START / IDENT_CONT) / '__attribute__' # Choice
     switch (_getState(_transitions35)) {
-      // [_] [a-g] [i] [l] [r-w]
+      // [_]
       case 0:
+        while (true) {
+          // => ('auto' / 'break' / 'case' / 'char' / 'const' / 'continue' / 'default' / 'do' / 'double' / 'else' / 'enum' / 'extern' / 'float' / 'for' / 'goto' / 'if' / 'inline' / 'int' / 'long' / 'register' / 'restrict' / 'return' / 'short' / 'signed' / 'sizeof' / 'static' / 'struct' / 'switch' / 'typedef' / 'union' / 'unsigned' / 'void' / 'volatile' / 'while' / '_Bool' / '_Complex' / '_Imaginary') !(IDENT_START / IDENT_CONT) # Sequence
+          var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
+          _startPos = _cursor;
+          while (true) {  
+            // => ('auto' / 'break' / 'case' / 'char' / 'const' / 'continue' / 'default' / 'do' / 'double' / 'else' / 'enum' / 'extern' / 'float' / 'for' / 'goto' / 'if' / 'inline' / 'int' / 'long' / 'register' / 'restrict' / 'return' / 'short' / 'signed' / 'sizeof' / 'static' / 'struct' / 'switch' / 'typedef' / 'union' / 'unsigned' / 'void' / 'volatile' / 'while' / '_Bool' / '_Complex' / '_Imaginary') # Choice
+            switch (_getState(_transitions36)) {
+              // [_]
+              case 0:
+                while (true) {
+                  var startPos1 = _startPos;
+                  _startPos = _cursor;
+                  // => '_Bool'
+                  $$ = _matchString(_strings1, '_Bool');
+                  // <= '_Bool'
+                  _startPos = startPos1;
+                  if (success) break;
+                  var startPos2 = _startPos;
+                  _startPos = _cursor;
+                  // => '_Complex'
+                  $$ = _matchString(_strings19, '_Complex');
+                  // <= '_Complex'
+                  _startPos = startPos2;
+                  if (success) break;
+                  var startPos3 = _startPos;
+                  _startPos = _cursor;
+                  // => '_Imaginary'
+                  $$ = _matchString(_strings20, '_Imaginary');
+                  // <= '_Imaginary'
+                  _startPos = startPos3;
+                  break;
+                }
+                break;
+              // [a]
+              case 1:
+                var startPos4 = _startPos;
+                _startPos = _cursor;
+                // => 'auto'
+                $$ = _matchString(_strings21, 'auto');
+                // <= 'auto'
+                _startPos = startPos4;
+                break;
+              // [b]
+              case 2:
+                var startPos5 = _startPos;
+                _startPos = _cursor;
+                // => 'break'
+                $$ = _matchString(_strings22, 'break');
+                // <= 'break'
+                _startPos = startPos5;
+                break;
+              // [c]
+              case 3:
+                while (true) {
+                  var startPos6 = _startPos;
+                  _startPos = _cursor;
+                  // => 'case'
+                  $$ = _matchString(_strings23, 'case');
+                  // <= 'case'
+                  _startPos = startPos6;
+                  if (success) break;
+                  var startPos7 = _startPos;
+                  _startPos = _cursor;
+                  // => 'char'
+                  $$ = _matchString(_strings2, 'char');
+                  // <= 'char'
+                  _startPos = startPos7;
+                  if (success) break;
+                  var startPos8 = _startPos;
+                  _startPos = _cursor;
+                  // => 'const'
+                  $$ = _matchString(_strings14, 'const');
+                  // <= 'const'
+                  _startPos = startPos8;
+                  if (success) break;
+                  var startPos9 = _startPos;
+                  _startPos = _cursor;
+                  // => 'continue'
+                  $$ = _matchString(_strings24, 'continue');
+                  // <= 'continue'
+                  _startPos = startPos9;
+                  break;
+                }
+                break;
+              // [d]
+              case 4:
+                while (true) {
+                  var startPos10 = _startPos;
+                  _startPos = _cursor;
+                  // => 'default'
+                  $$ = _matchString(_strings25, 'default');
+                  // <= 'default'
+                  _startPos = startPos10;
+                  if (success) break;
+                  var startPos11 = _startPos;
+                  _startPos = _cursor;
+                  // => 'do'
+                  $$ = _matchString(_strings26, 'do');
+                  // <= 'do'
+                  _startPos = startPos11;
+                  if (success) break;
+                  var startPos12 = _startPos;
+                  _startPos = _cursor;
+                  // => 'double'
+                  $$ = _matchString(_strings3, 'double');
+                  // <= 'double'
+                  _startPos = startPos12;
+                  break;
+                }
+                break;
+              // [e]
+              case 5:
+                while (true) {
+                  var startPos13 = _startPos;
+                  _startPos = _cursor;
+                  // => 'else'
+                  $$ = _matchString(_strings27, 'else');
+                  // <= 'else'
+                  _startPos = startPos13;
+                  if (success) break;
+                  var startPos14 = _startPos;
+                  _startPos = _cursor;
+                  // => 'enum'
+                  $$ = _matchString(_strings4, 'enum');
+                  // <= 'enum'
+                  _startPos = startPos14;
+                  if (success) break;
+                  var startPos15 = _startPos;
+                  _startPos = _cursor;
+                  // => 'extern'
+                  $$ = _matchString(_strings28, 'extern');
+                  // <= 'extern'
+                  _startPos = startPos15;
+                  break;
+                }
+                break;
+              // [f]
+              case 6:
+                while (true) {
+                  var startPos16 = _startPos;
+                  _startPos = _cursor;
+                  // => 'float'
+                  $$ = _matchString(_strings5, 'float');
+                  // <= 'float'
+                  _startPos = startPos16;
+                  if (success) break;
+                  var startPos17 = _startPos;
+                  _startPos = _cursor;
+                  // => 'for'
+                  $$ = _matchString(_strings29, 'for');
+                  // <= 'for'
+                  _startPos = startPos17;
+                  break;
+                }
+                break;
+              // [g]
+              case 7:
+                var startPos18 = _startPos;
+                _startPos = _cursor;
+                // => 'goto'
+                $$ = _matchString(_strings30, 'goto');
+                // <= 'goto'
+                _startPos = startPos18;
+                break;
+              // [i]
+              case 8:
+                while (true) {
+                  var startPos19 = _startPos;
+                  _startPos = _cursor;
+                  // => 'if'
+                  $$ = _matchString(_strings31, 'if');
+                  // <= 'if'
+                  _startPos = startPos19;
+                  if (success) break;
+                  var startPos20 = _startPos;
+                  _startPos = _cursor;
+                  // => 'inline'
+                  $$ = _matchString(_strings32, 'inline');
+                  // <= 'inline'
+                  _startPos = startPos20;
+                  if (success) break;
+                  var startPos21 = _startPos;
+                  _startPos = _cursor;
+                  // => 'int'
+                  $$ = _matchString(_strings6, 'int');
+                  // <= 'int'
+                  _startPos = startPos21;
+                  break;
+                }
+                break;
+              // [l]
+              case 9:
+                var startPos22 = _startPos;
+                _startPos = _cursor;
+                // => 'long'
+                $$ = _matchString(_strings18, 'long');
+                // <= 'long'
+                _startPos = startPos22;
+                break;
+              // [r]
+              case 10:
+                while (true) {
+                  var startPos23 = _startPos;
+                  _startPos = _cursor;
+                  // => 'register'
+                  $$ = _matchString(_strings33, 'register');
+                  // <= 'register'
+                  _startPos = startPos23;
+                  if (success) break;
+                  var startPos24 = _startPos;
+                  _startPos = _cursor;
+                  // => 'restrict'
+                  $$ = _matchString(_strings34, 'restrict');
+                  // <= 'restrict'
+                  _startPos = startPos24;
+                  if (success) break;
+                  var startPos25 = _startPos;
+                  _startPos = _cursor;
+                  // => 'return'
+                  $$ = _matchString(_strings35, 'return');
+                  // <= 'return'
+                  _startPos = startPos25;
+                  break;
+                }
+                break;
+              // [s]
+              case 11:
+                while (true) {
+                  var startPos26 = _startPos;
+                  _startPos = _cursor;
+                  // => 'short'
+                  $$ = _matchString(_strings7, 'short');
+                  // <= 'short'
+                  _startPos = startPos26;
+                  if (success) break;
+                  var startPos27 = _startPos;
+                  _startPos = _cursor;
+                  // => 'signed'
+                  $$ = _matchString(_strings36, 'signed');
+                  // <= 'signed'
+                  _startPos = startPos27;
+                  if (success) break;
+                  var startPos28 = _startPos;
+                  _startPos = _cursor;
+                  // => 'sizeof'
+                  $$ = _matchString(_strings37, 'sizeof');
+                  // <= 'sizeof'
+                  _startPos = startPos28;
+                  if (success) break;
+                  var startPos29 = _startPos;
+                  _startPos = _cursor;
+                  // => 'static'
+                  $$ = _matchString(_strings38, 'static');
+                  // <= 'static'
+                  _startPos = startPos29;
+                  if (success) break;
+                  var startPos30 = _startPos;
+                  _startPos = _cursor;
+                  // => 'struct'
+                  $$ = _matchString(_strings9, 'struct');
+                  // <= 'struct'
+                  _startPos = startPos30;
+                  if (success) break;
+                  var startPos31 = _startPos;
+                  _startPos = _cursor;
+                  // => 'switch'
+                  $$ = _matchString(_strings39, 'switch');
+                  // <= 'switch'
+                  _startPos = startPos31;
+                  break;
+                }
+                break;
+              // [t]
+              case 12:
+                var startPos32 = _startPos;
+                _startPos = _cursor;
+                // => 'typedef'
+                $$ = _matchString(_strings10, 'typedef');
+                // <= 'typedef'
+                _startPos = startPos32;
+                break;
+              // [u]
+              case 13:
+                while (true) {
+                  var startPos33 = _startPos;
+                  _startPos = _cursor;
+                  // => 'union'
+                  $$ = _matchString(_strings11, 'union');
+                  // <= 'union'
+                  _startPos = startPos33;
+                  if (success) break;
+                  var startPos34 = _startPos;
+                  _startPos = _cursor;
+                  // => 'unsigned'
+                  $$ = _matchString(_strings40, 'unsigned');
+                  // <= 'unsigned'
+                  _startPos = startPos34;
+                  break;
+                }
+                break;
+              // [v]
+              case 14:
+                while (true) {
+                  var startPos35 = _startPos;
+                  _startPos = _cursor;
+                  // => 'void'
+                  $$ = _matchString(_strings12, 'void');
+                  // <= 'void'
+                  _startPos = startPos35;
+                  if (success) break;
+                  var startPos36 = _startPos;
+                  _startPos = _cursor;
+                  // => 'volatile'
+                  $$ = _matchString(_strings41, 'volatile');
+                  // <= 'volatile'
+                  _startPos = startPos36;
+                  break;
+                }
+                break;
+              // [w]
+              case 15:
+                var startPos37 = _startPos;
+                _startPos = _cursor;
+                // => 'while'
+                $$ = _matchString(_strings42, 'while');
+                // <= 'while'
+                _startPos = startPos37;
+                break;
+              // No matches
+              // EOF
+              case 16:
+              case 17:
+                $$ = null;
+                success = false;
+                break;
+            }
+            if (!success && _cursor > _testing) {
+              // Expected: auto, break, case, char, const, continue, default, do, double, else, enum, extern, float, for, goto, if, inline, int, long, register, restrict, return, short, signed, sizeof, static, struct, switch, typedef, union, unsigned, void, volatile, while, _Bool, _Complex, _Imaginary
+              _failure(_expect57);
+            }
+            // <= ('auto' / 'break' / 'case' / 'char' / 'const' / 'continue' / 'default' / 'do' / 'double' / 'else' / 'enum' / 'extern' / 'float' / 'for' / 'goto' / 'if' / 'inline' / 'int' / 'long' / 'register' / 'restrict' / 'return' / 'short' / 'signed' / 'sizeof' / 'static' / 'struct' / 'switch' / 'typedef' / 'union' / 'unsigned' / 'void' / 'volatile' / 'while' / '_Bool' / '_Complex' / '_Imaginary') # Choice
+            if (!success) break;
+            var seq = new List(2)..[0] = $$;
+            // => !(IDENT_START / IDENT_CONT)
+            var ch1 = _ch, pos1 = _cursor, testing0 = _testing; 
+            _testing = _inputLen + 1;
+            // => (IDENT_START / IDENT_CONT) # Choice
+            switch (_getState(_transitions33)) {
+              // [0-9]
+              case 0:
+                var startPos38 = _startPos;
+                _startPos = _cursor;
+                // => IDENT_CONT
+                $$ = _parse_IDENT_CONT();
+                // <= IDENT_CONT
+                _startPos = startPos38;
+                break;
+              // [A-Z] [_] [a-z]
+              case 1:
+                while (true) {
+                  var startPos39 = _startPos;
+                  _startPos = _cursor;
+                  // => IDENT_START
+                  $$ = _parse_IDENT_START();
+                  // <= IDENT_START
+                  _startPos = startPos39;
+                  if (success) break;
+                  var startPos40 = _startPos;
+                  _startPos = _cursor;
+                  // => IDENT_CONT
+                  $$ = _parse_IDENT_CONT();
+                  // <= IDENT_CONT
+                  _startPos = startPos40;
+                  break;
+                }
+                break;
+              // No matches
+              // EOF
+              case 2:
+              case 3:
+                $$ = null;
+                success = false;
+                break;
+            }
+            if (!success && _cursor > _testing) {
+              // Expected: 
+              _failure(const [null]);
+            }
+            // <= (IDENT_START / IDENT_CONT) # Choice
+            _ch = ch1;
+            _cursor = pos1; 
+            _testing = testing0;
+            $$ = null;
+            success = !success;
+            // <= !(IDENT_START / IDENT_CONT)
+            if (!success) break;
+            seq[1] = $$;
+            $$ = seq;
+            break;
+          }
+          if (!success) {
+            _ch = ch0;
+            _cursor = pos0;
+          }
+          _startPos = startPos0;
+          // <= ('auto' / 'break' / 'case' / 'char' / 'const' / 'continue' / 'default' / 'do' / 'double' / 'else' / 'enum' / 'extern' / 'float' / 'for' / 'goto' / 'if' / 'inline' / 'int' / 'long' / 'register' / 'restrict' / 'return' / 'short' / 'signed' / 'sizeof' / 'static' / 'struct' / 'switch' / 'typedef' / 'union' / 'unsigned' / 'void' / 'volatile' / 'while' / '_Bool' / '_Complex' / '_Imaginary') !(IDENT_START / IDENT_CONT) # Sequence
+          if (success) break;
+          var startPos41 = _startPos;
+          _startPos = _cursor;
+          // => '__attribute__'
+          $$ = _matchString(_strings0, '__attribute__');
+          // <= '__attribute__'
+          _startPos = startPos41;
+          break;
+        }
+        break;
+      // [a-g] [i] [l] [r-w]
+      case 1:
         // => ('auto' / 'break' / 'case' / 'char' / 'const' / 'continue' / 'default' / 'do' / 'double' / 'else' / 'enum' / 'extern' / 'float' / 'for' / 'goto' / 'if' / 'inline' / 'int' / 'long' / 'register' / 'restrict' / 'return' / 'short' / 'signed' / 'sizeof' / 'static' / 'struct' / 'switch' / 'typedef' / 'union' / 'unsigned' / 'void' / 'volatile' / 'while' / '_Bool' / '_Complex' / '_Imaginary') !(IDENT_START / IDENT_CONT) # Sequence
-        var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
+        var ch2 = _ch, pos2 = _cursor, startPos42 = _startPos;
         _startPos = _cursor;
         while (true) {  
           // => ('auto' / 'break' / 'case' / 'char' / 'const' / 'continue' / 'default' / 'do' / 'double' / 'else' / 'enum' / 'extern' / 'float' / 'for' / 'goto' / 'if' / 'inline' / 'int' / 'long' / 'register' / 'restrict' / 'return' / 'short' / 'signed' / 'sizeof' / 'static' / 'struct' / 'switch' / 'typedef' / 'union' / 'unsigned' / 'void' / 'volatile' / 'while' / '_Bool' / '_Complex' / '_Imaginary') # Choice
@@ -8732,323 +9200,323 @@ class CParser {
             // [_]
             case 0:
               while (true) {
-                var startPos1 = _startPos;
+                var startPos43 = _startPos;
                 _startPos = _cursor;
                 // => '_Bool'
                 $$ = _matchString(_strings1, '_Bool');
                 // <= '_Bool'
-                _startPos = startPos1;
+                _startPos = startPos43;
                 if (success) break;
-                var startPos2 = _startPos;
+                var startPos44 = _startPos;
                 _startPos = _cursor;
                 // => '_Complex'
                 $$ = _matchString(_strings19, '_Complex');
                 // <= '_Complex'
-                _startPos = startPos2;
+                _startPos = startPos44;
                 if (success) break;
-                var startPos3 = _startPos;
+                var startPos45 = _startPos;
                 _startPos = _cursor;
                 // => '_Imaginary'
                 $$ = _matchString(_strings20, '_Imaginary');
                 // <= '_Imaginary'
-                _startPos = startPos3;
+                _startPos = startPos45;
                 break;
               }
               break;
             // [a]
             case 1:
-              var startPos4 = _startPos;
+              var startPos46 = _startPos;
               _startPos = _cursor;
               // => 'auto'
               $$ = _matchString(_strings21, 'auto');
               // <= 'auto'
-              _startPos = startPos4;
+              _startPos = startPos46;
               break;
             // [b]
             case 2:
-              var startPos5 = _startPos;
+              var startPos47 = _startPos;
               _startPos = _cursor;
               // => 'break'
               $$ = _matchString(_strings22, 'break');
               // <= 'break'
-              _startPos = startPos5;
+              _startPos = startPos47;
               break;
             // [c]
             case 3:
               while (true) {
-                var startPos6 = _startPos;
+                var startPos48 = _startPos;
                 _startPos = _cursor;
                 // => 'case'
                 $$ = _matchString(_strings23, 'case');
                 // <= 'case'
-                _startPos = startPos6;
+                _startPos = startPos48;
                 if (success) break;
-                var startPos7 = _startPos;
+                var startPos49 = _startPos;
                 _startPos = _cursor;
                 // => 'char'
                 $$ = _matchString(_strings2, 'char');
                 // <= 'char'
-                _startPos = startPos7;
+                _startPos = startPos49;
                 if (success) break;
-                var startPos8 = _startPos;
+                var startPos50 = _startPos;
                 _startPos = _cursor;
                 // => 'const'
                 $$ = _matchString(_strings14, 'const');
                 // <= 'const'
-                _startPos = startPos8;
+                _startPos = startPos50;
                 if (success) break;
-                var startPos9 = _startPos;
+                var startPos51 = _startPos;
                 _startPos = _cursor;
                 // => 'continue'
                 $$ = _matchString(_strings24, 'continue');
                 // <= 'continue'
-                _startPos = startPos9;
+                _startPos = startPos51;
                 break;
               }
               break;
             // [d]
             case 4:
               while (true) {
-                var startPos10 = _startPos;
+                var startPos52 = _startPos;
                 _startPos = _cursor;
                 // => 'default'
                 $$ = _matchString(_strings25, 'default');
                 // <= 'default'
-                _startPos = startPos10;
+                _startPos = startPos52;
                 if (success) break;
-                var startPos11 = _startPos;
+                var startPos53 = _startPos;
                 _startPos = _cursor;
                 // => 'do'
                 $$ = _matchString(_strings26, 'do');
                 // <= 'do'
-                _startPos = startPos11;
+                _startPos = startPos53;
                 if (success) break;
-                var startPos12 = _startPos;
+                var startPos54 = _startPos;
                 _startPos = _cursor;
                 // => 'double'
                 $$ = _matchString(_strings3, 'double');
                 // <= 'double'
-                _startPos = startPos12;
+                _startPos = startPos54;
                 break;
               }
               break;
             // [e]
             case 5:
               while (true) {
-                var startPos13 = _startPos;
+                var startPos55 = _startPos;
                 _startPos = _cursor;
                 // => 'else'
                 $$ = _matchString(_strings27, 'else');
                 // <= 'else'
-                _startPos = startPos13;
+                _startPos = startPos55;
                 if (success) break;
-                var startPos14 = _startPos;
+                var startPos56 = _startPos;
                 _startPos = _cursor;
                 // => 'enum'
                 $$ = _matchString(_strings4, 'enum');
                 // <= 'enum'
-                _startPos = startPos14;
+                _startPos = startPos56;
                 if (success) break;
-                var startPos15 = _startPos;
+                var startPos57 = _startPos;
                 _startPos = _cursor;
                 // => 'extern'
                 $$ = _matchString(_strings28, 'extern');
                 // <= 'extern'
-                _startPos = startPos15;
+                _startPos = startPos57;
                 break;
               }
               break;
             // [f]
             case 6:
               while (true) {
-                var startPos16 = _startPos;
+                var startPos58 = _startPos;
                 _startPos = _cursor;
                 // => 'float'
                 $$ = _matchString(_strings5, 'float');
                 // <= 'float'
-                _startPos = startPos16;
+                _startPos = startPos58;
                 if (success) break;
-                var startPos17 = _startPos;
+                var startPos59 = _startPos;
                 _startPos = _cursor;
                 // => 'for'
                 $$ = _matchString(_strings29, 'for');
                 // <= 'for'
-                _startPos = startPos17;
+                _startPos = startPos59;
                 break;
               }
               break;
             // [g]
             case 7:
-              var startPos18 = _startPos;
+              var startPos60 = _startPos;
               _startPos = _cursor;
               // => 'goto'
               $$ = _matchString(_strings30, 'goto');
               // <= 'goto'
-              _startPos = startPos18;
+              _startPos = startPos60;
               break;
             // [i]
             case 8:
               while (true) {
-                var startPos19 = _startPos;
+                var startPos61 = _startPos;
                 _startPos = _cursor;
                 // => 'if'
                 $$ = _matchString(_strings31, 'if');
                 // <= 'if'
-                _startPos = startPos19;
+                _startPos = startPos61;
                 if (success) break;
-                var startPos20 = _startPos;
+                var startPos62 = _startPos;
                 _startPos = _cursor;
                 // => 'inline'
                 $$ = _matchString(_strings32, 'inline');
                 // <= 'inline'
-                _startPos = startPos20;
+                _startPos = startPos62;
                 if (success) break;
-                var startPos21 = _startPos;
+                var startPos63 = _startPos;
                 _startPos = _cursor;
                 // => 'int'
                 $$ = _matchString(_strings6, 'int');
                 // <= 'int'
-                _startPos = startPos21;
+                _startPos = startPos63;
                 break;
               }
               break;
             // [l]
             case 9:
-              var startPos22 = _startPos;
+              var startPos64 = _startPos;
               _startPos = _cursor;
               // => 'long'
               $$ = _matchString(_strings18, 'long');
               // <= 'long'
-              _startPos = startPos22;
+              _startPos = startPos64;
               break;
             // [r]
             case 10:
               while (true) {
-                var startPos23 = _startPos;
+                var startPos65 = _startPos;
                 _startPos = _cursor;
                 // => 'register'
                 $$ = _matchString(_strings33, 'register');
                 // <= 'register'
-                _startPos = startPos23;
+                _startPos = startPos65;
                 if (success) break;
-                var startPos24 = _startPos;
+                var startPos66 = _startPos;
                 _startPos = _cursor;
                 // => 'restrict'
                 $$ = _matchString(_strings34, 'restrict');
                 // <= 'restrict'
-                _startPos = startPos24;
+                _startPos = startPos66;
                 if (success) break;
-                var startPos25 = _startPos;
+                var startPos67 = _startPos;
                 _startPos = _cursor;
                 // => 'return'
                 $$ = _matchString(_strings35, 'return');
                 // <= 'return'
-                _startPos = startPos25;
+                _startPos = startPos67;
                 break;
               }
               break;
             // [s]
             case 11:
               while (true) {
-                var startPos26 = _startPos;
+                var startPos68 = _startPos;
                 _startPos = _cursor;
                 // => 'short'
                 $$ = _matchString(_strings7, 'short');
                 // <= 'short'
-                _startPos = startPos26;
+                _startPos = startPos68;
                 if (success) break;
-                var startPos27 = _startPos;
+                var startPos69 = _startPos;
                 _startPos = _cursor;
                 // => 'signed'
                 $$ = _matchString(_strings36, 'signed');
                 // <= 'signed'
-                _startPos = startPos27;
+                _startPos = startPos69;
                 if (success) break;
-                var startPos28 = _startPos;
+                var startPos70 = _startPos;
                 _startPos = _cursor;
                 // => 'sizeof'
                 $$ = _matchString(_strings37, 'sizeof');
                 // <= 'sizeof'
-                _startPos = startPos28;
+                _startPos = startPos70;
                 if (success) break;
-                var startPos29 = _startPos;
+                var startPos71 = _startPos;
                 _startPos = _cursor;
                 // => 'static'
                 $$ = _matchString(_strings38, 'static');
                 // <= 'static'
-                _startPos = startPos29;
+                _startPos = startPos71;
                 if (success) break;
-                var startPos30 = _startPos;
+                var startPos72 = _startPos;
                 _startPos = _cursor;
                 // => 'struct'
                 $$ = _matchString(_strings9, 'struct');
                 // <= 'struct'
-                _startPos = startPos30;
+                _startPos = startPos72;
                 if (success) break;
-                var startPos31 = _startPos;
+                var startPos73 = _startPos;
                 _startPos = _cursor;
                 // => 'switch'
                 $$ = _matchString(_strings39, 'switch');
                 // <= 'switch'
-                _startPos = startPos31;
+                _startPos = startPos73;
                 break;
               }
               break;
             // [t]
             case 12:
-              var startPos32 = _startPos;
+              var startPos74 = _startPos;
               _startPos = _cursor;
               // => 'typedef'
               $$ = _matchString(_strings10, 'typedef');
               // <= 'typedef'
-              _startPos = startPos32;
+              _startPos = startPos74;
               break;
             // [u]
             case 13:
               while (true) {
-                var startPos33 = _startPos;
+                var startPos75 = _startPos;
                 _startPos = _cursor;
                 // => 'union'
                 $$ = _matchString(_strings11, 'union');
                 // <= 'union'
-                _startPos = startPos33;
+                _startPos = startPos75;
                 if (success) break;
-                var startPos34 = _startPos;
+                var startPos76 = _startPos;
                 _startPos = _cursor;
                 // => 'unsigned'
                 $$ = _matchString(_strings40, 'unsigned');
                 // <= 'unsigned'
-                _startPos = startPos34;
+                _startPos = startPos76;
                 break;
               }
               break;
             // [v]
             case 14:
               while (true) {
-                var startPos35 = _startPos;
+                var startPos77 = _startPos;
                 _startPos = _cursor;
                 // => 'void'
                 $$ = _matchString(_strings12, 'void');
                 // <= 'void'
-                _startPos = startPos35;
+                _startPos = startPos77;
                 if (success) break;
-                var startPos36 = _startPos;
+                var startPos78 = _startPos;
                 _startPos = _cursor;
                 // => 'volatile'
                 $$ = _matchString(_strings41, 'volatile');
                 // <= 'volatile'
-                _startPos = startPos36;
+                _startPos = startPos78;
                 break;
               }
               break;
             // [w]
             case 15:
-              var startPos37 = _startPos;
+              var startPos79 = _startPos;
               _startPos = _cursor;
               // => 'while'
               $$ = _matchString(_strings42, 'while');
               // <= 'while'
-              _startPos = startPos37;
+              _startPos = startPos79;
               break;
             // No matches
             // EOF
@@ -9060,41 +9528,41 @@ class CParser {
           }
           if (!success && _cursor > _testing) {
             // Expected: auto, break, case, char, const, continue, default, do, double, else, enum, extern, float, for, goto, if, inline, int, long, register, restrict, return, short, signed, sizeof, static, struct, switch, typedef, union, unsigned, void, volatile, while, _Bool, _Complex, _Imaginary
-            _failure(_expect56);
+            _failure(_expect57);
           }
           // <= ('auto' / 'break' / 'case' / 'char' / 'const' / 'continue' / 'default' / 'do' / 'double' / 'else' / 'enum' / 'extern' / 'float' / 'for' / 'goto' / 'if' / 'inline' / 'int' / 'long' / 'register' / 'restrict' / 'return' / 'short' / 'signed' / 'sizeof' / 'static' / 'struct' / 'switch' / 'typedef' / 'union' / 'unsigned' / 'void' / 'volatile' / 'while' / '_Bool' / '_Complex' / '_Imaginary') # Choice
           if (!success) break;
           var seq = new List(2)..[0] = $$;
           // => !(IDENT_START / IDENT_CONT)
-          var ch1 = _ch, pos1 = _cursor, testing0 = _testing; 
+          var ch3 = _ch, pos3 = _cursor, testing1 = _testing; 
           _testing = _inputLen + 1;
           // => (IDENT_START / IDENT_CONT) # Choice
           switch (_getState(_transitions33)) {
             // [0-9]
             case 0:
-              var startPos38 = _startPos;
+              var startPos80 = _startPos;
               _startPos = _cursor;
               // => IDENT_CONT
               $$ = _parse_IDENT_CONT();
               // <= IDENT_CONT
-              _startPos = startPos38;
+              _startPos = startPos80;
               break;
             // [A-Z] [_] [a-z]
             case 1:
               while (true) {
-                var startPos39 = _startPos;
+                var startPos81 = _startPos;
                 _startPos = _cursor;
                 // => IDENT_START
                 $$ = _parse_IDENT_START();
                 // <= IDENT_START
-                _startPos = startPos39;
+                _startPos = startPos81;
                 if (success) break;
-                var startPos40 = _startPos;
+                var startPos82 = _startPos;
                 _startPos = _cursor;
                 // => IDENT_CONT
                 $$ = _parse_IDENT_CONT();
                 // <= IDENT_CONT
-                _startPos = startPos40;
+                _startPos = startPos82;
                 break;
               }
               break;
@@ -9111,45 +9579,37 @@ class CParser {
             _failure(const [null]);
           }
           // <= (IDENT_START / IDENT_CONT) # Choice
-          _ch = ch1;
-          _cursor = pos1; 
-          _testing = testing0;
+          _ch = ch3;
+          _cursor = pos3; 
+          _testing = testing1;
           $$ = null;
           success = !success;
           // <= !(IDENT_START / IDENT_CONT)
           if (!success) break;
           seq[1] = $$;
           $$ = seq;
-          if (success) {    
-            // ('auto' / 'break' / 'case' / 'char' / 'const' / 'continue' / 'default' / 'do' / 'double' / 'else' / 'enum' / 'extern' / 'float' / 'for' / 'goto' / 'if' / 'inline' / 'int' / 'long' / 'register' / 'restrict' / 'return' / 'short' / 'signed' / 'sizeof' / 'static' / 'struct' / 'switch' / 'typedef' / 'union' / 'unsigned' / 'void' / 'volatile' / 'while' / '_Bool' / '_Complex' / '_Imaginary')
-            final $1 = seq[0];
-            // !(IDENT_START / IDENT_CONT)
-            final $2 = seq[1];
-            final $start = startPos0;
-            $$ = $1;
-          }
           break;
         }
         if (!success) {
-          _ch = ch0;
-          _cursor = pos0;
+          _ch = ch2;
+          _cursor = pos2;
         }
-        _startPos = startPos0;
+        _startPos = startPos42;
         // <= ('auto' / 'break' / 'case' / 'char' / 'const' / 'continue' / 'default' / 'do' / 'double' / 'else' / 'enum' / 'extern' / 'float' / 'for' / 'goto' / 'if' / 'inline' / 'int' / 'long' / 'register' / 'restrict' / 'return' / 'short' / 'signed' / 'sizeof' / 'static' / 'struct' / 'switch' / 'typedef' / 'union' / 'unsigned' / 'void' / 'volatile' / 'while' / '_Bool' / '_Complex' / '_Imaginary') !(IDENT_START / IDENT_CONT) # Sequence
         break;
       // No matches
       // EOF
-      case 1:
       case 2:
+      case 3:
         $$ = null;
         success = false;
         break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: auto, break, case, char, const, continue, default, do, double, else, enum, extern, float, for, goto, if, inline, int, long, register, restrict, return, short, signed, sizeof, static, struct, switch, typedef, union, unsigned, void, volatile, while, _Bool, _Complex, _Imaginary
+      // Expected: auto, break, case, char, const, continue, default, do, double, else, enum, extern, float, for, goto, if, inline, int, long, register, restrict, return, short, signed, sizeof, static, struct, switch, typedef, union, unsigned, void, volatile, while, _Bool, _Complex, _Imaginary, __attribute__
       _failure(_expect56);
     }
-    // <= ('auto' / 'break' / 'case' / 'char' / 'const' / 'continue' / 'default' / 'do' / 'double' / 'else' / 'enum' / 'extern' / 'float' / 'for' / 'goto' / 'if' / 'inline' / 'int' / 'long' / 'register' / 'restrict' / 'return' / 'short' / 'signed' / 'sizeof' / 'static' / 'struct' / 'switch' / 'typedef' / 'union' / 'unsigned' / 'void' / 'volatile' / 'while' / '_Bool' / '_Complex' / '_Imaginary') !(IDENT_START / IDENT_CONT) # Choice
+    // <= ('auto' / 'break' / 'case' / 'char' / 'const' / 'continue' / 'default' / 'do' / 'double' / 'else' / 'enum' / 'extern' / 'float' / 'for' / 'goto' / 'if' / 'inline' / 'int' / 'long' / 'register' / 'restrict' / 'return' / 'short' / 'signed' / 'sizeof' / 'static' / 'struct' / 'switch' / 'typedef' / 'union' / 'unsigned' / 'void' / 'volatile' / 'while' / '_Bool' / '_Complex' / '_Imaginary') !(IDENT_START / IDENT_CONT) / '__attribute__' # Choice
     return $$;
   }
   
@@ -9353,7 +9813,7 @@ class CParser {
     }
     if (!success && _cursor > _testing) {
       // Expected: +, -
-      _failure(_expect57);
+      _failure(_expect58);
     }
     // <= PLUS / MINUS # Choice
     return $$;
@@ -9425,7 +9885,7 @@ class CParser {
     }
     if (!success && _cursor > _testing) {
       // Expected: signed
-      _failure(_expect58);
+      _failure(_expect59);
     }
     // <= 'signed' !IDENT_PART SPACING # Choice
     return $$;
@@ -10744,15 +11204,15 @@ class CParser {
   
   dynamic _parse_TYPEDEF() {
     // LEXEME (TOKEN)
-    // TYPEDEF <- 'typedef' SPACING
+    // TYPEDEF <- 'typedef' !IDENT_PART SPACING
     var $$;
     _token = 30;  
     _tokenStart = _cursor;  
-    // => 'typedef' SPACING # Choice
+    // => 'typedef' !IDENT_PART SPACING # Choice
     switch (_ch == 116 ? 0 : _ch == -1 ? 2 : 1) {
       // [t]
       case 0:
-        // => 'typedef' SPACING # Sequence
+        // => 'typedef' !IDENT_PART SPACING # Sequence
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
         _startPos = _cursor;
         while (true) {  
@@ -10760,18 +11220,34 @@ class CParser {
           $$ = _matchString(_strings10, 'typedef');
           // <= 'typedef'
           if (!success) break;
-          var seq = new List(2)..[0] = $$;
+          var seq = new List(3)..[0] = $$;
+          // => !IDENT_PART
+          var ch1 = _ch, pos1 = _cursor, testing0 = _testing; 
+          _testing = _inputLen + 1;
+          // => IDENT_PART
+          $$ = _parse_IDENT_PART();
+          // <= IDENT_PART
+          _ch = ch1;
+          _cursor = pos1; 
+          _testing = testing0;
+          $$ = null;
+          success = !success;
+          // <= !IDENT_PART
+          if (!success) break;
+          seq[1] = $$;
           // => SPACING
           $$ = _parse_SPACING();
           // <= SPACING
           if (!success) break;
-          seq[1] = $$;
+          seq[2] = $$;
           $$ = seq;
           if (success) {    
             // 'typedef'
             final $1 = seq[0];
-            // SPACING
+            // !IDENT_PART
             final $2 = seq[1];
+            // SPACING
+            final $3 = seq[2];
             final $start = startPos0;
             $$ = $1;
           }
@@ -10782,7 +11258,7 @@ class CParser {
           _cursor = pos0;
         }
         _startPos = startPos0;
-        // <= 'typedef' SPACING # Sequence
+        // <= 'typedef' !IDENT_PART SPACING # Sequence
         break;
       // No matches
       // EOF
@@ -10796,7 +11272,7 @@ class CParser {
       // Expected: 'typedef'
       _failure(_expect25);
     }
-    // <= 'typedef' SPACING # Choice
+    // <= 'typedef' !IDENT_PART SPACING # Choice
     _token = null;
     _tokenStart = null;
     return $$;
@@ -11727,7 +12203,7 @@ class CParser {
     }
     if (!success && _cursor > _testing) {
       // Expected: \U, \u
-      _failure(_expect59);
+      _failure(_expect60);
     }
     // <= '\\U' HEX_QUAD HEX_QUAD / '\\u' HEX_QUAD # Choice
     return $$;
@@ -11799,7 +12275,7 @@ class CParser {
     }
     if (!success && _cursor > _testing) {
       // Expected: unsigned
-      _failure(_expect60);
+      _failure(_expect61);
     }
     // <= 'unsigned' !IDENT_PART SPACING # Choice
     return $$;
@@ -11961,13 +12437,13 @@ class CParser {
   
   dynamic _parse_VOLATILE() {
     // MORHEME
-    // VOLATILE <- 'volatile' SPACING
+    // VOLATILE <- 'volatile' !IDENT_PART SPACING
     var $$;
-    // => 'volatile' SPACING # Choice
+    // => 'volatile' !IDENT_PART SPACING # Choice
     switch (_ch == 118 ? 0 : _ch == -1 ? 2 : 1) {
       // [v]
       case 0:
-        // => 'volatile' SPACING # Sequence
+        // => 'volatile' !IDENT_PART SPACING # Sequence
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
         _startPos = _cursor;
         while (true) {  
@@ -11975,18 +12451,34 @@ class CParser {
           $$ = _matchString(_strings41, 'volatile');
           // <= 'volatile'
           if (!success) break;
-          var seq = new List(2)..[0] = $$;
+          var seq = new List(3)..[0] = $$;
+          // => !IDENT_PART
+          var ch1 = _ch, pos1 = _cursor, testing0 = _testing; 
+          _testing = _inputLen + 1;
+          // => IDENT_PART
+          $$ = _parse_IDENT_PART();
+          // <= IDENT_PART
+          _ch = ch1;
+          _cursor = pos1; 
+          _testing = testing0;
+          $$ = null;
+          success = !success;
+          // <= !IDENT_PART
+          if (!success) break;
+          seq[1] = $$;
           // => SPACING
           $$ = _parse_SPACING();
           // <= SPACING
           if (!success) break;
-          seq[1] = $$;
+          seq[2] = $$;
           $$ = seq;
           if (success) {    
             // 'volatile'
             final $1 = seq[0];
-            // SPACING
+            // !IDENT_PART
             final $2 = seq[1];
+            // SPACING
+            final $3 = seq[2];
             final $start = startPos0;
             $$ = $1;
           }
@@ -11997,7 +12489,7 @@ class CParser {
           _cursor = pos0;
         }
         _startPos = startPos0;
-        // <= 'volatile' SPACING # Sequence
+        // <= 'volatile' !IDENT_PART SPACING # Sequence
         break;
       // No matches
       // EOF
@@ -12009,9 +12501,9 @@ class CParser {
     }
     if (!success && _cursor > _testing) {
       // Expected: volatile
-      _failure(_expect61);
+      _failure(_expect62);
     }
-    // <= 'volatile' SPACING # Choice
+    // <= 'volatile' !IDENT_PART SPACING # Choice
     return $$;
   }
   

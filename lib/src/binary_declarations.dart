@@ -575,7 +575,7 @@ class FunctionParameters {
 
         var type = declaration.type;
         var typeKind = type.typeKind;
-        if (typeKind == TypeSpecificationKind.VOID) {
+        if (_Utils.isVoidType(type, declaration.declarator)) {
           if (i != 0) {
             throw new ArgumentError("Parameter $i should not have a '$type' type.");
           }
@@ -742,7 +742,7 @@ class StructureTypeSpecification extends TypeSpecification {
 
   List<ParameterDeclaration> _members;
 
-  StructureTypeSpecification({this.elaboratedType, DeclarationSpecifiers metadata, TypeQualifiers qualifiers,List<ParameterDeclaration> members}) : super(metadata: metadata, qualifiers: qualifiers) {
+  StructureTypeSpecification({this.elaboratedType, DeclarationSpecifiers metadata, TypeQualifiers qualifiers, List<ParameterDeclaration> members}) : super(metadata: metadata, qualifiers: qualifiers) {
     if (elaboratedType == null) {
       throw new ArgumentError.notNull("elaboratedType");
     }
@@ -998,5 +998,21 @@ class _ListCloner<T> {
     }
 
     list = new UnmodifiableListView<T>(temp);
+  }
+}
+
+class _Utils {
+  static bool isVoidType(TypeSpecification type, Declarator declarator) {
+    if (type == null) {
+      return false;
+    }
+
+    if (type.typeKind == TypeSpecificationKind.VOID) {
+      if (declarator == null || declarator.pointers == null) {
+        return true;
+      }
+    }
+
+    return false;
   }
 }

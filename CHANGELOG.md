@@ -1,3 +1,8 @@
+## 0.0.44
+
+- Changes in `c.peg` grammar
+- Minor bug fixes in the constructor `FunctionParameters.FunctionParameters()`
+
 ## 0.0.43
 
 - Changes in `c.peg` grammar

@@ -2,11 +2,6 @@ import "package:binary_declarations/binary_declarations.dart";
 import "package:unittest/unittest.dart";
 
 void main() {
-  var text = "";
-  text = "typedef int * __attribute__((A3)) *INT __attribute__((A4));";
-  new Declarations(text).first.toString();
-
-
   group("Declarations.", () {
     group("Functions.", () {
       test("Function declarations.", () {
@@ -14,6 +9,7 @@ void main() {
         list.add("int foo();");
         list.add("unsigned foo();");
         list.add("void foo();");
+        list.add("void foo(void *, void *);");
         list.add("short foo(int);");
         list.add("struct Foo foo(int, int *);");
         list.add("struct { int i : 8; } foo(enum e { A } e, int *);");
@@ -36,6 +32,10 @@ void main() {
         }
 
         _checkPresentation(text, declarations);
+
+        text = "void foo(void);";
+        declarations = new Declarations(text);
+        _checkPresentation("void foo();", declarations);
       });
     });
 

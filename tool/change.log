@@ -49,3 +49,5 @@
 0.0.37 Breaking changes. Significant changes of several classes
 0.0.37 Declarations are now based on the declarator. The declarator is the main concept of C-like declarations
 0.0.43 Changes in `c.peg` grammar
+0.0.44 Changes in `c.peg` grammar
+0.0.44 Minor bug fixes in the constructor `FunctionParameters.FunctionParameters()`
