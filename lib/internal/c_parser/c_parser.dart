@@ -173,6 +173,8 @@ class CParser {
   
   static final List<String> _expect58 = <String>["unsigned"];
   
+  static final List<String> _expect59 = <String>["0X", "0x"];
+  
   static final List<String> _expect6 = <String>["\',\'"];
   
   static final List<String> _expect7 = <String>["NUMBER", "STRING_LITERAL"];
@@ -181,25 +183,25 @@ class CParser {
   
   static final List<String> _expect9 = <String>["\'const\'", "\'volatile\'"];
   
-  static final List<bool> _lookahead = _unmap([0x7e000005, 0x7d0fffff, 0x3fffff, 0x7fffe080, 0x7fffd0ff, 0x7c07ffff, 0x7a1fffff, 0x607fffff, 0x50ffffff, 0x7fffffff, 0x7fffffff, 0x61fff, 0x0, 0x60, 0x28060000, 0x600007fe, 0x13fc12fe, 0x230000, 0x14740, 0xd00008c, 0x5024]);
+  static final List<bool> _lookahead = _unmap([0x7e000005, 0x7d0fffff, 0x3fffff, 0x7fffe080, 0x7fffd0ff, 0x7c07ffff, 0x7a1fffff, 0x607fffff, 0x50ffffff, 0x7fffffff, 0x1f80f, 0x7f000, 0x0, 0x60, 0x28060000, 0x600007fe, 0x11fc12fe, 0x274000, 0x14600, 0xe80008c, 0x5024]);
   
   // '\n', '\r'
   static final List<bool> _mapping0 = _unmap([0x9]);
   
-  // '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ':', ';', '<', '=', '>', '?', '@', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '[', '\\', ']', '^', '_', '`', 'a', 'f'
-  static final List<bool> _mapping1 = _unmap([0x7fffffff, 0x87ffff]);
-  
   // 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '_', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'
-  static final List<bool> _mapping2 = _unmap([0x43ffffff, 0x7fffffe]);
+  static final List<bool> _mapping1 = _unmap([0x43ffffff, 0x7fffffe]);
   
   // '\"', '\'', '?', '\\', 'a', 'b', 'f', 'n', 'r', 't', 'v'
-  static final List<bool> _mapping3 = _unmap([0x20000021, 0x8000000, 0x544046]);
+  static final List<bool> _mapping2 = _unmap([0x20000021, 0x8000000, 0x544046]);
   
   // '\t', '\n', '\r', ' '
-  static final List<bool> _mapping4 = _unmap([0x800013]);
+  static final List<bool> _mapping3 = _unmap([0x800013]);
   
   // '\n', '\r', '\"', '\\'
-  static final List<bool> _mapping5 = _unmap([0x1000009, 0x0, 0x100000]);
+  static final List<bool> _mapping4 = _unmap([0x1000009, 0x0, 0x100000]);
+  
+  // '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F', 'a', 'b', 'c', 'd', 'e', 'f'
+  static final List<bool> _mapping5 = _unmap([0x7e03ff, 0xfc0000]);
   
   // '__attribute__'
   static final List<int> _strings0 = <int>[95, 95, 97, 116, 116, 114, 105, 98, 117, 116, 101, 95, 95];
@@ -321,6 +323,12 @@ class CParser {
   // '\u'
   static final List<int> _strings44 = <int>[92, 117];
   
+  // '0x'
+  static final List<int> _strings45 = <int>[48, 120];
+  
+  // '0X'
+  static final List<int> _strings46 = <int>[48, 88];
+  
   // 'enum'
   static final List<int> _strings5 = <int>[101, 110, 117, 109];
   
@@ -378,7 +386,7 @@ class CParser {
   
   static final List<List<int>> _transitions24 = [[40, 40], [42, 42], [65, 90, 95, 95, 97, 122]];
   
-  static final List<List<int>> _transitions25 = [[43, 43, 45, 45, 48, 48], [49, 57]];
+  static final List<List<int>> _transitions25 = [[43, 43, 45, 45], [48, 48], [49, 57]];
   
   static final List<List<int>> _transitions26 = [[34, 34, 76, 76]];
   
@@ -386,11 +394,11 @@ class CParser {
   
   static final List<List<int>> _transitions28 = [[10, 10], [13, 13]];
   
-  static final List<List<int>> _transitions29 = [[48, 97, 102, 102]];
+  static final List<List<int>> _transitions29 = [[0, 47, 58, 64, 71, 96, 103, 1114111], [48, 57, 65, 70, 97, 102]];
   
   static final List<List<int>> _transitions3 = [[34, 34, 43, 43, 45, 45, 48, 57, 76, 76]];
   
-  static final List<List<int>> _transitions30 = [[0, 47, 98, 101, 103, 1114111], [48, 97, 102, 102]];
+  static final List<List<int>> _transitions30 = [[48, 57, 65, 70, 97, 102]];
   
   static final List<List<int>> _transitions31 = [[48, 57], [65, 90, 95, 95, 97, 122]];
   
@@ -5600,17 +5608,17 @@ class CParser {
   
   dynamic _parse_HEXADECIMAL_DIGIT() {
     // MORHEME
-    // HEXADECIMAL_DIGIT <- [0-af]
+    // HEXADECIMAL_DIGIT <- [0-9A-Fa-f]
     var $$;
-    // => [0-af] # Choice
-    switch (_getState(_transitions29)) {
-      // [0-a] [f]
+    // => [0-9A-Fa-f] # Choice
+    switch (_getState(_transitions30)) {
+      // [0-9] [A-F] [a-f]
       case 0:
         var startPos0 = _startPos;
         _startPos = _cursor;
-        // => [0-af]
-        $$ = _matchMapping(48, 102, _mapping1);
-        // <= [0-af]
+        // => [0-9A-Fa-f]
+        $$ = _matchMapping(48, 102, _mapping5);
+        // <= [0-9A-Fa-f]
         _startPos = startPos0;
         break;
       // No matches
@@ -5625,7 +5633,7 @@ class CParser {
       // Expected: 
       _failure(const [null]);
     }
-    // <= [0-af] # Choice
+    // <= [0-9A-Fa-f] # Choice
     return $$;
   }
   
@@ -5697,8 +5705,8 @@ class CParser {
     // HEXADECIMAL_ESCAPE_SEQUENCE1 <- HEXADECIMAL_DIGIT HEXADECIMAL_ESCAPE_SEQUENCE1 / ''
     var $$;
     // => HEXADECIMAL_DIGIT HEXADECIMAL_ESCAPE_SEQUENCE1 / '' # Choice
-    switch (_getState(_transitions30)) {
-      // [\u0000-/] [b-e] [g-\u0010ffff]
+    switch (_getState(_transitions29)) {
+      // [\u0000-/] [:-@] [G-`] [g-\u0010ffff]
       // EOF
       case 0:
       case 3:
@@ -5710,7 +5718,7 @@ class CParser {
         // <= ''
         _startPos = startPos0;
         break;
-      // [0-a] [f]
+      // [0-9] [A-F] [a-f]
       case 1:
         while (true) {
           // => HEXADECIMAL_DIGIT HEXADECIMAL_ESCAPE_SEQUENCE1 # Sequence
@@ -5769,13 +5777,132 @@ class CParser {
     return $$;
   }
   
+  dynamic _parse_HEXADECIMAL_NUMBER() {
+    // MORHEME
+    // HEXADECIMAL_NUMBER <- HEXADECIMAL_PREFIX HEXADECIMAL_DIGIT+
+    var $$;
+    // => HEXADECIMAL_PREFIX HEXADECIMAL_DIGIT+ # Choice
+    switch (_ch == 48 ? 0 : _ch == -1 ? 2 : 1) {
+      // [0]
+      case 0:
+        // => HEXADECIMAL_PREFIX HEXADECIMAL_DIGIT+ # Sequence
+        var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
+        _startPos = _cursor;
+        while (true) {  
+          // => HEXADECIMAL_PREFIX
+          $$ = _parse_HEXADECIMAL_PREFIX();
+          // <= HEXADECIMAL_PREFIX
+          if (!success) break;
+          var seq = new List(2)..[0] = $$;
+          // => HEXADECIMAL_DIGIT+
+          var testing0;
+          for (var first = true, reps; ;) {  
+            // => HEXADECIMAL_DIGIT  
+            $$ = _parse_HEXADECIMAL_DIGIT();  
+            // <= HEXADECIMAL_DIGIT  
+            if (success) {
+             if (first) {      
+                first = false;
+                reps = [$$];
+                testing0 = _testing;                  
+              } else {
+                reps.add($$);
+              }
+              _testing = _cursor;   
+            } else {
+              success = !first;
+              if (success) {      
+                _testing = testing0;
+                $$ = reps;      
+              } else $$ = null;
+              break;
+            }  
+          }
+          // <= HEXADECIMAL_DIGIT+
+          if (!success) break;
+          seq[1] = $$;
+          $$ = seq;
+          if (success) {    
+            // HEXADECIMAL_PREFIX
+            final $1 = seq[0];
+            // HEXADECIMAL_DIGIT+
+            final $2 = seq[1];
+            final $start = startPos0;
+            $$ = int.parse(_text(2), radix: 16);
+          }
+          break;
+        }
+        if (!success) {
+          _ch = ch0;
+          _cursor = pos0;
+        }
+        _startPos = startPos0;
+        // <= HEXADECIMAL_PREFIX HEXADECIMAL_DIGIT+ # Sequence
+        break;
+      // No matches
+      // EOF
+      case 1:
+      case 2:
+        $$ = null;
+        success = false;
+        break;
+    }
+    if (!success && _cursor > _testing) {
+      // Expected: 0x, 0X
+      _failure(_expect59);
+    }
+    // <= HEXADECIMAL_PREFIX HEXADECIMAL_DIGIT+ # Choice
+    return $$;
+  }
+  
+  dynamic _parse_HEXADECIMAL_PREFIX() {
+    // MORHEME
+    // HEXADECIMAL_PREFIX <- '0x' / '0X'
+    var $$;
+    // => '0x' / '0X' # Choice
+    switch (_ch == 48 ? 0 : _ch == -1 ? 2 : 1) {
+      // [0]
+      case 0:
+        while (true) {
+          var startPos0 = _startPos;
+          _startPos = _cursor;
+          // => '0x'
+          $$ = _matchString(_strings45, '0x');
+          // <= '0x'
+          _startPos = startPos0;
+          if (success) break;
+          var startPos1 = _startPos;
+          _startPos = _cursor;
+          // => '0X'
+          $$ = _matchString(_strings46, '0X');
+          // <= '0X'
+          _startPos = startPos1;
+          break;
+        }
+        break;
+      // No matches
+      // EOF
+      case 1:
+      case 2:
+        $$ = null;
+        success = false;
+        break;
+    }
+    if (!success && _cursor > _testing) {
+      // Expected: 0x, 0X
+      _failure(_expect59);
+    }
+    // <= '0x' / '0X' # Choice
+    return $$;
+  }
+  
   dynamic _parse_HEX_QUAD() {
     // MORHEME
     // HEX_QUAD <- HEXADECIMAL_DIGIT HEXADECIMAL_DIGIT HEXADECIMAL_DIGIT HEXADECIMAL_DIGIT
     var $$;
     // => HEXADECIMAL_DIGIT HEXADECIMAL_DIGIT HEXADECIMAL_DIGIT HEXADECIMAL_DIGIT # Choice
-    switch (_getState(_transitions29)) {
-      // [0-a] [f]
+    switch (_getState(_transitions30)) {
+      // [0-9] [A-F] [a-f]
       case 0:
         // => HEXADECIMAL_DIGIT HEXADECIMAL_DIGIT HEXADECIMAL_DIGIT HEXADECIMAL_DIGIT # Sequence
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
@@ -6033,7 +6160,7 @@ class CParser {
         var startPos0 = _startPos;
         _startPos = _cursor;
         // => [A-Z_a-z]
-        $$ = _matchMapping(65, 122, _mapping2);
+        $$ = _matchMapping(65, 122, _mapping1);
         // <= [A-Z_a-z]
         _startPos = startPos0;
         break;
@@ -7293,7 +7420,7 @@ class CParser {
   
   dynamic _parse_NUMBER() {
     // LEXEME (TOKEN)
-    // NUMBER <- OCTAL_NUMBER / INTEGER_NUMBER
+    // NUMBER <- HEXADECIMAL_NUMBER / OCTAL_NUMBER / INTEGER_NUMBER
     var $$;          
     var pos = _cursor;             
     if(_cachePos[75] >= pos) {
@@ -7306,9 +7433,9 @@ class CParser {
     }  
     _token = 19;    
     _tokenStart = _cursor;    
-    // => OCTAL_NUMBER / INTEGER_NUMBER # Choice
+    // => HEXADECIMAL_NUMBER / OCTAL_NUMBER / INTEGER_NUMBER # Choice
     switch (_getState(_transitions25)) {
-      // [+] [-] [0]
+      // [+] [-]
       case 0:
         while (true) {
           var startPos0 = _startPos;
@@ -7327,19 +7454,45 @@ class CParser {
           break;
         }
         break;
-      // [1-9]
+      // [0]
       case 1:
-        var startPos2 = _startPos;
+        while (true) {
+          var startPos2 = _startPos;
+          _startPos = _cursor;
+          // => HEXADECIMAL_NUMBER
+          $$ = _parse_HEXADECIMAL_NUMBER();
+          // <= HEXADECIMAL_NUMBER
+          _startPos = startPos2;
+          if (success) break;
+          var startPos3 = _startPos;
+          _startPos = _cursor;
+          // => OCTAL_NUMBER
+          $$ = _parse_OCTAL_NUMBER();
+          // <= OCTAL_NUMBER
+          _startPos = startPos3;
+          if (success) break;
+          var startPos4 = _startPos;
+          _startPos = _cursor;
+          // => INTEGER_NUMBER
+          $$ = _parse_INTEGER_NUMBER();
+          // <= INTEGER_NUMBER
+          _startPos = startPos4;
+          break;
+        }
+        break;
+      // [1-9]
+      case 2:
+        var startPos5 = _startPos;
         _startPos = _cursor;
         // => INTEGER_NUMBER
         $$ = _parse_INTEGER_NUMBER();
         // <= INTEGER_NUMBER
-        _startPos = startPos2;
+        _startPos = startPos5;
         break;
       // No matches
       // EOF
-      case 2:
       case 3:
+      case 4:
         $$ = null;
         success = false;
         break;
@@ -7348,7 +7501,7 @@ class CParser {
       // Expected: NUMBER
       _failure(_expect8);
     }
-    // <= OCTAL_NUMBER / INTEGER_NUMBER # Choice
+    // <= HEXADECIMAL_NUMBER / OCTAL_NUMBER / INTEGER_NUMBER # Choice
     if (_cacheable[75]) {
       _addToCache($$, pos, 75);
     }    
@@ -9638,7 +9791,7 @@ class CParser {
           if (!success) break;
           var seq = new List(2)..[0] = $$;
           // => ["'?\\a-bfnrtv]
-          $$ = _matchMapping(34, 118, _mapping3);
+          $$ = _matchMapping(34, 118, _mapping2);
           // <= ["'?\\a-bfnrtv]
           if (!success) break;
           seq[1] = $$;
@@ -9687,7 +9840,7 @@ class CParser {
         var startPos0 = _startPos;
         _startPos = _cursor;
         // => [\t-\n\r ]
-        $$ = _matchMapping(9, 32, _mapping4);
+        $$ = _matchMapping(9, 32, _mapping3);
         // <= [\t-\n\r ]
         _startPos = startPos0;
         break;
@@ -9921,7 +10074,7 @@ class CParser {
             var ch1 = _ch, pos1 = _cursor, testing0 = _testing; 
             _testing = _inputLen + 1;
             // => [\n\r"\\]
-            $$ = _matchMapping(10, 92, _mapping5);
+            $$ = _matchMapping(10, 92, _mapping4);
             // <= [\n\r"\\]
             _ch = ch1;
             _cursor = pos1; 
@@ -9978,7 +10131,7 @@ class CParser {
           var ch3 = _ch, pos3 = _cursor, testing1 = _testing; 
           _testing = _inputLen + 1;
           // => [\n\r"\\]
-          $$ = _matchMapping(10, 92, _mapping5);
+          $$ = _matchMapping(10, 92, _mapping4);
           // <= [\n\r"\\]
           _ch = ch3;
           _cursor = pos3; 
@@ -12746,9 +12899,9 @@ class CParser {
       throw new RangeError('pos');
     }      
     _cursor = pos;
-    _cache = new List<Map<int, List>>(122);
-    _cachePos = new List<int>.filled(122, -1);  
-    _cacheable = new List<bool>.filled(122, false);
+    _cache = new List<Map<int, List>>(124);
+    _cachePos = new List<int>.filled(124, -1);  
+    _cacheable = new List<bool>.filled(124, false);
     _ch = -1;
     _errors = <CParserError>[];   
     _expected = <String>[];

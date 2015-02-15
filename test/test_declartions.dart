@@ -289,6 +289,14 @@ void main() {
       _checkPresentation("int i[011];", declarations);
     });
 
+    test("Hexadecimal numbers.", () {
+      var list = <String>[];
+      list.add("int i[0x11];");
+      var text = list.join("\n");
+      var declarations = new Declarations(text);
+      _checkPresentation("int i[0x11];", declarations);
+    });
+
     test("Attributes.", () {
       var list = <String>[];
       list.add("const __attribute__((A0)) typedef __attribute__((A1)) signed int __attribute__((A2)) INT __attribute__((A3));");
