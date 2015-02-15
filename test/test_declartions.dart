@@ -53,7 +53,7 @@ void main() {
         baseList.add("$kind s { int i; $kind s; }");
         baseList.add("$kind s { int i; $kind s s; }");
         baseList.add("$kind s { int i; $kind s { int i; } s; }");
-        baseList.add("$kind s { int i; int a : 1; }");
+        baseList.add("$kind s { int i; DWORD a : 1; }");
         baseList.add("$kind s { int i; int : 0; }");
         baseList.add("$kind s { int foo(int); }");
         baseList.add("$kind s { int *foo(char); }");

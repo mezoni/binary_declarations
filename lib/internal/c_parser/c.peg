@@ -178,8 +178,8 @@ StructureMember <-
   / ParameterDeclarationAbstract SEMICOLON { $$ = $1; }
 
 BitFieldParameterDeclaration <-
-  Metadata? TypeQualifiers? IntegerType BitFieldDeclaratorNotAbstract { $$ = new ParameterDeclaration(declarator: $4, metadata: $1, qualifiers: $2,  type: $3); }
-  / Metadata? TypeQualifiers? IntegerType BitFieldDeclaratorAbstract { $$ = new ParameterDeclaration(declarator: $4, metadata: $1, qualifiers: $2, type: $3); }
+  Metadata? TypeQualifiers? Type BitFieldDeclaratorNotAbstract { $$ = new ParameterDeclaration(declarator: $4, metadata: $1, qualifiers: $2,  type: $3); }
+  / Metadata? TypeQualifiers? Type BitFieldDeclaratorAbstract { $$ = new ParameterDeclaration(declarator: $4, metadata: $1, qualifiers: $2, type: $3); }
 
 BitFieldDeclaratorNotAbstract <-
   Identifier COLON IntegerLiteral Metadata? { $$ = new Declarator(identifier: $1, metadata: $4, width: $3); }

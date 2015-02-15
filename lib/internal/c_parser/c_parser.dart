@@ -181,7 +181,7 @@ class CParser {
   
   static final List<String> _expect9 = <String>["\'const\'", "\'volatile\'"];
   
-  static final List<bool> _lookahead = _unmap([0x7e000005, 0x7d0fffff, 0x3fffff, 0x7fffe080, 0x7fffd0ff, 0x7c07ffff, 0x7a1fffff, 0x607fffff, 0x50ffffff, 0x7fffffff, 0x7fffffff, 0x61fff, 0x0, 0x60, 0x28060000, 0x600007fe, 0x11fc12fe, 0x274000, 0x40904600, 0xe80008e, 0x80005]);
+  static final List<bool> _lookahead = _unmap([0x7e000005, 0x7d0fffff, 0x3fffff, 0x7fffe080, 0x7fffd0ff, 0x7c07ffff, 0x7a1fffff, 0x607fffff, 0x50ffffff, 0x7fffffff, 0x7fffffff, 0x61fff, 0x0, 0x60, 0x28060000, 0x600007fe, 0x13fc12fe, 0x230000, 0x14740, 0xd00008c, 0x5024]);
   
   // '\n', '\r'
   static final List<bool> _mapping0 = _unmap([0x9]);
@@ -360,59 +360,55 @@ class CParser {
   
   static final List<List<int>> _transitions16 = [[115, 115], [117, 117]];
   
-  static final List<List<int>> _transitions17 = [[65, 90, 97, 98, 100, 104, 106, 107, 109, 114, 116, 116, 119, 122], [95, 95, 99, 99, 105, 105, 108, 108, 115, 115, 117, 118]];
+  static final List<List<int>> _transitions17 = [[58, 58, 65, 90, 95, 95, 97, 122]];
   
-  static final List<List<int>> _transitions18 = [[95, 95, 99, 99, 105, 105, 108, 108, 115, 115, 117, 118]];
+  static final List<List<int>> _transitions18 = [[42, 42], [91, 91]];
   
-  static final List<List<int>> _transitions19 = [[58, 58, 65, 90, 95, 95, 97, 122]];
+  static final List<List<int>> _transitions19 = [[40, 40, 42, 42]];
   
   static final List<List<int>> _transitions2 = [[65, 90, 95, 95, 97, 122]];
   
-  static final List<List<int>> _transitions20 = [[42, 42], [91, 91]];
+  static final List<List<int>> _transitions20 = [[95, 95, 99, 99, 115, 115, 117, 118]];
   
-  static final List<List<int>> _transitions21 = [[40, 40, 42, 42]];
+  static final List<List<int>> _transitions21 = [[95, 95, 99, 99, 101, 101, 118, 118]];
   
-  static final List<List<int>> _transitions22 = [[95, 95, 99, 99, 115, 115, 117, 118]];
+  static final List<List<int>> _transitions22 = [[95, 95, 99, 99, 116, 116, 118, 118]];
   
-  static final List<List<int>> _transitions23 = [[95, 95, 99, 99, 101, 101, 118, 118]];
+  static final List<List<int>> _transitions23 = [[40, 40, 42, 42, 65, 90, 95, 95, 97, 122]];
   
-  static final List<List<int>> _transitions24 = [[95, 95, 99, 99, 116, 116, 118, 118]];
+  static final List<List<int>> _transitions24 = [[40, 40], [42, 42], [65, 90, 95, 95, 97, 122]];
   
-  static final List<List<int>> _transitions25 = [[40, 40, 42, 42, 65, 90, 95, 95, 97, 122]];
+  static final List<List<int>> _transitions25 = [[43, 43, 45, 45, 48, 48], [49, 57]];
   
-  static final List<List<int>> _transitions26 = [[40, 40], [42, 42], [65, 90, 95, 95, 97, 122]];
+  static final List<List<int>> _transitions26 = [[34, 34, 76, 76]];
   
-  static final List<List<int>> _transitions27 = [[43, 43, 45, 45, 48, 48], [49, 57]];
+  static final List<List<int>> _transitions27 = [[0, 9, 11, 12, 14, 1114111], [10, 10, 13, 13]];
   
-  static final List<List<int>> _transitions28 = [[34, 34, 76, 76]];
+  static final List<List<int>> _transitions28 = [[10, 10], [13, 13]];
   
-  static final List<List<int>> _transitions29 = [[0, 9, 11, 12, 14, 1114111], [10, 10, 13, 13]];
+  static final List<List<int>> _transitions29 = [[48, 97, 102, 102]];
   
   static final List<List<int>> _transitions3 = [[34, 34, 43, 43, 45, 45, 48, 57, 76, 76]];
   
-  static final List<List<int>> _transitions30 = [[10, 10], [13, 13]];
+  static final List<List<int>> _transitions30 = [[0, 47, 98, 101, 103, 1114111], [48, 97, 102, 102]];
   
-  static final List<List<int>> _transitions31 = [[48, 97, 102, 102]];
+  static final List<List<int>> _transitions31 = [[48, 57], [65, 90, 95, 95, 97, 122]];
   
-  static final List<List<int>> _transitions32 = [[0, 47, 98, 101, 103, 1114111], [48, 97, 102, 102]];
+  static final List<List<int>> _transitions32 = [[43, 43, 45, 45, 48, 48]];
   
-  static final List<List<int>> _transitions33 = [[48, 57], [65, 90, 95, 95, 97, 122]];
+  static final List<List<int>> _transitions33 = [[95, 95], [97, 103, 105, 105, 108, 108, 114, 119]];
   
-  static final List<List<int>> _transitions34 = [[43, 43, 45, 45, 48, 48]];
+  static final List<List<int>> _transitions34 = [[95, 95], [97, 97], [98, 98], [99, 99], [100, 100], [101, 101], [102, 102], [103, 103], [105, 105], [108, 108], [114, 114], [115, 115], [116, 116], [117, 117], [118, 118], [119, 119]];
   
-  static final List<List<int>> _transitions35 = [[95, 95], [97, 103, 105, 105, 108, 108, 114, 119]];
+  static final List<List<int>> _transitions35 = [[43, 43], [45, 45]];
   
-  static final List<List<int>> _transitions36 = [[95, 95], [97, 97], [98, 98], [99, 99], [100, 100], [101, 101], [102, 102], [103, 103], [105, 105], [108, 108], [114, 114], [115, 115], [116, 116], [117, 117], [118, 118], [119, 119]];
+  static final List<List<int>> _transitions36 = [[9, 10, 13, 13, 32, 32]];
   
-  static final List<List<int>> _transitions37 = [[43, 43], [45, 45]];
+  static final List<List<int>> _transitions37 = [[9, 10, 13, 13, 32, 32], [47, 47]];
   
-  static final List<List<int>> _transitions38 = [[9, 10, 13, 13, 32, 32]];
-  
-  static final List<List<int>> _transitions39 = [[9, 10, 13, 13, 32, 32], [47, 47]];
+  static final List<List<int>> _transitions38 = [[34, 34], [76, 76]];
   
   static final List<List<int>> _transitions4 = [[34, 34, 76, 76], [43, 43, 45, 45, 48, 57]];
-  
-  static final List<List<int>> _transitions40 = [[34, 34], [76, 76]];
   
   static final List<List<int>> _transitions5 = [[43, 43, 45, 45, 48, 57]];
   
@@ -1099,7 +1095,7 @@ class CParser {
     // BitFieldDeclaratorAbstract <- Identifier? COLON IntegerLiteral Metadata?
     var $$;
     // => Identifier? COLON IntegerLiteral Metadata? # Choice
-    switch (_getState(_transitions19)) {
+    switch (_getState(_transitions17)) {
       // [:] [A-Z] [_] [a-z]
       // EOF
       case 0:
@@ -1254,14 +1250,16 @@ class CParser {
   
   dynamic _parse_BitFieldParameterDeclaration() {
     // SENTENCE (NONTERMINAL)
-    // BitFieldParameterDeclaration <- Metadata? TypeQualifiers? IntegerType BitFieldDeclaratorNotAbstract / Metadata? TypeQualifiers? IntegerType BitFieldDeclaratorAbstract
+    // BitFieldParameterDeclaration <- Metadata? TypeQualifiers? Type BitFieldDeclaratorNotAbstract / Metadata? TypeQualifiers? Type BitFieldDeclaratorAbstract
     var $$;
-    // => Metadata? TypeQualifiers? IntegerType BitFieldDeclaratorNotAbstract / Metadata? TypeQualifiers? IntegerType BitFieldDeclaratorAbstract # Choice
-    switch (_getState(_transitions18)) {
-      // [_] [c] [i] [l] [s] [u-v]
+    // => Metadata? TypeQualifiers? Type BitFieldDeclaratorNotAbstract / Metadata? TypeQualifiers? Type BitFieldDeclaratorAbstract # Choice
+    switch (_getState(_transitions2)) {
+      // [A-Z] [_] [a-z]
+      // EOF
       case 0:
+      case 2:
         while (true) {
-          // => Metadata? TypeQualifiers? IntegerType BitFieldDeclaratorNotAbstract # Sequence
+          // => Metadata? TypeQualifiers? Type BitFieldDeclaratorNotAbstract # Sequence
           var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
           _startPos = _cursor;
           while (true) {  
@@ -1287,9 +1285,9 @@ class CParser {
             // <= TypeQualifiers?
             if (!success) break;
             seq[1] = $$;
-            // => IntegerType
-            $$ = _parse_IntegerType();
-            // <= IntegerType
+            // => Type
+            $$ = _parse_Type();
+            // <= Type
             if (!success) break;
             seq[2] = $$;
             // => BitFieldDeclaratorNotAbstract
@@ -1303,7 +1301,7 @@ class CParser {
               final $1 = seq[0];
               // TypeQualifiers?
               final $2 = seq[1];
-              // IntegerType
+              // Type
               final $3 = seq[2];
               // BitFieldDeclaratorNotAbstract
               final $4 = seq[3];
@@ -1317,9 +1315,9 @@ class CParser {
             _cursor = pos0;
           }
           _startPos = startPos0;
-          // <= Metadata? TypeQualifiers? IntegerType BitFieldDeclaratorNotAbstract # Sequence
+          // <= Metadata? TypeQualifiers? Type BitFieldDeclaratorNotAbstract # Sequence
           if (success) break;
-          // => Metadata? TypeQualifiers? IntegerType BitFieldDeclaratorAbstract # Sequence
+          // => Metadata? TypeQualifiers? Type BitFieldDeclaratorAbstract # Sequence
           var ch1 = _ch, pos1 = _cursor, startPos1 = _startPos;
           _startPos = _cursor;
           while (true) {  
@@ -1345,9 +1343,9 @@ class CParser {
             // <= TypeQualifiers?
             if (!success) break;
             seq[1] = $$;
-            // => IntegerType
-            $$ = _parse_IntegerType();
-            // <= IntegerType
+            // => Type
+            $$ = _parse_Type();
+            // <= Type
             if (!success) break;
             seq[2] = $$;
             // => BitFieldDeclaratorAbstract
@@ -1361,7 +1359,7 @@ class CParser {
               final $1 = seq[0];
               // TypeQualifiers?
               final $2 = seq[1];
-              // IntegerType
+              // Type
               final $3 = seq[2];
               // BitFieldDeclaratorAbstract
               final $4 = seq[3];
@@ -1375,23 +1373,21 @@ class CParser {
             _cursor = pos1;
           }
           _startPos = startPos1;
-          // <= Metadata? TypeQualifiers? IntegerType BitFieldDeclaratorAbstract # Sequence
+          // <= Metadata? TypeQualifiers? Type BitFieldDeclaratorAbstract # Sequence
           break;
         }
         break;
       // No matches
-      // EOF
       case 1:
-      case 2:
         $$ = null;
         success = false;
         break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: 'short', 'long', 'char', 'int', SIGNEDNESS
-      _failure(_expect12);
+      // Expected: Identifier, 'short', 'long', 'char', 'int', SIGNEDNESS, 'float', 'double', 'void', '_Bool', 'struct', 'union', 'enum'
+      _failure(_expect3);
     }
-    // <= Metadata? TypeQualifiers? IntegerType BitFieldDeclaratorNotAbstract / Metadata? TypeQualifiers? IntegerType BitFieldDeclaratorAbstract # Choice
+    // <= Metadata? TypeQualifiers? Type BitFieldDeclaratorNotAbstract / Metadata? TypeQualifiers? Type BitFieldDeclaratorAbstract # Choice
     return $$;
   }
   
@@ -2008,7 +2004,7 @@ class CParser {
           if (!success) break;
           seq[1] = $$;
           // => (EOL / !.) # Choice
-          switch (_getState(_transitions29)) {
+          switch (_getState(_transitions27)) {
             // [\u0000-\t] [\u000b-\u000c] [\u000e-\u0010ffff]
             // EOF
             case 0:
@@ -3308,7 +3304,7 @@ class CParser {
     // DeclaratorAbstract <- PointerSpecifiers ArrayDimensions Metadata? / PointerSpecifiers? ArrayDimensions Metadata? / PointerSpecifiers ArrayDimensions? Metadata?
     var $$;
     // => PointerSpecifiers ArrayDimensions Metadata? / PointerSpecifiers? ArrayDimensions Metadata? / PointerSpecifiers ArrayDimensions? Metadata? # Choice
-    switch (_getState(_transitions20)) {
+    switch (_getState(_transitions18)) {
       // [*]
       case 0:
         while (true) {
@@ -3967,7 +3963,7 @@ class CParser {
     // EOL <- '\r\n' / [\n\r]
     var $$;
     // => '\r\n' / [\n\r] # Choice
-    switch (_getState(_transitions30)) {
+    switch (_getState(_transitions28)) {
       // [\n]
       case 0:
         var startPos0 = _startPos;
@@ -4072,7 +4068,7 @@ class CParser {
     // EnumDeclaration <- Metadata? TypeQualifiers? EnumType
     var $$;
     // => Metadata? TypeQualifiers? EnumType # Choice
-    switch (_getState(_transitions23)) {
+    switch (_getState(_transitions21)) {
       // [_] [c] [e] [v]
       case 0:
         // => Metadata? TypeQualifiers? EnumType # Sequence
@@ -5488,7 +5484,7 @@ class CParser {
       _cachePos[44] = pos;
     }  
     // => PointerSpecifiers? OPEN_PAREN PointerSpecifiers Identifier CLOSE_PAREN FunctionParameters ArrayDimensions? Metadata? # Choice
-    switch (_getState(_transitions21)) {
+    switch (_getState(_transitions19)) {
       // [(] [*]
       case 0:
         // => PointerSpecifiers? OPEN_PAREN PointerSpecifiers Identifier CLOSE_PAREN FunctionParameters ArrayDimensions? Metadata? # Sequence
@@ -5607,7 +5603,7 @@ class CParser {
     // HEXADECIMAL_DIGIT <- [0-af]
     var $$;
     // => [0-af] # Choice
-    switch (_getState(_transitions31)) {
+    switch (_getState(_transitions29)) {
       // [0-a] [f]
       case 0:
         var startPos0 = _startPos;
@@ -5701,7 +5697,7 @@ class CParser {
     // HEXADECIMAL_ESCAPE_SEQUENCE1 <- HEXADECIMAL_DIGIT HEXADECIMAL_ESCAPE_SEQUENCE1 / ''
     var $$;
     // => HEXADECIMAL_DIGIT HEXADECIMAL_ESCAPE_SEQUENCE1 / '' # Choice
-    switch (_getState(_transitions32)) {
+    switch (_getState(_transitions30)) {
       // [\u0000-/] [b-e] [g-\u0010ffff]
       // EOF
       case 0:
@@ -5778,7 +5774,7 @@ class CParser {
     // HEX_QUAD <- HEXADECIMAL_DIGIT HEXADECIMAL_DIGIT HEXADECIMAL_DIGIT HEXADECIMAL_DIGIT
     var $$;
     // => HEXADECIMAL_DIGIT HEXADECIMAL_DIGIT HEXADECIMAL_DIGIT HEXADECIMAL_DIGIT # Choice
-    switch (_getState(_transitions31)) {
+    switch (_getState(_transitions29)) {
       // [0-a] [f]
       case 0:
         // => HEXADECIMAL_DIGIT HEXADECIMAL_DIGIT HEXADECIMAL_DIGIT HEXADECIMAL_DIGIT # Sequence
@@ -5941,7 +5937,7 @@ class CParser {
     // IDENT_CONT <- IDENT_START / [0-9]
     var $$;
     // => IDENT_START / [0-9] # Choice
-    switch (_getState(_transitions33)) {
+    switch (_getState(_transitions31)) {
       // [0-9]
       case 0:
         var startPos0 = _startPos;
@@ -5981,7 +5977,7 @@ class CParser {
     // IDENT_PART <- IDENT_START / IDENT_CONT
     var $$;
     // => IDENT_START / IDENT_CONT # Choice
-    switch (_getState(_transitions33)) {
+    switch (_getState(_transitions31)) {
       // [0-9]
       case 0:
         var startPos0 = _startPos;
@@ -6341,16 +6337,7 @@ class CParser {
   dynamic _parse_IntegerType() {
     // SENTENCE (NONTERMINAL)
     // IntegerType <- SIGNEDNESS? (SHORT / LONG_TYPE) INT? Metadata? TypeQualifiers? / SIGNEDNESS? (CHAR / INT / SHORT / LONG_TYPE) Metadata? TypeQualifiers? / SIGNEDNESS Metadata? TypeQualifiers?
-    var $$;          
-    var pos = _cursor;             
-    if(_cachePos[23] >= pos) {
-      $$ = _getFromCache(23);
-      if($$ != null) {
-        return $$[0];       
-      }
-    } else {
-      _cachePos[23] = pos;
-    }  
+    var $$;
     // => SIGNEDNESS? (SHORT / LONG_TYPE) INT? Metadata? TypeQualifiers? / SIGNEDNESS? (CHAR / INT / SHORT / LONG_TYPE) Metadata? TypeQualifiers? / SIGNEDNESS Metadata? TypeQualifiers? # Choice
     switch (_getState(_transitions10)) {
       // [c] [i]
@@ -6979,9 +6966,6 @@ class CParser {
       _failure(_expect12);
     }
     // <= SIGNEDNESS? (SHORT / LONG_TYPE) INT? Metadata? TypeQualifiers? / SIGNEDNESS? (CHAR / INT / SHORT / LONG_TYPE) Metadata? TypeQualifiers? / SIGNEDNESS Metadata? TypeQualifiers? # Choice
-    if (_cacheable[23]) {
-      _addToCache($$, pos, 23);
-    }    
     return $$;
   }
   
@@ -7323,7 +7307,7 @@ class CParser {
     _token = 19;    
     _tokenStart = _cursor;    
     // => OCTAL_NUMBER / INTEGER_NUMBER # Choice
-    switch (_getState(_transitions27)) {
+    switch (_getState(_transitions25)) {
       // [+] [-] [0]
       case 0:
         while (true) {
@@ -7571,7 +7555,7 @@ class CParser {
     // OCTAL_NUMBER <- SIGN? [0] [0-9]+
     var $$;
     // => SIGN? [0] [0-9]+ # Choice
-    switch (_getState(_transitions34)) {
+    switch (_getState(_transitions32)) {
       // [+] [-] [0]
       case 0:
         // => SIGN? [0] [0-9]+ # Sequence
@@ -8453,7 +8437,7 @@ class CParser {
     // RESERVED_WORD <- ('auto' / 'break' / 'case' / 'char' / 'const' / 'continue' / 'default' / 'do' / 'double' / 'else' / 'enum' / 'extern' / 'float' / 'for' / 'goto' / 'if' / 'inline' / 'int' / 'long' / 'register' / 'restrict' / 'return' / 'short' / 'signed' / 'sizeof' / 'static' / 'struct' / 'switch' / 'typedef' / 'union' / 'unsigned' / 'void' / 'volatile' / 'while' / '_Bool' / '_Complex' / '_Imaginary') !(IDENT_START / IDENT_CONT) / '__attribute__'
     var $$;
     // => ('auto' / 'break' / 'case' / 'char' / 'const' / 'continue' / 'default' / 'do' / 'double' / 'else' / 'enum' / 'extern' / 'float' / 'for' / 'goto' / 'if' / 'inline' / 'int' / 'long' / 'register' / 'restrict' / 'return' / 'short' / 'signed' / 'sizeof' / 'static' / 'struct' / 'switch' / 'typedef' / 'union' / 'unsigned' / 'void' / 'volatile' / 'while' / '_Bool' / '_Complex' / '_Imaginary') !(IDENT_START / IDENT_CONT) / '__attribute__' # Choice
-    switch (_getState(_transitions35)) {
+    switch (_getState(_transitions33)) {
       // [_]
       case 0:
         while (true) {
@@ -8462,7 +8446,7 @@ class CParser {
           _startPos = _cursor;
           while (true) {  
             // => ('auto' / 'break' / 'case' / 'char' / 'const' / 'continue' / 'default' / 'do' / 'double' / 'else' / 'enum' / 'extern' / 'float' / 'for' / 'goto' / 'if' / 'inline' / 'int' / 'long' / 'register' / 'restrict' / 'return' / 'short' / 'signed' / 'sizeof' / 'static' / 'struct' / 'switch' / 'typedef' / 'union' / 'unsigned' / 'void' / 'volatile' / 'while' / '_Bool' / '_Complex' / '_Imaginary') # Choice
-            switch (_getState(_transitions36)) {
+            switch (_getState(_transitions34)) {
               // [_]
               case 0:
                 while (true) {
@@ -8803,7 +8787,7 @@ class CParser {
             var ch1 = _ch, pos1 = _cursor, testing0 = _testing; 
             _testing = _inputLen + 1;
             // => (IDENT_START / IDENT_CONT) # Choice
-            switch (_getState(_transitions33)) {
+            switch (_getState(_transitions31)) {
               // [0-9]
               case 0:
                 var startPos38 = _startPos;
@@ -8879,7 +8863,7 @@ class CParser {
         _startPos = _cursor;
         while (true) {  
           // => ('auto' / 'break' / 'case' / 'char' / 'const' / 'continue' / 'default' / 'do' / 'double' / 'else' / 'enum' / 'extern' / 'float' / 'for' / 'goto' / 'if' / 'inline' / 'int' / 'long' / 'register' / 'restrict' / 'return' / 'short' / 'signed' / 'sizeof' / 'static' / 'struct' / 'switch' / 'typedef' / 'union' / 'unsigned' / 'void' / 'volatile' / 'while' / '_Bool' / '_Complex' / '_Imaginary') # Choice
-          switch (_getState(_transitions36)) {
+          switch (_getState(_transitions34)) {
             // [_]
             case 0:
               while (true) {
@@ -9220,7 +9204,7 @@ class CParser {
           var ch3 = _ch, pos3 = _cursor, testing1 = _testing; 
           _testing = _inputLen + 1;
           // => (IDENT_START / IDENT_CONT) # Choice
-          switch (_getState(_transitions33)) {
+          switch (_getState(_transitions31)) {
             // [0-9]
             case 0:
               var startPos80 = _startPos;
@@ -9467,7 +9451,7 @@ class CParser {
     // SIGN <- PLUS / MINUS
     var $$;
     // => PLUS / MINUS # Choice
-    switch (_getState(_transitions37)) {
+    switch (_getState(_transitions35)) {
       // [+]
       case 0:
         var startPos0 = _startPos;
@@ -9697,7 +9681,7 @@ class CParser {
     // SPACE <- [\t-\n\r ]
     var $$;
     // => [\t-\n\r ] # Choice
-    switch (_getState(_transitions38)) {
+    switch (_getState(_transitions36)) {
       // [\t-\n] [\r] [ ]
       case 0:
         var startPos0 = _startPos;
@@ -9740,7 +9724,7 @@ class CParser {
         for (var reps = []; ; ) {
           _testing = _cursor;
           // => (SPACE / COMMENT) # Choice
-          switch (_getState(_transitions39)) {
+          switch (_getState(_transitions37)) {
             // [\t-\n] [\r] [ ]
             case 0:
               var startPos1 = _startPos;
@@ -9803,7 +9787,7 @@ class CParser {
     // STRING <- '"' STRING_CHAR_SEQUENCE? '"' / 'L"' STRING_CHAR_SEQUENCE? '"'
     var $$;
     // => '"' STRING_CHAR_SEQUENCE? '"' / 'L"' STRING_CHAR_SEQUENCE? '"' # Choice
-    switch (_getState(_transitions40)) {
+    switch (_getState(_transitions38)) {
       // [\"]
       case 0:
         // => '"' STRING_CHAR_SEQUENCE? '"' # Sequence
@@ -10096,7 +10080,7 @@ class CParser {
     _token = 26;  
     _tokenStart = _cursor;  
     // => STRING_LITERAL_PART+ # Choice
-    switch (_getState(_transitions28)) {
+    switch (_getState(_transitions26)) {
       // [\"] [L]
       case 0:
         var startPos0 = _startPos;
@@ -10157,7 +10141,7 @@ class CParser {
     // STRING_LITERAL_PART <- STRING SPACING
     var $$;
     // => STRING SPACING # Choice
-    switch (_getState(_transitions28)) {
+    switch (_getState(_transitions26)) {
       // [\"] [L]
       case 0:
         // => STRING SPACING # Sequence
@@ -10301,7 +10285,7 @@ class CParser {
     // StructureDeclaration <- Metadata? TypeQualifiers? StructureType
     var $$;
     // => Metadata? TypeQualifiers? StructureType # Choice
-    switch (_getState(_transitions22)) {
+    switch (_getState(_transitions20)) {
       // [_] [c] [s] [u-v]
       case 0:
         // => Metadata? TypeQualifiers? StructureType # Sequence
@@ -10376,83 +10360,14 @@ class CParser {
     // StructureMember <- BitFieldParameterDeclaration SEMICOLON / ParameterDeclarationNotAbstract SEMICOLON / ParameterDeclarationAbstract SEMICOLON
     var $$;
     // => BitFieldParameterDeclaration SEMICOLON / ParameterDeclarationNotAbstract SEMICOLON / ParameterDeclarationAbstract SEMICOLON # Choice
-    switch (_getState(_transitions17)) {
-      // [A-Z] [a-b] [d-h] [j-k] [m-r] [t] [w-z]
+    switch (_getState(_transitions2)) {
+      // [A-Z] [_] [a-z]
       // EOF
       case 0:
-      case 3:
-        while (true) {
-          // => ParameterDeclarationNotAbstract SEMICOLON # Sequence
-          var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
-          _startPos = _cursor;
-          while (true) {  
-            // => ParameterDeclarationNotAbstract
-            $$ = _parse_ParameterDeclarationNotAbstract();
-            // <= ParameterDeclarationNotAbstract
-            if (!success) break;
-            var seq = new List(2)..[0] = $$;
-            // => SEMICOLON
-            $$ = _parse_SEMICOLON();
-            // <= SEMICOLON
-            if (!success) break;
-            seq[1] = $$;
-            $$ = seq;
-            if (success) {    
-              // ParameterDeclarationNotAbstract
-              final $1 = seq[0];
-              // SEMICOLON
-              final $2 = seq[1];
-              final $start = startPos0;
-              $$ = $1;
-            }
-            break;
-          }
-          if (!success) {
-            _ch = ch0;
-            _cursor = pos0;
-          }
-          _startPos = startPos0;
-          // <= ParameterDeclarationNotAbstract SEMICOLON # Sequence
-          if (success) break;
-          // => ParameterDeclarationAbstract SEMICOLON # Sequence
-          var ch1 = _ch, pos1 = _cursor, startPos1 = _startPos;
-          _startPos = _cursor;
-          while (true) {  
-            // => ParameterDeclarationAbstract
-            $$ = _parse_ParameterDeclarationAbstract();
-            // <= ParameterDeclarationAbstract
-            if (!success) break;
-            var seq = new List(2)..[0] = $$;
-            // => SEMICOLON
-            $$ = _parse_SEMICOLON();
-            // <= SEMICOLON
-            if (!success) break;
-            seq[1] = $$;
-            $$ = seq;
-            if (success) {    
-              // ParameterDeclarationAbstract
-              final $1 = seq[0];
-              // SEMICOLON
-              final $2 = seq[1];
-              final $start = startPos1;
-              $$ = $1;
-            }
-            break;
-          }
-          if (!success) {
-            _ch = ch1;
-            _cursor = pos1;
-          }
-          _startPos = startPos1;
-          // <= ParameterDeclarationAbstract SEMICOLON # Sequence
-          break;
-        }
-        break;
-      // [_] [c] [i] [l] [s] [u-v]
-      case 1:
+      case 2:
         while (true) {
           // => BitFieldParameterDeclaration SEMICOLON # Sequence
-          var ch2 = _ch, pos2 = _cursor, startPos2 = _startPos;
+          var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
           _startPos = _cursor;
           while (true) {  
             // => BitFieldParameterDeclaration
@@ -10471,20 +10386,20 @@ class CParser {
               final $1 = seq[0];
               // SEMICOLON
               final $2 = seq[1];
-              final $start = startPos2;
+              final $start = startPos0;
               $$ = $1;
             }
             break;
           }
           if (!success) {
-            _ch = ch2;
-            _cursor = pos2;
+            _ch = ch0;
+            _cursor = pos0;
           }
-          _startPos = startPos2;
+          _startPos = startPos0;
           // <= BitFieldParameterDeclaration SEMICOLON # Sequence
           if (success) break;
           // => ParameterDeclarationNotAbstract SEMICOLON # Sequence
-          var ch3 = _ch, pos3 = _cursor, startPos3 = _startPos;
+          var ch1 = _ch, pos1 = _cursor, startPos1 = _startPos;
           _startPos = _cursor;
           while (true) {  
             // => ParameterDeclarationNotAbstract
@@ -10503,20 +10418,20 @@ class CParser {
               final $1 = seq[0];
               // SEMICOLON
               final $2 = seq[1];
-              final $start = startPos3;
+              final $start = startPos1;
               $$ = $1;
             }
             break;
           }
           if (!success) {
-            _ch = ch3;
-            _cursor = pos3;
+            _ch = ch1;
+            _cursor = pos1;
           }
-          _startPos = startPos3;
+          _startPos = startPos1;
           // <= ParameterDeclarationNotAbstract SEMICOLON # Sequence
           if (success) break;
           // => ParameterDeclarationAbstract SEMICOLON # Sequence
-          var ch4 = _ch, pos4 = _cursor, startPos4 = _startPos;
+          var ch2 = _ch, pos2 = _cursor, startPos2 = _startPos;
           _startPos = _cursor;
           while (true) {  
             // => ParameterDeclarationAbstract
@@ -10535,28 +10450,28 @@ class CParser {
               final $1 = seq[0];
               // SEMICOLON
               final $2 = seq[1];
-              final $start = startPos4;
+              final $start = startPos2;
               $$ = $1;
             }
             break;
           }
           if (!success) {
-            _ch = ch4;
-            _cursor = pos4;
+            _ch = ch2;
+            _cursor = pos2;
           }
-          _startPos = startPos4;
+          _startPos = startPos2;
           // <= ParameterDeclarationAbstract SEMICOLON # Sequence
           break;
         }
         break;
       // No matches
-      case 2:
+      case 1:
         $$ = null;
         success = false;
         break;
     }
     if (!success && _cursor > _testing) {
-      // Expected: 'short', 'long', 'char', 'int', SIGNEDNESS, Identifier, 'float', 'double', 'void', '_Bool', 'struct', 'union', 'enum'
+      // Expected: Identifier, 'short', 'long', 'char', 'int', SIGNEDNESS, 'float', 'double', 'void', '_Bool', 'struct', 'union', 'enum'
       _failure(_expect3);
     }
     // <= BitFieldParameterDeclaration SEMICOLON / ParameterDeclarationNotAbstract SEMICOLON / ParameterDeclarationAbstract SEMICOLON # Choice
@@ -11199,7 +11114,7 @@ class CParser {
       _cachePos[51] = pos;
     }  
     // => FunctionDeclarator / FunctionPointerDeclarator / DeclaratorNotAbstract / TypedefFunctionDeclarator # Choice
-    switch (_getState(_transitions26)) {
+    switch (_getState(_transitions24)) {
       // [(]
       case 0:
         while (true) {
@@ -11295,7 +11210,7 @@ class CParser {
     // TypeDeclaratorList <- TypeDeclarator (COMMA TypeDeclarator)*
     var $$;
     // => TypeDeclarator (COMMA TypeDeclarator)* # Choice
-    switch (_getState(_transitions25)) {
+    switch (_getState(_transitions23)) {
       // [(] [*] [A-Z] [_] [a-z]
       // EOF
       case 0:
@@ -11566,7 +11481,7 @@ class CParser {
     // TypedefDeclaration <- Metadata? TypeQualifiers? TypedefSpecifier Type TypeDeclaratorList
     var $$;
     // => Metadata? TypeQualifiers? TypedefSpecifier Type TypeDeclaratorList # Choice
-    switch (_getState(_transitions24)) {
+    switch (_getState(_transitions22)) {
       // [_] [c] [t] [v]
       case 0:
         // => Metadata? TypeQualifiers? TypedefSpecifier Type TypeDeclaratorList # Sequence
@@ -11655,7 +11570,7 @@ class CParser {
     // TypedefFunctionDeclarator <- PointerSpecifiers? OPEN_PAREN Identifier CLOSE_PAREN FunctionParameters Metadata?
     var $$;
     // => PointerSpecifiers? OPEN_PAREN Identifier CLOSE_PAREN FunctionParameters Metadata? # Choice
-    switch (_getState(_transitions21)) {
+    switch (_getState(_transitions19)) {
       // [(] [*]
       case 0:
         // => PointerSpecifiers? OPEN_PAREN Identifier CLOSE_PAREN FunctionParameters Metadata? # Sequence

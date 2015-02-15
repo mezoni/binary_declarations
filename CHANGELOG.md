@@ -1,3 +1,7 @@
+## 0.0.47
+
+- Changes in `c.peg` grammar
+
 ## 0.0.46
 
 - Added support of string concatenation
