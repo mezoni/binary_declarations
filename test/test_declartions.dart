@@ -9,6 +9,7 @@ void main() {
         list.add("int foo();");
         list.add("unsigned foo();");
         list.add("void foo();");
+        list.add("void foo(void);");
         list.add("void foo(void *, void *);");
         list.add("short foo(int);");
         list.add("struct Foo foo(int, int *);");
@@ -32,10 +33,6 @@ void main() {
         }
 
         _checkPresentation(text, declarations);
-
-        text = "void foo(void);";
-        declarations = new Declarations(text);
-        _checkPresentation("void foo();", declarations);
       });
     });
 
@@ -170,9 +167,9 @@ void main() {
         _checkPresentation(text, declarations);
         for (var declaration in declarations) {
           var type = (declaration as VariableDeclaration).type;
-          expect(type is BuiltinTypeSpecification, true, reason: "Not an $BuiltinTypeSpecification");
-          var builtinType = type as BuiltinTypeSpecification;
-          expect(builtinType.typeKind == TypeSpecificationKind.INTEGER, true, reason: "typeKind != TypeSpecificationKind.INTEGER");
+          expect(type is BasicTypeSpecification, true, reason: "Not an $BasicTypeSpecification");
+          var builtinType = type as BasicTypeSpecification;
+          expect(builtinType.typeKind == TypeSpecificationKind.BASIC, true, reason: "typeKind != TypeSpecificationKind.INTEGER");
         }
       });
 
@@ -328,7 +325,7 @@ void main() {
 
     test("String literal concatenation.", () {
       var list = <String>[];
-      list.add('__attribute__((deprected("This" "is" "deprected"))) int foo;');
+      list.add('__attribute__((deprecated("This" "is" "deprecated"))) int foo;');
       var text = list.join("\n");
       var declarations = new Declarations(text);
       _checkPresentation(text, declarations);
@@ -336,6 +333,14 @@ void main() {
 
     test("Directives.", () {
 
+    });
+
+    test("Expressions.", () {
+      var list = <String>[];
+      list.add('int i[(sizeof(FOO) >> 2) > 512 ? 1 : -1];');
+      var text = list.join("\n");
+      var declarations = new Declarations(text);
+      _checkPresentation(text, declarations);
     });
   });
 }

@@ -551,6 +551,15 @@ VariableDeclaratorList <-
 VariableDeclarator <-
   DeclaratorNotAbstract
 
+FunctionInvocation <-
+  Identifier OPEN_PAREN FunctionArguments? CLOSE_PAREN { $$ = new FunctionInvocation(arguments: $3, identifier: $1); }
+
+FunctionArguments <-
+  FunctionArgument (COMMA FunctionArgument)* { $$ = new Arguments(elements: _list($1, $2)); }
+
+FunctionArgument <-
+  expression
+
 string_literal <-
   string_literal2 spaces { $$ = $1; }
 

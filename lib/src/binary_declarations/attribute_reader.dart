@@ -114,8 +114,8 @@ class AttributeReader {
       return arguments;
     }
 
-    for (var specifier in specifier.specifiers) {
-      for (var modifier in specifier.modifiers.modifiers) {
+    for (var specifier in specifier.elements) {
+      for (var modifier in specifier.modifiers.elements) {
         var name = modifier.identifier.name;
         var list = arguments[name];
         if (list == null) {
@@ -123,7 +123,7 @@ class AttributeReader {
           arguments[name] = list;
         }
 
-        list.add(modifier.arguments);
+        list.add(modifier.arguments.elements);
       }
     }
 
