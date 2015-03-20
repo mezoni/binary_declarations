@@ -8,7 +8,7 @@ class ExpressionEvaluator<T> extends GeneralAstVisitor<T> {
   String _source;
 
   dynamic evaluate(Expression expression, String source,
-      {dynamic ident(String name), int sizeof(Expression expression)}) {
+      {dynamic ident(String name), int sizeof(TypeSpecification type)}) {
     if (expression == null) {
       throw new ArgumentError.notNull("expression");
     }

@@ -232,13 +232,7 @@ class AstPrinter<T> extends AstVisitor {
   }
 
   visitFunctionDeclaration(FunctionDeclaration node) {
-    _joinNodes(<AstNode>[
-      node.metadata,
-      node.qualifiers,
-      node.type,
-      node.declarator,
-      node.body
-    ], " ");
+    _joinNodes(<AstNode>[node.metadata, node.qualifiers, node.type, node.declarator, node.body], " ");
   }
 
   T visitFunctionInvocation(FunctionInvocation node) {
@@ -601,8 +595,7 @@ class GeneralAstVisitor<T> extends AstVisitor<T> {
 
   T visitStructureDeclaration(StructureDeclaration node) => visit(node);
 
-  T visitStructureTypeSpecification(StructureTypeSpecification node) =>
-      visit(node);
+  T visitStructureTypeSpecification(StructureTypeSpecification node) => visit(node);
 
   T visitTypeQualifier(TypeQualifier node) => visit(node);
 

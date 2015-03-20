@@ -25,8 +25,7 @@ abstract class AstNode {
     return visitor.toString();
   }
 
-  void visitChildren(AstVisitor visitor) {
-  }
+  void visitChildren(AstVisitor visitor) {}
 }
 
 abstract class AstNodeList<T extends AstNode> extends AstNode {
@@ -60,7 +59,8 @@ class BasicTypeSpecification extends TypeSpecification {
 
   String _name;
 
-  BasicTypeSpecification({DeclarationSpecifiers metadata, TypeQualifiers qualifiers, this.specifiers}) : super(metadata: metadata, qualifiers: qualifiers) {
+  BasicTypeSpecification({DeclarationSpecifiers metadata, TypeQualifiers qualifiers, this.specifiers})
+      : super(metadata: metadata, qualifiers: qualifiers) {
     if (specifiers == null) {
       throw new ArgumentError.notNull("identifier");
     }
@@ -122,7 +122,8 @@ class BinaryExpression extends Expression {
 class BoolTypeSpecification extends TypeSpecification {
   final Identifier identifier;
 
-  BoolTypeSpecification({this.identifier, DeclarationSpecifiers metadata, TypeQualifiers qualifiers}) : super(metadata: metadata, qualifiers: qualifiers) {
+  BoolTypeSpecification({this.identifier, DeclarationSpecifiers metadata, TypeQualifiers qualifiers})
+      : super(metadata: metadata, qualifiers: qualifiers) {
     if (identifier == null) {
       throw new ArgumentError.notNull("identifier");
     }
@@ -285,7 +286,8 @@ class Declarator extends AstNode {
 
   final IntegerLiteral width;
 
-  Declarator({this.dimensions, this.functionPointers, this.identifier, this.metadata, this.parameters, this.pointers, this.width}) {
+  Declarator({this.dimensions, this.functionPointers, this.identifier, this.metadata, this.parameters, this.pointers,
+      this.width}) {
     if (isBitField && (isArray || isFunction || isPointers)) {
       throw new ArgumentError("Width should only be specified separately from other arguments");
     }
@@ -299,7 +301,8 @@ class Declarator extends AstNode {
     }
 
     if (dimensions == null && identifier == null && parameters == null && pointers == null && width == null) {
-      throw new ArgumentError("Dimensions, identifier, parameters, pointers and width cannot all be null simultaneously");
+      throw new ArgumentError(
+          "Dimensions, identifier, parameters, pointers and width cannot all be null simultaneously");
     }
   }
 
@@ -330,7 +333,6 @@ class Declarator extends AstNode {
       if (width != null) {
         width.accept(visitor);
       }
-
     } else {
       if (functionPointers != null) {
         functionPointers.accept(visitor);
@@ -355,7 +357,8 @@ class Declarator extends AstNode {
 class DefinedTypeSpecification extends TypeSpecification {
   final Identifier identifier;
 
-  DefinedTypeSpecification({this.identifier, DeclarationSpecifiers metadata, TypeQualifiers qualifiers}) : super(metadata: metadata, qualifiers: qualifiers) {
+  DefinedTypeSpecification({this.identifier, DeclarationSpecifiers metadata, TypeQualifiers qualifiers})
+      : super(metadata: metadata, qualifiers: qualifiers) {
     if (identifier == null) {
       throw new ArgumentError.notNull("identifier");
     }
@@ -438,7 +441,8 @@ class EmptyDeclaration extends Declaration {
 class EnumDeclaration extends Declaration {
   final EnumTypeSpecification type;
 
-  EnumDeclaration({DeclarationSpecifiers metadata, TypeQualifiers qualifiers, this.type}) : super(metadata: metadata, qualifiers: qualifiers) {
+  EnumDeclaration({DeclarationSpecifiers metadata, TypeQualifiers qualifiers, this.type})
+      : super(metadata: metadata, qualifiers: qualifiers) {
     if (type == null) {
       throw new ArgumentError.notNull("type");
     }
@@ -466,7 +470,9 @@ class EnumTypeSpecification extends TypeSpecification {
 
   final Enumerators enumerators;
 
-  EnumTypeSpecification({this.elaboratedType, this.enumerators, DeclarationSpecifiers metadata, TypeQualifiers qualifiers}) : super(metadata: metadata, qualifiers: qualifiers) {
+  EnumTypeSpecification(
+      {this.elaboratedType, this.enumerators, DeclarationSpecifiers metadata, TypeQualifiers qualifiers})
+      : super(metadata: metadata, qualifiers: qualifiers) {
     if (elaboratedType == null) {
       throw new ArgumentError.notNull("elaboratedType");
     }
@@ -531,8 +537,7 @@ class Enumerators extends AstNodeList<Enumerator> {
   }
 }
 
-abstract class Expression extends AstNode {
-}
+abstract class Expression extends AstNode {}
 
 class FloatingPointLiteral extends Literal {
   final double value;
@@ -559,7 +564,9 @@ class FunctionDeclaration extends Declaration {
 
   final TypeSpecification type;
 
-  FunctionDeclaration({this.body, this.declarator, DeclarationSpecifiers metadata, TypeQualifiers qualifiers, this.type}) : super(metadata: metadata, qualifiers: qualifiers) {
+  FunctionDeclaration(
+      {this.body, this.declarator, DeclarationSpecifiers metadata, TypeQualifiers qualifiers, this.type})
+      : super(metadata: metadata, qualifiers: qualifiers) {
     if (declarator == null) {
       throw new ArgumentError.notNull("declarator");
     }
@@ -696,7 +703,6 @@ class CharacterLiteral extends Literal {
   }
 }
 
-
 abstract class Literal extends Expression {
   final String text;
 
@@ -726,7 +732,8 @@ class ParameterDeclaration extends Declaration {
 
   final TypeSpecification type;
 
-  ParameterDeclaration({this.declarator, DeclarationSpecifiers metadata, TypeQualifiers qualifiers, this.type}) : super(metadata: metadata, qualifiers: qualifiers) {
+  ParameterDeclaration({this.declarator, DeclarationSpecifiers metadata, TypeQualifiers qualifiers, this.type})
+      : super(metadata: metadata, qualifiers: qualifiers) {
     if (type == null) {
       throw new ArgumentError.notNull("type");
     }
@@ -837,7 +844,8 @@ class StringLiteral extends Literal {
 class StructureDeclaration extends Declaration {
   final StructureTypeSpecification type;
 
-  StructureDeclaration({DeclarationSpecifiers metadata, TypeQualifiers qualifiers, this.type}) : super(metadata: metadata, qualifiers: qualifiers) {
+  StructureDeclaration({DeclarationSpecifiers metadata, TypeQualifiers qualifiers, this.type})
+      : super(metadata: metadata, qualifiers: qualifiers) {
     if (type == null) {
       throw new ArgumentError.notNull("type");
     }
@@ -865,7 +873,9 @@ class StructureTypeSpecification extends TypeSpecification {
 
   final MemberDeclarations members;
 
-  StructureTypeSpecification({this.elaboratedType, DeclarationSpecifiers metadata, TypeQualifiers qualifiers, this.members}) : super(metadata: metadata, qualifiers: qualifiers) {
+  StructureTypeSpecification(
+      {this.elaboratedType, DeclarationSpecifiers metadata, TypeQualifiers qualifiers, this.members})
+      : super(metadata: metadata, qualifiers: qualifiers) {
     if (elaboratedType == null) {
       throw new ArgumentError.notNull("elaboratedType");
     }
@@ -978,7 +988,9 @@ class TypedefDeclaration extends Declaration {
 
   final TypedefDeclarators declarators;
 
-  TypedefDeclaration({this.declarators, DeclarationSpecifiers metadata, TypeQualifiers qualifiers, this.type, this.typedef}) : super(metadata: metadata, qualifiers: qualifiers) {
+  TypedefDeclaration(
+      {this.declarators, DeclarationSpecifiers metadata, TypeQualifiers qualifiers, this.type, this.typedef})
+      : super(metadata: metadata, qualifiers: qualifiers) {
     if (declarators == null) {
       throw new ArgumentError.notNull("declarators");
     }
@@ -1070,7 +1082,8 @@ class VariableDeclaration extends Declaration {
 
   final TypeSpecification type;
 
-  VariableDeclaration({this.declarators, DeclarationSpecifiers metadata, TypeQualifiers qualifiers, this.type}) : super(metadata: metadata, qualifiers: qualifiers) {
+  VariableDeclaration({this.declarators, DeclarationSpecifiers metadata, TypeQualifiers qualifiers, this.type})
+      : super(metadata: metadata, qualifiers: qualifiers) {
     if (declarators == null) {
       throw new ArgumentError.notNull("declarators");
     }
@@ -1109,7 +1122,8 @@ class VariableDeclarators extends AstNodeList<Declarator> {
 class VoidTypeSpecification extends TypeSpecification {
   final Identifier identifier;
 
-  VoidTypeSpecification({this.identifier, DeclarationSpecifiers metadata, TypeQualifiers qualifiers}) : super(metadata: metadata, qualifiers: qualifiers) {
+  VoidTypeSpecification({this.identifier, DeclarationSpecifiers metadata, TypeQualifiers qualifiers})
+      : super(metadata: metadata, qualifiers: qualifiers) {
     if (identifier == null) {
       throw new ArgumentError.notNull("identifier");
     }
@@ -1153,7 +1167,6 @@ class _ListCloner<T> {
           if (!allowNull) {
             fail = true;
           }
-
         } else if (element is! T) {
           fail = true;
         }
