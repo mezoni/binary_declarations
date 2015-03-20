@@ -139,7 +139,7 @@ class ExpressionEvaluator<T> extends GeneralAstVisitor<T> {
       throw new FormatException("Unexpected expression: $node");
     }
 
-    return _sizeof(node);
+    return _sizeof(node.type);
   }
 
   Object visitUnaryExpression(UnaryExpression node) {
