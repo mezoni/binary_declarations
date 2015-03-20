@@ -1,6 +1,6 @@
 part of binary_declarations.expression_evaluator;
 
-class _ExpressionEvaluator<T> extends GeneralAstVisitor<T> {
+class ExpressionEvaluator<T> extends GeneralAstVisitor<T> {
   Function _ident;
 
   Function _sizeof;
