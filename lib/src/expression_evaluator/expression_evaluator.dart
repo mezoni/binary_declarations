@@ -98,7 +98,7 @@ class ExpressionEvaluator<T> extends GeneralAstVisitor<T> {
         _checkIntegerValue(rvalue, right);
         return lvalue || rvalue;
       default:
-        throw new FormatException("Unknown binary operation", node);
+        throw new FormatException("Unknown binary operation", node.toString());
     }
   }
 
@@ -131,7 +131,7 @@ class ExpressionEvaluator<T> extends GeneralAstVisitor<T> {
   }
 
   Object visitNode(AstNode node) {
-    throw new FormatException("Syntax error", node);
+    throw new FormatException("Syntax error", node.toString());
   }
 
   Object visitParenthesisExpression(ParenthesisExpression node) {
@@ -140,7 +140,7 @@ class ExpressionEvaluator<T> extends GeneralAstVisitor<T> {
 
   Object visitSizeofExpression(SizeofExpression node) {
     if (_sizeof == null) {
-      throw new FormatException("Unexpected expression", node);
+      throw new FormatException("Unexpected expression", node.toString());
     }
 
     return _sizeof(node);
@@ -163,25 +163,25 @@ class ExpressionEvaluator<T> extends GeneralAstVisitor<T> {
         _checkIntegerValue(value, operand);
         return ~value;
       default:
-        throw new FormatException("Unknown unary operation", node);
+        throw new FormatException("Unknown unary operation", node.toString());
     }
   }
 
   void _checkComparableValue(value, AstNode node) {
     if (value is! Comparable) {
-      throw new FormatException("Expected comparable expression", node);
+      throw new FormatException("Expected comparable expression", node.toString());
     }
   }
 
   void _checkIntegerValue(value, AstNode node) {
     if (value is! int) {
-      throw new FormatException("Expected integer expression", node);
+      throw new FormatException("Expected integer expression", node.toString());
     }
   }
 
   void _checkNumericValue(value, AstNode node) {
     if (value is! num) {
-      throw new FormatException("Expected numeric expression", node);
+      throw new FormatException("Expected numeric expression", node.toString());
     }
   }
 }
