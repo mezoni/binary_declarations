@@ -5,17 +5,13 @@ class ExpressionEvaluator<T> extends GeneralAstVisitor<T> {
 
   Function _sizeof;
 
-  String _source;
-
-  dynamic evaluate(Expression expression, String source,
-      {dynamic ident(String name), int sizeof(TypeSpecification type)}) {
+  dynamic evaluate(Expression expression, {dynamic ident(String name), int sizeof(TypeSpecification type)}) {
     if (expression == null) {
       throw new ArgumentError.notNull("expression");
     }
 
     _ident = ident;
     _sizeof = sizeof;
-    _source = source;
     return expression.accept(this);
   }
 
