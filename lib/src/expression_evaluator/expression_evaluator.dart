@@ -1,16 +1,16 @@
 part of binary_declarations.expression_evaluator;
 
 class ExpressionEvaluator<T> extends GeneralAstVisitor<T> {
-  Function _enumerator;
+  Function _identifier;
 
   Function _sizeof;
 
-  dynamic evaluate(Expression expression, {int enumerator(Identifier identifier), int sizeof(TypeSpecification type)}) {
+  dynamic evaluate(Expression expression, {int identifier(Identifier identifier), int sizeof(TypeSpecification type)}) {
     if (expression == null) {
       throw new ArgumentError.notNull("expression");
     }
 
-    _enumerator = enumerator;
+    _identifier = identifier;
     _sizeof = sizeof;
     return expression.accept(this);
   }
@@ -115,11 +115,11 @@ class ExpressionEvaluator<T> extends GeneralAstVisitor<T> {
   }
 
   Object visitIdentifier(Identifier node) {
-    if (_enumerator == null) {
+    if (_identifier == null) {
       throw new FormatException("Unexpected expression: $node");
     }
 
-    return _enumerator(node);
+    return _identifier(node);
   }
 
   Object visitIntegerLiteral(IntegerLiteral node) {
