@@ -98,7 +98,7 @@ class ExpressionEvaluator<T> extends GeneralAstVisitor<T> {
         _checkIntegerValue(rvalue, right);
         return lvalue || rvalue;
       default:
-        throw new FormatException("Unknown binary operation", node.toString());
+        throw new FormatException("Unknown binary operation: $node");
     }
   }
 
@@ -131,7 +131,7 @@ class ExpressionEvaluator<T> extends GeneralAstVisitor<T> {
   }
 
   Object visitNode(AstNode node) {
-    throw new FormatException("Syntax error", node.toString());
+    throw new FormatException("Syntax error: $node");
   }
 
   Object visitParenthesisExpression(ParenthesisExpression node) {
@@ -140,7 +140,7 @@ class ExpressionEvaluator<T> extends GeneralAstVisitor<T> {
 
   Object visitSizeofExpression(SizeofExpression node) {
     if (_sizeof == null) {
-      throw new FormatException("Unexpected expression", node.toString());
+      throw new FormatException("Unexpected expression: $node");
     }
 
     return _sizeof(node);
@@ -163,25 +163,25 @@ class ExpressionEvaluator<T> extends GeneralAstVisitor<T> {
         _checkIntegerValue(value, operand);
         return ~value;
       default:
-        throw new FormatException("Unknown unary operation", node.toString());
+        throw new FormatException("Unknown unary operation: $node");
     }
   }
 
   void _checkComparableValue(value, AstNode node) {
     if (value is! Comparable) {
-      throw new FormatException("Expected comparable expression", node.toString());
+      throw new FormatException("Expected comparable expression: $node");
     }
   }
 
   void _checkIntegerValue(value, AstNode node) {
     if (value is! int) {
-      throw new FormatException("Expected integer expression", node.toString());
+      throw new FormatException("Expected integer expression: $node");
     }
   }
 
   void _checkNumericValue(value, AstNode node) {
     if (value is! num) {
-      throw new FormatException("Expected numeric expression", node.toString());
+      throw new FormatException("Expected numeric expression: $node");
     }
   }
 }
