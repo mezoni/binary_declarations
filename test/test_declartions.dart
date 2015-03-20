@@ -169,7 +169,8 @@ void main() {
           var type = (declaration as VariableDeclaration).type;
           expect(type is BasicTypeSpecification, true, reason: "Not an $BasicTypeSpecification");
           var builtinType = type as BasicTypeSpecification;
-          expect(builtinType.typeKind == TypeSpecificationKind.BASIC, true, reason: "typeKind != TypeSpecificationKind.INTEGER");
+          expect(builtinType.typeKind == TypeSpecificationKind.BASIC, true,
+              reason: "typeKind != TypeSpecificationKind.INTEGER");
         }
       });
 
@@ -297,22 +298,29 @@ void main() {
 
     test("Attributes.", () {
       var list = <String>[];
-      list.add("const __attribute__((A0)) typedef __attribute__((A1)) signed int __attribute__((A2)) INT __attribute__((A3));");
+      list.add(
+          "const __attribute__((A0)) typedef __attribute__((A1)) signed int __attribute__((A2)) INT __attribute__((A3));");
       list.add("__attribute__((A0)) typedef __attribute__((A1)) FOO __attribute__((A2)) BAZ __attribute__((A3));");
       list.add("__attribute__((A0)) float __attribute__((A1)) f __attribute__((A2));");
       list.add("__attribute__((A0)) enum __attribute__((A1)) ee e __attribute__((A2));");
       list.add("__attribute__((A0)) struct __attribute__((A1)) ss s __attribute__((A2));");
       list.add("__attribute__((A0)) int __attribute__((A1)) i __attribute__((A2));");
-      list.add("__attribute__((A0)) int __attribute__((A1)) foo(int __attribute__((A2)) x __attribute__((A3))) __attribute__((A4));");
-      list.add("__attribute__((A0)) struct __attribute__((A1)) { int __attribute__((A2)) x __attribute__((A3)); } __attribute__((A4)) s __attribute__((A5));");
-      list.add("__attribute__((A0)) struct __attribute__((A1)) ss { int __attribute__((A2)) x __attribute__((A3)); } __attribute__((A4)) s __attribute__((A5));");
+      list.add(
+          "__attribute__((A0)) int __attribute__((A1)) foo(int __attribute__((A2)) x __attribute__((A3))) __attribute__((A4));");
+      list.add(
+          "__attribute__((A0)) struct __attribute__((A1)) { int __attribute__((A2)) x __attribute__((A3)); } __attribute__((A4)) s __attribute__((A5));");
+      list.add(
+          "__attribute__((A0)) struct __attribute__((A1)) ss { int __attribute__((A2)) x __attribute__((A3)); } __attribute__((A4)) s __attribute__((A5));");
       list.add("__attribute__((A0)) enum __attribute__((A1)) { E } __attribute__((A2)) e __attribute__((A3));");
       list.add("__attribute__((A0)) enum __attribute__((A1)) ee { E } __attribute__((A2)) e __attribute__((A3));");
       list.add("__attribute__((A0)) TYPE __attribute__((A1)) i __attribute__((A2));");
       list.add("__attribute__((A0)) int __attribute__((aligned(8), packed)) i __attribute__((foo(\"baz\", 2)));");
-      list.add("__attribute__((A0)) typedef __attribute__((A1)) int __attribute__((A2)) * __attribute__((A3)) *INT __attribute__((A4));");
-      list.add("__attribute__((A0)) typedef __attribute__((A1)) const int __attribute__((A3)) * __attribute__((A4)) *INT __attribute__((A5));");
-      list.add("const char *strncpy(char *destination, const char *source, size_t num) __attribute__((alias(\"_sprintf_p\")));");
+      list.add(
+          "__attribute__((A0)) typedef __attribute__((A1)) int __attribute__((A2)) * __attribute__((A3)) *INT __attribute__((A4));");
+      list.add(
+          "__attribute__((A0)) typedef __attribute__((A1)) const int __attribute__((A3)) * __attribute__((A4)) *INT __attribute__((A5));");
+      list.add(
+          "const char *strncpy(char *destination, const char *source, size_t num) __attribute__((alias(\"_sprintf_p\")));");
       var text = list.join("\n");
       var declarations = new Declarations(text);
       _checkPresentation(text, declarations);
@@ -331,9 +339,7 @@ void main() {
       _checkPresentation(text, declarations);
     });
 
-    test("Directives.", () {
-
-    });
+    test("Directives.", () {});
 
     test("Expressions.", () {
       var list = <String>[];

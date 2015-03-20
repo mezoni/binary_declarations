@@ -202,14 +202,6 @@ class DeclarationModifier extends AstNode {
     if (identifier == null) {
       throw new ArgumentError.notNull("identifier");
     }
-
-    if (arguments != null) {
-      for (var element in arguments.elements) {
-        if (element is! Literal) {
-          throw new ArgumentError("List of the arguments contains invalid elements");
-        }
-      }
-    }
   }
 
   dynamic accept(AstVisitor visitor) {

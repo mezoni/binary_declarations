@@ -45,7 +45,7 @@ class AttributeReader {
 
     var length = arguments.length;
     _checkNumberOfArguments(name, length, minLength, maxLength);
-    if (length == null) {
+    if (length == 0) {
       return value;
     }
 
@@ -77,24 +77,36 @@ class AttributeReader {
     }
   }
 
-  IntegerLiteral getIntegerArgument(String name, int index, IntegerLiteral value,
+  int getIntegerArgument(String name, int index, IntegerLiteral value,
       {bool fromEnd: true, int maxLength, int minLength}) {
-    Object argument = getArgument(name, index, value, fromEnd: fromEnd, maxLength: maxLength, minLength: minLength);
-    if (argument != null && argument is! IntegerLiteral) {
+    var argument = getArgument(name, index, value, fromEnd: fromEnd, maxLength: maxLength, minLength: minLength);
+    if (argument == null) {
+      return null;
+    }
+
+    var evaluator = new ExpressionEvaluator();
+    var result = evaluator.evaluate(argument, identifier: (Identifier identifier) => identifier.name);
+    if (result != null && result is! int) {
       _wrongArgumentType(name, "integer");
     }
 
-    return argument;
+    return result;
   }
 
-  StringLiteral getStringArgument(String name, int index, StringLiteral value,
+  String getStringArgument(String name, int index, StringLiteral value,
       {bool fromEnd: true, int maxLength, int minLength}) {
-    Object argument = getArgument(name, index, value, fromEnd: fromEnd, maxLength: maxLength, minLength: minLength);
-    if (argument != null && argument is! StringLiteral) {
-      _wrongArgumentType(name, "string");
+    var argument = getArgument(name, index, value, fromEnd: fromEnd, maxLength: maxLength, minLength: minLength);
+    if (argument == null) {
+      return null;
     }
 
-    return argument;
+    var evaluator = new ExpressionEvaluator();
+    var result = evaluator.evaluate(argument);
+    if (result != null && result is! String) {
+      _wrongArgumentType(name, "integer");
+    }
+
+    return result;
   }
 
   void _checkNumberOfArguments(String name, int length, int minLength, int maxLength) {
@@ -126,7 +138,11 @@ class AttributeReader {
           arguments[name] = list;
         }
 
-        list.add(modifier.arguments.elements);
+        if (modifier.arguments != null) {
+          list.add(modifier.arguments.elements);
+        } else {
+          list.add(<Expression>[]);
+        }
       }
     }
 
@@ -136,7 +152,9 @@ class AttributeReader {
   Map<String, List<List<Expression>>> _joinArguments(List<DeclarationSpecifiers> specifiers) {
     Map<String, List<List<Expression>>> arguments;
     for (var specifier in specifiers) {
-      arguments = _getArguments(specifier, arguments);
+      if (specifier != null) {
+        arguments = _getArguments(specifier, arguments);
+      }
     }
 
     return arguments;

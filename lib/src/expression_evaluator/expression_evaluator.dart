@@ -5,7 +5,8 @@ class ExpressionEvaluator<T> extends GeneralAstVisitor<T> {
 
   Function _sizeof;
 
-  dynamic evaluate(Expression expression, {int identifier(Identifier identifier), int sizeof(TypeSpecification type)}) {
+  dynamic evaluate(Expression expression,
+      {dynamic identifier(Identifier identifier), int sizeof(TypeSpecification type)}) {
     if (expression == null) {
       throw new ArgumentError.notNull("expression");
     }
@@ -140,6 +141,10 @@ class ExpressionEvaluator<T> extends GeneralAstVisitor<T> {
     }
 
     return _sizeof(node.type);
+  }
+
+  Object visitStringLiteral(StringLiteral node) {
+    return node.value;
   }
 
   Object visitUnaryExpression(UnaryExpression node) {

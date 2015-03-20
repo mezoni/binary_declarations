@@ -114,6 +114,22 @@ List _removeNull(List list) {
   return result;
 }
 
+String _strValue(List<int> first, List<List<int>> next) {
+  var chars = [];
+  if (first != null) {
+    chars.addAll(first);
+  }
+
+  if (next != null) {
+    for (var element in next) {
+      if (element != null) {
+        chars.addAll(element);
+      }
+    }
+  }
+  return new String.fromCharCodes(chars);
+}
+
 Expression _unary(String operator, Expression operand) {
   return new UnaryExpression(operand: operand, operator: operator);
 }
@@ -19248,7 +19264,7 @@ class CParser {
             // (spaces string_literal_base)*
             final $2 = seq[1];
             final $start = startPos0;
-            $$ = new StringLiteral(text: _text(), value: _list($1, $2).join());
+            $$ = new StringLiteral(text: _text(), value: _strValue($1, $2));
           }
           break;
         }
