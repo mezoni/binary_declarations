@@ -234,7 +234,7 @@ primary_expression <-
   / lparen expression rparen { $$ = new ParenthesisExpression(expression: $2); }
 
 sizeof <-
-  SIZEOF OPEN_PAREN expression CLOSE_PAREN { $$ = new SizeofExpression(expression: $3); }
+  SIZEOF OPEN_PAREN Type CLOSE_PAREN { $$ = new SizeofExpression(type: $3); }
 
 expression <-
   conditional_expression

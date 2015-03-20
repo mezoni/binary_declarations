@@ -18114,13 +18114,13 @@ class CParser {
   
   dynamic _parse_sizeof() {
     // SENTENCE (NONTERMINAL)
-    // sizeof <- SIZEOF OPEN_PAREN expression CLOSE_PAREN
+    // sizeof <- SIZEOF OPEN_PAREN Type CLOSE_PAREN
     var $$;
-    // => SIZEOF OPEN_PAREN expression CLOSE_PAREN # Choice
+    // => SIZEOF OPEN_PAREN Type CLOSE_PAREN # Choice
     switch (_ch == 115 ? 0 : _ch == -1 ? 2 : 1) {
       // [s]
       case 0:
-        // => SIZEOF OPEN_PAREN expression CLOSE_PAREN # Sequence
+        // => SIZEOF OPEN_PAREN Type CLOSE_PAREN # Sequence
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
         _startPos = _cursor;
         while (true) {  
@@ -18134,9 +18134,9 @@ class CParser {
           // <= OPEN_PAREN
           if (!success) break;
           seq[1] = $$;
-          // => expression
-          $$ = _parse_expression();
-          // <= expression
+          // => Type
+          $$ = _parse_Type();
+          // <= Type
           if (!success) break;
           seq[2] = $$;
           // => CLOSE_PAREN
@@ -18150,12 +18150,12 @@ class CParser {
             final $1 = seq[0];
             // OPEN_PAREN
             final $2 = seq[1];
-            // expression
+            // Type
             final $3 = seq[2];
             // CLOSE_PAREN
             final $4 = seq[3];
             final $start = startPos0;
-            $$ = new SizeofExpression(expression: $3);
+            $$ = new SizeofExpression(type: $3);
           }
           break;
         }
@@ -18164,7 +18164,7 @@ class CParser {
           _cursor = pos0;
         }
         _startPos = startPos0;
-        // <= SIZEOF OPEN_PAREN expression CLOSE_PAREN # Sequence
+        // <= SIZEOF OPEN_PAREN Type CLOSE_PAREN # Sequence
         break;
       // No matches
       // EOF
@@ -18178,7 +18178,7 @@ class CParser {
       // Expected: 'sizeof'
       _failure(_expect10);
     }
-    // <= SIZEOF OPEN_PAREN expression CLOSE_PAREN # Choice
+    // <= SIZEOF OPEN_PAREN Type CLOSE_PAREN # Choice
     return $$;
   }
   

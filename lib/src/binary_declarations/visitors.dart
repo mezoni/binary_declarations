@@ -309,7 +309,7 @@ class AstPrinter<T> extends AstVisitor {
 
   T visitSizeofExpression(SizeofExpression node) {
     sb.write("sizeof(");
-    node.expression.accept(this);
+    node.type.accept(this);
     sb.write(")");
     return null;
   }

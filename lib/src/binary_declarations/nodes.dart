@@ -805,11 +805,11 @@ class PointerSpecifiers extends AstNodeList<PointerSpecifier> {
 }
 
 class SizeofExpression extends Expression {
-  final Expression expression;
+  final TypeSpecification type;
 
-  SizeofExpression({this.expression}) {
-    if (expression == null) {
-      throw new ArgumentError.notNull("identifier");
+  SizeofExpression({this.type}) {
+    if (type == null) {
+      throw new ArgumentError.notNull("type");
     }
   }
 
@@ -818,7 +818,7 @@ class SizeofExpression extends Expression {
   }
 
   void visitChildren(AstVisitor visitor) {
-    expression.accept(visitor);
+    type.accept(visitor);
   }
 }
 
