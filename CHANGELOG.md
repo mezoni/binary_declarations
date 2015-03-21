@@ -1,3 +1,9 @@
+## 0.0.51
+
+- Added support of expressions
+- Breaking changes. Significant changes of several classes
+- Changes in `c.peg` grammar
+
 ## 0.0.50
 
 - Changes in `c.peg` grammar
