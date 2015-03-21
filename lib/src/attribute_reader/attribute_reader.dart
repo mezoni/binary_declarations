@@ -8,7 +8,7 @@ class AttributeReader {
       throw new ArgumentError.notNull("specifiers");
     }
 
-    _arguments = _joinArguments(specifiers);
+    _joinArguments(specifiers);
   }
 
   bool defined(String name, {int maxLength: 0, int minLength: 0}) {
@@ -119,14 +119,9 @@ class AttributeReader {
     }
   }
 
-  Map<String, List<List<Expression>>> _getArguments(
-      DeclarationSpecifiers specifier, Map<String, List<List<Expression>>> arguments) {
-    if (arguments == null) {
-      arguments = <String, List<List<Expression>>>{};
-    }
-
+  void _addArguments(DeclarationSpecifiers specifier, Map<String, List<List<Expression>>> arguments) {
     if (specifier == null) {
-      return arguments;
+      return;
     }
 
     for (var specifier in specifier.elements) {
@@ -145,19 +140,15 @@ class AttributeReader {
         }
       }
     }
-
-    return arguments;
   }
 
-  Map<String, List<List<Expression>>> _joinArguments(List<DeclarationSpecifiers> specifiers) {
-    Map<String, List<List<Expression>>> arguments;
+  void _joinArguments(List<DeclarationSpecifiers> specifiers) {
+    _arguments = <String, List<List<Expression>>>{};
     for (var specifier in specifiers) {
       if (specifier != null) {
-        arguments = _getArguments(specifier, arguments);
+        _addArguments(specifier, _arguments);
       }
     }
-
-    return arguments;
   }
 
   void _wrongArgumentType(String name, String type) {
