@@ -112,18 +112,10 @@ List _removeNull(List list) {
   return result;
 }
 
-String _strValue(List<int> first, List<List<int>> next) {
-  var chars = [];
-  if (first != null) {
-    chars.addAll(first);
-  }
-  
-  if (next != null) {
-    for (var element in next) {
-      if (element != null) {
-        chars.addAll(element);
-      }
-    }  
+String _strValue(List<List<int>> list) {
+  var chars = <int>[];
+  for (var element in list) {
+    chars.addAll(element);
   }
   return new String.fromCharCodes(chars);
 }
@@ -571,7 +563,7 @@ string_literal <-
   string_literal2 spaces { $$ = $1; }
 
 string_literal2 <-
-  string_literal_base (spaces string_literal_base)* { $$ = new StringLiteral(text: _text(), value: _strValue($1, $2)); }
+  string_literal_base (spaces string_literal_base)* { $$ = new StringLiteral(text: _text(), value: _strValue(_list($1, $2))); }
 
 ### Lexemes (tokens) ###
 

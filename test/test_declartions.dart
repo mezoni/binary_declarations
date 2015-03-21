@@ -333,7 +333,7 @@ void main() {
 
     test("String literal concatenation.", () {
       var list = <String>[];
-      list.add('__attribute__((deprecated("This" "is" "deprecated"))) int foo;');
+      list.add('__attribute__((deprecated("This " " is" " deprecated"))) int foo;');
       var text = list.join("\n");
       var declarations = new Declarations(text);
       _checkPresentation(text, declarations);
