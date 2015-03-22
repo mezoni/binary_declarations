@@ -89,11 +89,11 @@ class ExpressionEvaluator<T> extends GeneralAstVisitor<T> {
       case "&&":
         _checkIntegerValue(lvalue, left);
         _checkIntegerValue(rvalue, right);
-        return lvalue && rvalue;
+        return (lvalue != 0 && rvalue != 0) ? 1 : 0;
       case "||":
         _checkIntegerValue(lvalue, left);
         _checkIntegerValue(rvalue, right);
-        return lvalue || rvalue;
+        return (lvalue != 0 || rvalue != 0) ? 1 : 0;
       default:
         throw new FormatException("Unknown binary operation: $node");
     }

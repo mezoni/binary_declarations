@@ -1,3 +1,7 @@
+## 0.0.52
+
+- Fixed bug in ExpressionEvaluator.visitBinaryExpression() with logical expression
+
 ## 0.0.51
 
 - Changes in `c.peg` grammar
