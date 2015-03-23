@@ -1217,13 +1217,13 @@ class CParser {
     // ArrayDimensions <- Dimension+
     var $$;          
     var pos = _cursor;             
-    if(_cachePos[96] >= pos) {
-      $$ = _getFromCache(96);
+    if(_cachePos[95] >= pos) {
+      $$ = _getFromCache(95);
       if($$ != null) {
         return $$[0];       
       }
     } else {
-      _cachePos[96] = pos;
+      _cachePos[95] = pos;
     }  
     // => Dimension+ # Choice
     switch (_ch == 91 ? 0 : _ch == -1 ? 2 : 1) {
@@ -1277,8 +1277,8 @@ class CParser {
       _failure(_expect51);
     }
     // <= Dimension+ # Choice
-    if (_cacheable[96]) {
-      _addToCache($$, pos, 96);
+    if (_cacheable[95]) {
+      _addToCache($$, pos, 95);
     }    
     return $$;
   }
@@ -1917,13 +1917,13 @@ class CParser {
     // CLOSE_BRACE <- '}' SPACING
     var $$;          
     var pos = _cursor;             
-    if(_cachePos[123] >= pos) {
-      $$ = _getFromCache(123);
+    if(_cachePos[122] >= pos) {
+      $$ = _getFromCache(122);
       if($$ != null) {
         return $$[0];       
       }
     } else {
-      _cachePos[123] = pos;
+      _cachePos[122] = pos;
     }  
     _token = 24;    
     _tokenStart = _cursor;    
@@ -1982,8 +1982,8 @@ class CParser {
       _failure(_expect58);
     }
     // <= '}' SPACING # Choice
-    if (_cacheable[123]) {
-      _addToCache($$, pos, 123);
+    if (_cacheable[122]) {
+      _addToCache($$, pos, 122);
     }    
     _token = null;
     _tokenStart = null;
@@ -2061,13 +2061,13 @@ class CParser {
     // CLOSE_PAREN <- ')' SPACING
     var $$;          
     var pos = _cursor;             
-    if(_cachePos[125] >= pos) {
-      $$ = _getFromCache(125);
+    if(_cachePos[124] >= pos) {
+      $$ = _getFromCache(124);
       if($$ != null) {
         return $$[0];       
       }
     } else {
-      _cachePos[125] = pos;
+      _cachePos[124] = pos;
     }  
     _token = 26;    
     _tokenStart = _cursor;    
@@ -2126,8 +2126,8 @@ class CParser {
       _failure(_expect13);
     }
     // <= ')' SPACING # Choice
-    if (_cacheable[125]) {
-      _addToCache($$, pos, 125);
+    if (_cacheable[124]) {
+      _addToCache($$, pos, 124);
     }    
     _token = null;
     _tokenStart = null;
@@ -2139,13 +2139,13 @@ class CParser {
     // COLON <- ':' SPACING
     var $$;          
     var pos = _cursor;             
-    if(_cachePos[126] >= pos) {
-      $$ = _getFromCache(126);
+    if(_cachePos[125] >= pos) {
+      $$ = _getFromCache(125);
       if($$ != null) {
         return $$[0];       
       }
     } else {
-      _cachePos[126] = pos;
+      _cachePos[125] = pos;
     }  
     _token = 27;    
     _tokenStart = _cursor;    
@@ -2204,8 +2204,8 @@ class CParser {
       _failure(_expect40);
     }
     // <= ':' SPACING # Choice
-    if (_cacheable[126]) {
-      _addToCache($$, pos, 126);
+    if (_cacheable[125]) {
+      _addToCache($$, pos, 125);
     }    
     _token = null;
     _tokenStart = null;
@@ -2217,13 +2217,13 @@ class CParser {
     // COMMA <- ',' SPACING
     var $$;          
     var pos = _cursor;             
-    if(_cachePos[127] >= pos) {
-      $$ = _getFromCache(127);
+    if(_cachePos[126] >= pos) {
+      $$ = _getFromCache(126);
       if($$ != null) {
         return $$[0];       
       }
     } else {
-      _cachePos[127] = pos;
+      _cachePos[126] = pos;
     }  
     _token = 28;    
     _tokenStart = _cursor;    
@@ -2282,8 +2282,8 @@ class CParser {
       _failure(_expect6);
     }
     // <= ',' SPACING # Choice
-    if (_cacheable[127]) {
-      _addToCache($$, pos, 127);
+    if (_cacheable[126]) {
+      _addToCache($$, pos, 126);
     }    
     _token = null;
     _tokenStart = null;
@@ -3729,13 +3729,13 @@ class CParser {
     // DeclarationModifierArgument <- constant_expression
     var $$;          
     var pos = _cursor;             
-    if(_cachePos[11] >= pos) {
-      $$ = _getFromCache(11);
+    if(_cachePos[10] >= pos) {
+      $$ = _getFromCache(10);
       if($$ != null) {
         return $$[0];       
       }
     } else {
-      _cachePos[11] = pos;
+      _cachePos[10] = pos;
     }  
     // => constant_expression # Choice
     switch (_getState(_transitions3)) {
@@ -3761,8 +3761,8 @@ class CParser {
       _failure(_expect7);
     }
     // <= constant_expression # Choice
-    if (_cacheable[11]) {
-      _addToCache($$, pos, 11);
+    if (_cacheable[10]) {
+      _addToCache($$, pos, 10);
     }    
     return $$;
   }
@@ -4305,13 +4305,13 @@ class CParser {
     // DeclaratorNotAbstract <- PointerSpecifiers? Identifier ArrayDimensions? Metadata?
     var $$;          
     var pos = _cursor;             
-    if(_cachePos[106] >= pos) {
-      $$ = _getFromCache(106);
+    if(_cachePos[105] >= pos) {
+      $$ = _getFromCache(105);
       if($$ != null) {
         return $$[0];       
       }
     } else {
-      _cachePos[106] = pos;
+      _cachePos[105] = pos;
     }  
     // => PointerSpecifiers? Identifier ArrayDimensions? Metadata? # Choice
     switch (_getState(_transitions25)) {
@@ -4394,8 +4394,8 @@ class CParser {
       _failure(_expect5);
     }
     // <= PointerSpecifiers? Identifier ArrayDimensions? Metadata? # Choice
-    if (_cacheable[106]) {
-      _addToCache($$, pos, 106);
+    if (_cacheable[105]) {
+      _addToCache($$, pos, 105);
     }    
     return $$;
   }
@@ -4609,13 +4609,13 @@ class CParser {
     // ENUM <- 'enum' !IDENTIFIER_BASE1 SPACING
     var $$;          
     var pos = _cursor;             
-    if(_cachePos[131] >= pos) {
-      $$ = _getFromCache(131);
+    if(_cachePos[130] >= pos) {
+      $$ = _getFromCache(130);
       if($$ != null) {
         return $$[0];       
       }
     } else {
-      _cachePos[131] = pos;
+      _cachePos[130] = pos;
     }  
     _token = 32;    
     _tokenStart = _cursor;    
@@ -4684,8 +4684,8 @@ class CParser {
       _failure(_expect52);
     }
     // <= 'enum' !IDENTIFIER_BASE1 SPACING # Choice
-    if (_cacheable[131]) {
-      _addToCache($$, pos, 131);
+    if (_cacheable[130]) {
+      _addToCache($$, pos, 130);
     }    
     _token = null;
     _tokenStart = null;
@@ -5026,13 +5026,13 @@ class CParser {
     // EnumType <- EnumTypeSpecifier OPEN_BRACE Enumerators CLOSE_BRACE Metadata? TypeQualifiers? / EnumTypeSpecifierWithTag Metadata? TypeQualifiers?
     var $$;          
     var pos = _cursor;             
-    if(_cachePos[99] >= pos) {
-      $$ = _getFromCache(99);
+    if(_cachePos[98] >= pos) {
+      $$ = _getFromCache(98);
       if($$ != null) {
         return $$[0];       
       }
     } else {
-      _cachePos[99] = pos;
+      _cachePos[98] = pos;
     }  
     // => EnumTypeSpecifier OPEN_BRACE Enumerators CLOSE_BRACE Metadata? TypeQualifiers? / EnumTypeSpecifierWithTag Metadata? TypeQualifiers? # Choice
     switch (_ch == 101 ? 0 : _ch == -1 ? 2 : 1) {
@@ -5177,8 +5177,8 @@ class CParser {
       _failure(_expect52);
     }
     // <= EnumTypeSpecifier OPEN_BRACE Enumerators CLOSE_BRACE Metadata? TypeQualifiers? / EnumTypeSpecifierWithTag Metadata? TypeQualifiers? # Choice
-    if (_cacheable[99]) {
-      _addToCache($$, pos, 99);
+    if (_cacheable[98]) {
+      _addToCache($$, pos, 98);
     }    
     return $$;
   }
@@ -5332,13 +5332,13 @@ class CParser {
     // Enumerator <- Identifier ASSIGN (constant_expression) / Identifier
     var $$;          
     var pos = _cursor;             
-    if(_cachePos[103] >= pos) {
-      $$ = _getFromCache(103);
+    if(_cachePos[102] >= pos) {
+      $$ = _getFromCache(102);
       if($$ != null) {
         return $$[0];       
       }
     } else {
-      _cachePos[103] = pos;
+      _cachePos[102] = pos;
     }  
     // => Identifier ASSIGN (constant_expression) / Identifier # Choice
     switch (_getState(_transitions2)) {
@@ -5433,8 +5433,8 @@ class CParser {
       _failure(_expect5);
     }
     // <= Identifier ASSIGN (constant_expression) / Identifier # Choice
-    if (_cacheable[103]) {
-      _addToCache($$, pos, 103);
+    if (_cacheable[102]) {
+      _addToCache($$, pos, 102);
     }    
     return $$;
   }
@@ -6191,13 +6191,13 @@ class CParser {
     // FunctionDeclarator <- PointerSpecifiers? Identifier OPEN_PAREN FunctionParameters CLOSE_PAREN Metadata?
     var $$;          
     var pos = _cursor;             
-    if(_cachePos[73] >= pos) {
-      $$ = _getFromCache(73);
+    if(_cachePos[72] >= pos) {
+      $$ = _getFromCache(72);
       if($$ != null) {
         return $$[0];       
       }
     } else {
-      _cachePos[73] = pos;
+      _cachePos[72] = pos;
     }  
     // => PointerSpecifiers? Identifier OPEN_PAREN FunctionParameters CLOSE_PAREN Metadata? # Choice
     switch (_getState(_transitions25)) {
@@ -6288,8 +6288,8 @@ class CParser {
       _failure(_expect5);
     }
     // <= PointerSpecifiers? Identifier OPEN_PAREN FunctionParameters CLOSE_PAREN Metadata? # Choice
-    if (_cacheable[73]) {
-      _addToCache($$, pos, 73);
+    if (_cacheable[72]) {
+      _addToCache($$, pos, 72);
     }    
     return $$;
   }
@@ -6299,13 +6299,13 @@ class CParser {
     // FunctionParameterDeclaration <- ParameterDeclarationNotAbstract / ParameterDeclarationAbstract
     var $$;          
     var pos = _cursor;             
-    if(_cachePos[78] >= pos) {
-      $$ = _getFromCache(78);
+    if(_cachePos[77] >= pos) {
+      $$ = _getFromCache(77);
       if($$ != null) {
         return $$[0];       
       }
     } else {
-      _cachePos[78] = pos;
+      _cachePos[77] = pos;
     }  
     // => ParameterDeclarationNotAbstract / ParameterDeclarationAbstract # Choice
     switch (_getState(_transitions2)) {
@@ -6341,8 +6341,8 @@ class CParser {
       _failure(_expect3);
     }
     // <= ParameterDeclarationNotAbstract / ParameterDeclarationAbstract # Choice
-    if (_cacheable[78]) {
-      _addToCache($$, pos, 78);
+    if (_cacheable[77]) {
+      _addToCache($$, pos, 77);
     }    
     return $$;
   }
@@ -6757,13 +6757,13 @@ class CParser {
     // FunctionPointerDeclarator <- PointerSpecifiers? OPEN_PAREN PointerSpecifiers Identifier CLOSE_PAREN OPEN_PAREN FunctionParameters CLOSE_PAREN ArrayDimensions? Metadata?
     var $$;          
     var pos = _cursor;             
-    if(_cachePos[105] >= pos) {
-      $$ = _getFromCache(105);
+    if(_cachePos[104] >= pos) {
+      $$ = _getFromCache(104);
       if($$ != null) {
         return $$[0];       
       }
     } else {
-      _cachePos[105] = pos;
+      _cachePos[104] = pos;
     }  
     // => PointerSpecifiers? OPEN_PAREN PointerSpecifiers Identifier CLOSE_PAREN OPEN_PAREN FunctionParameters CLOSE_PAREN ArrayDimensions? Metadata? # Choice
     switch (_getState(_transitions34)) {
@@ -6888,8 +6888,8 @@ class CParser {
       _failure(_expect12);
     }
     // <= PointerSpecifiers? OPEN_PAREN PointerSpecifiers Identifier CLOSE_PAREN OPEN_PAREN FunctionParameters CLOSE_PAREN ArrayDimensions? Metadata? # Choice
-    if (_cacheable[105]) {
-      _addToCache($$, pos, 105);
+    if (_cacheable[104]) {
+      _addToCache($$, pos, 104);
     }    
     return $$;
   }
@@ -7812,7 +7812,7 @@ class CParser {
   
   dynamic _parse_Identifier() {
     // LEXEME (TOKEN)
-    // Identifier <- !RESERVED_WORD Identifier_base spaces2
+    // Identifier <- !RESERVED_WORD Identifier_base SPACING
     var $$;          
     var pos = _cursor;             
     if(_cachePos[8] >= pos) {
@@ -7825,13 +7825,13 @@ class CParser {
     }  
     _token = 0;    
     _tokenStart = _cursor;    
-    // => !RESERVED_WORD Identifier_base spaces2 # Choice
+    // => !RESERVED_WORD Identifier_base SPACING # Choice
     switch (_getState(_transitions2)) {
       // [A-Z] [\\] [_] [a-z]
       // EOF
       case 0:
       case 2:
-        // => !RESERVED_WORD Identifier_base spaces2 # Sequence
+        // => !RESERVED_WORD Identifier_base SPACING # Sequence
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
         _startPos = _cursor;
         while (true) {  
@@ -7854,9 +7854,9 @@ class CParser {
           // <= Identifier_base
           if (!success) break;
           seq[1] = $$;
-          // => spaces2
-          $$ = _parse_spaces2();
-          // <= spaces2
+          // => SPACING
+          $$ = _parse_SPACING();
+          // <= SPACING
           if (!success) break;
           seq[2] = $$;
           $$ = seq;
@@ -7865,7 +7865,7 @@ class CParser {
             final $1 = seq[0];
             // Identifier_base
             final $2 = seq[1];
-            // spaces2
+            // SPACING
             final $3 = seq[2];
             final $start = startPos0;
             $$ = $2;
@@ -7877,7 +7877,7 @@ class CParser {
           _cursor = pos0;
         }
         _startPos = startPos0;
-        // <= !RESERVED_WORD Identifier_base spaces2 # Sequence
+        // <= !RESERVED_WORD Identifier_base SPACING # Sequence
         break;
       // No matches
       case 1:
@@ -7889,7 +7889,7 @@ class CParser {
       // Expected: Identifier
       _failure(_expect5);
     }
-    // <= !RESERVED_WORD Identifier_base spaces2 # Choice
+    // <= !RESERVED_WORD Identifier_base SPACING # Choice
     if (_cacheable[8]) {
       _addToCache($$, pos, 8);
     }    
@@ -9647,13 +9647,13 @@ class CParser {
     // OPEN_BRACE <- '{' SPACING
     var $$;          
     var pos = _cursor;             
-    if(_cachePos[137] >= pos) {
-      $$ = _getFromCache(137);
+    if(_cachePos[136] >= pos) {
+      $$ = _getFromCache(136);
       if($$ != null) {
         return $$[0];       
       }
     } else {
-      _cachePos[137] = pos;
+      _cachePos[136] = pos;
     }  
     _token = 37;    
     _tokenStart = _cursor;    
@@ -9712,8 +9712,8 @@ class CParser {
       _failure(_expect48);
     }
     // <= '{' SPACING # Choice
-    if (_cacheable[137]) {
-      _addToCache($$, pos, 137);
+    if (_cacheable[136]) {
+      _addToCache($$, pos, 136);
     }    
     _token = null;
     _tokenStart = null;
@@ -9791,13 +9791,13 @@ class CParser {
     // OPEN_PAREN <- '(' SPACING
     var $$;          
     var pos = _cursor;             
-    if(_cachePos[139] >= pos) {
-      $$ = _getFromCache(139);
+    if(_cachePos[138] >= pos) {
+      $$ = _getFromCache(138);
       if($$ != null) {
         return $$[0];       
       }
     } else {
-      _cachePos[139] = pos;
+      _cachePos[138] = pos;
     }  
     _token = 39;    
     _tokenStart = _cursor;    
@@ -9856,8 +9856,8 @@ class CParser {
       _failure(_expect12);
     }
     // <= '(' SPACING # Choice
-    if (_cacheable[139]) {
-      _addToCache($$, pos, 139);
+    if (_cacheable[138]) {
+      _addToCache($$, pos, 138);
     }    
     _token = null;
     _tokenStart = null;
@@ -9869,13 +9869,13 @@ class CParser {
     // ParameterDeclarationAbstract <- Metadata? TypeQualifiers? Type DeclaratorAbstract / Metadata? TypeQualifiers? Type
     var $$;          
     var pos = _cursor;             
-    if(_cachePos[94] >= pos) {
-      $$ = _getFromCache(94);
+    if(_cachePos[93] >= pos) {
+      $$ = _getFromCache(93);
       if($$ != null) {
         return $$[0];       
       }
     } else {
-      _cachePos[94] = pos;
+      _cachePos[93] = pos;
     }  
     // => Metadata? TypeQualifiers? Type DeclaratorAbstract / Metadata? TypeQualifiers? Type # Choice
     switch (_getState(_transitions2)) {
@@ -10006,8 +10006,8 @@ class CParser {
       _failure(_expect3);
     }
     // <= Metadata? TypeQualifiers? Type DeclaratorAbstract / Metadata? TypeQualifiers? Type # Choice
-    if (_cacheable[94]) {
-      _addToCache($$, pos, 94);
+    if (_cacheable[93]) {
+      _addToCache($$, pos, 93);
     }    
     return $$;
   }
@@ -10017,13 +10017,13 @@ class CParser {
     // ParameterDeclarationNotAbstract <- Metadata? TypeQualifiers? Type FunctionDeclarator / Metadata? TypeQualifiers? Type FunctionPointerDeclarator / Metadata? TypeQualifiers? Type DeclaratorNotAbstract
     var $$;          
     var pos = _cursor;             
-    if(_cachePos[79] >= pos) {
-      $$ = _getFromCache(79);
+    if(_cachePos[78] >= pos) {
+      $$ = _getFromCache(78);
       if($$ != null) {
         return $$[0];       
       }
     } else {
-      _cachePos[79] = pos;
+      _cachePos[78] = pos;
     }  
     // => Metadata? TypeQualifiers? Type FunctionDeclarator / Metadata? TypeQualifiers? Type FunctionPointerDeclarator / Metadata? TypeQualifiers? Type DeclaratorNotAbstract # Choice
     switch (_getState(_transitions2)) {
@@ -10219,8 +10219,8 @@ class CParser {
       _failure(_expect3);
     }
     // <= Metadata? TypeQualifiers? Type FunctionDeclarator / Metadata? TypeQualifiers? Type FunctionPointerDeclarator / Metadata? TypeQualifiers? Type DeclaratorNotAbstract # Choice
-    if (_cacheable[79]) {
-      _addToCache($$, pos, 79);
+    if (_cacheable[78]) {
+      _addToCache($$, pos, 78);
     }    
     return $$;
   }
@@ -10305,13 +10305,13 @@ class CParser {
     // PointerSpecifiers <- PointerSpecifier+
     var $$;          
     var pos = _cursor;             
-    if(_cachePos[74] >= pos) {
-      $$ = _getFromCache(74);
+    if(_cachePos[73] >= pos) {
+      $$ = _getFromCache(73);
       if($$ != null) {
         return $$[0];       
       }
     } else {
-      _cachePos[74] = pos;
+      _cachePos[73] = pos;
     }  
     // => PointerSpecifier+ # Choice
     switch (_ch == 42 ? 0 : _ch == -1 ? 2 : 1) {
@@ -10365,8 +10365,8 @@ class CParser {
       _failure(_expect42);
     }
     // <= PointerSpecifier+ # Choice
-    if (_cacheable[74]) {
-      _addToCache($$, pos, 74);
+    if (_cacheable[73]) {
+      _addToCache($$, pos, 73);
     }    
     return $$;
   }
@@ -10773,13 +10773,13 @@ class CParser {
     // SEMICOLON <- ';' SPACING
     var $$;          
     var pos = _cursor;             
-    if(_cachePos[141] >= pos) {
-      $$ = _getFromCache(141);
+    if(_cachePos[140] >= pos) {
+      $$ = _getFromCache(140);
       if($$ != null) {
         return $$[0];       
       }
     } else {
-      _cachePos[141] = pos;
+      _cachePos[140] = pos;
     }  
     _token = 40;    
     _tokenStart = _cursor;    
@@ -10838,8 +10838,8 @@ class CParser {
       _failure(_expect67);
     }
     // <= ';' SPACING # Choice
-    if (_cacheable[141]) {
-      _addToCache($$, pos, 141);
+    if (_cacheable[140]) {
+      _addToCache($$, pos, 140);
     }    
     _token = null;
     _tokenStart = null;
@@ -11377,13 +11377,13 @@ class CParser {
     // STRUCT <- 'struct' !IDENTIFIER_BASE1 SPACING
     var $$;          
     var pos = _cursor;             
-    if(_cachePos[143] >= pos) {
-      $$ = _getFromCache(143);
+    if(_cachePos[142] >= pos) {
+      $$ = _getFromCache(142);
       if($$ != null) {
         return $$[0];       
       }
     } else {
-      _cachePos[143] = pos;
+      _cachePos[142] = pos;
     }  
     _token = 42;    
     _tokenStart = _cursor;    
@@ -11452,8 +11452,8 @@ class CParser {
       _failure(_expect68);
     }
     // <= 'struct' !IDENTIFIER_BASE1 SPACING # Choice
-    if (_cacheable[143]) {
-      _addToCache($$, pos, 143);
+    if (_cacheable[142]) {
+      _addToCache($$, pos, 142);
     }    
     _token = null;
     _tokenStart = null;
@@ -11917,13 +11917,13 @@ class CParser {
     // StructureType <- StructureTypeSpecifier StructureMemberList Metadata? TypeQualifiers? / StructureTypeSpecifierWithTag Metadata? TypeQualifiers?
     var $$;          
     var pos = _cursor;             
-    if(_cachePos[86] >= pos) {
-      $$ = _getFromCache(86);
+    if(_cachePos[85] >= pos) {
+      $$ = _getFromCache(85);
       if($$ != null) {
         return $$[0];       
       }
     } else {
-      _cachePos[86] = pos;
+      _cachePos[85] = pos;
     }  
     // => StructureTypeSpecifier StructureMemberList Metadata? TypeQualifiers? / StructureTypeSpecifierWithTag Metadata? TypeQualifiers? # Choice
     switch (_getState(_transitions30)) {
@@ -12054,8 +12054,8 @@ class CParser {
       _failure(_expect47);
     }
     // <= StructureTypeSpecifier StructureMemberList Metadata? TypeQualifiers? / StructureTypeSpecifierWithTag Metadata? TypeQualifiers? # Choice
-    if (_cacheable[86]) {
-      _addToCache($$, pos, 86);
+    if (_cacheable[85]) {
+      _addToCache($$, pos, 85);
     }    
     return $$;
   }
@@ -12345,13 +12345,13 @@ class CParser {
     // Type <- DefinedType / IntegerType / FloatType / VoidType / BoolType / StructureType / EnumType
     var $$;          
     var pos = _cursor;             
-    if(_cachePos[80] >= pos) {
-      $$ = _getFromCache(80);
+    if(_cachePos[79] >= pos) {
+      $$ = _getFromCache(79);
       if($$ != null) {
         return $$[0];       
       }
     } else {
-      _cachePos[80] = pos;
+      _cachePos[79] = pos;
     }  
     // => DefinedType / IntegerType / FloatType / VoidType / BoolType / StructureType / EnumType # Choice
     switch (_getState(_transitions26)) {
@@ -12443,8 +12443,8 @@ class CParser {
       _failure(_expect3);
     }
     // <= DefinedType / IntegerType / FloatType / VoidType / BoolType / StructureType / EnumType # Choice
-    if (_cacheable[80]) {
-      _addToCache($$, pos, 80);
+    if (_cacheable[79]) {
+      _addToCache($$, pos, 79);
     }    
     return $$;
   }
@@ -12454,13 +12454,13 @@ class CParser {
     // TypeDeclarator <- FunctionDeclarator / FunctionPointerDeclarator / DeclaratorNotAbstract / TypedefFunctionDeclarator
     var $$;          
     var pos = _cursor;             
-    if(_cachePos[112] >= pos) {
-      $$ = _getFromCache(112);
+    if(_cachePos[111] >= pos) {
+      $$ = _getFromCache(111);
       if($$ != null) {
         return $$[0];       
       }
     } else {
-      _cachePos[112] = pos;
+      _cachePos[111] = pos;
     }  
     // => FunctionDeclarator / FunctionPointerDeclarator / DeclaratorNotAbstract / TypedefFunctionDeclarator # Choice
     switch (_getState(_transitions39)) {
@@ -12548,8 +12548,8 @@ class CParser {
       _failure(_expect54);
     }
     // <= FunctionDeclarator / FunctionPointerDeclarator / DeclaratorNotAbstract / TypedefFunctionDeclarator # Choice
-    if (_cacheable[112]) {
-      _addToCache($$, pos, 112);
+    if (_cacheable[111]) {
+      _addToCache($$, pos, 111);
     }    
     return $$;
   }
@@ -12759,13 +12759,13 @@ class CParser {
     // TypeQualifiers <- TypeQualifier+
     var $$;          
     var pos = _cursor;             
-    if(_cachePos[71] >= pos) {
-      $$ = _getFromCache(71);
+    if(_cachePos[70] >= pos) {
+      $$ = _getFromCache(70);
       if($$ != null) {
         return $$[0];       
       }
     } else {
-      _cachePos[71] = pos;
+      _cachePos[70] = pos;
     }  
     // => TypeQualifier+ # Choice
     switch (_getState(_transitions23)) {
@@ -12819,8 +12819,8 @@ class CParser {
       _failure(_expect41);
     }
     // <= TypeQualifier+ # Choice
-    if (_cacheable[71]) {
-      _addToCache($$, pos, 71);
+    if (_cacheable[70]) {
+      _addToCache($$, pos, 70);
     }    
     return $$;
   }
@@ -13104,13 +13104,13 @@ class CParser {
     // UNION <- 'union' !IDENTIFIER_BASE1 SPACING
     var $$;          
     var pos = _cursor;             
-    if(_cachePos[145] >= pos) {
-      $$ = _getFromCache(145);
+    if(_cachePos[144] >= pos) {
+      $$ = _getFromCache(144);
       if($$ != null) {
         return $$[0];       
       }
     } else {
-      _cachePos[145] = pos;
+      _cachePos[144] = pos;
     }  
     _token = 44;    
     _tokenStart = _cursor;    
@@ -13179,8 +13179,8 @@ class CParser {
       _failure(_expect69);
     }
     // <= 'union' !IDENTIFIER_BASE1 SPACING # Choice
-    if (_cacheable[145]) {
-      _addToCache($$, pos, 145);
+    if (_cacheable[144]) {
+      _addToCache($$, pos, 144);
     }    
     _token = null;
     _tokenStart = null;
@@ -13627,13 +13627,13 @@ class CParser {
     // VariableDeclarator <- DeclaratorNotAbstract
     var $$;          
     var pos = _cursor;             
-    if(_cachePos[116] >= pos) {
-      $$ = _getFromCache(116);
+    if(_cachePos[115] >= pos) {
+      $$ = _getFromCache(115);
       if($$ != null) {
         return $$[0];       
       }
     } else {
-      _cachePos[116] = pos;
+      _cachePos[115] = pos;
     }  
     // => DeclaratorNotAbstract # Choice
     switch (_getState(_transitions25)) {
@@ -13659,8 +13659,8 @@ class CParser {
       _failure(_expect5);
     }
     // <= DeclaratorNotAbstract # Choice
-    if (_cacheable[116]) {
-      _addToCache($$, pos, 116);
+    if (_cacheable[115]) {
+      _addToCache($$, pos, 115);
     }    
     return $$;
   }
@@ -13853,13 +13853,13 @@ class CParser {
     // additive_expression <- multiplicative_expression additive_expression1
     var $$;          
     var pos = _cursor;             
-    if(_cachePos[22] >= pos) {
-      $$ = _getFromCache(22);
+    if(_cachePos[21] >= pos) {
+      $$ = _getFromCache(21);
       if($$ != null) {
         return $$[0];       
       }
     } else {
-      _cachePos[22] = pos;
+      _cachePos[21] = pos;
     }  
     // => multiplicative_expression additive_expression1 # Choice
     switch (_getState(_transitions5)) {
@@ -13910,8 +13910,8 @@ class CParser {
       _failure(_expect8);
     }
     // <= multiplicative_expression additive_expression1 # Choice
-    if (_cacheable[22]) {
-      _addToCache($$, pos, 22);
+    if (_cacheable[21]) {
+      _addToCache($$, pos, 21);
     }    
     return $$;
   }
@@ -14187,13 +14187,13 @@ class CParser {
     // and_expression <- equality_expression and_expression1
     var $$;          
     var pos = _cursor;             
-    if(_cachePos[18] >= pos) {
-      $$ = _getFromCache(18);
+    if(_cachePos[17] >= pos) {
+      $$ = _getFromCache(17);
       if($$ != null) {
         return $$[0];       
       }
     } else {
-      _cachePos[18] = pos;
+      _cachePos[17] = pos;
     }  
     // => equality_expression and_expression1 # Choice
     switch (_getState(_transitions5)) {
@@ -14244,8 +14244,8 @@ class CParser {
       _failure(_expect8);
     }
     // <= equality_expression and_expression1 # Choice
-    if (_cacheable[18]) {
-      _addToCache($$, pos, 18);
+    if (_cacheable[17]) {
+      _addToCache($$, pos, 17);
     }    
     return $$;
   }
@@ -14523,13 +14523,13 @@ class CParser {
     // conditional_expression <- logical_or_expression question_mark expression semicolon conditional_expression / logical_or_expression
     var $$;          
     var pos = _cursor;             
-    if(_cachePos[13] >= pos) {
-      $$ = _getFromCache(13);
+    if(_cachePos[12] >= pos) {
+      $$ = _getFromCache(12);
       if($$ != null) {
         return $$[0];       
       }
     } else {
-      _cachePos[13] = pos;
+      _cachePos[12] = pos;
     }  
     // => logical_or_expression question_mark expression semicolon conditional_expression / logical_or_expression # Choice
     switch (_getState(_transitions5)) {
@@ -14611,23 +14611,23 @@ class CParser {
       _failure(_expect8);
     }
     // <= logical_or_expression question_mark expression semicolon conditional_expression / logical_or_expression # Choice
-    if (_cacheable[13]) {
-      _addToCache($$, pos, 13);
+    if (_cacheable[12]) {
+      _addToCache($$, pos, 12);
     }    
     return $$;
   }
   
   dynamic _parse_constant() {
     // LEXEME (TOKEN)
-    // constant <- constant_base spaces2
+    // constant <- constant_base SPACING
     var $$;
     _token = 1;  
     _tokenStart = _cursor;  
-    // => constant_base spaces2 # Choice
+    // => constant_base SPACING # Choice
     switch (_getState(_transitions8)) {
       // [\'] [.] [0-9] [L]
       case 0:
-        // => constant_base spaces2 # Sequence
+        // => constant_base SPACING # Sequence
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
         _startPos = _cursor;
         while (true) {  
@@ -14636,16 +14636,16 @@ class CParser {
           // <= constant_base
           if (!success) break;
           var seq = new List(2)..[0] = $$;
-          // => spaces2
-          $$ = _parse_spaces2();
-          // <= spaces2
+          // => SPACING
+          $$ = _parse_SPACING();
+          // <= SPACING
           if (!success) break;
           seq[1] = $$;
           $$ = seq;
           if (success) {    
             // constant_base
             final $1 = seq[0];
-            // spaces2
+            // SPACING
             final $2 = seq[1];
             final $start = startPos0;
             $$ = $1;
@@ -14657,7 +14657,7 @@ class CParser {
           _cursor = pos0;
         }
         _startPos = startPos0;
-        // <= constant_base spaces2 # Sequence
+        // <= constant_base SPACING # Sequence
         break;
       // No matches
       // EOF
@@ -14671,7 +14671,7 @@ class CParser {
       // Expected: constant
       _failure(_expect11);
     }
-    // <= constant_base spaces2 # Choice
+    // <= constant_base SPACING # Choice
     _token = null;
     _tokenStart = null;
     return $$;
@@ -14741,13 +14741,13 @@ class CParser {
     // constant_expression <- conditional_expression / string_literal
     var $$;          
     var pos = _cursor;             
-    if(_cachePos[12] >= pos) {
-      $$ = _getFromCache(12);
+    if(_cachePos[11] >= pos) {
+      $$ = _getFromCache(11);
       if($$ != null) {
         return $$[0];       
       }
     } else {
-      _cachePos[12] = pos;
+      _cachePos[11] = pos;
     }  
     // => conditional_expression / string_literal # Choice
     switch (_getState(_transitions4)) {
@@ -14801,21 +14801,21 @@ class CParser {
       _failure(_expect7);
     }
     // <= conditional_expression / string_literal # Choice
-    if (_cacheable[12]) {
-      _addToCache($$, pos, 12);
+    if (_cacheable[11]) {
+      _addToCache($$, pos, 11);
     }    
     return $$;
   }
   
   dynamic _parse_decimal_floating_constant() {
     // MORHEME
-    // decimal_floating_constant <- decimal_floating_constant_base spaces2
+    // decimal_floating_constant <- decimal_floating_constant_base SPACING
     var $$;
-    // => decimal_floating_constant_base spaces2 # Choice
+    // => decimal_floating_constant_base SPACING # Choice
     switch (_getState(_transitions11)) {
       // [.] [0-9]
       case 0:
-        // => decimal_floating_constant_base spaces2 # Sequence
+        // => decimal_floating_constant_base SPACING # Sequence
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
         _startPos = _cursor;
         while (true) {  
@@ -14824,16 +14824,16 @@ class CParser {
           // <= decimal_floating_constant_base
           if (!success) break;
           var seq = new List(2)..[0] = $$;
-          // => spaces2
-          $$ = _parse_spaces2();
-          // <= spaces2
+          // => SPACING
+          $$ = _parse_SPACING();
+          // <= SPACING
           if (!success) break;
           seq[1] = $$;
           $$ = seq;
           if (success) {    
             // decimal_floating_constant_base
             final $1 = seq[0];
-            // spaces2
+            // SPACING
             final $2 = seq[1];
             final $start = startPos0;
             $$ = $1;
@@ -14845,7 +14845,7 @@ class CParser {
           _cursor = pos0;
         }
         _startPos = startPos0;
-        // <= decimal_floating_constant_base spaces2 # Sequence
+        // <= decimal_floating_constant_base SPACING # Sequence
         break;
       // No matches
       // EOF
@@ -14859,7 +14859,7 @@ class CParser {
       // Expected: 
       _failure(const [null]);
     }
-    // <= decimal_floating_constant_base spaces2 # Choice
+    // <= decimal_floating_constant_base SPACING # Choice
     return $$;
   }
   
@@ -15104,13 +15104,13 @@ class CParser {
     // equality_expression <- relational_expression equality_expression1
     var $$;          
     var pos = _cursor;             
-    if(_cachePos[19] >= pos) {
-      $$ = _getFromCache(19);
+    if(_cachePos[18] >= pos) {
+      $$ = _getFromCache(18);
       if($$ != null) {
         return $$[0];       
       }
     } else {
-      _cachePos[19] = pos;
+      _cachePos[18] = pos;
     }  
     // => relational_expression equality_expression1 # Choice
     switch (_getState(_transitions5)) {
@@ -15161,8 +15161,8 @@ class CParser {
       _failure(_expect8);
     }
     // <= relational_expression equality_expression1 # Choice
-    if (_cacheable[19]) {
-      _addToCache($$, pos, 19);
+    if (_cacheable[18]) {
+      _addToCache($$, pos, 18);
     }    
     return $$;
   }
@@ -15388,13 +15388,13 @@ class CParser {
     // exclusive_or_expression <- and_expression exclusive_or_expression1
     var $$;          
     var pos = _cursor;             
-    if(_cachePos[17] >= pos) {
-      $$ = _getFromCache(17);
+    if(_cachePos[16] >= pos) {
+      $$ = _getFromCache(16);
       if($$ != null) {
         return $$[0];       
       }
     } else {
-      _cachePos[17] = pos;
+      _cachePos[16] = pos;
     }  
     // => and_expression exclusive_or_expression1 # Choice
     switch (_getState(_transitions5)) {
@@ -15445,8 +15445,8 @@ class CParser {
       _failure(_expect8);
     }
     // <= and_expression exclusive_or_expression1 # Choice
-    if (_cacheable[17]) {
-      _addToCache($$, pos, 17);
+    if (_cacheable[16]) {
+      _addToCache($$, pos, 16);
     }    
     return $$;
   }
@@ -15552,13 +15552,13 @@ class CParser {
     // expression <- conditional_expression
     var $$;          
     var pos = _cursor;             
-    if(_cachePos[27] >= pos) {
-      $$ = _getFromCache(27);
+    if(_cachePos[26] >= pos) {
+      $$ = _getFromCache(26);
       if($$ != null) {
         return $$[0];       
       }
     } else {
-      _cachePos[27] = pos;
+      _cachePos[26] = pos;
     }  
     // => conditional_expression # Choice
     switch (_getState(_transitions5)) {
@@ -15584,8 +15584,8 @@ class CParser {
       _failure(_expect8);
     }
     // <= conditional_expression # Choice
-    if (_cacheable[27]) {
-      _addToCache($$, pos, 27);
+    if (_cacheable[26]) {
+      _addToCache($$, pos, 26);
     }    
     return $$;
   }
@@ -15894,13 +15894,13 @@ class CParser {
     // inclusive_or_expression <- exclusive_or_expression inclusive_or_expression1
     var $$;          
     var pos = _cursor;             
-    if(_cachePos[16] >= pos) {
-      $$ = _getFromCache(16);
+    if(_cachePos[15] >= pos) {
+      $$ = _getFromCache(15);
       if($$ != null) {
         return $$[0];       
       }
     } else {
-      _cachePos[16] = pos;
+      _cachePos[15] = pos;
     }  
     // => exclusive_or_expression inclusive_or_expression1 # Choice
     switch (_getState(_transitions5)) {
@@ -15951,8 +15951,8 @@ class CParser {
       _failure(_expect8);
     }
     // <= exclusive_or_expression inclusive_or_expression1 # Choice
-    if (_cacheable[16]) {
-      _addToCache($$, pos, 16);
+    if (_cacheable[15]) {
+      _addToCache($$, pos, 15);
     }    
     return $$;
   }
@@ -16058,13 +16058,13 @@ class CParser {
     // integer_constant <- integer_constant_base spaces
     var $$;          
     var pos = _cursor;             
-    if(_cachePos[92] >= pos) {
-      $$ = _getFromCache(92);
+    if(_cachePos[91] >= pos) {
+      $$ = _getFromCache(91);
       if($$ != null) {
         return $$[0];       
       }
     } else {
-      _cachePos[92] = pos;
+      _cachePos[91] = pos;
     }  
     _token = 18;    
     _tokenStart = _cursor;    
@@ -16117,8 +16117,8 @@ class CParser {
       _failure(_expect49);
     }
     // <= integer_constant_base spaces # Choice
-    if (_cacheable[92]) {
-      _addToCache($$, pos, 92);
+    if (_cacheable[91]) {
+      _addToCache($$, pos, 91);
     }    
     _token = null;
     _tokenStart = null;
@@ -16273,13 +16273,13 @@ class CParser {
     // logical_and_expression <- inclusive_or_expression logical_and_expression1
     var $$;          
     var pos = _cursor;             
-    if(_cachePos[15] >= pos) {
-      $$ = _getFromCache(15);
+    if(_cachePos[14] >= pos) {
+      $$ = _getFromCache(14);
       if($$ != null) {
         return $$[0];       
       }
     } else {
-      _cachePos[15] = pos;
+      _cachePos[14] = pos;
     }  
     // => inclusive_or_expression logical_and_expression1 # Choice
     switch (_getState(_transitions5)) {
@@ -16330,8 +16330,8 @@ class CParser {
       _failure(_expect8);
     }
     // <= inclusive_or_expression logical_and_expression1 # Choice
-    if (_cacheable[15]) {
-      _addToCache($$, pos, 15);
+    if (_cacheable[14]) {
+      _addToCache($$, pos, 14);
     }    
     return $$;
   }
@@ -16437,13 +16437,13 @@ class CParser {
     // logical_or_expression <- logical_and_expression logical_or_expression1
     var $$;          
     var pos = _cursor;             
-    if(_cachePos[14] >= pos) {
-      $$ = _getFromCache(14);
+    if(_cachePos[13] >= pos) {
+      $$ = _getFromCache(13);
       if($$ != null) {
         return $$[0];       
       }
     } else {
-      _cachePos[14] = pos;
+      _cachePos[13] = pos;
     }  
     // => logical_and_expression logical_or_expression1 # Choice
     switch (_getState(_transitions5)) {
@@ -16494,8 +16494,8 @@ class CParser {
       _failure(_expect8);
     }
     // <= logical_and_expression logical_or_expression1 # Choice
-    if (_cacheable[14]) {
-      _addToCache($$, pos, 14);
+    if (_cacheable[13]) {
+      _addToCache($$, pos, 13);
     }    
     return $$;
   }
@@ -16505,13 +16505,13 @@ class CParser {
     // logical_or_expression1 <- vertical_line2 logical_and_expression logical_or_expression1 / ''
     var $$;          
     var pos = _cursor;             
-    if(_cachePos[67] >= pos) {
-      $$ = _getFromCache(67);
+    if(_cachePos[66] >= pos) {
+      $$ = _getFromCache(66);
       if($$ != null) {
         return $$[0];       
       }
     } else {
-      _cachePos[67] = pos;
+      _cachePos[66] = pos;
     }  
     // => vertical_line2 logical_and_expression logical_or_expression1 / '' # Choice
     switch (_getState(_transitions22)) {
@@ -16602,8 +16602,8 @@ class CParser {
       _failure(const [null]);
     }
     // <= vertical_line2 logical_and_expression logical_or_expression1 / '' # Choice
-    if (_cacheable[67]) {
-      _addToCache($$, pos, 67);
+    if (_cacheable[66]) {
+      _addToCache($$, pos, 66);
     }    
     return $$;
   }
@@ -16915,13 +16915,13 @@ class CParser {
     // multiplicative_expression <- unary_expression multiplicative_expression1
     var $$;          
     var pos = _cursor;             
-    if(_cachePos[23] >= pos) {
-      $$ = _getFromCache(23);
+    if(_cachePos[22] >= pos) {
+      $$ = _getFromCache(22);
       if($$ != null) {
         return $$[0];       
       }
     } else {
-      _cachePos[23] = pos;
+      _cachePos[22] = pos;
     }  
     // => unary_expression multiplicative_expression1 # Choice
     switch (_getState(_transitions5)) {
@@ -16972,8 +16972,8 @@ class CParser {
       _failure(_expect8);
     }
     // <= unary_expression multiplicative_expression1 # Choice
-    if (_cacheable[23]) {
-      _addToCache($$, pos, 23);
+    if (_cacheable[22]) {
+      _addToCache($$, pos, 22);
     }    
     return $$;
   }
@@ -17501,13 +17501,13 @@ class CParser {
     // relational_expression <- shift_expression relational_expression1
     var $$;          
     var pos = _cursor;             
-    if(_cachePos[20] >= pos) {
-      $$ = _getFromCache(20);
+    if(_cachePos[19] >= pos) {
+      $$ = _getFromCache(19);
       if($$ != null) {
         return $$[0];       
       }
     } else {
-      _cachePos[20] = pos;
+      _cachePos[19] = pos;
     }  
     // => shift_expression relational_expression1 # Choice
     switch (_getState(_transitions5)) {
@@ -17558,8 +17558,8 @@ class CParser {
       _failure(_expect8);
     }
     // <= shift_expression relational_expression1 # Choice
-    if (_cacheable[20]) {
-      _addToCache($$, pos, 20);
+    if (_cacheable[19]) {
+      _addToCache($$, pos, 19);
     }    
     return $$;
   }
@@ -17917,13 +17917,13 @@ class CParser {
     // shift_expression <- additive_expression shift_expression1
     var $$;          
     var pos = _cursor;             
-    if(_cachePos[21] >= pos) {
-      $$ = _getFromCache(21);
+    if(_cachePos[20] >= pos) {
+      $$ = _getFromCache(20);
       if($$ != null) {
         return $$[0];       
       }
     } else {
-      _cachePos[21] = pos;
+      _cachePos[20] = pos;
     }  
     // => additive_expression shift_expression1 # Choice
     switch (_getState(_transitions5)) {
@@ -17974,8 +17974,8 @@ class CParser {
       _failure(_expect8);
     }
     // <= additive_expression shift_expression1 # Choice
-    if (_cacheable[21]) {
-      _addToCache($$, pos, 21);
+    if (_cacheable[20]) {
+      _addToCache($$, pos, 20);
     }    
     return $$;
   }
@@ -18300,37 +18300,6 @@ class CParser {
       _failure(_expect1);
     }
     // <= [\t ]* # Choice
-    return $$;
-  }
-  
-  dynamic _parse_spaces2() {
-    // MORHEME
-    // spaces2 <- spaces
-    var $$;
-    // => spaces # Choice
-    switch (_ch >= 0 && _ch <= 1114111 ? 0 : _ch == -1 ? 2 : 1) {
-      // [\u0000-\u0010ffff]
-      // EOF
-      case 0:
-      case 2:
-        var startPos0 = _startPos;
-        _startPos = _cursor;
-        // => spaces
-        $$ = _parse_spaces();
-        // <= spaces
-        _startPos = startPos0;
-        break;
-      // No matches
-      case 1:
-        $$ = null;
-        success = true;
-        break;
-    }
-    if (!success && _cursor > _testing) {
-      // Expected: 
-      _failure(_expect1);
-    }
-    // <= spaces # Choice
     return $$;
   }
   
@@ -18691,13 +18660,13 @@ class CParser {
     // unary_expression <- primary_expression / unary_operator unary_expression
     var $$;          
     var pos = _cursor;             
-    if(_cachePos[24] >= pos) {
-      $$ = _getFromCache(24);
+    if(_cachePos[23] >= pos) {
+      $$ = _getFromCache(23);
       if($$ != null) {
         return $$[0];       
       }
     } else {
-      _cachePos[24] = pos;
+      _cachePos[23] = pos;
     }  
     // => primary_expression / unary_operator unary_expression # Choice
     switch (_getState(_transitions6)) {
@@ -18757,8 +18726,8 @@ class CParser {
       _failure(_expect8);
     }
     // <= primary_expression / unary_operator unary_expression # Choice
-    if (_cacheable[24]) {
-      _addToCache($$, pos, 24);
+    if (_cacheable[23]) {
+      _addToCache($$, pos, 23);
     }    
     return $$;
   }
@@ -19231,9 +19200,9 @@ class CParser {
       throw new RangeError('pos');
     }      
     _cursor = pos;
-    _cache = new List<Map<int, List>>(204);
-    _cachePos = new List<int>.filled(204, -1);  
-    _cacheable = new List<bool>.filled(204, false);
+    _cache = new List<Map<int, List>>(203);
+    _cachePos = new List<int>.filled(203, -1);  
+    _cacheable = new List<bool>.filled(203, false);
     _ch = -1;
     _errors = <CParserError>[];   
     _expected = <String>[];

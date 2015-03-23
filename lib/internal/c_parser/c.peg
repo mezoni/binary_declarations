@@ -182,10 +182,7 @@ DeclarationModifier <-
   / Identifier { $$ = new DeclarationModifier(identifier: $1); }
 
 Identifier <-
-  !RESERVED_WORD Identifier_base spaces2 { $$ = $2; }
-
-spaces2 <-
-  spaces
+  !RESERVED_WORD Identifier_base SPACING { $$ = $2; }
 
 DeclarationModifierArguments <-
   DeclarationModifierArgument (COMMA DeclarationModifierArgument)* { $$ = new Arguments(elements: _list($1, $2)); }
@@ -248,7 +245,7 @@ expression <-
   conditional_expression
 
 constant <-
-  constant_base spaces2 { $$ = $1; }
+  constant_base SPACING { $$ = $1; }
 
 constant_base <-
   floating_constant_base
@@ -260,7 +257,7 @@ floating_constant_base <-
   / hexadecimal_floating_constant
 
 decimal_floating_constant <-
-  decimal_floating_constant_base spaces2 { $$ = $1; }
+  decimal_floating_constant_base SPACING { $$ = $1; }
 
 lparen <-
   '(' spaces { $$ = $1; }

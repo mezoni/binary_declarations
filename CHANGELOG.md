@@ -1,3 +1,7 @@
+## 0.0.53
+
+- Fixed bug in `C grammar`
+
 ## 0.0.52
 
 - Fixed bug in ExpressionEvaluator.visitBinaryExpression() with logical expression
