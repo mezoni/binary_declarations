@@ -4,15 +4,22 @@ library binary_declarations.internal.c_parser;
 import "dart:math";
 import "package:binary_declarations/binary_declarations.dart";
 
-Expression _binary(left, _Node node) {
-  if (node == null) {
-    return left;
+Expression _buildBinary(Expression first, List rest) {
+  Expression builder(Expression result, List element) {
+    return new BinaryExpression(left: result, operator: element[0], right: element[1]);
+  };
+  return _buildTree(first, rest, builder);        
+}
+
+Expression _buildTree(Expression first, List rest, builder(Expression result, List rest)) {
+  var result = first;    
+  for (var i = 0; i < rest.length; i++) {
+    result = builder(result, rest[i]);
   }
-  var right = _binary(node.operand, node.next);
-  return new BinaryExpression(left: left, operator: node.operator, right: right);  
- }
- 
- String _chars2str(List<int> chars) {
+  return result;
+}
+
+String _chars2str(List<int> chars) {
    if (chars == null) {
      return "";
    }
@@ -124,28 +131,6 @@ Expression _unary(String operator, Expression operand) {
   return new UnaryExpression(operand: operand, operator: operator);
 }
 
-class _Node {
-  final _Node next;
-
-  final dynamic operand;
- 
-  final String operator;    
-  
-  _Node(this.operator, this.operand, this.next);
-  
-  String toString() {
-    var sb = new StringBuffer();
-    sb.write(operator);
-    sb.write(" ");
-    sb.write(operand);
-    if (next != null) {
-      sb.write(" ");
-      sb.write(next);    
-    }
-    return sb.toString();
-  }
-}
-
 }%
 
 ### Sentences (nonterminals) ###
@@ -199,34 +184,34 @@ conditional_expression <-
   / logical_or_expression
 
 logical_or_expression <-
-  logical_and_expression logical_or_expression1 { $$ = _binary($1, $2); }
+  logical_and_expression (logical_or_operator logical_and_expression)* { $$ = _buildBinary($1, $2); }
 
 logical_and_expression <-
-  inclusive_or_expression logical_and_expression1 { $$ = _binary($1, $2); }
+  inclusive_or_expression (logical_and_operator inclusive_or_expression)* { $$ = _buildBinary($1, $2); }
 
 inclusive_or_expression <-
-  exclusive_or_expression inclusive_or_expression1 { $$ = _binary($1, $2); }
+  exclusive_or_expression (inclusive_or_operator exclusive_or_expression)* { $$ = _buildBinary($1, $2); }
 
 exclusive_or_expression <-
-  and_expression exclusive_or_expression1 { $$ = _binary($1, $2); }
+  and_expression (exclusive_or_operator and_expression)* { $$ = _buildBinary($1, $2); }
 
 and_expression <-
-  equality_expression and_expression1 { $$ = _binary($1, $2); }
+  equality_expression (and_operator equality_expression)* { $$ = _buildBinary($1, $2); }
 
 equality_expression <-
-  relational_expression equality_expression1 { $$ = _binary($1, $2); }
+  relational_expression (equality_operator relational_expression)* { $$ = _buildBinary($1, $2); }
 
 relational_expression <-
-  shift_expression relational_expression1 { $$ = _binary($1, $2); }
+  shift_expression (relational_operator shift_expression)* { $$ = _buildBinary($1, $2); }
 
 shift_expression <-
-  additive_expression shift_expression1 { $$ = _binary($1, $2); }
+  additive_expression (shift_operator additive_expression)* { $$ = _buildBinary($1, $2); }
 
 additive_expression <-
-  multiplicative_expression additive_expression1 { $$ = _binary($1, $2); }
+  multiplicative_expression (additive_operator multiplicative_expression)* { $$ = _buildBinary($1, $2); }
 
 multiplicative_expression <-
-  unary_expression multiplicative_expression1 { $$ = _binary($1, $2); }
+  unary_expression (multiplicative_operator unary_expression)* { $$ = _buildBinary($1, $2); }
 
 unary_expression <-
   primary_expression
@@ -283,10 +268,6 @@ tilde <-
 exclamation <-
   '!' spaces { $$ = $1; }
 
-multiplicative_expression1 <-
-  multiplicative_operator unary_expression multiplicative_expression1 { $$ = new _Node($1, $2, $3); }
-  / '' { $$ = null; }
-
 multiplicative_operator <-
   asterisk
   / slash
@@ -301,17 +282,9 @@ slash <-
 percent <-
   '%' spaces { $$ = $1; }
 
-additive_expression1 <-
-  additive_operator multiplicative_expression additive_expression1 { $$ = new _Node($1, $2, $3); }
-  / '' { $$ = null; }
-
 additive_operator <-
   plus
   / minus
-
-shift_expression1 <-
-  shift_operator additive_expression shift_expression1 { $$ = new _Node($1, $2, $3); }
-  / '' { $$ = null; }
 
 shift_operator <-
   lsh
@@ -322,10 +295,6 @@ lsh <-
 
 rsh <-
   '>>' spaces { $$ = $1; }
-
-relational_expression1 <-
-  relational_operator shift_expression relational_expression1 { $$ = new _Node($1, $2, $3); }
-  / '' { $$ = null; }
 
 relational_operator <-
   lt
@@ -345,48 +314,23 @@ lte <-
 gte <-
   '>=' spaces { $$ = $1; }
 
-equality_expression1 <-
-  eq relational_expression equality_expression1 { $$ = new _Node($1, $2, $3); }
-  / neq relational_expression equality_expression1 { $$ = new _Node($1, $2, $3); }
-  / '' { $$ = null; }
-
 eq <-
   '==' spaces { $$ = $1; }
 
 neq <-
   '!=' spaces { $$ = $1; }
 
-and_expression1 <-
-  ampersand equality_expression and_expression1 { $$ = new _Node($1, $2, $3); }
-  / '' { $$ = null; }
-
 ampersand <-
   '&' spaces { $$ = $1; }
-
-exclusive_or_expression1 <-
-  xor and_expression exclusive_or_expression1 { $$ = new _Node($1, $2, $3); }
-  / '' { $$ = null; }
 
 xor <-
   '^' spaces { $$ = $1; }
 
-inclusive_or_expression1 <-
-  vertical_line exclusive_or_expression inclusive_or_expression1 { $$ = new _Node($1, $2, $3); }
-  / '' { $$ = null; }
-
 vertical_line <-
   '|' spaces { $$ = $1; }
 
-logical_and_expression1 <-
-  ampersand2 inclusive_or_expression logical_or_expression1 { $$ = new _Node($1, $2, $3); }
-  / '' { $$ = null; }
-
 ampersand2 <-
   '&&' spaces { $$ = $1; }
-
-logical_or_expression1 <-
-  vertical_line2 logical_and_expression logical_or_expression1 { $$ = new _Node($1, $2, $3); }
-  / '' { $$ = null; }
 
 vertical_line2 <-
   '||' spaces { $$ = $1; }

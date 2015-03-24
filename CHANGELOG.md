@@ -1,3 +1,7 @@
+## 0.0.54
+
+- Fixed bug in `C grammar`
+
 ## 0.0.53
 
 - Fixed bug in `C grammar`
