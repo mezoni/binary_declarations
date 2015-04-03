@@ -3,38 +3,63 @@ part of binary_declarations;
 class Declarations extends Object with IterableMixin<Declaration> {
   List<Declaration> _declarations;
 
-  Declarations(String source, {Map<String, String> environment}) {
-    if (source == null) {
-      throw new ArgumentError.notNull("source");
+  Declarations(String filename, Map<String, String> files,
+      {Map<String, MacroDefinition> definitions, Map<String, dynamic> environment}) {
+    if (filename == null) {
+      throw new ArgumentError.notNull("filename");
+    }
+
+    if (files == null) {
+      throw new ArgumentError.notNull("files");
     }
 
     if (environment == null) {
       environment = <String, String>{};
     }
 
+    if (definitions == null) {
+      definitions = {};
+    }
+
+    if (!files.containsKey(filename)) {
+      throw new StateError("File not found: $filename");
+    }
+
+    var source = files[filename];
+    if (source == null) {
+      throw new StateError("The file is corrupted: $filename");
+    }
+
     _declarations = <Declaration>[];
     var processor = new MacroProcessor();
-    var blocks = processor.process(source, environment);
+    var blocks = processor.process(filename, files, environment: environment);
     var numberOfBlocks = blocks.length;
     if (numberOfBlocks == 0) {
       return;
     }
 
-    var text = blocks.map((e) => e.text).join();
-    var parser = new CParser(text);
-    var result = parser.parse_Declarations();
-    if (!parser.success) {
-      var messages = [];
-      for (var error in parser.errors()) {
-        messages.add(new ParserErrorMessage(error.message, error.start, error.position));
+    for (var block in blocks) {
+      var filename = block.filename;
+      var text = block.text;
+      var parser = new CParser(text);
+      List<Declaration> result = parser.parse_Declarations();
+      if (!parser.success) {
+        var messages = [];
+        for (var error in parser.errors()) {
+          messages.add(new ParserErrorMessage(error.message, error.start, error.position));
+        }
+
+        var strings = ParserErrorFormatter.format(text, messages);
+        print(strings.join("\n"));
+        throw new FormatException();
       }
 
-      var strings = ParserErrorFormatter.format(source, messages);
-      print(strings.join("\n"));
-      throw new FormatException();
-    }
+      for (var declaration in result) {
+        declaration.filename = filename;
+      }
 
-    _declarations.addAll(result);
+      _declarations.addAll(result);
+    }
   }
 
   Iterator<Declaration> get iterator => _declarations.iterator;

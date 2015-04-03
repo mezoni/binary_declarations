@@ -61,3 +61,5 @@
 0.0.52 Fixed bug in ExpressionEvaluator.visitBinaryExpression() with logical expression
 0.0.53 Fixed bug in `C grammar`
 0.0.54 Fixed bug in `C grammar`
+0.0.56 Initial support of header files
+0.0.56 Breaking changes: Declarations now based on header files

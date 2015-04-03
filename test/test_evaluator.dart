@@ -6,7 +6,8 @@ void main() {
   group("Expression evaluator", () {
     test("", () {
       var text = "enum A {B = 20 - 2 * 4 - 4};";
-      var declarations = new Declarations(text);
+      var files = {"header.h": text};
+      var declarations = new Declarations("header.h", files);
       EnumDeclaration first = declarations.first;
       var expr = first.type.enumerators.elements.first.value;
       var eval = new ExpressionEvaluator();
@@ -15,7 +16,8 @@ void main() {
 
       //
       text = "enum A {B = 0 | 1};";
-      declarations = new Declarations(text);
+      files = {"header.h": text};
+      declarations = new Declarations("header.h", files);
       first = declarations.first;
       expr = first.type.enumerators.elements.first.value;
       eval = new ExpressionEvaluator();
@@ -24,7 +26,8 @@ void main() {
 
       //
       text = "enum A {B = 0 || 1};";
-      declarations = new Declarations(text);
+      files = {"header.h": text};
+      declarations = new Declarations("header.h", files);
       first = declarations.first;
       expr = first.type.enumerators.elements.first.value;
       eval = new ExpressionEvaluator();
@@ -33,7 +36,8 @@ void main() {
 
       //
       text = "enum A {B = 1 ^ 1};";
-      declarations = new Declarations(text);
+      files = {"header.h": text};
+      declarations = new Declarations("header.h", files);
       first = declarations.first;
       expr = first.type.enumerators.elements.first.value;
       eval = new ExpressionEvaluator();
@@ -42,7 +46,8 @@ void main() {
 
       //
       text = "enum A {B = 1 && 0};";
-      declarations = new Declarations(text);
+      files = {"header.h": text};
+      declarations = new Declarations("header.h", files);
       first = declarations.first;
       expr = first.type.enumerators.elements.first.value;
       eval = new ExpressionEvaluator();
@@ -51,7 +56,8 @@ void main() {
 
       //
       text = "enum A {B = 1 || 0};";
-      declarations = new Declarations(text);
+      files = {"header.h": text};
+      declarations = new Declarations("header.h", files);
       first = declarations.first;
       expr = first.type.enumerators.elements.first.value;
       eval = new ExpressionEvaluator();
@@ -60,7 +66,8 @@ void main() {
 
       //
       text = "enum A {B = 1 != 0};";
-      declarations = new Declarations(text);
+      files = {"header.h": text};
+      declarations = new Declarations("header.h", files);
       first = declarations.first;
       expr = first.type.enumerators.elements.first.value;
       eval = new ExpressionEvaluator();
@@ -69,7 +76,8 @@ void main() {
 
       //
       text = "enum A {B = !1};";
-      declarations = new Declarations(text);
+      files = {"header.h": text};
+      declarations = new Declarations("header.h", files);
       first = declarations.first;
       expr = first.type.enumerators.elements.first.value;
       eval = new ExpressionEvaluator();

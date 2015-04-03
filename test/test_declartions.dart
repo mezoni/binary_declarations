@@ -27,7 +27,8 @@ void main() {
         list.add("int foo(int i);");
         list.add("short int *foo(int i, int *ip);");
         var text = list.join("\n");
-        var declarations = new Declarations(text);
+        var files = {"header.h": text};
+        var declarations = new Declarations("header.h", files);
         for (var declaration in declarations) {
           expect(declaration is FunctionDeclaration, true, reason: "Not a $FunctionDeclaration");
         }
@@ -61,7 +62,8 @@ void main() {
         var lines = baseList.toList();
         lines = _addBeforeAndAfter(lines, "", ";");
         var text = lines.join("\n");
-        var declarations = new Declarations(text);
+        var files = {"header.h": text};
+        var declarations = new Declarations("header.h", files);
         for (var declaration in declarations) {
           expect(declaration is StructureDeclaration, true, reason: "Not a $StructureDeclaration");
         }
@@ -73,7 +75,8 @@ void main() {
         var lines = baseList.toList();
         lines = _addBeforeAndAfter(lines, "", " s1;");
         var text = lines.join("\n");
-        var declarations = new Declarations(text);
+        var files = {"header.h": text};
+        var declarations = new Declarations("header.h", files);
         for (var declaration in declarations) {
           expect(declaration is VariableDeclaration, true, reason: "Not a $VariableDeclaration");
         }
@@ -85,7 +88,8 @@ void main() {
         var lines = baseList.toList();
         lines = _addBeforeAndAfter(lines, "typedef ", " s1;");
         var text = lines.join("\n");
-        var declarations = new Declarations(text);
+        var files = {"header.h": text};
+        var declarations = new Declarations("header.h", files);
         for (var declaration in declarations) {
           expect(declaration is TypedefDeclaration, true, reason: "Not a $TypedefDeclaration");
         }
@@ -110,7 +114,8 @@ void main() {
         var lines = baseList.toList();
         lines = _addBeforeAndAfter(lines, "", ";");
         var text = lines.join("\n");
-        var declarations = new Declarations(text);
+        var files = {"header.h": text};
+        var declarations = new Declarations("header.h", files);
         for (var declaration in declarations) {
           expect(declaration is EnumDeclaration, true, reason: "Not a $EnumDeclaration");
         }
@@ -118,7 +123,10 @@ void main() {
         _checkPresentation(text, declarations);
 
         try {
-          new Declarations("enum { A, };");
+          var text = "enum { A, };";
+          var files = {"header.h": text};
+          var declarations = new Declarations("header.h", files);
+
         } catch (e) {
           expect(true, false, reason: "Extra comma 'enum { A, }'");
         }
@@ -128,7 +136,8 @@ void main() {
         var lines = baseList.toList();
         lines = _addBeforeAndAfter(lines, "", " s1;");
         var text = lines.join("\n");
-        var declarations = new Declarations(text);
+        var files = {"header.h": text};
+        var declarations = new Declarations("header.h", files);
         for (var declaration in declarations) {
           expect(declaration is VariableDeclaration, true, reason: "Not a $VariableDeclaration");
         }
@@ -140,7 +149,8 @@ void main() {
         var lines = baseList.toList();
         lines = _addBeforeAndAfter(lines, "typedef ", " s1;");
         var text = lines.join("\n");
-        var declarations = new Declarations(text);
+        var files = {"header.h": text};
+        var declarations = new Declarations("header.h", files);
         for (var declaration in declarations) {
           expect(declaration is TypedefDeclaration, true, reason: "Not a $TypedefDeclaration");
         }
@@ -159,7 +169,8 @@ void main() {
         }
 
         var text = list.join("\n");
-        var declarations = new Declarations(text);
+        var files = {"header.h": text};
+        var declarations = new Declarations("header.h", files);
         for (var declaration in declarations) {
           expect(declaration is VariableDeclaration, true, reason: "Not a $VariableDeclaration");
         }
@@ -182,7 +193,8 @@ void main() {
         }
 
         var text = list.join("\n");
-        var declarations = new Declarations(text);
+        var files = {"header.h": text};
+        var declarations = new Declarations("header.h", files);
         for (var declaration in declarations) {
           expect(declaration is VariableDeclaration, true, reason: "Not a $VariableDeclaration");
         }
@@ -198,7 +210,8 @@ void main() {
         }
 
         var text = list.join("\n");
-        var declarations = new Declarations(text);
+        var files = {"header.h": text};
+        var declarations = new Declarations("header.h", files);
         for (var declaration in declarations) {
           expect(declaration is VariableDeclaration, true, reason: "Not a $VariableDeclaration");
         }
@@ -214,7 +227,8 @@ void main() {
         }
 
         var text = list.join("\n");
-        var declarations = new Declarations(text);
+        var files = {"header.h": text};
+        var declarations = new Declarations("header.h", files);
         for (var declaration in declarations) {
           expect(declaration is TypedefDeclaration, true, reason: "Not a $TypedefDeclaration");
         }
@@ -230,7 +244,8 @@ void main() {
         }
 
         var text = list.join("\n");
-        var declarations = new Declarations(text);
+        var files = {"header.h": text};
+        var declarations = new Declarations("header.h", files);
         for (var declaration in declarations) {
           expect(declaration is TypedefDeclaration, true, reason: "Not a $TypedefDeclaration");
         }
@@ -246,7 +261,8 @@ void main() {
         }
 
         var text = list.join("\n");
-        var declarations = new Declarations(text);
+        var files = {"header.h": text};
+        var declarations = new Declarations("header.h", files);
         for (var declaration in declarations) {
           expect(declaration is TypedefDeclaration, true, reason: "Not a $TypedefDeclaration");
         }
@@ -263,11 +279,13 @@ void main() {
       list.add("typedef int FOO(int, char *), BAZ();");
       list.add("typedef int (**FOO)(int, char *);");
       var text = list.join("\n");
-      var declarations = new Declarations(text);
+      var files = {"header.h": text};
+      var declarations = new Declarations("header.h", files);
       _checkPresentation(text, declarations);
 
       text = "typedef int (FOO)(int, char *);";
-      declarations = new Declarations(text);
+      files = {"header.h": text};
+      declarations = new Declarations("header.h", files);
       _checkPresentation("typedef int FOO(int, char *);", declarations);
     });
 
@@ -276,7 +294,8 @@ void main() {
       list.add("const int i;");
       list.add("typedef const const int const const INT;");
       var text = list.join("\n");
-      var declarations = new Declarations(text);
+      var files = {"header.h": text};
+      var declarations = new Declarations("header.h", files);
       _checkPresentation(text, declarations);
     });
 
@@ -284,7 +303,8 @@ void main() {
       var list = <String>[];
       list.add("int i[ 011 ];");
       var text = list.join("\n");
-      var declarations = new Declarations(text);
+      var files = {"header.h": text};
+      var declarations = new Declarations("header.h", files);
       _checkPresentation("int i[011];", declarations);
     });
 
@@ -292,7 +312,8 @@ void main() {
       var list = <String>[];
       list.add("int i[ 0x11 ];");
       var text = list.join("\n");
-      var declarations = new Declarations(text);
+      var files = {"header.h": text};
+      var declarations = new Declarations("header.h", files);
       _checkPresentation("int i[0x11];", declarations);
     });
 
@@ -322,12 +343,15 @@ void main() {
       list.add(
           "const char *strncpy(char *destination, const char *source, size_t num) __attribute__((alias(\"_sprintf_p\")));");
       var text = list.join("\n");
-      var declarations = new Declarations(text);
+      var files = {"header.h": text};
+      var declarations = new Declarations("header.h", files);
       _checkPresentation(text, declarations);
     });
 
     test("Semicolons.", () {
-      var declarations = new Declarations(";;;");
+      var text = ";;;";
+      var files = {"header.h": text};
+      var declarations = new Declarations("header.h", files);
       _checkPresentation(";;", declarations);
     });
 
@@ -335,7 +359,8 @@ void main() {
       var list = <String>[];
       list.add('__attribute__((deprecated("This " " is" " deprecated"))) int foo;');
       var text = list.join("\n");
-      var declarations = new Declarations(text);
+      var files = {"header.h": text};
+      var declarations = new Declarations("header.h", files);
       _checkPresentation(text, declarations);
     });
 
@@ -345,7 +370,8 @@ void main() {
       var list = <String>[];
       list.add('int i[(sizeof(FOO) >> 2) > 512 ? 1 : -1];');
       var text = list.join("\n");
-      var declarations = new Declarations(text);
+      var files = {"header.h": text};
+      var declarations = new Declarations("header.h", files);
       _checkPresentation(text, declarations);
     });
   });

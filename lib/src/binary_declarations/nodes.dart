@@ -186,6 +186,8 @@ class ConditionalExpression extends Expression {
 }
 
 abstract class Declaration extends AstNode {
+  String filename;
+
   final DeclarationSpecifiers metadata;
 
   final TypeQualifiers qualifiers;

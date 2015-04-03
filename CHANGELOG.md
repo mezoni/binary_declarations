@@ -1,3 +1,8 @@
+## 0.0.56
+
+- Breaking changes: Declarations now based on header files
+- Initial support of header files
+
 ## 0.0.54
 
 - Fixed bug in `C grammar`
