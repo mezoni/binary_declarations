@@ -27,7 +27,7 @@ class Declarations extends Object with IterableMixin<Declaration> {
 
     var source = files[filename];
     if (source == null) {
-      throw new StateError("The file is corrupted: $filename");
+      throw new StateError("File is corrupted: $filename");
     }
 
     _declarations = <Declaration>[];
@@ -38,9 +38,22 @@ class Declarations extends Object with IterableMixin<Declaration> {
       return;
     }
 
-    for (var block in blocks) {
+    var count = blocks.length;
+    for (var i = 0; i < count; i++) {
+      var block = blocks[i];
       var filename = block.filename;
-      var text = block.text;
+      var buffer = new StringBuffer(block.text);
+      while (i < count - 1) {
+        var next = blocks[i + 1];
+        if (next.filename != filename) {
+          break;
+        }
+
+        buffer.write(next.text);
+        i++;
+      }
+
+      var text = buffer.toString();
       var parser = new CParser(text);
       List<Declaration> result = parser.parse_Declarations();
       if (!parser.success) {
