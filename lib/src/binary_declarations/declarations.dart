@@ -32,7 +32,7 @@ class Declarations extends Object with IterableMixin<Declaration> {
 
     _declarations = <Declaration>[];
     var processor = new MacroProcessor();
-    var blocks = processor.process(filename, files, environment: environment);
+    var blocks = processor.process(filename, files, definitions: definitions, environment: environment);
     var numberOfBlocks = blocks.length;
     if (numberOfBlocks == 0) {
       return;
