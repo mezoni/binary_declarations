@@ -135,7 +135,7 @@ class BoolTypeSpecification extends TypeSpecification {
 
   String get name => identifier.name;
 
-  TypeSpecificationKind get typeKind => TypeSpecificationKind.VOID;
+  TypeSpecificationKind get typeKind => TypeSpecificationKind.BOOL;
 
   dynamic accept(AstVisitor visitor) {
     return visitor.visitBoolTypeSpecification(this);

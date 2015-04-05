@@ -1,3 +1,7 @@
+## 0.0.57
+
+- Fixed bug in `BoolTypeSpecification`
+
 ## 0.0.56
 
 - Breaking changes: Declarations now based on header files
