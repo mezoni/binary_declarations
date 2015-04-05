@@ -63,8 +63,9 @@ class Declarations extends Object with IterableMixin<Declaration> {
         }
 
         var strings = ParserErrorFormatter.format(text, messages);
-        print(strings.join("\n"));
-        throw new FormatException();
+        strings.insert(0, "\nFormat exception: Found errors in file '$filename'");
+        var message = strings.join("\n");
+        throw new FormatException(message);
       }
 
       for (var declaration in result) {

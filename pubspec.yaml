@@ -5,8 +5,7 @@ description: Binary declarations is a set of classes for parsing declarations of
 homepage: https://github.com/mezoni/binary_declarations
 dependencies:
   build_tools: any
-  macro_processor:
-    git: https://github.com/mezoni/macro_processor
+  macro_processor: any
   parser_error: any
   path: any
   text: any
