@@ -634,14 +634,6 @@ class FunctionParameters extends AstNodeList<ParameterDeclaration> {
           throw new ArgumentError("List of declarations contains illegal elements.");
         }
 
-        var type = declaration.type;
-        var typeKind = type.typeKind;
-        if (_Utils.isVoidType(type, declaration.declarator)) {
-          if (i != 0) {
-            throw new ArgumentError("Parameter $i should not have a '$type' type.");
-          }
-        }
-
         list.add(declaration);
       }
     }
@@ -1174,21 +1166,5 @@ class _ListCloner<T> {
     }
 
     list = new UnmodifiableListView<T>(temp);
-  }
-}
-
-class _Utils {
-  static bool isVoidType(TypeSpecification type, Declarator declarator) {
-    if (type == null) {
-      return false;
-    }
-
-    if (type.typeKind == TypeSpecificationKind.VOID) {
-      if (declarator == null || declarator.pointers == null) {
-        return true;
-      }
-    }
-
-    return false;
   }
 }

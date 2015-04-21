@@ -1,3 +1,7 @@
+## 0.0.58
+
+- Fixed minor bug
+
 ## 0.0.57
 
 - Fixed bug in `BoolTypeSpecification`

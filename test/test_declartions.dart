@@ -6,7 +6,7 @@ void main() {
     group("Functions.", () {
       test("Function declarations.", () {
         var list = <String>[];
-        list.add("int foo();");
+        list.add("int foo(int, void fn(int));");
         list.add("unsigned foo();");
         list.add("void foo();");
         list.add("void foo(void);");
@@ -125,8 +125,7 @@ void main() {
         try {
           var text = "enum { A, };";
           var files = {"header.h": text};
-          var declarations = new Declarations("header.h", files);
-
+          new Declarations("header.h", files);
         } catch (e) {
           expect(true, false, reason: "Extra comma 'enum { A, }'");
         }
