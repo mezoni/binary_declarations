@@ -1,20 +1,22 @@
 import "package:binary_declarations/binary_declarations.dart";
-import "package:unittest/unittest.dart";
+import "package:test/test.dart";
 
 void main() {
-  var files = {"header1.h": _header1, "header2.h": _header2};
-  var declarations = new Declarations("header1.h", files);
-  for (var declaration in declarations) {
-    if (declaration is FunctionDeclaration) {
-      var name = declaration.declarator.identifier.name;
-      var filename = declaration.filename;
-      var index = filename.indexOf(".");
-      if (index != null) {
-        var prefix = filename.substring(0, index);
-        expect(name.startsWith(prefix), true, reason: "The '$name' not in '$filename'");
+  test("Test headers", () {
+    var files = {"header1.h": _header1, "header2.h": _header2};
+    var declarations = new Declarations("header1.h", files);
+    for (var declaration in declarations) {
+      if (declaration is FunctionDeclaration) {
+        var name = declaration.declarator.identifier.name;
+        var filename = declaration.filename;
+        var index = filename.indexOf(".");
+        if (index != null) {
+          var prefix = filename.substring(0, index);
+          expect(name.startsWith(prefix), true, reason: "The '$name' not in '$filename'");
+        }
       }
     }
-  }
+  });
 }
 
 const String _header1 = '''

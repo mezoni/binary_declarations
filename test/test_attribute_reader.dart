@@ -1,6 +1,6 @@
 import "package:binary_declarations/attribute_reader.dart";
 import "package:binary_declarations/binary_declarations.dart";
-import "package:unittest/unittest.dart";
+import "package:test/test.dart";
 
 void main() {
   group("Attribute reader", () {

@@ -65,3 +65,4 @@
 0.0.56 Breaking changes: Declarations now based on header files
 0.0.57 Fixed bug in `BoolTypeSpecification`
 0.0.58 Fixed minor bug
+0.0.59 Made adaptations to the new version of package `test`

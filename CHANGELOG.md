@@ -1,3 +1,7 @@
+## 0.0.59
+
+- Made adaptations to the new version of package `test`
+
 ## 0.0.58
 
 - Fixed minor bug
