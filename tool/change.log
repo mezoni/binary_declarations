@@ -66,3 +66,4 @@
 0.0.57 Fixed bug in `BoolTypeSpecification`
 0.0.58 Fixed minor bug
 0.0.59 Made adaptations to the new version of package `test`
+0.0.60 Fixed bug in `c.peg` grammar

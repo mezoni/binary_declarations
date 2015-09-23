@@ -295,8 +295,7 @@ class Declarator extends AstNode {
     }
 
     if (dimensions == null && identifier == null && parameters == null && pointers == null && width == null) {
-      throw new ArgumentError(
-          "Dimensions, identifier, parameters, pointers and width cannot all be null simultaneously");
+      //throw new ArgumentError("Dimensions, identifier, parameters, pointers and width cannot all be null simultaneously");
     }
   }
 

@@ -429,7 +429,7 @@ BitFieldDeclaratorAbstract <-
 
 ParameterDeclarationAbstract <-
   Metadata? TypeQualifiers? Type DeclaratorAbstract { $$ = new ParameterDeclaration(declarator: $4, metadata: $1, qualifiers: $2, type: $3); }
-  / Metadata? TypeQualifiers? Type { $$ = new ParameterDeclaration(metadata: $1, qualifiers: $2, type: $3); }
+  / Metadata? TypeQualifiers? Type { $$ = new ParameterDeclaration(declarator: new Declarator(), metadata: $1, qualifiers: $2, type: $3); }
 
 DeclaratorAbstract <-
   PointerSpecifiers ArrayDimensions Metadata? { $$ = new Declarator(dimensions: $2, metadata: $3, pointers: $1); }

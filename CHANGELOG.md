@@ -1,3 +1,7 @@
+## 0.0.60
+
+- Fixed bug in `c.peg` grammar
+
 ## 0.0.59
 
 - Made adaptations to the new version of package `test`
