@@ -320,7 +320,7 @@ class CParser {
   
   static final List<String> _expect91 = <String>["\\U", "\\u"];
   
-  static final List<bool> _lookahead = _unmap([0x1ffb4c3, 0x17fffffe, 0xffffffd, 0x3ff6983, 0x2ffffffc, 0x1ffffffa, 0x5006, 0x0, 0x0, 0x603ff41c, 0x52ffffff, 0xbffffff, 0x7ff80000, 0x7ff4bfff, 0xffff, 0x7fffff82, 0x7fffff4b, 0x7ffffc0f, 0x7ffffa5f, 0x7fffffff, 0x7fffffa1, 0x7e03ff7, 0x1fc00000, 0x0, 0x18000, 0x18000000, 0x20000040, 0x4180, 0x7e818200, 0xc0000f, 0x60000000, 0x0, 0x60000003, 0x13fc12fe, 0x230000, 0x14740, 0xd00008c, 0x210d024]);
+  static final List<bool> _lookahead = _unmap([0x1ffb4c3, 0x17fffffe, 0xffffffd, 0x3ff6983, 0x2ffffffc, 0x1ffffffa, 0x5006, 0x0, 0x0, 0x603ff41c, 0x52ffffff, 0xbffffff, 0x7ff80000, 0x7ff4bfff, 0xffff, 0x7fffff82, 0x7fffff4b, 0x7ffffc0f, 0x7ffffa5f, 0x7fffffff, 0x7fffffa1, 0x7e03ff7, 0x5fc00000, 0x0, 0x600000, 0x0, 0x600, 0x600000, 0x800001, 0x106, 0x1ffa0608, 0x30000, 0x1800000, 0x6000000, 0x7d800000, 0x4ff04b, 0x8c00, 0x1800051d, 0x48340002, 0x84340]);
   
   static final List<bool> _mapping0 = _unmap([0x800001]);
   
@@ -530,69 +530,71 @@ class CParser {
   
   static final List<List<int>> _transitions36 = [[40, 40, 42, 42, 65, 90, 92, 92, 95, 95, 97, 122]];
   
-  static final List<List<int>> _transitions37 = [[40, 40], [42, 42], [65, 90, 92, 92, 95, 95, 97, 122]];
+  static final List<List<int>> _transitions37 = [[40, 40], [42, 42], [65, 90, 92, 92, 97, 122], [95, 95]];
   
-  static final List<List<int>> _transitions38 = [[34, 34, 76, 76]];
+  static final List<List<int>> _transitions38 = [[40, 40, 42, 42, 95, 95]];
   
-  static final List<List<int>> _transitions39 = [[99, 99], [115, 115, 117, 117]];
+  static final List<List<int>> _transitions39 = [[34, 34, 76, 76]];
   
   static final List<List<int>> _transitions4 = [[33, 33, 39, 40, 43, 43, 45, 46, 48, 57, 92, 92, 95, 95, 97, 122, 126, 126], [34, 34], [65, 90]];
   
-  static final List<List<int>> _transitions40 = [[100, 100], [102, 102]];
+  static final List<List<int>> _transitions40 = [[99, 99], [115, 115, 117, 117]];
   
-  static final List<List<int>> _transitions41 = [[105, 105], [108, 108], [115, 115], [117, 117]];
+  static final List<List<int>> _transitions41 = [[100, 100], [102, 102]];
   
-  static final List<List<int>> _transitions42 = [[95, 95, 97, 103, 105, 105, 108, 108, 114, 119]];
+  static final List<List<int>> _transitions42 = [[105, 105], [108, 108], [115, 115], [117, 117]];
   
-  static final List<List<int>> _transitions43 = [[95, 95], [97, 97], [98, 98], [99, 99], [100, 100], [101, 101], [102, 102], [103, 103], [105, 105], [108, 108], [114, 114], [115, 115], [116, 116], [117, 117], [118, 118], [119, 119]];
+  static final List<List<int>> _transitions43 = [[95, 95, 97, 103, 105, 105, 108, 108, 114, 119]];
   
-  static final List<List<int>> _transitions44 = [[39, 39], [76, 76]];
+  static final List<List<int>> _transitions44 = [[95, 95], [97, 97], [98, 98], [99, 99], [100, 100], [101, 101], [102, 102], [103, 103], [105, 105], [108, 108], [114, 114], [115, 115], [116, 116], [117, 117], [118, 118], [119, 119]];
   
-  static final List<List<int>> _transitions45 = [[48, 48], [49, 57]];
+  static final List<List<int>> _transitions45 = [[39, 39], [76, 76]];
   
-  static final List<List<int>> _transitions46 = [[34, 34], [76, 76]];
+  static final List<List<int>> _transitions46 = [[48, 48], [49, 57]];
   
-  static final List<List<int>> _transitions47 = [[0, 9, 11, 12, 14, 1114111], [10, 10, 13, 13]];
+  static final List<List<int>> _transitions47 = [[34, 34], [76, 76]];
   
-  static final List<List<int>> _transitions48 = [[10, 10], [13, 13]];
+  static final List<List<int>> _transitions48 = [[0, 9, 11, 12, 14, 1114111], [10, 10, 13, 13]];
   
-  static final List<List<int>> _transitions49 = [[48, 57], [65, 90, 92, 92, 95, 95, 97, 122]];
+  static final List<List<int>> _transitions49 = [[10, 10], [13, 13]];
   
   static final List<List<int>> _transitions5 = [[33, 33, 39, 40, 43, 43, 45, 46, 48, 57, 65, 90, 92, 92, 95, 95, 97, 122, 126, 126]];
   
-  static final List<List<int>> _transitions50 = [[65, 90, 95, 95, 97, 122], [92, 92]];
+  static final List<List<int>> _transitions50 = [[48, 57], [65, 90, 92, 92, 95, 95, 97, 122]];
   
-  static final List<List<int>> _transitions51 = [[9, 10, 13, 13, 32, 32]];
+  static final List<List<int>> _transitions51 = [[65, 90, 95, 95, 97, 122], [92, 92]];
   
-  static final List<List<int>> _transitions52 = [[9, 10, 13, 13, 32, 32], [47, 47]];
+  static final List<List<int>> _transitions52 = [[9, 10, 13, 13, 32, 32]];
   
-  static final List<List<int>> _transitions53 = [[108, 108], [115, 115]];
+  static final List<List<int>> _transitions53 = [[9, 10, 13, 13, 32, 32], [47, 47]];
   
-  static final List<List<int>> _transitions54 = [[80, 80, 112, 112]];
+  static final List<List<int>> _transitions54 = [[108, 108], [115, 115]];
   
-  static final List<List<int>> _transitions55 = [[80, 80], [112, 112]];
+  static final List<List<int>> _transitions55 = [[80, 80, 112, 112]];
   
-  static final List<List<int>> _transitions56 = [[69, 69, 101, 101]];
+  static final List<List<int>> _transitions56 = [[80, 80], [112, 112]];
   
-  static final List<List<int>> _transitions57 = [[69, 69], [101, 101]];
+  static final List<List<int>> _transitions57 = [[69, 69, 101, 101]];
   
-  static final List<List<int>> _transitions58 = [[70, 70, 76, 76, 102, 102, 108, 108]];
+  static final List<List<int>> _transitions58 = [[69, 69], [101, 101]];
   
-  static final List<List<int>> _transitions59 = [[48, 57, 65, 70, 97, 102]];
+  static final List<List<int>> _transitions59 = [[70, 70, 76, 76, 102, 102, 108, 108]];
   
   static final List<List<int>> _transitions6 = [[33, 33, 61, 61]];
   
-  static final List<List<int>> _transitions60 = [[46, 46], [48, 57, 65, 70, 97, 102]];
+  static final List<List<int>> _transitions60 = [[48, 57, 65, 70, 97, 102]];
   
-  static final List<List<int>> _transitions61 = [[76, 76, 108, 108], [85, 85, 117, 117]];
+  static final List<List<int>> _transitions61 = [[46, 46], [48, 57, 65, 70, 97, 102]];
   
-  static final List<List<int>> _transitions62 = [[76, 76], [108, 108]];
+  static final List<List<int>> _transitions62 = [[76, 76, 108, 108], [85, 85, 117, 117]];
   
-  static final List<List<int>> _transitions63 = [[76, 76, 108, 108]];
+  static final List<List<int>> _transitions63 = [[76, 76], [108, 108]];
   
-  static final List<List<int>> _transitions64 = [[65, 90, 95, 95, 97, 122]];
+  static final List<List<int>> _transitions64 = [[76, 76, 108, 108]];
   
-  static final List<List<int>> _transitions65 = [[85, 85, 117, 117]];
+  static final List<List<int>> _transitions65 = [[65, 90, 95, 95, 97, 122]];
+  
+  static final List<List<int>> _transitions66 = [[85, 85, 117, 117]];
   
   static final List<List<int>> _transitions7 = [[60, 60, 62, 62]];
   
@@ -1118,13 +1120,13 @@ class CParser {
   
   dynamic _parse_BINARY_EXPONENT_PART() {
     var $$;
-    switch (_getState(_transitions54)) {
+    switch (_getState(_transitions55)) {
       case 0:
       case 2:
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
         _startPos = _cursor;
         while (true) {  
-          switch (_getState(_transitions55)) {
+          switch (_getState(_transitions56)) {
             case 0:
               var startPos1 = _startPos;
               _startPos = _cursor;
@@ -1879,7 +1881,7 @@ class CParser {
           }
           if (!success) break;
           seq[1] = $$;
-          switch (_getState(_transitions47)) {
+          switch (_getState(_transitions48)) {
             case 0:
             case 3:
               var startPos2 = _startPos;
@@ -2059,7 +2061,7 @@ class CParser {
     var $$;
     _token = 29;  
     _tokenStart = _cursor;  
-    switch (_getState(_transitions39)) {
+    switch (_getState(_transitions40)) {
       case 0:
       case 3:
         while (true) {
@@ -3829,7 +3831,7 @@ class CParser {
   
   dynamic _parse_EOL() {
     var $$;
-    switch (_getState(_transitions48)) {
+    switch (_getState(_transitions49)) {
       case 0:
         var startPos0 = _startPos;
         _startPos = _cursor;
@@ -3908,13 +3910,13 @@ class CParser {
   
   dynamic _parse_EXPONENT_PART() {
     var $$;
-    switch (_getState(_transitions56)) {
+    switch (_getState(_transitions57)) {
       case 0:
       case 2:
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
         _startPos = _cursor;
         while (true) {  
-          switch (_getState(_transitions57)) {
+          switch (_getState(_transitions58)) {
             case 0:
               var startPos1 = _startPos;
               _startPos = _cursor;
@@ -4493,7 +4495,7 @@ class CParser {
   
   dynamic _parse_FLOATING_SUFFIX() {
     var $$;
-    switch (_getState(_transitions58)) {
+    switch (_getState(_transitions59)) {
       case 0:
         var startPos0 = _startPos;
         _startPos = _cursor;
@@ -4681,7 +4683,7 @@ class CParser {
       case 2:
         var startPos0 = _startPos;
         _startPos = _cursor;
-        switch (_getState(_transitions40)) {
+        switch (_getState(_transitions41)) {
           case 0:
             var startPos1 = _startPos;
             _startPos = _cursor;
@@ -4887,28 +4889,28 @@ class CParser {
         while (true) {  
           var testing0 = _testing;
           _testing = _cursor;
-          $$ = _parse_PointerSpecifiers();
+          $$ = _parse_Metadata();
           success = true; 
           _testing = testing0;
           if (!success) break;
           var seq = new List(6)..[0] = $$;
-          $$ = _parse_Identifier();
-          if (!success) break;
-          seq[1] = $$;
-          $$ = _parse_OPEN_PAREN();
-          if (!success) break;
-          seq[2] = $$;
-          $$ = _parse_FunctionParameters();
-          if (!success) break;
-          seq[3] = $$;
-          $$ = _parse_CLOSE_PAREN();
-          if (!success) break;
-          seq[4] = $$;
           var testing1 = _testing;
           _testing = _cursor;
-          $$ = _parse_Metadata();
+          $$ = _parse_PointerSpecifiers();
           success = true; 
           _testing = testing1;
+          if (!success) break;
+          seq[1] = $$;
+          $$ = _parse_Identifier();
+          if (!success) break;
+          seq[2] = $$;
+          $$ = _parse_OPEN_PAREN();
+          if (!success) break;
+          seq[3] = $$;
+          $$ = _parse_FunctionParameters();
+          if (!success) break;
+          seq[4] = $$;
+          $$ = _parse_CLOSE_PAREN();
           if (!success) break;
           seq[5] = $$;
           $$ = seq;
@@ -4920,7 +4922,7 @@ class CParser {
             final $5 = seq[4];
             final $6 = seq[5];
             final $start = startPos0;
-            $$ = new Declarator(identifier: $2, metadata: $6, parameters: $4, pointers: $1);
+            $$ = new Declarator(identifier: $3, metadata: $1, parameters: $5, pointers: $2);
           }
           break;
         }
@@ -5296,7 +5298,7 @@ class CParser {
         _startPos = _cursor;
         var testing0 = _testing;
         _testing = _cursor;
-        switch (_getState(_transitions59)) {
+        switch (_getState(_transitions60)) {
           case 0:
           case 2:
             var ch0 = _ch, pos0 = _cursor, startPos1 = _startPos;
@@ -5342,7 +5344,7 @@ class CParser {
   
   dynamic _parse_HEXADECIMAL_DIGIT() {
     var $$;
-    switch (_getState(_transitions59)) {
+    switch (_getState(_transitions60)) {
       case 0:
         var startPos0 = _startPos;
         _startPos = _cursor;
@@ -5363,7 +5365,7 @@ class CParser {
   
   dynamic _parse_HEXADECIMAL_DIGIT_SEQUENCE() {
     var $$;
-    switch (_getState(_transitions59)) {
+    switch (_getState(_transitions60)) {
       case 0:
         var startPos0 = _startPos;
         _startPos = _cursor;
@@ -5460,7 +5462,7 @@ class CParser {
         _startPos = _cursor;
         var testing0 = _testing;
         _testing = _cursor;
-        switch (_getState(_transitions59)) {
+        switch (_getState(_transitions60)) {
           case 0:
           case 2:
             var ch0 = _ch, pos0 = _cursor, startPos1 = _startPos;
@@ -5511,7 +5513,7 @@ class CParser {
   
   dynamic _parse_HEXADECIMAL_FRACTIONAL_CONSTANT() {
     var $$;
-    switch (_getState(_transitions60)) {
+    switch (_getState(_transitions61)) {
       case 0:
       case 3:
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
@@ -5628,7 +5630,7 @@ class CParser {
   
   dynamic _parse_HEX_QUAD() {
     var $$;
-    switch (_getState(_transitions59)) {
+    switch (_getState(_transitions60)) {
       case 0:
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
         _startPos = _cursor;
@@ -5676,7 +5678,7 @@ class CParser {
   
   dynamic _parse_IDENTIFIER_BASE1() {
     var $$;
-    switch (_getState(_transitions49)) {
+    switch (_getState(_transitions50)) {
       case 0:
         var startPos0 = _startPos;
         _startPos = _cursor;
@@ -5713,7 +5715,7 @@ class CParser {
   
   dynamic _parse_IDENTIFIER_NONDIGIT() {
     var $$;
-    switch (_getState(_transitions50)) {
+    switch (_getState(_transitions51)) {
       case 0:
         var startPos0 = _startPos;
         _startPos = _cursor;
@@ -5791,7 +5793,7 @@ class CParser {
   
   dynamic _parse_INTEGER_SUFFIX() {
     var $$;
-    switch (_getState(_transitions61)) {
+    switch (_getState(_transitions62)) {
       case 0:
         while (true) {
           var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
@@ -6175,7 +6177,7 @@ class CParser {
     var $$;
     _token = 34;  
     _tokenStart = _cursor;  
-    switch (_getState(_transitions41)) {
+    switch (_getState(_transitions42)) {
       case 0:
         while (true) {
           var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
@@ -7135,7 +7137,7 @@ class CParser {
   
   dynamic _parse_LONG_LONG_SUFFIX() {
     var $$;
-    switch (_getState(_transitions62)) {
+    switch (_getState(_transitions63)) {
       case 0:
         var startPos0 = _startPos;
         _startPos = _cursor;
@@ -7162,7 +7164,7 @@ class CParser {
   
   dynamic _parse_LONG_SUFFIX() {
     var $$;
-    switch (_getState(_transitions63)) {
+    switch (_getState(_transitions64)) {
       case 0:
         var startPos0 = _startPos;
         _startPos = _cursor;
@@ -7241,7 +7243,7 @@ class CParser {
   
   dynamic _parse_NONDIGIT() {
     var $$;
-    switch (_getState(_transitions64)) {
+    switch (_getState(_transitions65)) {
       case 0:
         var startPos0 = _startPos;
         _startPos = _cursor;
@@ -8024,13 +8026,13 @@ class CParser {
   
   dynamic _parse_RESERVED_WORD() {
     var $$;
-    switch (_getState(_transitions42)) {
+    switch (_getState(_transitions43)) {
       case 0:
       case 2:
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
         _startPos = _cursor;
         while (true) {  
-          switch (_getState(_transitions43)) {
+          switch (_getState(_transitions44)) {
             case 0:
               while (true) {
                 var startPos1 = _startPos;
@@ -8569,7 +8571,7 @@ class CParser {
   
   dynamic _parse_SIZEMODIFIER() {
     var $$;
-    switch (_getState(_transitions53)) {
+    switch (_getState(_transitions54)) {
       case 0:
         while (true) {
           var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
@@ -8703,7 +8705,7 @@ class CParser {
   
   dynamic _parse_SPACE() {
     var $$;
-    switch (_getState(_transitions51)) {
+    switch (_getState(_transitions52)) {
       case 0:
         var startPos0 = _startPos;
         _startPos = _cursor;
@@ -8732,7 +8734,7 @@ class CParser {
         var testing0 = _testing; 
         for (var reps = []; ; ) {
           _testing = _cursor;
-          switch (_getState(_transitions52)) {
+          switch (_getState(_transitions53)) {
             case 0:
               var startPos1 = _startPos;
               _startPos = _cursor;
@@ -9622,7 +9624,7 @@ class CParser {
         }
         break;
       case 1:
-      case 4:
+      case 5:
         while (true) {
           var startPos2 = _startPos;
           _startPos = _cursor;
@@ -9661,6 +9663,25 @@ class CParser {
         }
         break;
       case 3:
+        while (true) {
+          var startPos8 = _startPos;
+          _startPos = _cursor;
+          $$ = _parse_FunctionDeclarator();
+          _startPos = startPos8;
+          if (success) break;
+          var startPos9 = _startPos;
+          _startPos = _cursor;
+          $$ = _parse_DeclaratorNotAbstract();
+          _startPos = startPos9;
+          if (success) break;
+          var startPos10 = _startPos;
+          _startPos = _cursor;
+          $$ = _parse_TypedefFunctionDeclarator();
+          _startPos = startPos10;
+          break;
+        }
+        break;
+      case 4:
         $$ = null;
         success = false;
         break;
@@ -9952,7 +9973,7 @@ class CParser {
   
   dynamic _parse_TypedefFunctionDeclarator() {
     var $$;
-    switch (_getState(_transitions32)) {
+    switch (_getState(_transitions38)) {
       case 0:
       case 2:
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
@@ -9960,34 +9981,34 @@ class CParser {
         while (true) {  
           var testing0 = _testing;
           _testing = _cursor;
-          $$ = _parse_PointerSpecifiers();
+          $$ = _parse_Metadata();
           success = true; 
           _testing = testing0;
           if (!success) break;
           var seq = new List(8)..[0] = $$;
-          $$ = _parse_OPEN_PAREN();
-          if (!success) break;
-          seq[1] = $$;
-          $$ = _parse_Identifier();
-          if (!success) break;
-          seq[2] = $$;
-          $$ = _parse_CLOSE_PAREN();
-          if (!success) break;
-          seq[3] = $$;
-          $$ = _parse_OPEN_PAREN();
-          if (!success) break;
-          seq[4] = $$;
-          $$ = _parse_FunctionParameters();
-          if (!success) break;
-          seq[5] = $$;
-          $$ = _parse_CLOSE_PAREN();
-          if (!success) break;
-          seq[6] = $$;
           var testing1 = _testing;
           _testing = _cursor;
-          $$ = _parse_Metadata();
+          $$ = _parse_PointerSpecifiers();
           success = true; 
           _testing = testing1;
+          if (!success) break;
+          seq[1] = $$;
+          $$ = _parse_OPEN_PAREN();
+          if (!success) break;
+          seq[2] = $$;
+          $$ = _parse_Identifier();
+          if (!success) break;
+          seq[3] = $$;
+          $$ = _parse_CLOSE_PAREN();
+          if (!success) break;
+          seq[4] = $$;
+          $$ = _parse_OPEN_PAREN();
+          if (!success) break;
+          seq[5] = $$;
+          $$ = _parse_FunctionParameters();
+          if (!success) break;
+          seq[6] = $$;
+          $$ = _parse_CLOSE_PAREN();
           if (!success) break;
           seq[7] = $$;
           $$ = seq;
@@ -10001,7 +10022,7 @@ class CParser {
             final $7 = seq[6];
             final $8 = seq[7];
             final $start = startPos0;
-            $$ = new Declarator(identifier: $3, metadata: $8, parameters: $6, pointers: $1);
+            $$ = new Declarator(identifier: $4, metadata: $1, parameters: $7, pointers: $2);
           }
           break;
         }
@@ -10265,7 +10286,7 @@ class CParser {
   
   dynamic _parse_UNSIGNED_SUFFIX() {
     var $$;
-    switch (_getState(_transitions65)) {
+    switch (_getState(_transitions66)) {
       case 0:
         var startPos0 = _startPos;
         _startPos = _cursor;
@@ -10973,7 +10994,7 @@ class CParser {
   
   dynamic _parse_character_constant_base() {
     var $$;
-    switch (_getState(_transitions44)) {
+    switch (_getState(_transitions45)) {
       case 0:
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
         _startPos = _cursor;
@@ -12192,7 +12213,7 @@ class CParser {
   
   dynamic _parse_integer_constant_base() {
     var $$;
-    switch (_getState(_transitions45)) {
+    switch (_getState(_transitions46)) {
       case 0:
         while (true) {
           var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
@@ -13766,7 +13787,7 @@ class CParser {
     var $$;
     _token = 18;  
     _tokenStart = _cursor;  
-    switch (_getState(_transitions38)) {
+    switch (_getState(_transitions39)) {
       case 0:
       case 2:
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
@@ -13808,7 +13829,7 @@ class CParser {
   
   dynamic _parse_string_literal2() {
     var $$;
-    switch (_getState(_transitions38)) {
+    switch (_getState(_transitions39)) {
       case 0:
       case 2:
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
@@ -13888,7 +13909,7 @@ class CParser {
   
   dynamic _parse_string_literal_base() {
     var $$;
-    switch (_getState(_transitions46)) {
+    switch (_getState(_transitions47)) {
       case 0:
         var ch0 = _ch, pos0 = _cursor, startPos0 = _startPos;
         _startPos = _cursor;

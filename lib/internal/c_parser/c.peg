@@ -352,7 +352,7 @@ TypeQualifier <-
   (CONST / VOLATILE) Metadata? { $$ = new TypeQualifier(identifier: $1, metadata: $2); }
 
 FunctionDeclarator <-
-  PointerSpecifiers? Identifier OPEN_PAREN FunctionParameters CLOSE_PAREN Metadata? { $$ = new Declarator(identifier: $2, metadata: $6, parameters: $4, pointers: $1); }
+  Metadata? PointerSpecifiers? Identifier OPEN_PAREN FunctionParameters CLOSE_PAREN { $$ = new Declarator(identifier: $3, metadata: $1, parameters: $5, pointers: $2); }
 
 PointerSpecifiers <-
   PointerSpecifier+ { $$ = new PointerSpecifiers(elements: $1); }
@@ -493,7 +493,7 @@ TypeDeclarator <-
   / TypedefFunctionDeclarator
 
 TypedefFunctionDeclarator <-
-  PointerSpecifiers? OPEN_PAREN Identifier CLOSE_PAREN OPEN_PAREN FunctionParameters CLOSE_PAREN Metadata? { $$ = new Declarator(identifier: $3, metadata: $8, parameters: $6, pointers: $1); }
+  Metadata? PointerSpecifiers? OPEN_PAREN Identifier CLOSE_PAREN OPEN_PAREN FunctionParameters CLOSE_PAREN { $$ = new Declarator(identifier: $4, metadata: $1, parameters: $7, pointers: $2); }
 
 VariableDeclaration <-
   Metadata? TypeQualifiers? Type VariableDeclaratorList { $$ = new VariableDeclaration(declarators: $4, metadata: $1, qualifiers: $2, type: $3); }

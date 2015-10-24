@@ -1,7 +1,7 @@
 part of binary_declarations;
 
 class AstPrinter<T> extends AstVisitor {
-  final StringBuffer sb;
+  StringBuffer sb;
 
   String _newLine;
 
@@ -271,7 +271,17 @@ class AstPrinter<T> extends AstVisitor {
   visitParameterDeclaration(ParameterDeclaration node) {
     _visitNode(node.metadata, suffix: " ");
     _visitNode(node.qualifiers, suffix: " ");
-    _joinNodes([node.type, node.declarator], " ");
+    _visitNode(node.type);
+    var temp = sb;
+    sb = new StringBuffer();
+    _visitNode(node.declarator);
+    var string = sb.toString();
+    sb = temp;
+    if (!string.isEmpty) {
+      sb.write(" ");
+      sb.write(string);
+    }
+
     return null;
   }
 
